@@ -8678,7 +8678,7 @@
 				elseif AuctionFrameAuctions.duration == 3 then
 					AuctionsLongAuctionButton:SetChecked(true)
 				end
-
+-- test
 				-- Functions
 				local function CreateAuctionCB(name, anchor, x, y, text)
 					LeaPlusCB[name] = CreateFrame("CheckButton", nil, AuctionFrameAuctions, "OptionsCheckButtonTemplate")
