@@ -1663,585 +1663,132 @@
 
 		do
 
-			-- Create configuration panel
-			local QuestPanel = LeaPlusLC:CreatePanel("Automate quests", "QuestPanel")
+			local addon = CreateFrame('Frame')
+			addon.completed_quests = {}
+			addon.uncompleted_quests = {}
 
-			LeaPlusLC:MakeTx(QuestPanel, "Settings", 16, -72)
-			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestAvailable", "Accept available quests automatically", 16, -92, false, "If checked, available quests will be accepted automatically.")
-			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestCompleted", "Turn-in completed quests automatically", 16, -112, false, "If checked, completed quests will be turned-in automatically.")
-			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestShift", "Require override key for quest automation", 16, -132, false, "If checked, you will need to hold the override key down for quests to be automated.|n|nIf unchecked, holding the override key will prevent quests from being automated.")
-
-			LeaPlusLC:CreateDropDown("AutoQuestKeyMenu", "Override key", QuestPanel, 146, "TOPLEFT", 356, -115, {L["SHIFT"], L["ALT"], L["CONTROL"], L["CMD (MAC)"]}, "")
-
-			-- Help button hidden
-			QuestPanel.h:Hide()
-
-			-- Back button handler
-			QuestPanel.b:SetScript("OnClick", function()
-				QuestPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page1"]:Show();
-				return
-			end)
-
-			-- Reset button handler
-			QuestPanel.r:SetScript("OnClick", function()
-
-				-- Reset checkboxes
-				LeaPlusLC["AutoQuestShift"] = "Off"
-				LeaPlusLC["AutoQuestAvailable"] = "On"
-				LeaPlusLC["AutoQuestCompleted"] = "On"
-				LeaPlusLC["AutoQuestKeyMenu"] = 1
-
-				-- Refresh panel
-				QuestPanel:Hide(); QuestPanel:Show()
-
-			end)
-
-			-- Show panal when options panel button is clicked
-			LeaPlusCB["AutomateQuestsBtn"]:SetScript("OnClick", function()
-				if IsShiftKeyDown() and IsControlKeyDown() then
-					-- Preset profile
-					LeaPlusLC["AutoQuestShift"] = "Off"
-					LeaPlusLC["AutoQuestAvailable"] = "On"
-					LeaPlusLC["AutoQuestCompleted"] = "On"
-					LeaPlusLC["AutoQuestKeyMenu"] = 1
+			function addon:canAutomate ()
+				if IsShiftKeyDown() then
+					return false
 				else
-					QuestPanel:Show()
-					LeaPlusLC:HideFrames()
-				end
-			end)
-
-			-- Function to determine if override key is being held
-			local function IsOverrideKeyDown()
-				if LeaPlusLC["AutoQuestKeyMenu"] == 1 and IsShiftKeyDown()
-				or LeaPlusLC["AutoQuestKeyMenu"] == 2 and IsAltKeyDown()
-				or LeaPlusLC["AutoQuestKeyMenu"] == 3 and IsControlKeyDown()
-				or LeaPlusLC["AutoQuestKeyMenu"] == 4 and IsMetaKeyDown()
-				then
 					return true
 				end
 			end
 
-			-- Funcion to ignore specific NPCs
-			local function isNpcBlocked(actionType)
-				local npcGuid = UnitGUID("target") or nil
-				if npcGuid then
-					local void, void, void, void, void, npcID = strsplit("-", npcGuid)
-					if npcID then
-						-- Ignore specific NPCs for selecting, accepting and turning-in quests (required if automation has consequences)
-						if npcID == "15192"	-- Anachronos (Caverns of Time)
-						or npcID == "19935" -- Soridormi (The Scale of Sands, Caverns of Time)
-						or npcID == "19936" -- Arazmodu (The Scale of Sands, Caverns of Time)
-						or npcID == "3430" 	-- Mangletooth (Blood Shard quests, Barrens)
-						or npcID == "14828" -- Gelvas Grimegate (Darkmoon Faire Ticket Redemption, Elwynn Forest and Mulgore)
-						or npcID == "14921" -- Rin'wosho the Trader (Zul'Gurub Isle, Stranglethorn Vale)
-						or npcID == "18166" -- Khadgar (Allegiance to Aldor/Scryer, Shattrath)
-						or npcID == "18253" -- Archmage Leryda (Violet Signet, Karazhan)
-						then
-							return true
-						end
-						-- Same but for specific NPCs with special requirements
-						if npcID == "32540" then -- Lillehoff (The Sons of Hodir Quartermaster, The Storm Peaks)
-							local name, description, standingID = GetFactionInfoByID(1119)
-							if standingID and standingID >= 8 then -- Dont automate quests if exalted
-								return true
-							end
-						end
-						-- Ignore specific NPCs for accepting quests only
-						if actionType == "Accept" then
-							-- Classic escort quests
-							if npcID == "467" -- The Defias Traitor (The Defias Brotherhood)
-							or npcID == "349" -- Corporal Keeshan (Missing In Action)
-							or npcID == "1379" -- Miran (Protecting the Shipment)
-							or npcID == "7766" -- Tyrion (The Attack!)
-							or npcID == "1978" -- Deathstalker Erland (Escorting Erland)
-							or npcID == "7784" -- Homing Robot OOX-17/TN (Rescue OOX-17/TN!)
-							or npcID == "2713" -- Kinelory (Hints of a New Plague?)
-							or npcID == "2768" -- Professor Phizzlethorpe (Sunken Treasure)
-							or npcID == "2610" -- Shakes O'Breen (Death From Below)
-							or npcID == "2917" -- Prospector Remtravel (The Absent Minded Prospector)
-							or npcID == "7806" -- Homing Robot OOX-09/HL (Rescue OOX-09/HL!)
-							or npcID == "3439" -- Wizzlecrank's Shredder (The Escape)
-							or npcID == "3465" -- Gilthares Firebough (Free From the Hold)
-							or npcID == "3568" -- Mist (Mist)
-							or npcID == "3584" -- Therylune (Therylune's Escape)
-							or npcID == "4484" -- Feero Ironhand (Supplies to Auberdine)
-							or npcID == "3692" -- Volcor (Escape Through Force)
-							or npcID == "4508" -- Willix the Importer (Willix the Importer)
-							or npcID == "4880" -- "Stinky" Ignatz (Stinky's Escape)
-							or npcID == "4983" -- Ogron (Questioning Reethe)
-							or npcID == "5391" -- Galen Goodward (Galen's Escape)
-							or npcID == "5644" -- Dalinda Malem (Return to Vahlarriel)
-							or npcID == "5955" -- Tooga (Tooga's Quest)
-							or npcID == "7780" -- Rin'ji (Rin'ji is Trapped!)
-							or npcID == "7807" -- Homing Robot OOX-22/FE (Rescue OOX-22/FE!)
-							or npcID == "7774" -- Shay Leafrunner (Wandering Shay)
-							or npcID == "7850" -- Kernobee (A Fine Mess)
-							or npcID == "8284" -- Dorius Stonetender (Suntara Stones)
-							or npcID == "8380" -- Captain Vanessa Beltis (A Crew Under Fire)
-							or npcID == "8516" -- Belnistrasz (Extinguishing the Idol)
-							or npcID == "9020" -- Commander Gor'shak (What Is Going On?)
-							or npcID == "9520" -- Grark Lorkrub (Precarious Predicament)
-							or npcID == "9623" -- A-Me 01 (Chasing A-Me 01)
-							or npcID == "9598" -- Arei (Ancient Spirit)
-							or npcID == "9023" -- Marshal Windsor (Jail Break!)
-							or npcID == "9999" -- Ringo (A Little Help From My Friends)
-							or npcID == "10427" -- Pao'ka Swiftmountain (Homeward Bound)
-							or npcID == "10300" -- Ranshalla (Guardians of the Altar)
-							or npcID == "10646" -- Lakota Windsong (Free at Last)
-							or npcID == "10638" -- Kanati Greycloud (Protect Kanati Greycloud)
-							or npcID == "11016" -- Captured Arko'narin (Rescue From Jaedenar)
-							or npcID == "11218" -- Kerlonian Evershade (The Sleeper Has Awakened)
-							or npcID == "11711" -- Sentinel Aynasha (One Shot. One Kill.)
-							or npcID == "11625" -- Cork Gizelton (Bodyguard for Hire)
-							or npcID == "11626" -- Rigger Gizelton (Gizelton Caravan)
-							or npcID == "1842" -- Highlord Taelan Fordring (In Dreams)
-							or npcID == "12277" -- Melizza Brimbuzzle (Get Me Out of Here!)
-							or npcID == "12580" -- Reginald Windsor (The Great Masquerade)
-							or npcID == "12818" -- Ruul Snowhoof (Freedom to Ruul)
-							or npcID == "11856" -- Kaya Flathoof (Protect Kaya)
-							or npcID == "12858" -- Torek (Torek's Assault)
-							or npcID == "12717" -- Muglash (Vorsha the Lasher)
-							or npcID == "13716" -- Celebras the Redeemed (The Scepter of Celebras)
-							or npcID == "19401" -- Wing Commander Brack (Return to the Abyssal Shelf) (Horde)
-							or npcID == "20235" -- Gryphoneer Windbellow (Return to the Abyssal Shelf) (Alliance)
-							-- BCC escort quests
-							or npcID == "16295" -- Ranger Lilatha (Escape from the Catacombs)
-							or npcID == "17238" -- Anchorite Truuen (Tomb of the Lightbringer)
-							or npcID == "17312" -- Magwin (A Cry For Help)
-							or npcID == "17877" -- Fhwoor (Fhwoor Smash!)
-							or npcID == "17969" -- Kayra Longmane (Escape from Umbrafen)
-							or npcID == "18210" -- Mag'har Captive (The Totem of Kar'dash, Horde)
-							or npcID == "18209" -- Kurenai Captive (The Totem of Kar'dash, Alliance)
-							or npcID == "18760" -- Isla Starmane (Escape from Firewing Point!)
-							or npcID == "19589" -- Maxx A. Million Mk. V (Mark V is Alive!)
-							or npcID == "19671" -- Cryo-Engineer Sha'heen (Someone Else's Hard Work Pays Off)
-							or npcID == "20281" -- Drijya (Sabotage the Warp-Gate!)
-							or npcID == "20415" -- Bessy (When the Cows Come Home)
-							or npcID == "20482" -- Image of Commander Ameer (Delivering the Message)
-							or npcID == "20763" -- Captured Protectorate Vanguard (Escape from the Staging Grounds)
-							or npcID == "21027" -- Earthmender Wilda (Escape from Coilskar Cistern)
-							or npcID == "22424" -- Skywing (Skywing)
-							or npcID == "22458" -- Chief Archaeologist Letoll (Digging Through Bones)
-							or npcID == "23383" -- Skyguard Prisoner (Escape from Skettis)
-							then
-								return true
-							end
-						end
-						-- Ignore specific NPCs for selecting quests only (only used for items that have no other purpose)
-						if actionType == "Select" then
-							if npcID == "12944" -- Lokhtos Darkbargainer (Thorium Brotherhood, Blackrock Depths)
-							or npcID == "19401" -- Wing Commander Brack (Return to the Abyssal Shelf) (Horde)
-							or npcID == "20235" -- Gryphoneer Windbellow (Return to the Abyssal Shelf) (Alliance)
-							or npcID == "10307" -- Witch Doctor Mau'ari (E'Ko quests, Winterspring)
-							-- Ahn'Qiraj War Effort (Alliance, Ironforge)
-							or npcID == "15446" -- Bonnie Stoneflayer (Light Leather Collector)
-							or npcID == "15458" -- Commander Stronghammer (Alliance Ambassador)
-							or npcID == "15431" -- Corporal Carnes (Iron Bar Collector)
-							or npcID == "15432" -- Dame Twinbraid (Thorium Bar Collector)
-							or npcID == "15453" -- Keeper Moonshade (Runecloth Bandage Collector)
-							or npcID == "15457" -- Huntress Swiftriver (Spotted Yellowtail Collector)
-							or npcID == "15450" -- Marta Finespindle (Thick Leather Collector)
-							or npcID == "15437" -- Master Nightsong (Purple Lotus Collector)
-							or npcID == "15452" -- Nurse Stonefield (Silk Bandage Collector)
-							or npcID == "15434" -- Private Draxlegauge (Stranglekelp Collector)
-							or npcID == "15448" -- Private Porter (Medium Leather Collector)
-							or npcID == "15456" -- Sarah Sadwhistle (Roast Raptor Collector)
-							or npcID == "15451" -- Sentinel Silversky (Linen Bandage Collector)
-							or npcID == "15445" -- Sergeant Major Germaine (Arthas' Tears Collector)
-							or npcID == "15383" -- Sergeant Stonebrow (Copper Bar Collector)
-							or npcID == "15455" -- Slicky Gastronome (Rainbow Fin Albacore Collector)
-							-- Ahn'Qiraj War Effort (Horde, Orgrimmar)
-							or npcID == "15512" -- Apothecary Jezel (Purple Lotus Collector)
-							or npcID == "15508" -- Batrider Pele'keiki (Firebloom Collector)
-							or npcID == "15533" -- Bloodguard Rawtar (Lean Wolf Steak Collector)
-							or npcID == "15535" -- Chief Sharpclaw (Baked Salmon Collector)
-							or npcID == "15525" -- Doctor Serratus (Rugged Leather Collector)
-							or npcID == "15534" -- Fisherman Lin'do (Spotted Yellowtail Collector)
-							or npcID == "15539" -- General Zog (Horde Ambassador)
-							or npcID == "15460" -- Grunt Maug (Tin Bar Collector)
-							or npcID == "15528" -- Healer Longrunner (Wool Bandage Collector)
-							or npcID == "15477" -- Herbalist Proudfeather (Peacebloom Collector)
-							or npcID == "15529" -- Lady Callow (Mageweave Bandage Collector)
-							or npcID == "15459" -- Miner Cromwell (Copper Bar Collector)
-							or npcID == "15469" -- Senior Sergeant T'kelah (Mithril Bar Collector)
-							or npcID == "15522" -- Sergeant Umala (Thick Leather Collector)
-							or npcID == "15515" -- Skinner Jamani (Heavy Leather Collector)
-							or npcID == "15532" -- Stoneguard Clayhoof (Runecloth Bandage Collector)
-							-- Alliance Commendations
-							or npcID == "15764" -- Officer Ironbeard (Ironforge Commendations)
-							or npcID == "15762" -- Officer Lunalight (Darnassus Commendations)
-							or npcID == "15766" -- Officer Maloof (Stormwind Commendations)
-							or npcID == "15763" -- Officer Porterhouse (Gnomeregan Commendations)
-							-- Horde Commendations
-							or npcID == "15768" -- Officer Gothena (Undercity Commendations)
-							or npcID == "15765" -- Officer Redblade (Orgrimmar Commendations)
-							or npcID == "15767" -- Officer Thunderstrider (Thunder Bluff Commendations)
-							or npcID == "15761" -- Officer Vu'Shalay (Darkspear Commendations)
-							-- Battlegrounds (Alliance)
-							or npcID == "13442" -- Arch Druid Renferal (Storm Crystal, Alterac Valley)
-							-- Battlegrounds (Horde)
-							or npcID == "13236" -- Primalist Thurloga (Stormpike Soldier's Blood, Alterac Valley)
-							-- Scourgestones
-							or npcID == "11039" -- Duke Nicholas Zverenhoff (Eastern Plaguelands)
-							-- Un'Goro crystals
-							or npcID == "9117" 	-- J. D. Collie (Un'Goro Crater)
-							then
-								return true
-							end
-						end
-					end
+			function addon:strip_text (text)
+				if not text then return end
+				text = text:gsub('|c%x%x%x%x%x%x%x%x(.-)|r','%1')
+				text = text:gsub('%[.*%]%s*','')
+				text = text:gsub('(.+) %(.+%)', '%1')
+				text = text:trim()
+				return text
+			end
+
+			function addon:QUEST_PROGRESS ()
+				if not self:canAutomate() then return end
+				if IsQuestCompletable() then
+					CompleteQuest()
 				end
 			end
 
-			-- Function to check if quest requires a blocked item
-			local function QuestRequiresBlockedItem()
-				for i = 1, 6 do
-					local progItem = _G["QuestProgressItem" ..i] or nil
-					if progItem and progItem:IsShown() and progItem.type == "required" then
-						if progItem.objectType == "item" then
-							local name, texture, numItems = GetQuestItemInfo("required", i)
-							if name then
-								local itemID = GetItemInfoInstant(name)
-								if itemID then
-									if itemID == 9999999999 then -- Reserved for future use
-										return true
-									end
-								end
-							end
-						end
-					end
-				end
-			end
+			function addon:QUEST_LOG_UPDATE ()
+				if not self:canAutomate() then return end
+				local start_entry = GetQuestLogSelection()
+				local num_entries = GetNumQuestLogEntries()
+				local title
+				local is_complete
+				local no_objectives
 
-			-- Function to check if quest requires gold
-			local function QuestRequiresGold()
-				local goldRequiredAmount = GetQuestMoneyToGet()
-				if goldRequiredAmount and goldRequiredAmount > 0 then
-					return true
-				end
-			end
+				self.completed_quests = {}
+				self.uncompleted_quests = {}
 
-			-- Function to check if quest title has requirements met
-			local function DoesQuestHaveRequirementsMet(title)
-				if title and title ~= "" then
-
-					if not title then
-
-					-- Battlemasters
-					elseif title == L["Concerted Efforts"] or title == L["For Great Honor"] then
-						-- Requires 3 Alterac Valley Mark of Honor, 3 Arathi Basin Mark of Honor, 3 Warsong Gulch Mark of Honor (must be before other Mark of Honor quests)
-						if GetItemCount(20560) >= 3 and GetItemCount(20559) >= 3 and GetItemCount(20558) >= 3 then return true end
-					elseif title == L["Remember Alterac Valley!"] or title == L["Invaders of Alterac Valley"] then
-						-- Requires 3 Alterac Valley Mark of Honor
-						if GetItemCount(20560) >= 3 then return true end
-					elseif title == L["Claiming Arathi Basin"] or title == L["Conquering Arathi Basin"] then
-						-- Requires 3 Arathi Basin Mark of Honor
-						if GetItemCount(20559) >= 3 then return true end
-					elseif title == L["Fight for Warsong Gulch"] or title == L["Battle of Warsong Gulch"] then
-						-- Requires 3 Warsong Gulch Mark of Honor
-						if GetItemCount(20558) >= 3 then return true end
-
-					-- Cloth quartermasters
-					elseif title == L["A Donation of Wool"] then
-						-- Requires 60 Wool Cloth
-						if GetItemCount(2592) >= 60 then return true end
-					elseif title == L["A Donation of Silk"] then
-						-- Requires 60 Silk Cloth
-						if GetItemCount(4306) >= 60 then return true end
-					elseif title == L["A Donation of Mageweave"] then
-						-- Requires 60 Mageweave
-						if GetItemCount(4338) >= 60 then return true end
-					elseif title == L["A Donation of Runecloth"] then
-						-- Requires 60 Runecloth
-						if GetItemCount(14047) >= 60 then return true end
-					elseif title == L["Additional Runecloth"] then
-						-- Requires 20 Runecloth
-						if GetItemCount(14047) >= 20 then return true end
-					elseif title == L["Gurubashi, Vilebranch, and Witherbark Coins"] then
-						-- Requires 1 Gurubashi Coin, 1 Vilebranch Coin, 1 Witherbark Coin
-						if GetItemCount(19701) >= 1 and GetItemCount(19702) >= 1 and GetItemCount(19703) >= 1 then return true end
-					elseif title == L["Sandfury, Skullsplitter, and Bloodscalp Coins"] then
-						-- Requires 1 Sandfury Coin, 1 Skullsplitter Coin, 1 Bloodscalp Coin
-						if GetItemCount(19704) >= 1 and GetItemCount(19705) >= 1 and GetItemCount(19706) >= 1 then return true end
-					elseif title == L["Zulian, Razzashi, and Hakkari Coins"] then
-						-- Requires 1 Zulian Coin, 1 Razzashi Coin, 1 Hakkari Coin
-						if GetItemCount(19698) >= 1 and GetItemCount(19699) >= 1 and GetItemCount(19700) >= 1 then return true end
-					elseif title == L["Frostsaber E'ko"] then
-						-- Requires 3 Frostsaber E'ko
-						if GetItemCount(12430) >= 3 then return true end
-					elseif title == L["Winterfall E'ko"] then
-						-- Requires 3 Winterfall E'ko
-						if GetItemCount(12431) >= 3 then return true end
-					elseif title == L["Shardtooth E'ko"] then
-						-- Requires 3 Shardtooth E'ko
-						if GetItemCount(12432) >= 3 then return true end
-					elseif title == L["Wildkin E'ko"] then
-						-- Requires 3 Wildkin E'ko
-						if GetItemCount(12433) >= 3 then return true end
-					elseif title == L["Chillwind E'ko"] then
-						-- Requires 3 Chillwind E'ko
-						if GetItemCount(12434) >= 3 then return true end
-					elseif title == L["Ice Thistle E'ko"] then
-						-- Requires 3 Ice Thistle E'ko
-						if GetItemCount(12435) >= 3 then return true end
-					elseif title == L["Frostmaul E'ko"] then
-						-- Requires 3 Ice Thistle E'ko
-						if GetItemCount(12436) >= 3 then return true end
-					elseif title == L["Marks of Kil'jaeden"] or title == L["More Marks of Kil'jaeden"] then
-						-- Requires 10 More Marks of Kil'jaeden
-						if GetItemCount(29425) >= 10 then return true end
-					elseif title == L["Single Mark of Sargeras"] then
-						-- Requires 1 Marks of Sargeras (if more than 10, leave for More Marks of Sargeras)
-						if GetItemCount(30809) >= 1 and GetItemCount(30809) < 10 then return true end
-					elseif title == L["More Marks of Sargeras"] then
-						-- Requires 10 Marks of Sargeras
-						if GetItemCount(30809) >= 10 then return true end
-					elseif title == L["Firewing Signets"] or title == L["More Firewing Signets"] then
-						-- Requires 10 Firewing Signets
-						if GetItemCount(29426) >= 10 then return true end
-					elseif title == L["Single Sunfury Signet"] then
-						-- Requires 1 Sunfury Signet (if more than 10, leave for More Sunfury Signets)
-						if GetItemCount(30810) >= 1 and GetItemCount(30810) < 10 then return true end
-					elseif title == L["More Sunfury Signets"] then
-						-- Requires 10 Sunfury Signets
-						if GetItemCount(30810) >= 10 then return true end
-
-					-- Darkmoon Faire (Rinling)
-					elseif title == L["Copper Modulator"] then
-						if GetItemCount(4363) >= 5 then return true end
-					elseif title == L["Whirring Bronze Gizmo"] then
-						if GetItemCount(4375) >= 7 then return true end
-					elseif title == L["Green Fireworks"] then
-						if GetItemCount(9313) >= 36 then return true end
-					elseif title == L["Mechanical Repair Kits"] then
-						if GetItemCount(11590) >= 6 then return true end
-					elseif title == L["Thorium Widget"] then
-						if GetItemCount(15994) >= 6 then return true end
-					elseif title == L["More Thorium Widgets"] then
-						if GetItemCount(15994) >= 6 then return true end
-
-					-- Darkmoon Faire (Yebb Neblegear)
-					elseif title == L["Small Furry Paws"] then
-						if GetItemCount(5134) >= 5 then return true end
-					elseif title == L["Evil Bat Eyes"] then
-						if GetItemCount(11404) >= 10 then return true end
-					elseif title == L["Glowing Scorpid Blood"] then
-						if GetItemCount(19933) >= 10 then return true end
-					elseif title == L["More Bat Eyes"] then
-						if GetItemCount(11404) >= 10 then return true end
-					elseif title == L["More Glowing Scorpid Blood"] then
-						if GetItemCount(19933) >= 10 then return true end
-					elseif title == L["Soft Bushy Tails"] then
-						if GetItemCount(4582) >= 5 then return true end
-					elseif title == L["Torn Bear Pelts"] then
-						if GetItemCount(11407) >= 5 then return true end
-					elseif title == L["Vibrant Plumes"] then
-						if GetItemCount(5117) >= 5 then return true end
-
-					-- Darkmoon Faire (Chronos)
-					elseif title == L["Armor Kits"] then
-						if GetItemCount(15564) >= 8 then return true end
-					elseif title == L["Carnival Boots"] then
-						if GetItemCount(2309) >= 3 then return true end
-					elseif title == L["Carnival Jerkins"] then
-						if GetItemCount(2314) >= 3 then return true end
-					elseif title == L["Crocolisk Boy and the Bearded Murloc"] then
-						if GetItemCount(8185) >= 1 then return true end
-					elseif title == L["More Armor Kits"] then
-						if GetItemCount(15564) >= 8 then return true end
-					elseif title == L["The World's Largest Gnome!"] then
-						if GetItemCount(5739) >= 3 then return true end
-
-					-- Darkmoon Faire (Kerri Hicks)
-					elseif title == L["Big Black Mace"] then
-						if GetItemCount(7945) >= 1 then return true end
-					elseif title == L["Coarse Weightstone"] then
-						if GetItemCount(3240) >= 10 then return true end
-					elseif title == L["Green Iron Bracers"] then
-						if GetItemCount(3835) >= 3 then return true end
-					elseif title == L["Heavy Grinding Stone"] then
-						if GetItemCount(3486) >= 7 then return true end
-					elseif title == L["More Dense Grinding Stones"] then
-						if GetItemCount(12644) >= 8 then return true end
-					elseif title == L["Rituals of Strength"] then
-						if GetItemCount(12644) >= 8 then return true end
-
-					else return true
-					end
-				end
-			end
-
-			-- Create event frame
-			local qFrame = CreateFrame("FRAME")
-
-			-- Function to setup events
-			local function SetupEvents()
-				if LeaPlusLC["AutomateQuests"] == "On" then
-					qFrame:RegisterEvent("QUEST_DETAIL")
-					qFrame:RegisterEvent("QUEST_ACCEPT_CONFIRM")
-					qFrame:RegisterEvent("QUEST_PROGRESS")
-					qFrame:RegisterEvent("QUEST_COMPLETE")
-					qFrame:RegisterEvent("QUEST_GREETING")
-					qFrame:RegisterEvent("QUEST_AUTOCOMPLETE")
-					qFrame:RegisterEvent("GOSSIP_SHOW")
-					qFrame:RegisterEvent("QUEST_FINISHED")
-				else
-					qFrame:UnregisterAllEvents()
-				end
-			end
-
-			-- Setup events when option is clicked and on startup (if option is enabled)
-			LeaPlusCB["AutomateQuests"]:HookScript("OnClick", SetupEvents)
-			if LeaPlusLC["AutomateQuests"] == "On" then SetupEvents() end
-
-			-- Event handler
-			qFrame:SetScript("OnEvent", function(self, event, arg1)
-
-				-- Block shared quests if option is enabled
-				if event == "QUEST_DETAIL" then
-					LeaPlusLC:CheckIfQuestIsSharedAndShouldBeDeclined()
-				end
-
-				-- Clear progress items when quest interaction has ceased
-				if event == "QUEST_FINISHED" then
-					for i = 1, 6 do
-						local progItem = _G["QuestProgressItem" ..i] or nil
-						if progItem and progItem:IsShown() then
-							progItem:Hide()
-						end
-					end
-					return
-				end
-
-				-- Check for SHIFT key modifier
-				if LeaPlusLC["AutoQuestShift"] == "On" and not IsOverrideKeyDown() then return
-				elseif LeaPlusLC["AutoQuestShift"] == "Off" and IsOverrideKeyDown() then return
-				end
-
-				----------------------------------------------------------------------
-				-- Accept quests automatically
-				----------------------------------------------------------------------
-
-				-- Accept quests with a quest detail window
-				if event == "QUEST_DETAIL" then
-					if LeaPlusLC["AutoQuestAvailable"] == "On" then
-						-- Don't accept blocked quests
-						if isNpcBlocked("Accept") then return end
-						-- Accept quest
-						AcceptQuest()
-						HideUIPanel(QuestFrame)
-					end
-				end
-
-				-- Accept quests which require confirmation (such as sharing escort quests)
-				if event == "QUEST_ACCEPT_CONFIRM" then
-					if LeaPlusLC["AutoQuestAvailable"] == "On" then
-						ConfirmAcceptQuest()
-						StaticPopup_Hide("QUEST_ACCEPT")
-					end
-				end
-
-				----------------------------------------------------------------------
-				-- Turn-in quests automatically
-				----------------------------------------------------------------------
-
-				-- Turn-in progression quests
-				if event == "QUEST_PROGRESS" and IsQuestCompletable() then
-					if LeaPlusLC["AutoQuestCompleted"] == "On" then
-						-- Don't continue quests for blocked NPCs
-						if isNpcBlocked("Complete") then return end
-						-- Don't continue if quest requires blocked item
-						if QuestRequiresBlockedItem() then return end
-						-- Don't continue if quest requires gold
-						if QuestRequiresGold() then return end
-						-- Continue quest
-						CompleteQuest()
-					end
-				end
-
-				-- Turn in completed quests if only one reward item is being offered
-				if event == "QUEST_COMPLETE" then
-					if LeaPlusLC["AutoQuestCompleted"] == "On" then
-						-- Don't complete quests for blocked NPCs
-						if isNpcBlocked("Complete") then return end
-						-- Don't complete if quest requires blocked item
-						if QuestRequiresBlockedItem() then return end
-						-- Don't complete if quest requires gold
-						if QuestRequiresGold() then return end
-						-- Complete quest
-						if GetNumQuestChoices() <= 1 then
-							GetQuestReward(GetNumQuestChoices())
-						end
-					end
-				end
-
-				-- Show quest dialog for quests that use the objective tracker (it will be completed automatically)
-				if event == "QUEST_AUTOCOMPLETE" then
-					if LeaPlusLC["AutoQuestCompleted"] == "On" then
-						local index = GetQuestLogIndexByID(arg1)
-						if GetQuestLogIsAutoComplete(index) then
-							ShowQuestComplete(index)
-						end
-					end
-				end
-
-				----------------------------------------------------------------------
-				-- Select quests automatically
-				----------------------------------------------------------------------
-
-				if event == "GOSSIP_SHOW" or event == "QUEST_GREETING" then
-
-					-- Select quests
-					if UnitExists("npc") or QuestFrameGreetingPanel:IsShown() or GossipFrame.GreetingPanel:IsShown() then
-
-						-- Don't select quests for blocked NPCs
-						if isNpcBlocked("Select") then return end
-
-						if event == "QUEST_GREETING" then
-							-- Select quest greeting completed quests
-							if LeaPlusLC["AutoQuestCompleted"] == "On" then
-								for i = 1, GetNumActiveQuests() do
-									local title, isComplete = GetActiveTitle(i)
-									if title and isComplete then
-										return SelectActiveQuest(i)
-									end
-								end
-							end
-							-- Select quest greeting available quests
-							if LeaPlusLC["AutoQuestAvailable"] == "On" then
-								for i = 1, GetNumAvailableQuests() do
-									local title, isComplete = GetAvailableTitle(i)
-									if title and not isComplete then
-										return SelectAvailableQuest(i)
-									end
-								end
-							end
+				if num_entries > 0 then
+					for i = 1, num_entries do
+						SelectQuestLogEntry(i)
+						title, _, _, _, _, _, is_complete = GetQuestLogTitle(i)
+						no_objectives = GetNumQuestLeaderBoards(i) == 0
+						if title and (is_complete or no_objectives) then
+							self.completed_quests[title] = true
 						else
-							-- Select gossip completed quests
-							if LeaPlusLC["AutoQuestCompleted"] == "On" then
-								local gossipQuests = C_GossipInfo.GetActiveQuests()
-								for titleIndex, questInfo in ipairs(gossipQuests) do
-									if questInfo.title and questInfo.isComplete then
-										if questInfo.questID then
-											return C_GossipInfo.SelectActiveQuest(questInfo.questID)
-										end
-									end
-								end
-							end
-							-- Select gossip available quests
-							if LeaPlusLC["AutoQuestAvailable"] == "On" then
-								local GossipQuests = C_GossipInfo.GetAvailableQuests()
-								for titleIndex, questInfo in ipairs(GossipQuests) do
-									if questInfo.questID and DoesQuestHaveRequirementsMet(questInfo.questID) then
-										return C_GossipInfo.SelectAvailableQuest(questInfo.questID)
-									end
-								end
-							end
+							self.uncompleted_quests[title] = true
 						end
 					end
 				end
 
-			end)
+				SelectQuestLogEntry(start_entry)
+			end
+
+			function addon:GOSSIP_SHOW ()
+				if not self:canAutomate() then return end
+
+				local button
+				local text
+
+				for i = 1, 32 do
+					button = _G['GossipTitleButton' .. i]
+					if button:IsVisible() then
+						text = self:strip_text(button:GetText())
+						ABCDE={button:GetText(), text}
+						if button.type == 'Available' then
+							button:Click()
+						elseif button.type == 'Active' then
+							if self.completed_quests[text] then
+								button:Click()
+							end
+						end
+					end
+				end
+			end
+
+			function addon:QUEST_GREETING (...)
+				if not self:canAutomate() then return end
+
+				local button
+				local text
+
+				for i = 1, 32 do
+					button = _G['QuestTitleButton' .. i]
+					if button:IsVisible() then
+						text = self:strip_text(button:GetText())
+						if self.completed_quests[text] then
+							button:Click()
+						elseif not self.uncompleted_quests[text] then
+							button:Click()
+						end
+					end
+				end
+			end
+
+			function addon:QUEST_DETAIL ()
+				if not self:canAutomate() then return end
+				AcceptQuest()
+			end
+
+			function addon:QUEST_COMPLETE (event)
+				if not self:canAutomate() then return end
+				if GetNumQuestChoices() <= 1 then
+					GetQuestReward(QuestFrameRewardPanel.itemChoice)
+				end
+			end
+
+			function addon.onevent (self, event, ...)
+				if self[event] then
+					self[event](self, ...)
+				end
+			end
+
+			addon:SetScript('OnEvent', addon.onevent)
+			addon:RegisterEvent('GOSSIP_SHOW')
+			addon:RegisterEvent('QUEST_COMPLETE')
+			addon:RegisterEvent('QUEST_DETAIL')
+			addon:RegisterEvent('QUEST_FINISHED')
+			addon:RegisterEvent('QUEST_GREETING')
+			addon:RegisterEvent('QUEST_LOG_UPDATE')
+			addon:RegisterEvent('QUEST_PROGRESS')
+
+			_G.Leatrix_Plus = addon
+
+
 
 		end
 
