@@ -8150,17 +8150,15 @@
                 if InterfaceOptionsFrame:IsShown() or VideoOptionsFrame:IsShown() then return end
 
                 if arg1 == "LeftButton" then
-                        if LeaPlusLC["PageF"]:IsShown() then
-                            LeaPlusLC:HideFrames();
-                        else
-                            LeaPlusLC:HideFrames();
-                            LeaPlusLC["PageF"]:Show();
-                        end
-                        if LeaPlusLC["Page"..LeaPlusLC["LeaStartPage"]] and LeaPlusLC["OpenPlusAtHome"] == "Off" then
-                             LeaPlusLC["Page"..LeaPlusLC["LeaStartPage"]]:Show()
-                        else
-                            LeaPlusLC["Page0"]:Show();
-                        end
+					-- No modifier key toggles the options panel
+					if LeaPlusLC:IsPlusShowing() then
+						LeaPlusLC:HideFrames()
+						LeaPlusLC:HideConfigPanels()
+					else
+						LeaPlusLC:HideFrames()
+						LeaPlusLC["PageF"]:Show()
+					end
+					LeaPlusLC["Page" .. LeaPlusLC["LeaStartPage"]]:Show()
                 end
                 if arg1 == "RightButton" then
                         ReloadUI();
