@@ -622,9 +622,9 @@ local function createButton(name, object, db)
 	button.dataObject = object
 	button.db = db
 	button:SetFrameStrata("MEDIUM")
-	button:SetFixedFrameStrata(true)
+	-- button:SetFixedFrameStrata(true)
 	button:SetFrameLevel(8)
-	button:SetFixedFrameLevel(true)
+	-- button:SetFixedFrameLevel(true)
 	button:SetSize(31, 31)
 	button:RegisterForClicks("anyUp")
 	button:RegisterForDrag("LeftButton")
@@ -678,12 +678,12 @@ local function createButton(name, object, db)
 
 	button.fadeOut = button:CreateAnimationGroup()
 	local animOut = button.fadeOut:CreateAnimation("Alpha")
-	animOut:SetOrder(1)
-	animOut:SetDuration(0.2)
-	animOut:SetFromAlpha(1)
-	animOut:SetToAlpha(0)
-	animOut:SetStartDelay(1)
-	button.fadeOut:SetToFinalAlpha(true)
+	-- animOut:SetOrder(1)
+	-- animOut:SetDuration(0.2)
+	-- animOut:SetFromAlpha(1)
+	-- animOut:SetToAlpha(0)
+	-- animOut:SetStartDelay(1)
+	-- button.fadeOut:SetToFinalAlpha(true)
 
 	lib.objects[name] = button
 
@@ -893,7 +893,7 @@ lib:SetButtonRadius(lib.radius) -- Upgrade to 40
 -- LibDBIconEnd
 
 end
-LeaLibDBIcon()
+-- LeaLibDBIcon() -- disabled in 3.3.5, was causing red things
 
 
 ----------------------------------------------------------------------
