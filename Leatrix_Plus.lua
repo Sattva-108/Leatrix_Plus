@@ -7170,7 +7170,7 @@
 				local DetailsInset = _G["ClassTrainerFrame"]:CreateTexture(nil, "ARTWORK")
 				DetailsInset:SetSize(302, 339 + tall)
 				DetailsInset:SetPoint("TOPLEFT", _G["ClassTrainerFrame"], "TOPLEFT", 348, -72)
-				DetailsInset:SetTexture("Interface\\ACHIEVEMENTFRAME\\UI-GuildAchievement-Parchment-Horizontal-Desaturated")
+				DetailsInset:SetTexture("Interface\\DressUpFrame\\DressUpBackground-NightElf1")
 
 				-- Move bottom button row
 				_G["ClassTrainerTrainButton"]:ClearAllPoints()
@@ -7474,7 +7474,7 @@
 				local DetailsInset = _G["TradeSkillFrame"]:CreateTexture(nil, "ARTWORK")
 				DetailsInset:SetSize(302, 339+ tall)
 				DetailsInset:SetPoint("TOPLEFT", _G["TradeSkillFrame"], "TOPLEFT", 348, -72)
-				DetailsInset:SetTexture("Interface\\ACHIEVEMENTFRAME\\UI-GuildAchievement-Parchment-Horizontal-Desaturated")
+				DetailsInset:SetTexture("Interface\\DressUpFrame\\DressUpBackground-NightElf1")
 
 				-- Hide expand tab (left of All button)
 				_G["TradeSkillExpandTabLeft"]:Hide()
@@ -11400,6 +11400,7 @@
 
 				-- Create hover texture
 				mbtn.t = mbtn:CreateTexture(nil, "BACKGROUND")
+						mbtn.t:SetTexture("Interface\\Buttons\\WHITE8X8")
 				mbtn.t:SetVertexColor(0.3, 0.3, 0.00, 0.8)
 				mbtn.t:SetAlpha(0.7)
 				mbtn.t:SetAllPoints()
@@ -11407,6 +11408,7 @@
 
 				-- Create highlight texture
 				mbtn.s = mbtn:CreateTexture(nil, "BACKGROUND")
+						mbtn.s:SetTexture("Interface\\Buttons\\WHITE8X8")
 				mbtn.s:SetVertexColor(0.3, 0.3, 0.00, 0.8)
 				mbtn.s:SetAlpha(1.0)
 				mbtn.s:SetAllPoints()
@@ -13413,6 +13415,8 @@
 
 	end
 
+	--===== Bottom left button web link =====--
+
 	-- Create a standard button (using standard button template)
 	function LeaPlusLC:CreateButton(name, frame, label, anchor, x, y, width, height, reskin, tip, naked)
 		local mbtn = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
@@ -15201,13 +15205,15 @@
 
 		mbtn.t = mbtn:CreateTexture(nil, "BACKGROUND")
 		mbtn.t:SetAllPoints()
-		mbtn.t:SetVertexColor(0.3, 0.3, 0.00, 0.8)
+		mbtn.t:SetTexture("Interface\\Buttons\\WHITE8X8")
+		mbtn.t:SetVertexColor(1.0, 0.5, 0.0, 0.8)
 		mbtn.t:SetAlpha(0.7)
 		mbtn.t:Hide()
 
 		mbtn.s = mbtn:CreateTexture(nil, "BACKGROUND")
 		mbtn.s:SetAllPoints()
-		mbtn.s:SetVertexColor(0.3, 0.3, 0.00, 0.8)
+		mbtn.s:SetTexture("Interface\\Buttons\\WHITE8X8")
+		mbtn.s:SetVertexColor(1.0, 0.5, 0.0, 0.8)
 		mbtn.s:Hide()
 
 		mbtn.f = mbtn:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
