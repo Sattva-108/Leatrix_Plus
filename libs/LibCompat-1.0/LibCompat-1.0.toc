@@ -1,0 +1,20 @@
+## Title: Lib: Compat-1.0
+## Notes: Brings extra useful functions, some from later expansions and others as utilties.
+
+## Author: Kader
+## X-Email: bkader@mail.com
+## X-Donate: bkader@mail.com
+
+## Interface: 30300
+## Version: 16
+
+## X-Category: Library
+## X-Website: https://github.com/bkader/LibCompat-1.0
+
+## Dependencies:
+## X-Embeds: LibStub, CallbackHandler-1.0, LibTalentQuery-1.0, LibGroupTalents-1.0
+## OptionalDeps: LibStub, CallbackHandler-1.0
+## DefaultState: Enabled
+## LoadOnDemand: 0
+
+lib.xml

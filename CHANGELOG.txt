@@ -1,0 +1,765 @@
+3.0.131 - 10th May 2023
+- Added flight times.
+
+3.0.130 - 3rd May 2023
+- For 'Enhance tooltip' ('Interface'), fixed an issue with 'Hide health bar' which caused the health bar to not be hidden.
+- For 'Easy item destroy' ('System'), fixed an issue which caused a Lua error when clicking outside of the destroy confirmation.
+
+3.0.129 - 25th April 2023
+- Added flight times.
+
+3.0.128 - 22nd April 2023
+- Added flight times.
+
+3.0.127 - 19th April 2023
+- Added flight times.
+- Fixed /run leaplus("quest <id>") functionality.
+
+3.0.126 - 15th April 2023
+- Added flight times.
+
+3.0.125 - 2nd April 2023
+- Added flight times.
+
+3.0.124 - 31st March 2023
+- Added flight times.
+
+3.0.123 - 27th March 2023
+- Added flight times.
+
+3.0.122 - 26th March 2023
+- Added flight times.
+
+3.0.121 - 23rd March 2023
+- Added flight times.
+
+3.0.120 - 18th March 2023
+- Added flight times.
+
+3.0.118 - 13th March 2023
+- Added flight times.
+
+3.0.117 - 7th March 2023
+- Added flight times.
+
+3.0.116 - 5th March 2023
+- Added flight times.
+
+3.0.115 - 4th March 2023
+- Added flight times.
+
+3.0.114 - 3rd March 2023
+- Added flight times.
+
+3.0.113 - 2nd March 2023
+- Added flight times.
+
+3.0.112 - 1st March 2023
+- Added flight times.
+
+3.0.111 - 28th February 2023
+- Added flight times.
+
+3.0.110 - 25th February 2023
+- Added flight times.
+
+3.0.109 - 22nd February 2023
+- For 'Mute game sounds' ('System'), added new sounds to the 'Gyrocopters' setting (including Mimiron's Head).
+- Added flight times.
+
+3.0.108 - 19th February 2023
+- Added flight times.
+
+3.0.107 - 12th February 2023
+- Added flight times.
+
+3.0.106 - 10th February 2023
+- Added flight times.
+
+3.0.105 - 8th February 2023
+- Added flight times.
+
+3.0.104 - 6th February 2023
+- Updated friend checking code for the options in the social menu to more closely match Dragonflight code.
+- For 'Recent chat window' ('Chat'), fixed an issue which caused texture atlases to break dragging and selecting messages.
+- For 'Show durability status' ('Interface'), fixed a bug which caused ranged weapons to be excluded.
+- Added flight times.
+
+3.0.103 - 5th February 2023
+- Added flight times.
+
+3.0.102 - 4th February 2023
+- For 'Mute game sounds' ('System'), you can now mute Rhonin.
+- For 'Hide chat buttons' ('Chat'), the text to speech configuration button will now be hidden.
+- Added flight times.
+
+3.0.101 - 2nd February 2023
+- Fixed a minor issue with 'Show auction controls' ('Interface') which caused the 'Find Item' button to only show one page of results.
+- Added flight times.  There are now 7954 flight times in Leatrix Plus for Wrath of the Lich King Classic.
+
+3.0.100 - 30th January 2023
+- Updated 'Recent chat window' ('Chat') code and 'Show flight times' ('Interface') code.
+- Added flight times.
+
+3.0.99 - 30th January 2023
+- Updated LibDBIcon.
+- Added flight times.
+
+3.0.98 - 29th January 2023
+- Added flight times.
+
+3.0.97 - 28th January 2023
+- Added flight times.
+
+3.0.96 - 27th January 2023
+- Added flight times.
+
+3.0.95 - 26th January 2023
+- Added flight times.
+
+3.0.94 - 25th January 2023
+- Added flight times.
+
+3.0.93 - 24th January 2023
+- Added flight times.
+
+3.0.92 - 23rd January 2023
+- Added flight times.
+
+3.0.91 - 22nd January 2023
+- Added flight times.
+
+3.0.90 - 22nd January 2023
+- Updated the 'Login' setting code ('Mute game sounds') so that it works the same way as Dragonflight and Classic Era.
+- Fixed a situational Lua error with 'Automate quests' ('Automation').
+- Added flight times.
+
+3.0.89 - 21st January 2023
+- Added flight times.
+
+3.0.88 - 20th January 2023
+- For 'Mute game sounds' ('System'), the 'Login' setting now mutes the login screen music too.
+- Added flight times.
+
+3.0.87 - 19th January 2023
+- Fixed an issue with 'Resize quest text' ('Text') which caused gossip greeting panel scroll lists (such as city guard directions) to be shown outside of the gossip frame.  If you use ElvUI, the 'Resize quest text' option will now be disabled if you have ElvUI Skins > Blizzard > Gossip Frame checked.
+- Added flight times.
+
+3.0.86 - 19th January 2023
+- Fixed an issue with 'Enhance trainers' ('Interface') which may have caused the trainers frame to open alongside the gossip frame.
+- Added flight times.
+
+3.0.85 - 19th January 2023
+- For 'Mute game sounds' ('System'), you can now mute login screen sounds.  If checked, login screen sounds will be muted when you logout of the game.  Note that login screen sounds will not be muted when you initially launch the game.  They will only be muted when you logout of the game.  This includes manually logging out as well as being forcefully logged out by the game server for reasons such as being away for an extended period of time.  No more dragons roaring when you fall asleep while the game is running!
+- Added flight times.
+
+3.0.84 - 18th January 2023
+- Added flight times.
+
+3.0.83 - 18th January 2023
+- Updated for game version 3.4.1.
+- There are a lot of code changes in 3.4.1.
+- Due to problems with Blizzard's slash command system in 3.4.1, the /ltp command has been replaced with /run leaplus().  If you wish to pass a parameter, enter it in quotes between the brackets.
+- Added flight times.
+
+3.0.82 - 16th January 2023
+- Added flight times.
+
+3.0.81 - 14th January 2023
+- Added flight times.
+
+3.0.80 - 12th January 2023
+- Added flight times.
+
+3.0.79 - 11th January 2023
+- Added flight times.
+
+3.0.78 - 8th January 2023
+- Added a new option called 'Mute custom sounds' ('System').  You can enter sound file IDs (separated by comma) along with a brief note describing each ID in the configuration panel editbox.  After that, click the Mute button and you will never hear the sounds again.  For example, entering 'DevAura 569679, RetAura 568744' will mute both aura sounds.  Read the help button tooltip for more details.
+- For 'Show train all button' ('Interface'), the train all button now has a global name of LeaPlusGlobalTrainAllButton.
+- Added flight times.
+- PTR (3.4.1): Fixed the Lua error when logging into the PTR.
+
+3.0.77 - 4th January 2023
+- Added flight times.
+
+3.0.76 - 2nd January 2023
+- For 'Filter chat messages' ('Chat'), the 'Block spell links during combat' setting now also applies to the yell channel.
+- Added flight times.
+
+3.0.75 - 31st December 2022
+- Added flight times.
+
+3.0.74 - 27th December 2022
+- Added flight times.
+
+3.0.73 - 24th December 2022
+- Added flight times.
+
+3.0.71 - 23rd December 2022
+- Added flight times.  There are now 7393 flight times in Leatrix Plus for Wrath of the Lich King Classic.
+
+3.0.70 - 21st December 2022
+- Added flight times.
+
+3.0.69 - 19th December 2022
+- Added flight times.
+
+3.0.68 - 16th December 2022
+- Added flight times.
+
+3.0.67 - 13th December 2022
+- Added flight times.
+
+3.0.66 - 10th December 2022
+- Added flight times.
+
+3.0.65 - 8th December 2022
+- Added flight times.
+
+3.0.64 - 5th December 2022
+- Added flight times.
+
+3.0.63 - 2nd December 2022
+- Added flight times.
+
+3.0.62 - 30th November 2022
+- For 'Enhance minimap' ('Interface'), the 'Combine addon buttons' setting now supports the Armory addon.
+- Added flight times.
+
+3.0.61 - 27th November 2022
+- 3.4.1: For 'Automate gossip' ('Automation'), replaced the (now removed) NPC types with NPC IDs.
+- Added flight times.
+
+3.0.60 - 23rd November 2022
+- Updated for game version 3.4.1 (currently on the PTR).  This is a major update as there are a lot of code changes in 3.4.1.
+- These options have been updated for 3.4.1: Automate quests, Automate gossip, Sell junk automatically, Resize quest text, Resize mail text, Resize book text, Hide chat buttons, Restore chat messages and Show flight times.
+- In 3.4.1, it's no longer possible to automatically skip gossip based on NPC type (such as banker or battlemaster).
+- In 3.4.1, Blizzard's slash command system causes errors (just like retail) so /ltp has been replaced with /run leaplus() (just like retail).  When Blizzard fixes their slash command system, the /ltp slash command will return.
+- Added flight times.
+
+3.0.59 - 22nd November 2022
+- Updated 'Sell junk automatically' ('Automation') internal code.
+- Fixed a rare and situational Lua error with 'Restore chat messages' ('Chat').
+
+3.0.58 - 22nd November 2022
+- Added flight times.
+
+3.0.57 - 18th November 2022
+- Added flight times.
+
+3.0.56 - 16th November 2022
+- Fixed the profession frames.
+- Added flight times.
+
+3.0.55 - 16th November 2022
+- Due to problems with Blizzard's code in Wrath of the Lich King Classic, the taller quest log setting (part of 'Enhance quest log') has been removed.
+- Updated LibDBIcon, LibChatAnims and LibCandyBar.
+- Added flight times.
+
+3.0.54 - 14th November 2022
+- Added flight times.
+
+3.0.53 - 10th November 2022
+- Added flight times.
+
+3.0.52 - 9th November 2022
+- Added flight times.
+
+3.0.51 - 7th November 2022
+- If you use the Glass addon, some chat settings will now be locked out of Leatrix Plus in order to ensure that the addon loads correctly.
+- Added flight times.
+
+3.0.50 - 6th November 2022
+- For addon authors, the enhanced minimap combined button frame now has a global reference of LeaPlusGlobalMinimapCombinedButtonFrame.
+- Added flight times.
+
+3.0.49 - 5th November 2022
+- Added flight times.
+
+3.0.48 - 2nd November 2022
+- Added flight times.
+
+3.0.47 - 31st October 2022
+- Added flight times.
+
+3.0.46 - 29th October 2022
+- Added flight times.
+
+3.0.45 - 28th October 2022
+- Added flight times.
+
+3.0.44 - 27th October 2022
+- Added flight times.
+
+3.0.43 - 26th October 2022
+- Added flight times.
+
+3.0.42 - 25th October 2022
+- Added flight times.
+
+3.0.41 - 24th October 2022
+- Added flight times.
+
+3.0.40 - 23rd October 2022
+- Added flight times.
+
+3.0.39 - 22nd October 2022
+- If you use 'Show flight times' ('Interface') with ElvUI, the flight progress bar will now use ElvUI style.
+- Added flight times.
+
+3.0.38 - 21st October 2022
+- Having ElvUI installed will no longer uncheck conflicting option checkboxes.  Conflicting option checkboxes will still be locked but they won't be unchecked.  So if a conflicting option checkbox was checked before installing ElvUI or before enabling a conflicting ElvUI module, it will still be checked after disabling ElvUI or disabling the conflicting ElvUI module.
+- Added flight times.
+
+3.0.37 - 20th October 2022
+- Added a new option 'Manage vehicle' ('Frames') which will allow you to move and scale the vehicle seat indicator frame.
+- For 'Mute game sounds' ('System'), you can now mute broom mount sounds.
+- Added flight times.
+
+3.0.36 - 19th October 2022
+- Added flight times.
+
+3.0.35 - 18th October 2022
+- Added flight times.
+
+3.0.34 - 17th October 2022
+- For 'Show flight times' text to speech, the speech volume will now be set to the game master volume slider and the option is now disabled by default.
+- For 'Automate quests' ('Automation'), quests from Lillehoff (The Sons of Hodir Quartermaster, The Storm Peaks) will not be selected, accepted or turned-in automatically if you are exalted with Sons of Hodir.
+- Added flight times.
+
+3.0.33 - 16th October 2022
+- For 'Show flight times', you can now have the remaining time spoken to you using text to speech.  The time will be announced once a minute and at 30 seconds, 20 seconds and 10 seconds.  This setting is enabled by default.
+- Fixed a minor issue with LibCandyBar.
+- Added flight times.
+
+3.0.32 - 15th October 2022
+- Fixed 'Use class colors in chat' ('Chat') for game version 3.4.0.46158.
+- Added a flight time.
+
+3.0.31 - 15th October 2022
+- Added flight times.
+
+3.0.30 - 14th October 2022
+- Update for 'Enhance dressup' ('Interface') and ElvUI WrathArmory plugin.
+- Added flight times.
+
+3.0.29 - 12th October 2022
+- Added flight times.
+
+3.0.28 - 11th October 2022
+- For 'Mute game sounds' ('System'), you can now make Netherdrakes quieter.
+- Added flight times.
+- Removed references to instance chat.
+
+3.0.27 - 10th October 2022
+- Added flight times.
+
+3.0.26 - 9th October 2022
+- For 'Sell junk automatically' ('Automation'), white items entered in the exclusions editbox will be sold automatically.  Junk items entered in the editbox will not be sold automatically (as before).
+- Added flight times.
+
+3.0.25 - 8th October 2022
+- Added flight times.
+
+3.0.24 - 7th October 2022
+- Fixed 'Mute travelers' so that it applies to Gnimo too.  Gnimo sounds are shared with mechstrider wound sounds so now enabling either mute travelers or mute mechstriders will mute the mechstrider wound sounds.
+- Added flight times.
+
+3.0.23 - 6th October 2022
+- For 'Mute game sounds' ('System'), you can now mute travelers, bikes and mechanical guild vaults.
+- For 'Show minimap icon', some of the modified clicks have changed.  Read the option tooltip for more details.
+- The minimap button control-alt-click to toggle maximised windowed mode now runs much faster.
+- Added flight times.
+
+3.0.22 - 5th October 2022
+- Added flight times.
+
+3.0.21 - 4th October 2022
+- Added flight times.
+
+3.0.20 - 3rd October 2022
+- Added flight times.
+
+3.0.19 - 2nd October 2022
+- Added flight times.
+
+3.0.18 - 2nd October 2022
+- Added flight times.
+
+3.0.17 - 1st October 2022
+- For 'Show flight times', you can now set the flight progress bar background to fill instead of drain.
+- Added flight times.  There are more addon releases at the moment to make sure that everyone gets the latest flight times that have been submitted by thousands of Leatrix Plus users since Wrath's release.  Thank you everyone for your contributions.
+
+3.0.16 - 1st October 2022
+- If 'Automate gossip' ('Automation') is enabled, the gossip from the engineer auction house robots in Dalaran will be skipped.
+- Added flight times.
+
+3.0.15 - 30th September 2022
+- Added flight times.
+
+3.0.14 - 30th September 2022
+- Changes to file structure.
+- Added flight times.
+
+3.0.13 - 29th September 2022
+- Added lots and lots of flight times.  There are now 4378 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.12 - 28th September 2022
+- Added lots and lots of flight times.  There are now 4275 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.11 - 28th September 2022
+- Added lots and lots of flight times.  There are now 4122 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.10 - 28th September 2022
+- For 'Automate gossip' ('Automation'), stable master gossip will now be skipped as long as there are no other gossip options.  You can hold shift to prevent this.
+- Added Wrath of the Lich King main title music (media > various > main titles).
+- Added lots and lots of flight times.  There are now 4003 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.09 - 27th September 2022
+- Added a new option 'Restore chat messages' ('Chat').  If enabled, you can reload your UI without losing your recent chat messages.
+- Added a new option 'Block shared quests' ('Social').  If enabled, shared quests will be automatically declined unless the player sharing the quest is a friend.
+- Added lots and lots of flight times.  There are now 3845 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.08 - 21st September 2022
+- For 'Mute game sounds' ('System'), you can now mute the Arcanite Ripper guitar sound.
+- For 'Manage buffs' ('Frames'), fixed an issue which caused buff icons to overlap each other at higher scale values.  The scale slider will now affect the consolidated buff icon too.
+- Added lots of flight times.  There are now 3726 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.07 - 14th September 2022
+- For 'Enhance tooltip' ('Interface'), if you use the setting to hide tooltips for world units during combat, you can now specify whether holding shift should override that setting or not.  Also some locale updates.
+- For 'Show flight times' ('Interface'), the flight progress bar will no longer show if you are in combat when you attempt to take a flight.  A few seconds into the flight, there is an additional check to make sure you are actually on the taxi.  If you are not, the flight progress bar will be hidden.
+- For 'Enhance quest log' ('Interface'), fixed a minor issue which quest list alignment.
+- Added lots of flight times.  There are now 3657 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.05 - 7th September 2022
+- For 'Enhance questlog', there is a new setting in the configuration panel to show a toggle headers button.  It's enabled by default.  The toggle headers button allows you to collapse and expand all quest headers in one click.
+- Added lots of flight times.  There are now 3590 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.04 - 4th September 2022
+- For 'Automate quests', Darkmoon Faire repeatable quests will now be automated for English game clients if you have the required materials in your bag.
+- For 'Enhance minimap', fix for the square minimap mail icon overlapping the tracking icon.
+
+3.0.03 - 4th September 2022
+- For 'Enhance quest log', quest level and difficulty will now be shown in the quest detail pane once again for quests that are in your quest log.  Added a new setting to show the quest difficulty in the quest log list.
+- For 'Enhance professions', fix for intermittent horizontal bar showing in the professions frame.
+- For 'Enhance minimap', fix for the heroic instance difficulty badge to not move with the minimap.
+- Added lots of flight times.  There are now 3572 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.02 - 31st August 2022
+- For 'Enhance quest log' ('Interface'), there is a new setting that lets you choose whether the quest log should be taller or not.
+- Fix for 'Enhance minimap' calendar button #2.
+- Added some flight times.  There are now 3541 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.01 - 31st August 2022
+- Added a new option 'Manage durability' ('Frames').  If enabled, you can move and scale the armored man durability frame.
+- Fixed an issue with 'Enhance minimap' missing calendar button.
+- Fixed an issue with 'Enhance quest log' incorrect quest title.
+- Added some flight times.  There are now 3539 flight times stored in Leatrix Plus for Wrath Classic.
+
+3.0.00 - 29th August 2022
+- Welcome to Wrath of the Lich King!
+- Removed BCC transitional code.
+- Added a new option called 'Manage timer' ('Frames').  The 'Manage frames' option no longer includes the timer bar.
+- For 'Enhance minimap' ('Interface'), added a new setting that will allow you to adjust the minimap cluster scale without it affecting the minimap scale.
+- Removed the 'Hide the clock' setting (part of 'Enhance minimap') and the 'Show free bag slots' setting as they are now both included in the default UI (interface settings display menu).
+- Tweaks to the ElvUI locks.
+- Added a few flight times.  There are now 3521 flight times stored in Leatrix Plus for Wrath Classic.
+
+2.5.120 - 24th August 2022
+- The 'Hide action button text' option ('Text') is now two options - 'Hide keybind text' and 'Hide macro text'.
+- For 'Show flight times' ('Interface'), you can now control whether flight report windows are shown using a new setting in the configuration panel.
+- If you use ElvUI, Leatrix Plus options which are not compatible with specific ElvUI modules will now be disabled and locked while those ElvUI modules are enabled.  The option tooltip will tell you which ElvUI module is causing the Leatrix Plus option to be disabled.  Disabling the relevant ElvUI module will make the Leatrix Plus setting available again.
+- Fixed a minor issue with 'Show Wowhead links' ('Interface') and Questie which sometimes caused the quest link to not be updated.
+- Wrath: For 'Enhance quest log' ('Interface'), quest levels are now shown in the quest details pane in addition to the quest list.
+- Added lots and lots of flight times.  There are now 3515 flight times stored in Leatrix Plus for BCC and Wrath Classic.
+
+2.5.119 - 17th August 2022
+- Wrath: Added a new option 'Hide alerts' ('Frames').  If checked, alert frames will not be shown.  When you earn an achievement, a message will be shown in chat instead (just like retail).
+- Wrath: Added Northrend zone and dungeon music to the media section.  Most of the dungeon tracks are sound kits.
+- Wrath: For 'Accept resurrection' ('Automation'), you will not accept a resurrection request automatically if you are in the Thaddius fight (Naxxramas) and someone in your group has a positive or negative charge.
+- For 'Show flight times' ('Interface'), the flight progress bar will now always hide when you land.  The flight report window will now show if the minimum time difference between the saved flight time and the actual flight time is 15 seconds (up from 5).
+- Fixed a minor issue with 'Show cooldowns' ('Interface') which caused buff spell IDs to show in debuff tooltips.
+- Added a massive number of flight times.  There are now 3476 flight times stored in Leatrix Plus for BCC and Wrath Classic.
+
+2.5.118 - 10th August 2022
+- Updated for Wrath of the Lich King Beta.
+- Wrath: Show Wowhead links (Interface) will now show achievement links as well as quest links.
+- Wrath: Show druid power bar is disabled since it's now included in the default UI.
+- If you use 'Automate quests' ('Automation') with a Mac, you can now assign the override key to be the command key if you wish.
+- Added a massive number of flight times.  There are now 2959 flight times stored in Leatrix Plus for BCC and Wrath Classic.
+- For Wrath, it's best to use alpha releases during Wrath Beta/prepatch so that you get the latest development updates.  To switch to alpha releases, open CurseForge App, right-click Leatrix Plus in your Wrath addon listing and change release type to Alpha.  You can change it back to Release once Wrath is live for everyone.
+
+2.5.117 - 3rd August 2022
+- Added lots of flight times.  There are now 2551 flight times stored in Leatrix Plus for BCC.
+- Leatrix Plus will be updated for Wrath Classic in August 2022.
+
+2.5.116 - 27th July 2022
+- For 'Enhance minimap', added a new setting to hide the tracking button while the pointer is not over the minimap.  The clock and zone text bar will now be shown on top when using square minimap.  Some structural changes to the code.
+- Added lots of flight times.  There are now 2530 flight times stored in Leatrix Plus for BCC.
+- Leatrix Plus will now attempt to run on Wrath Beta but note that it hasn't been tested and there are no Wrath features yet.
+
+2.5.115 - 20th July 2022
+- Removed the compatibility fix for ClassicCodex addon.
+- Added lots of flight times.  There are now 2507 flight times stored in Leatrix Plus for BCC.
+
+2.5.114 - 13th July 2022
+- For 'Enhance tooltip' ('Interface'), there is a new setting to hide the health bar.  It's disabled by default.
+- Added lots of flight times.  There are now 2492 flight times stored in Leatrix Plus for BCC.
+
+2.5.113 - 6th July 2022
+- Added lots of flight times.  There are now 2473 flight times stored in Leatrix Plus for BCC.
+
+2.5.112 - 29th June 2022
+- In the game key bindings menu, you can now set a keybind to announce rares in chat.  Target a creature, press your keybind and detals of your target will be shown in the General chat channel.  These details include your target's name, health percentage remaining and coordinates.
+- Added lots of flight times.  There are now 2455 flight times stored in Leatrix Plus for BCC.
+
+2.5.111 - 22nd June 2022
+- In the game key bindings menu, you can now set a keybind to show a web link for whatever your pointer is over (as long as it has a tooltip).  For example, if you have an item in your bag and you don't know what it's for, hover your pointer over it so the item tooltip shows up then press your defined hotkey.  A Wowhead link will show in a copy-friendly window.  Press CTRL/C to copy the link then paste it into your browser.
+- In the game key bindings menu, you can now set a keybind to toggle Leatrix Plus.  The 'Enable hotkey' command has been removed.
+- The '/ltp id' command now runs the web link keybind function so if you don't want to set a keybind, you can enter '/ltp id' instead.
+- Added lots of flight times.  There are now 2431 flight times stored in Leatrix Plus for BCC.
+
+2.5.110 - 15th June 2022
+- The 'Manage frames', 'Manage buffs', 'Manage widget' and 'Manage focus' settings ('Frames') now show a frame alignment grid when moving the frames (there is a button in each configuration panel to toggle the grid).  You can now drag the frames with the left button to position them freely or with the right button to position them using snap-to-grid.
+- Added lots of flight times.  There are now 2416 flight times stored in Leatrix Plus for BCC.
+
+2.5.109 - 8th June 2022
+- For 'Show flight times', you can now change the position, scale and width of the flight progress bar using a new configuration panel.  You can also remove the progress bar background and destination text if you wish.  The flight progress bar is now noninteractive so you can click through it as if it isn't there.  If you wish to manually close the flight progress bar, there is a new Close Bar button in the configuration panel.  These new settings give you a lot of customisation options.  For example, if you set the width to the minimum, hide the background and hide the destination, you can have a neat little flight timer in the corner of the screen.
+- Added lots of flight times.  There are now 2402 flight times stored in Leatrix Plus for BCC.
+
+2.5.108 - 1st June 2022
+- For 'Enhance trainers' ('Interface'), you can now disable the train all skills button if you wish using a new setting in the configuration panel.
+- For 'Mute game sounds' ('System'), the 'Mechstriders' setting will no longer mute mechanostrider footstep sounds.  There is a new setting called 'Mechsteps' that will mute footstep sounds for mechanical mounts.
+- Added lots of flight times.  There are now 2383 flight times stored in Leatrix Plus for BCC.
+
+2.5.107 - 25th May 2022
+- Added a new option 'Show ready timer' ('Interface').  If checked, a timer will be shown under the PvP encounter ready frame so that you know how long you have left to click the enter button.
+- Added lots of flight times.  There are now 2359 flight times stored in Leatrix Plus for BCC.
+
+2.5.106 - 18th May 2022
+- For 'Enhance quest log' ('Interface'), the quest log is now taller.
+- For 'Enhance professions' ('Interface'), the professions frame is now taller.
+- For 'Enhance trainers' ('Interface'), the skill trainer frame is now taller.  Also fixed a cosmetic bug with the position of the beast training cost column.
+- If you are using ElvUI, 'Show Wowhead links' ('Interface') will now place links inside the quest log frame rather than above it.  For 'Enhance professions', the search box and 'Have materials' checkbox have been repositioned.
+- Added some flight times.  There are now 2340 flight times stored in Leatrix Plus for BCC.
+
+2.5.105 - 12th May 2022
+- Corrected a very popular flight route and added flight times.  There are now 2329 flight times stored in Leatrix Plus for BCC.
+
+2.5.104 - 12th May 2022
+- For 'Sell junk automatically' ('Automation'), you can now exclude specific junk items from being sold.  There is an exclusion list in the configuration panel where you can enter your own item IDs (separated by commas).  Item IDs will be shown in item tooltips while the configuration panel is showing.
+- If you try to use 'Enhance minimap' ('Interface') and ElvUI Minimap together, you will now be asked which one you want to use on startup.  Choosing Leatrix Plus will disable ElvUI's minimap module.  Choosing ElvUI will disable Leatrix Plus 'Enhance minimap' setting.
+- Added flight times.  There are now 2326 flight times stored in Leatrix Plus for BCC.
+
+2.5.103 - 5th May 2022
+- Added lots of flight times.  There are now 2314 flight times stored in Leatrix Plus for BCC.
+
+2.5.102 - 27th April 2022
+- Added lots of flight times.  There are now 2295 flight times stored in Leatrix Plus for BCC.
+
+2.5.101 - 20th April 2022
+- Added lots of flight times.  There are now 2265 flight times stored in Leatrix Plus for BCC.
+
+2.5.100 - 13th April 2022
+- For 'Enhance minimap' ('Interface'), if you use 'Hide addon buttons' or 'Combine addon buttons' but you want some buttons to remain visible around the minimap, you can now do so using a new 'Buttons' editor in the configuration panel.  Just follow the directions in the Help button.  The 'Exclude BugSack' setting has been removed since you can now add BugSack to the 'Buttons' panel to achieve the same result.
+- Added lots of flight times.  There are now 2180 flight times stored in Leatrix Plus for BCC.
+
+2.5.99 - 6th April 2022
+- Fixed an issue with 'Show bag search box' ('Interface') which caused a Lua error after opening a guild bank.
+- Added flight times.  There are now 2105 flight times stored in Leatrix Plus for BCC.
+
+2.5.98 - 6th April 2022
+- The 'Enhance dressup' option now shows a toggle stats button in the character frame.  You can either click this button or middle-click the character frame to toggle stats.  For new Leatrix Plus users, stats are now shown by default.
+- Added lots of flight times.  There are now 2102 flight times stored in Leatrix Plus for BCC.
+
+2.5.97 - 30th March 2022
+- If 'Enhance trainers' ('Interface') is enabled, a 'Train All' button will now be shown in the skill trainer frame allowing you to train all available skills in one click.
+- Added a compatibility fix for 'Enhance professions' when using the 'Classic Profession Filter' addon so that you can see the search box in the craft frame (used for enchanting).
+- Added lots of flight times.  There are now 2075 flight times stored in Leatrix Plus for BCC.
+
+2.5.96 - 25th March 2022
+- Fixed an issue with 'Enhance professions' ('Interface') which caused the new search box to be obscured.
+- Added lots of flight times.  There are now 2051 flight times stored in Leatrix Plus for BCC.
+
+2.5.95 - 23rd March 2022
+- Updated for game version 2.5.4.
+- Added lots of flight times.  There are now 2035 flight times stored in Leatrix Plus for BCC.
+- Updated the '/ltp ra' rare announcement message.
+- For 'Enhance tooltip', removed the setting to show tooltip backdrops in faction color.
+
+2.5.94 - 9th March 2022
+- Added lots of flight times.  There are now 1994 flight times stored in Leatrix Plus for BCC.
+
+2.5.93 - 2nd March 2022
+- Added lots of flight times.  There are now 1980 flight times stored in Leatrix Plus for BCC.
+
+2.5.92 - 23rd February 2022
+- Added lots of flight times.  There are now 1971 flight times stored in Leatrix Plus for BCC.
+
+2.5.91 - 16th February 2022
+- For 'Enhance minimap' ('Interface'), added a new setting 'Show who pinged'.  It's enabled by default.  Note that this does not apply to your own pings.
+- For 'Mute game sounds' ('System'), added 'A'dal'.  This will mute A'dal in Shattrath City.
+- Added lots of flight times.  There are now 1952 flight times stored in Leatrix Plus for BCC.
+
+2.5.90 - 9th February 2022
+- Added lots of flight times.  There are now 1932 flight times stored in Leatrix Plus for BCC.
+- Added 'Screech' to 'Mute game sounds' ('System').  This is a spell used by some flying pets.
+- Added 'Striders' to 'Mute game sounds' ('System').  This will mute mechanostrider mounts.
+
+2.5.89 - 3rd February 2022
+- Added lots of flight times.  There are now 1908 flight times stored in Leatrix Plus for BCC.
+
+2.5.88 - 26th January 2022
+- If 'Automate quests' ('Automation') is enabled, you can now set the override key to be shift, alt or control.  Repeatable battlemaster and cloth quartermaster quests no longer require the alt key to be held.
+- For 'Mute game sounds' ('System'), the 'Chimes' setting will now mute the Ironforge hourly horn sound.
+- Added lots of flight times.  Keep reporting.  Every little helps.  There are now 1868 flight times stored in Leatrix Plus for BCC.
+- If you use ItemRack alongside 'Enhance minimap' with 'Combine addon buttons' enabled, the ItemRack minimap button flyout menu will remain visible as long as the mouse pointer is over it.
+
+2.5.87 - 19th January 2022
+- Fixed the textures for 'Enhance professions' ('Interface').
+
+2.5.86 - 19th January 2022
+- Updated for game version 2.5.3.
+- Added lots more flight times.  Keep reporting until there's none left to report.  Some minor tweaks to flight point tooltips.
+- The 'Faster auto loot' option ('System') will now work with TSM Destroy.  You no longer need to disable faster auto loot when using TSM Destroy.
+
+2.5.85 - 13th January 2022
+- Added lots of flight times.  Keep reporting.
+
+2.5.84 - 9th January 2022
+- For 'Show flight times' ('Interface'), added support for odd flight points (such as Altar of Sha'tar).
+
+2.5.83 - 9th January 2022
+- The 'Show flight times' option ('Interface') now supports multiple flight routes to the same destination.  So it will work regardless of how many flight points you have unlocked.  Due to the code changes to include multiple routes, some of the submitted flight times could not be added.  Please report them again when you see the report window again.
+
+2.5.82 - 5th January 2022
+- The 'Show flight times' option ('Interface') now works with any locale without the need for translations.  Added lots of missing flight times.  After landing from a flight, if the saved flight time is missing or incorrect (greater than 5 second difference), you will see a copy-friendly window with the flight details making it very easy for you to report the missing or incorrect flight time.
+
+2.5.81 - 29th December 2021
+- You need to restart your game client after installing this update.
+- Added a new setting 'Show flight times' ('Interface').  If enabled, a flight time progress bar will be shown when you take a flight and travel times will be shown in the flight point tooltips (note: only for flight times that Leatrix Plus is aware of).  For the time being, all flight times (whether known or not) will be printed in chat when you land so that you can report inaccurate or missing flight times (there are some of both).  If a flight ends before or after the progress bar has reached zero, report the flight time printed in chat and the times will be updated.  You can report at github.com/leatrix or you can send a message to leatrix on CurseForge.  If you're using the 'Recent chat window' setting ('Chat'), you can use that to copy the text from chat for your report.  For non-English locales, the progress bar and flight times will only be shown if the start and end flight point names have been translated.  If you want to help with translations to solve that issue, send a message to leatrix on CurseForge.
+
+2.5.80 - 22nd December 2021
+- If 'Combine addon buttons' ('Enhance minimap)' is enabled, addon button tooltips will no longer show together with game tooltips.  Non-standard buttons are now always replaced with LibDBIcon buttons so the 'Replace non-standard buttons' setting has been removed.  In addition, non-standard buttons will (for now) be described as such in the button tooltips.  You can now set the cluster scale again (note that adjusting the cluster scale has side effects so read the setting tooltip).  Method Raid Tools now has a standard LibDBIcon (though it's based on the original, custom icon).  If you come across any addons that aren't given a standard icon, please let me know.
+
+2.5.79 - 18th December 2021
+- If 'Combine addon buttons' ('Enhance minimap)' is enabled, addon button tooltips will now be shown under the minimap so as not to clutter the button frame.  This should work with most addon buttons.  Fixed a potential issue with addons using non-standard buttons that may have been caused Leatrix Plus not to load correctly.
+
+2.5.78 - 17th December 2021
+- Fixed a situational issue with 'Replace non-standard buttons' for 'Enhance minimap' ('Interface') creating unintended minimap buttons.
+
+2.5.75 - 16th December 2021
+- Added a new option 'Filter chat messages' ('Chat').  If enabled, you can block spell links in combat (useful for blocking spell interrupt spam), drunken spam (if it doesn't apply to your character) and duel victory and retreat spam (if you didn't take part in the duel).
+- Added a new slider setting to 'Enhance minimap' ('Interface') called 'Square size' which allows you to adjust the square minimap size (up to 400%).  While the scale slider makes the minimap and all the elements bigger, the size slider makes the minimap bigger but keeps all the elements the same size.  If you are using the square minimap, you can use either the scale slider or the size slider or a combination of the two.  The configuration panel reset button will not reset settings that require a UI reload.  Added a new setting called 'Replace non-standard buttons'.  Most addons use the standard LibDBIcon library for their minimap buttons but a few addons use non-standard buttons instead.  The new setting will replace any non-standard buttons with LibDBIcon buttons.  This will solve the problems with non-standard buttons such as not hiding automatically, not following the minimap shape and not being placed in the button frame.  Added a new setting called 'Exclude BugSack' which will keep the BugSack addon minimap button visible if you have BugSack installed and the minimap button enabled.
+- Updated the tooltips for 'Manage frames' and 'Manage focus' ('Frames').
+
+2.5.74 - 9th December 2021
+- Fixed a few default UI minimap button locations for 'Enhance minimap' ('Interface') when using the square minimap.
+
+2.5.73 - 8th December 2021
+- Added some new settings to 'Enhance minimap' ('Interface').  'Square minimap' changes the minimap shape to a square.  'Hide addon buttons' hides addon buttons automatically while the pointer is not over the minimap.  'Combine addon buttons' combines all addon buttons into a single frame which you can toggle by right-clicking the minimap (cannot be used with 'Hide addon buttons').  You can always drag the minimap now while holding the alt key so the 'Unlock map frame' setting has been removed.  The maximum minimap scale is now 400% (was 200%).
+- If 'Automate gossip' ('Automation') is enabled, battlemaster gossip will now be automatically selected and the battleground name will be shown at the top of the battlefield instance window.
+- Fixed a minor issue with 'Enhance professions' ('Interface') which caused the craft frame filter dropdown menu to not be positioned correctly.  Also fixed a minor issue with the default UI which caused beast training points to show in profession frames (this bug is not caused by addons).
+
+2.5.72 - 2nd December 2021
+- If 'Enhance minimap' is enabled, you can toggle the zone text bar once again using a setting in the configuration panel.  Added a new setting to toggle the world map button.
+
+2.5.71 - 2nd December 2021
+- To address issues with minimap cluster scaling (which have been present for a long time), the 'Scale entire cluster' setting has been removed.  Also fixed a minor issue causing the minimap toggle button to be visible.
+
+2.5.70 - 1st December 2021
+- The 'Enhance minimap' option ('Interface') has two new settings.  The first is 'Unlock minimap'.  If enabled, you can hold alt and drag the minimap to move it.  The second is 'Scale entire cluster'.  If checked, the scale slider will apply to the entire minimap cluster.  If unchecked, the scale slider will only apply to the minimap.  The zone text bar is now always hidden.
+- The 'Show Wowhead links' option ('Interface') now has a configuration panel allowing you to choose whether links should go directly to the comments section.
+- The 'Recent chat window' option ('Chat') will now use the same font and size as the chat window.  Fixed an issue which sometimes caused the recent chat window font size to be smaller than intended.
+- Fixed a minor issue with 'Automate quests' ('Automation') which caused Mark of Sargeras and Sunfury Signet reputation turn-ins to not be automated if you only had one of either item in your bags.
+
+2.5.68 - 17th November 2021
+- Added an animation slider setting to 'Enhance dressup' ('Interface').
+- Added a configuration panel for 'Accept resurrection' ('Automation') so you can choose whether combat resurrection should be excluded.
+- Added a 'Guild' setting to the 'Social' page which allows you to choose whether the 'Social' page options should apply to guild members or not (previously, 'Social' page options always applied to guild members).
+- Added 'Yawns' to 'Mute game sounds' ('System').  If checked, yawns from hunter pet cats will be muted.
+
+2.5.67 - 10th November 2021
+- Added a new setting to 'Enhance dressup' ('Interface') which adds item buttons to the dressing room.  Added a 'Show me' button and a button to toggle the new item buttons.  The 'Remove tabard' button is now part of the new item buttons.
+- Added a new option 'Hide action button text' ('Text').  If enabled, macro and keybind text will not be shown on action buttons.
+
+2.5.66 - 4th November 2021
+- Added a new option 'More font sizes' ('Chat').  If enabled, additional font sizes will be available in the chat frame font size menu.
+
+2.5.64 - 29th October 2021
+- Replaced packager to fix CurseForge App issue.
+
+2.5.62 - 28th October 2021
+- The 'Enhance dressup' option ('Interface') now shows a 'Show target model' button in the dressup window.  Requires a player target.  The nude and tabard buttons will apply whichever model is showing.  Transformations such as shapeshift and appearance change will be removed.  The 'Reset' button will set the model back to your character.  Dressup window buttons are now much smaller and have tooltips.
+- The 'Enhance quest log' option now has a setting to toggle showing quest levels.
+- The 'Sell junk automatically' option now has a setting to toggle the vendor summary in chat.
+- The 'Repair automatically' option now has a setting to toggle the repair summary in chat.
+- Fixed a minor issue with 'Recent chat window' ('Chat') which caused the title bar text to overlap the message count for some locales.
+- Fixed a few locale issues with invalid translations.
+
+2.5.61 - 21st October 2021
+- Added 'Chimes' to 'Mute game sounds' ('System').  If enabled, clock hourly chimes will be muted.
+- The 'Enhance tooltip' option ('Interface') now scales Total RP 3 tooltips.
+
+2.5.59 - 13th October 2021
+- Added a new option called 'Show druid power bar' ('Interface').  If enabled, a druid power bar will be shown in the player frame while you are playing as a shapeshifted druid.
+- The 'Dismount me' option ('System') will now work with Shaman Ghost Wolf.  Added a new setting to show an unshift buton on the flight map when playing as a shapeshifted druid or shaman.  The setting to dismount when selecting a flight destination has been removed as that functionality is now built into the game.
+- The 'Release in PvP' option ('Automation') now has a configuration panel that lets you exclude Alterac Valley.  You can also set a delay timer before you are automatically released.  You can hold shift as the timer is ending to cancel automatic release.
+
+2.5.58 - 29th September 2021
+- Quests from Soridormi and Arazmodu (The Scale of the Sands, Caverns of Time) will no longer be selected, accepted or turned-in automatically.
+
+2.5.55 - 16th September 2021
+- Updated for World of Warcraft patch 2.5.2.
+- Added guild bank support for 'Repair automatically ('Automation').
+
+2.5.53 - 19th August 2021
+- Fixed issue caused by malformed translations.
+
+2.5.48 - 5th August 2021
+- Added 'Gyrocopters' to 'Mute game sounds' ('System').  This includes the engineering flying machine mounts.
+
+2.5.47 - 22nd July 2021
+- Improved quest automation for Aldor/Scryer repeatable reputation quests in Shattrath.
+
+2.5.44 - 30th June 2021
+- Updated Classic Profession Filter addon compatibility fixes for 'Enhance professions' ('Interface') to support the latest version.  If you use Classic Profession Filter addon, you need to update it.
+
+2.5.43 - 24th June 2021
+- Fixed a situational issue with 'Faster auto loot' ('System') which caused the loot window to sometimes remain open if you are in a group using free for all loot with multiple group members looting the same corpse at the same time.
+- Updated the tooltip for 'Invite from whispers' ('Social') to highlight that an invite will not sent in response a Battle.net message if the invite recipient is showing offline.
+
+2.5.42 - 16th June 2021
+- Added a new setting to 'Enhance tooltip' ('Interface') which allows you to see guild ranks for players who are not in your guild.  It's disabled by default.
+- Fixed a compatibility issue with 'Enhance professions' and 'Classic profession filter' addon.
+- Removed the 'Class icon portraits' option ('Frames') due to performance issues.  There are standalone addons available for this feature if you need it.
+
+2.5.41 - 9th June 2021
+- Added a note about framerate to the 'Class icon portraits' ('Frames') tooltip.
+
+2.5.39 - 6th June 2021
+- For 'Automate quests' ('Automation'), quests from Archmage Leryda (The Violet Eye) will no longer be selected, accepted or turned-in automatically.
+- Updated translations.
+
+2.5.38 - 2nd June 2021
+- For 'Automate quests' ('Automation'), quests from BCC escort quest givers will not be accepted automatically.  This applies to Ranger Lilatha (Escape from the Catacombs), Anchorite Truuen (Tomb of the Lightbringer), Magwin (A Cry For Help), Fhwoor (Fhwoor Smash!), Kayra Longmane (Escape from Umbrafen), Mag'har Captive (The Totem of Kar'dash, Horde), Kurenai Captive (The Totem of Kar'dash, Alliance), Isla Starmane (Escape from Firewing Point!), Maxx A. Million Mk. V (Mark V is Alive!), Cryo-Engineer Sha'heen (Someone Else's Hard Work Pays Off), Drijya (Sabotage the Warp-Gate!), Bessy (When the Cows Come Home), Image of Commander Ameer (Delivering the Message), Captured Protectorate Vanguard (Escape from the Staging Grounds), Earthmender Wilda (Escape from Coilskar Cistern), Skywing (Skywing), Chief Archaeologist Letoll (Digging Through Bones) and Skyguard Prisoner (Escape from Skettis).  Many thanks to drejjmit for supplying the list.
+- The 'Manage widget' configuration panel will now show a warning if Titan Panel is preventing the widget frame position from saving correctly.. 
+- The 'Dismount automatically' option ('System') is now called 'Dismount me'.  It now has a configuration panel so you can set which dismount rules you want to use including a new setting that dismounts you when you instruct a flight master to open the flight map.
+
+2.5.37 - 26th May 2021
+- The 'Dismount automatically' option ('System') will no longer dismount you if you are out of range of your target.
+
+2.5.33 - 21st May 2021
+- The 'Stand and dismount' option is now called 'Dismount automatically'.  Most of what it did before is now included in the game.  So now, the option will dismount you when you select a flight location or when you attempt to cast a spell regardless of whether you have enough resource to cast or whether the target is in range.
+- Fixed an issue with 'Recent chat window' which caused a Lua error when attempting to show Battle.net messages.
+- The 'Remove raid restrictions' option has been removed since it's not needed for Burning Crusade Classic.
+
+2.5.32 - 17th May 2021
+- Welcome to Burning Crusade Classic.
+- Leatrix Plus for Burning Crusade Classic is based on Leatrix Plus for World of Warcraft Classic with the changes listed below.
+- Added 'Manage focus' ('Frames'), 'Mute game sounds' ('System') and 'Remove raid restrictions' ('System').
+- Added Burning Crusade zones, dungeons, titles, credits, narration tracks and movies to 'Media'.
+- The 'Enhance dressup' option ('Interface') now adds pan (right-button), zoom (mousewheel) and toggle attributes (middle-click) functionality to the character frame, dressup frame and inspect frame.
+- The 'Class colored frames' option ('Frames') now colors the focus frame too.
+- Thanks to Blizzard for the day one beta access allowing me to bring Leatrix addons to the BCC community.

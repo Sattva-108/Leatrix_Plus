@@ -1,0 +1,31 @@
+## Interface: 30300
+
+## Title: Leatrix Plus
+## Title-zhCN: Leatrix Plus [|cffeda55f功能百宝箱|r]
+## Title-zhTW: Leatrix Plus [|cffeda55f功能百寶箱|r]
+
+## Notes: Quality of life addon.
+## Notes-zhCN: 哆啦A梦的百宝袋
+## Notes-zhTW: 哆啦A夢的百寶袋
+
+## Version: 3.0.131
+## Author: Leatrix
+## SavedVariables: LeaPlusDB
+
+## OptionalDeps: Leatrix_enUS, ElvUI, Glass
+
+## X-Curse-Project-ID: 463863
+
+libs\LibStub\LibStub.lua
+libs\LibCompat-1.0\lib.xml
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+
+
+Leatrix_Plus_Library.lua
+Leatrix_Plus_Locale.lua
+Leatrix_Plus_Media.lua
+Leatrix_Plus_Flight_Alliance.lua
+Leatrix_Plus_Flight_Horde.lua
+Leatrix_Plus.lua
