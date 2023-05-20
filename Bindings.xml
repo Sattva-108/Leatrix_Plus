@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <Bindings>
 
 	<!-- Toggle panel -->
@@ -16,3 +17,23 @@
 	</Binding>
 
 </Bindings>
+=======
+<Bindings>
+
+	<!-- Toggle panel -->
+	<Binding name="LEATRIX_PLUS_GLOBAL_TOGGLE" category = "Leatrix Plus">
+		SlashCmdList["Leatrix_Plus"]()
+	</Binding>
+
+	<!-- Show web link -->
+	<Binding name="LEATRIX_PLUS_GLOBAL_WEBLINK" category = "Leatrix Plus">
+		SlashCmdList["Leatrix_Plus"]("id")
+	</Binding>
+
+	<!-- Announce rare -->
+	<Binding name="LEATRIX_PLUS_GLOBAL_RARE" category = "Leatrix Plus">
+		SlashCmdList["Leatrix_Plus"]("ra")
+	</Binding>
+
+</Bindings>
+>>>>>>> 0f3757ee7b0a1d6b3ed73a1e639c617c3b5acfd0
