@@ -126,7 +126,7 @@
 			-- Add background color
 			eFrame.t = eFrame:CreateTexture(nil, "BACKGROUND")
 			eFrame.t:SetAllPoints()
-			-- eFrame.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+			eFrame.t:SetVertexColor(0.05, 0.05, 0.05, 0.9)
 			-- Add copy title
 			eFrame.f = eFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 			eFrame.f:SetPoint("TOPLEFT", x, y)
@@ -1168,12 +1168,14 @@
 				if LeaPlusLC["MuteGameSounds"] == "On" and LeaPlusLC["MuteLogin"] == "On" then
 					-- Mute logout table sounds on logout
 					for void, soundID in pairs(muteLogoutTable) do
-						MuteSoundFile(soundID)
+						--FIX ME
+						-- MuteSoundFile(soundID)
 					end
 				else
 					-- Unmute logout table sounds on logout
 					for void, soundID in pairs(muteLogoutTable) do
-						UnmuteSoundFile(soundID)
+						--FIX ME
+						-- UnmuteSoundFile(soundID)
 					end
 				end
 			end)
@@ -1424,7 +1426,7 @@
 			mEB.t = mEB:CreateTexture(nil, "BACKGROUND")
 			mEB.t:SetPoint(mEB:GetPoint())
 			mEB.t:SetSize(mEB:GetSize())
-			-- mEB.t:SetColorTexture(0.05, 0.05, 0.05, 1.0)
+			mEB.t:SetVertexColor(0.05, 0.05, 0.05, 1.0)
 
 			-- Create hidden font string (used for setting width of editbox)
 			mEB.z = mEB:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
@@ -2271,7 +2273,7 @@
 
 			StartMsg.s = StartMsg:CreateTexture(nil, "BACKGROUND")
 			StartMsg.s:SetAllPoints()
-			-- StartMsg.s:SetColorTexture(0.1, 0.1, 0.1, 1.0)
+			StartMsg.s:SetVertexColor(0.1, 0.1, 0.1, 1.0)
 
 			StartMsg.f = StartMsg:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 			StartMsg.f:SetAllPoints();
@@ -3691,7 +3693,7 @@
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -5244,7 +5246,7 @@
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -5419,7 +5421,7 @@
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -5682,7 +5684,7 @@
 			-- Add background color
 			editFrame.t = editFrame:CreateTexture(nil, "BACKGROUND")
 			editFrame.t:SetAllPoints()
-			-- editFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
+			editFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
 
 			-- Set textures
 			editFrame.LeftTex:SetTexture(editFrame.RightTex:GetTexture()); editFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
@@ -5702,7 +5704,7 @@
 			titleFrame.CharCount:Hide()
 			titleFrame.t = titleFrame:CreateTexture(nil, "BACKGROUND")
 			titleFrame.t:SetAllPoints()
-			-- titleFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
+			titleFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
 			titleFrame.LeftTex:SetTexture(titleFrame.RightTex:GetTexture()); titleFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
 			titleFrame.BottomTex:SetTexture(titleFrame.TopTex:GetTexture()); titleFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
 			titleFrame.BottomRightTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
@@ -9028,7 +9030,7 @@ ReloadUI()
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -9268,7 +9270,7 @@ ReloadUI()
 				if not currentframe then
 					-- No frame selected so select the player frame
 					currentframe = PlayerFrame:GetName()
-					-- LeaPlusLC["DragPlayerFrame"].t:SetColorTexture(0.0, 1.0, 0.0,0.5)
+					LeaPlusLC["DragPlayerFrame"].t:SetVertexColor(0.0, 1.0, 0.0,0.5)
 				end
 				-- Set the scale slider value to the selected frame
 				LeaPlusCB["FrameScale"]:SetValue(LeaPlusDB["Frames"][currentframe]["Scale"])
@@ -9412,9 +9414,9 @@ ReloadUI()
 
 					-- Set all drag frames to blue then tint the selected frame to green
 					for k,v in pairs(FrameTable) do
-						-- LeaPlusLC[k].t:SetColorTexture(0.0, 0.5, 1.0, 0.5)
+						LeaPlusLC[k].t:SetVertexColor(0.0, 0.5, 1.0, 0.5)
 					end
-					-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+					dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
 
 					-- Set currentframe variable to selected frame and set the scale slider value
 					currentframe = realframe:GetName()
@@ -9429,7 +9431,7 @@ ReloadUI()
 
 				dragframe.t = dragframe:CreateTexture()
 				dragframe.t:SetAllPoints()
-				-- dragframe.t:SetColorTexture(0.0, 0.5, 1.0, 0.5)
+				dragframe.t:SetVertexColor(0.0, 0.5, 1.0, 0.5)
 				dragframe.t:SetAlpha(0.5)
 
 				dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -9590,7 +9592,7 @@ ReloadUI()
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -9793,7 +9795,7 @@ ReloadUI()
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -10124,7 +10126,7 @@ ReloadUI()
 			-- Add background color
 			editFrame.t = editFrame:CreateTexture(nil, "BACKGROUND")
 			editFrame.t:SetAllPoints()
-			-- editFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
+			editFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
 
 			-- Set textures
 			editFrame.LeftTex:SetTexture(editFrame.RightTex:GetTexture()); editFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
@@ -10144,7 +10146,7 @@ ReloadUI()
 			titleFrame.CharCount:Hide()
 			titleFrame.t = titleFrame:CreateTexture(nil, "BACKGROUND")
 			titleFrame.t:SetAllPoints()
-			-- titleFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
+			titleFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
 			titleFrame.LeftTex:SetTexture(titleFrame.RightTex:GetTexture()); titleFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
 			titleFrame.BottomTex:SetTexture(titleFrame.TopTex:GetTexture()); titleFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
 			titleFrame.BottomRightTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
@@ -10758,7 +10760,7 @@ ReloadUI()
 			-- Create texture
 			TipDrag.t = TipDrag:CreateTexture();
 			TipDrag.t:SetAllPoints();
-			-- TipDrag.t:SetColorTexture(0.0, 0.5, 1.0, 0.5);
+			TipDrag.t:SetVertexColor(0.0, 0.5, 1.0, 0.5);
 			TipDrag.t:SetAlpha(0.5);
 
 			---------------------------------------------------------------------------------------------------------
@@ -11469,16 +11471,16 @@ ReloadUI()
 
 			-- Create border textures
 			local BordTop = WorldFrame:CreateTexture(nil, "ARTWORK"); 
-			-- BordTop:SetColorTexture(0, 0, 0, 1); 
+			BordTop:SetVertexColor(0, 0, 0, 1); 
 			BordTop:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0); BordTop:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
 			local BordBot = WorldFrame:CreateTexture(nil, "ARTWORK"); 
-			-- BordBot:SetColorTexture(0, 0, 0, 1); 
+			BordBot:SetVertexColor(0, 0, 0, 1); 
 			BordBot:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0); BordBot:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
 			local BordLeft = WorldFrame:CreateTexture(nil, "ARTWORK"); 
-			-- BordLeft:SetColorTexture(0, 0, 0, 1); 
+			BordLeft:SetVertexColor(0, 0, 0, 1); 
 			BordLeft:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0); BordLeft:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
 			local BordRight = WorldFrame:CreateTexture(nil, "ARTWORK"); 
-			-- BordRight:SetColorTexture(0, 0, 0, 1); 
+			BordRight:SetVertexColor(0, 0, 0, 1); 
 			BordRight:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0); BordRight:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
 
 			-- Create viewport configuration panel
@@ -11786,14 +11788,14 @@ ReloadUI()
 			-- Plot vertical lines
 			for i = 0, wline do
 				local t = LeaPlusLC.grid:CreateTexture(nil, 'BACKGROUND')
-				-- if i == wline / 2 then t:SetColorTexture(1, 0, 0, 0.5) else t:SetColorTexture(0, 0, 0, 0.5) end
+				if i == wline / 2 then t:SetVertexColor(1, 0, 0, 0.5) else t:SetVertexColor(0, 0, 0, 0.5) end
 				t:SetPoint('TOPLEFT', grid, 'TOPLEFT', i * w / wline - 1, 0)
 				t:SetPoint('BOTTOMRIGHT', grid, 'BOTTOMLEFT', i * w / wline + 1, 0)
 			end
 			-- Plot horizontal lines
 			for i = 0, hline do
 				local t = LeaPlusLC.grid:CreateTexture(nil, 'BACKGROUND')
-				-- if i == hline / 2 then	t:SetColorTexture(1, 0, 0, 0.5) else t:SetColorTexture(0, 0, 0, 0.5) end
+				if i == hline / 2 then	t:SetVertexColor(1, 0, 0, 0.5) else t:SetVertexColor(0, 0, 0, 0.5) end
 				t:SetPoint('TOPLEFT', grid, 'TOPLEFT', 0, -i * h / hline + 1)
 				t:SetPoint('BOTTOMRIGHT', grid, 'TOPRIGHT', 0, -i * h / hline - 1)
 			end
@@ -11901,14 +11903,14 @@ ReloadUI()
 
 				-- Create hover texture
 				mbtn.t = mbtn:CreateTexture(nil, "BACKGROUND")
-				-- mbtn.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+				mbtn.t:SetVertexColor(0.3, 0.3, 0.00, 0.8)
 				mbtn.t:SetAlpha(0.7)
 				mbtn.t:SetAllPoints()
 				mbtn.t:Hide()
 
 				-- Create highlight texture
 				mbtn.s = mbtn:CreateTexture(nil, "BACKGROUND")
-				-- mbtn.s:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+				mbtn.s:SetVertexColor(0.3, 0.3, 0.00, 0.8)
 				mbtn.s:SetAlpha(1.0)
 				mbtn.s:SetAllPoints()
 				mbtn.s:Hide()
@@ -12264,7 +12266,7 @@ ReloadUI()
 				button.t:SetPoint("TOPLEFT", button, 0, 0)
 				button.t:SetSize(516, 16)
 
-				-- button.t:SetColorTexture(0.3, 0.3, 0.0, 0.8)
+				button.t:SetVertexColor(0.3, 0.3, 0.0, 0.8)
 				button.t:SetAlpha(0.7)
 				button.t:Hide()
 
@@ -12273,7 +12275,7 @@ ReloadUI()
 				button.s:SetPoint("TOPLEFT", button, 0, 0)
 				button.s:SetSize(516, 16)
 
-				-- button.s:SetColorTexture(0.3, 0.4, 0.00, 0.6)
+				button.s:SetVertexColor(0.3, 0.4, 0.00, 0.6)
 				button.s:Hide()
 
 				button:SetScript("OnEnter", function()
@@ -13639,7 +13641,7 @@ ReloadUI()
 		-- Set the background color
 		Side.t = Side:CreateTexture(nil, "BACKGROUND")
 		Side.t:SetAllPoints()
-		-- Side.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+		Side.t:SetVertexColor(0.05, 0.05, 0.05, 0.9)
 
 		-- Add a close Button
 		Side.c = CreateFrame("Button", nil, Side, "UIPanelCloseButton")
@@ -14036,7 +14038,7 @@ ReloadUI()
 
 			dditem.t = dditem:CreateTexture(nil, "BACKGROUND")
 			dditem.t:SetAllPoints()
-			-- dditem.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+			dditem.t:SetVertexColor(0.3, 0.3, 0.00, 0.8)
 			dditem.t:Hide();
 
 			dditem:SetScript("OnEnter", function() dditem.t:Show() end)
@@ -14106,12 +14108,12 @@ ReloadUI()
 		-- Add background color
 		PageF.t = PageF:CreateTexture(nil, "BACKGROUND")
 		PageF.t:SetAllPoints()
-		-- PageF.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+		PageF.t:SetVertexColor(0.05, 0.05, 0.05, 0.9)
 
 		-- Add textures
-		LeaPlusLC:CreateBar("FootTexture", PageF, 570, 48, "BOTTOM", 0.5, 0.5, 0.5, 1.0, "Interface\\ACHIEVEMENTFRAME\\UI-GuildAchievement-Parchment-Horizontal-Desaturated.png")
-		LeaPlusLC:CreateBar("MainTexture", PageF, 440, 323, "TOPRIGHT", 0.7, 0.7, 0.7, 0.7,  "Interface\\ACHIEVEMENTFRAME\\UI-GuildAchievement-Parchment-Horizontal-Desaturated.png")
-		LeaPlusLC:CreateBar("MenuTexture", PageF, 130, 323, "TOPLEFT", 0.7, 0.7, 0.7, 0.7, "Interface\\ACHIEVEMENTFRAME\\UI-GuildAchievement-Parchment-Horizontal-Desaturated.png")
+	LeaPlusLC:CreateBar("FootTexture", PageF, 570, 42, "BOTTOM", 0.3, 0.3, 1.0, 0.9, "Interface\\GLUES\\MODELS\\UI_MAINMENU\\GRADIENT")
+	LeaPlusLC:CreateBar("MainTexture", PageF, 440, 348, "TOPRIGHT", 0.8, 0.8, 0.8, 0.9, "Interface\\DressUpFrame\\DressUpBackground-NightElf1")
+	LeaPlusLC:CreateBar("MenuTexture", PageF, 130, 348, "TOPLEFT", 0.6, 0.6, 0.6, 0.9, "Interface\\GLUES\\MODELS\\UI_MAINMENU\\GRADIENT")
 
 		-- Set panel position when shown
 		PageF:SetScript("OnShow", function()
@@ -14804,7 +14806,7 @@ ReloadUI()
 					local frame = CreateFrame("FRAME", nil, UIParent)
 					frame:SetSize(570, 340); frame:SetFrameStrata("FULLSCREEN_DIALOG"); frame:SetFrameLevel(100)
 					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints(); 
-					-- frame.tex:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+					frame.tex:SetVertexColor(0.05, 0.05, 0.05, 0.9)
 					frame.close = CreateFrame("Button", nil, frame, "UIPanelCloseButton"); frame.close:SetSize(30, 30); frame.close:SetPoint("TOPRIGHT", 0, 0); frame.close:SetScript("OnClick", function() frame:Hide() end)
 					frame:ClearAllPoints(); frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 					frame:SetClampedToScreen(true)
@@ -15149,7 +15151,7 @@ ReloadUI()
 					local frame = CreateFrame("FRAME", nil, UIParent)
 					frame:SetSize(294, 86); frame:SetFrameStrata("FULLSCREEN_DIALOG"); frame:SetFrameLevel(100); frame:SetScale(2)
 					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints(); 
-					-- frame.tex:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+					frame.tex:SetVertexColor(0.05, 0.05, 0.05, 0.9)
 					frame.close = CreateFrame("Button", nil, frame, "UIPanelCloseButton"); frame.close:SetSize(30, 30); frame.close:SetPoint("TOPRIGHT", 0, 0); frame.close:SetScript("OnClick", function() frame:Hide() end)
 					frame:ClearAllPoints(); frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 					frame:SetClampedToScreen(true)
@@ -15702,13 +15704,13 @@ ReloadUI()
 
 		mbtn.t = mbtn:CreateTexture(nil, "BACKGROUND")
 		mbtn.t:SetAllPoints()
-		-- mbtn.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+		mbtn.t:SetVertexColor(0.3, 0.3, 0.00, 0.8)
 		mbtn.t:SetAlpha(0.7)
 		mbtn.t:Hide()
 
 		mbtn.s = mbtn:CreateTexture(nil, "BACKGROUND")
 		mbtn.s:SetAllPoints()
-		-- mbtn.s:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+		mbtn.s:SetVertexColor(0.3, 0.3, 0.00, 0.8)
 		mbtn.s:Hide()
 
 		mbtn.f = mbtn:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
