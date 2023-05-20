@@ -9,6 +9,7 @@
 -- 	Leatrix Plus
 ----------------------------------------------------------------------
 
+	LibCompat = LibStub:GetLibrary("LibCompat-1.0")
 	-- Create global table
 	_G.LeaPlusDB = _G.LeaPlusDB or {}
 
@@ -30,7 +31,7 @@
 		local gameversion, gamebuild, gamedate, gametocversion = GetBuildInfo()
 		if gametocversion and gametocversion < 30000 or gametocversion > 39999 then
 			-- Game client is not Wow Classic
-			C_Timer.After(2, function()
+			LibCompat.After(2, function()
 				print(L["LEATRIX PLUS: WRONG VERSION INSTALLED!"])
 			end)
 			return
@@ -125,7 +126,7 @@
 			-- Add background color
 			eFrame.t = eFrame:CreateTexture(nil, "BACKGROUND")
 			eFrame.t:SetAllPoints()
-			eFrame.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+			-- eFrame.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
 			-- Add copy title
 			eFrame.f = eFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 			eFrame.f:SetPoint("TOPLEFT", x, y)
@@ -163,7 +164,7 @@
 			eFrame.b:SetAutoFocus(true)
 			eFrame.b:SetAltArrowKeyMode(true)
 			-- Editbox texture
-			eFrame.t = CreateFrame("FRAME", nil, eFrame.b, "BackdropTemplate")
+			eFrame.t = CreateFrame("FRAME", nil, eFrame.b)
 			eFrame.t:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = false, tileSize = 16, edgeSize = 16, insets = { left = 5, right = 5, top = 5, bottom = 5 }})
 			eFrame.t:SetPoint("LEFT", -6, 0)
 			eFrame.t:SetWidth(eFrame.b:GetWidth() + 6)
@@ -172,7 +173,7 @@
 			-- Handler
 			eFrame.b:SetScript("OnKeyDown", function(void, key)
 				if key == "C" and IsControlKeyDown() then
-					C_Timer.After(0.1, function()
+					LibCompat.After(0.1, function()
 						eFrame:Hide()
 						ActionStatus_DisplayMessage(L["Copied to clipboard."], true)
 						if LeaPlusLC.FactoryEditBoxFocusChat then
@@ -1178,9 +1179,9 @@
 			end)
 
 			-- Unmute sounds when logging in
-			for void, soundID in pairs(muteLogoutTable) do
-				UnmuteSoundFile(soundID)
-			end
+			-- for void, soundID in pairs(muteLogoutTable) do
+			-- 	UnmuteSoundFile(soundID)
+			-- end
 
 		end
 
@@ -1423,7 +1424,7 @@
 			mEB.t = mEB:CreateTexture(nil, "BACKGROUND")
 			mEB.t:SetPoint(mEB:GetPoint())
 			mEB.t:SetSize(mEB:GetSize())
-			mEB.t:SetColorTexture(0.05, 0.05, 0.05, 1.0)
+			-- mEB.t:SetColorTexture(0.05, 0.05, 0.05, 1.0)
 
 			-- Create hidden font string (used for setting width of editbox)
 			mEB.z = mEB:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
@@ -1483,7 +1484,7 @@
 
 			-- ElvUI fix to move Wowhead link inside the quest log frame
 			if LeaPlusLC.ElvUI then
-				C_Timer.After(0.1, function()
+				LibCompat.After(0.1, function()
 					QuestLogTitleText:ClearAllPoints()
 					QuestLogTitleText:SetPoint("TOPLEFT", QuestLogFrame, "TOPLEFT", 32, -18)
 					if QuestLogTitleText:GetStringWidth() > 200 then
@@ -2270,7 +2271,7 @@
 
 			StartMsg.s = StartMsg:CreateTexture(nil, "BACKGROUND")
 			StartMsg.s:SetAllPoints()
-			StartMsg.s:SetColorTexture(0.1, 0.1, 0.1, 1.0)
+			-- StartMsg.s:SetColorTexture(0.1, 0.1, 0.1, 1.0)
 
 			StartMsg.f = StartMsg:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 			StartMsg.f:SetAllPoints();
@@ -2293,12 +2294,12 @@
 								ticker._remainingIterations = ticker._remainingIterations - 1
 							end
 							if (not ticker._remainingIterations or ticker._remainingIterations > 0) then
-								C_Timer.After(duration, ticker._callback)
+								LibCompat.After(duration, ticker._callback)
 							end
 						end
 					end
 				end
-				C_Timer.After(duration, ticker._callback)
+				LibCompat.After(duration, ticker._callback)
 				return ticker
 			end
 
@@ -2358,7 +2359,7 @@
 			-- Show help button for exclusions
 			LeaPlusLC:CreateHelpButton("SellJunkExcludeHelpButton", SellJunkFrame, titleTX, "Enter item IDs separated by commas.  Item IDs can be found in item tooltips while this panel is showing.|n|nJunk items entered here will not be sold automatically.|n|nWhite items entered here will be sold automatically.|n|nThe editbox tooltip will show you more information about the items you have entered.")
 
-			local eb = CreateFrame("Frame", nil, SellJunkFrame, "BackdropTemplate")
+			local eb = CreateFrame("Frame", nil, SellJunkFrame)
 			eb:SetSize(200, 180)
 			eb:SetPoint("TOPLEFT", 350, -92)
 			eb:SetBackdrop({
@@ -2369,7 +2370,7 @@
 			})
 			eb:SetBackdropBorderColor(1.0, 0.85, 0.0, 0.5)
 
-			eb.scroll = CreateFrame("ScrollFrame", nil, eb, "UIPanelScrollFrameTemplate")
+			eb.scroll = CreateFrame("ScrollFrame", nil, eb)
 			eb.scroll:SetPoint("TOPLEFT", eb, 12, -10)
 			eb.scroll:SetPoint("BOTTOMRIGHT", eb, -30, 10)
 
@@ -2519,7 +2520,7 @@
 
 			eb.Text:HookScript("OnTextChanged", MakeTooltipString)
 			eb.Text:HookScript("OnTextChanged", function()
-				C_Timer.After(0.1, function()
+				LibCompat.After(0.1, function()
 					MakeTooltipString()
 				end)
 			end)
@@ -2760,7 +2761,7 @@
 				end)
 			else
 				-- If combat log is undocked, do nothing but show warning
-				C_Timer.After(1, function()
+				LibCompat.After(1, function()
 					LeaPlusLC:Print("Combat log cannot be hidden while undocked.")
 				end)
 			end
@@ -2848,7 +2849,7 @@
 			if CompactRaidFrameManagerDisplayFrameHiddenModeToggle then
 
 				-- Create a border for the button
-				local cBackdrop = CreateFrame("Frame", nil, CompactRaidFrameManagerDisplayFrameHiddenModeToggle, "BackdropTemplate")
+				local cBackdrop = CreateFrame("Frame", nil, CompactRaidFrameManagerDisplayFrameHiddenModeToggle)
 				cBackdrop:SetAllPoints()
 				cBackdrop.backdropInfo = {edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = {left = 0, right = 0, top = 0, bottom = 0}}
 				cBackdrop:ApplyBackdrop()
@@ -3288,7 +3289,7 @@
 			DeathDura:SetScript("OnEvent", function(self, event)
 				ShowDuraStats("status")
 				DeathDura:UnregisterEvent("PLAYER_DEAD")
-				C_Timer.After(2, function()
+				LibCompat.After(2, function()
 					DeathDura:RegisterEvent("PLAYER_DEAD")
 				end)
 			end)
@@ -3464,7 +3465,7 @@
 			LeaPlusLC:CreateHelpButton("MuteGameSoundsCustomHelpButton", MuteCustomPanel, titleTX, "Enter sound file IDs separated by comma then click the Mute button.|n|nIf you wish, you can enter a brief note for each file ID but do not include numbers in your notes.|n|nFor example, you can enter 'DevAura 569679, RetAura 568744' to mute the Devotion Aura and Retribution Aura spells.|n|nUse Leatrix Sounds to find, test and play sound file IDs.")
 
 			-- Add large editbox
-			local eb = CreateFrame("Frame", nil, MuteCustomPanel, "BackdropTemplate")
+			local eb = CreateFrame("Frame", nil, MuteCustomPanel)
 			eb:SetSize(548, 180)
 			eb:SetPoint("TOPLEFT", 10, -92)
 			eb:SetBackdrop({
@@ -3475,7 +3476,7 @@
 			})
 			eb:SetBackdropBorderColor(1.0, 0.85, 0.0, 0.5)
 
-			eb.scroll = CreateFrame("ScrollFrame", nil, eb, "UIPanelScrollFrameTemplate")
+			eb.scroll = CreateFrame("ScrollFrame", nil, eb)
 			eb.scroll:SetPoint("TOPLEFT", eb, 12, -10)
 			eb.scroll:SetPoint("BOTTOMRIGHT", eb, -30, 10)
 
@@ -3680,7 +3681,7 @@
 			VehicleSeatIndicator:SetScale(LeaPlusLC["VehicleScale"])
 
 			-- Create drag frame
-			local dragframe = CreateFrame("FRAME", nil, nil, "BackdropTemplate")
+			local dragframe = CreateFrame("FRAME", nil, nil)
 			dragframe:SetPoint("CENTER", vehicleHolder, "CENTER", 0, 1)
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
@@ -3690,7 +3691,7 @@
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -4090,7 +4091,7 @@
 				end)
 
 				-- Add large editbox
-				local eb = CreateFrame("Frame", nil, ExcludedButtonsPanel, "BackdropTemplate")
+				local eb = CreateFrame("Frame", nil, ExcludedButtonsPanel)
 				eb:SetSize(548, 180)
 				eb:SetPoint("TOPLEFT", 10, -92)
 				eb:SetBackdrop({
@@ -4101,7 +4102,7 @@
 				})
 				eb:SetBackdropBorderColor(1.0, 0.85, 0.0, 0.5)
 
-				eb.scroll = CreateFrame("ScrollFrame", nil, eb, "UIPanelScrollFrameTemplate")
+				eb.scroll = CreateFrame("ScrollFrame", nil, eb)
 				eb.scroll:SetPoint("TOPLEFT", eb, 12, -10)
 				eb.scroll:SetPoint("BOTTOMRIGHT", eb, -30, 10)
 
@@ -4216,7 +4217,7 @@
 			do
 
 				-- Create frame
-				local pFrame = CreateFrame("FRAME", nil, Minimap, "BackdropTemplate")
+				local pFrame = CreateFrame("FRAME", nil, Minimap)
 				pFrame:SetSize(100, 20)
 
 				-- Set position
@@ -4268,7 +4269,7 @@
 							-- Hide frame after 5 seconds
 							pFrame:Show()
 							pingTime = GetTime()
-							C_Timer.After(5, function()
+							LibCompat.After(5, function()
 								if GetTime() - pingTime >= 5 then
 								pFrame:Hide()
 								end
@@ -4359,7 +4360,7 @@
 				LeaPlusCB["HideMiniAddonButtons"].tiptext = LeaPlusCB["HideMiniAddonButtons"].tiptext .. "|n|n|cff00AAFF" .. L["Cannot be used with Combine addon buttons."]
 
 				-- Create button frame (parenting to cluster ensures bFrame scales correctly)
-				local bFrame = CreateFrame("FRAME", nil, MinimapCluster, "BackdropTemplate")
+				local bFrame = CreateFrame("FRAME", nil, MinimapCluster)
 				bFrame:ClearAllPoints()
 				bFrame:SetPoint("TOPLEFT", Minimap, "TOPRIGHT", 4, 4)
 				bFrame:Hide()
@@ -4372,7 +4373,7 @@
 				local ButtonFrameTicker
 				bFrame:HookScript("OnShow", function()
 					if ButtonFrameTicker then ButtonFrameTicker:Cancel() end
-					ButtonFrameTicker = C_Timer.NewTicker(2, function()
+					ButtonFrameTicker = LibCompat.NewTicker(2, function()
 						if ItemRackMenuFrame and ItemRackMenuFrame:IsShown() and ItemRackMenuFrame:IsMouseOver() then return end
 						if not bFrame:IsMouseOver() and not Minimap:IsMouseOver() then
 							bFrame:Hide()
@@ -4529,7 +4530,7 @@
 				_G.GetMinimapShape = function() return "SQUARE" end
 
 				-- Create black border around map
-				local miniBorder = CreateFrame("Frame", nil, Minimap, "BackdropTemplate")
+				local miniBorder = CreateFrame("Frame", nil, Minimap)
 				miniBorder:SetPoint("TOPLEFT", -3, 3)
 				miniBorder:SetPoint("BOTTOMRIGHT", 3, -3)
 				miniBorder:SetAlpha(0.8)
@@ -4594,7 +4595,7 @@
 				-- Debug buttons
 				local LeaPlusMiniMapDebug = nil
 				if LeaPlusMiniMapDebug then
-					C_Timer.After(2, function()
+					LibCompat.After(2, function()
 						MiniMapMailFrame:Show()
 						MiniMapBattlefieldFrame:Show()
 						MiniMapWorldMapButton:Show()
@@ -4616,7 +4617,7 @@
 				end
 
 				-- Refresh buttons
-				C_Timer.After(0.1, SetButtonRad)
+				LibCompat.After(0.1, SetButtonRad)
 
 			else
 
@@ -4732,8 +4733,8 @@
 				end
 
 				-- Run the function a few times on startup
-				C_Timer.NewTicker(2, MakeButtons, 3)
-				C_Timer.After(0.1, MakeButtons)
+				LibCompat.NewTicker(2, MakeButtons, 3)
+				LibCompat.After(0.1, MakeButtons)
 
 			end
 
@@ -4869,7 +4870,7 @@
 			MinimapBorderTop:SetPoint("TOP", MinimapBackdrop, "TOP", 0, 20)
 
 			-- Refresh buttons
-			C_Timer.After(0.1, SetButtonRad)
+			LibCompat.After(0.1, SetButtonRad)
 
 			-- Function to set zone text bar
 			local function SetZoneTextBar()
@@ -5136,7 +5137,7 @@
 
 				-- Combine addon buttons: Hide new LibDBIcon icons
 				if LeaPlusLC["CombineAddonButtons"] == "On" then
-					--C_Timer.After(0.1, function() -- Removed for now
+					--LibCompat.After(0.1, function() -- Removed for now
 						local buttonName = strlower(name)
 						if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
 							if button.db and not button.db.hide then
@@ -5233,7 +5234,7 @@
 			DurabilityFrame:SetScale(LeaPlusLC["DurabilityScale"])
 
 			-- Create drag frame
-			local dragframe = CreateFrame("FRAME", nil, nil, "BackdropTemplate")
+			local dragframe = CreateFrame("FRAME", nil, nil)
 			dragframe:SetPoint("CENTER", durabilityHolder, "CENTER", 0, 1)
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
@@ -5243,7 +5244,7 @@
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -5408,7 +5409,7 @@
 			MirrorTimer1:SetScale(LeaPlusLC["TimerScale"])
 
 			-- Create drag frame
-			local dragframe = CreateFrame("FRAME", nil, nil, "BackdropTemplate")
+			local dragframe = CreateFrame("FRAME", nil, nil)
 			dragframe:SetPoint("TOPRIGHT", MirrorTimer1, "TOPRIGHT", 0, 2.5)
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
@@ -5418,7 +5419,7 @@
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -5646,7 +5647,7 @@
 				end)
 
 				-- Debug
-				-- C_Timer.After(2, function() PVPReadyDialog_Display(self, 1, "Warsong Gulch", 0, "BATTLEGROUND", "", "DAMAGER"); bar:Show() end)
+				-- LibCompat.After(2, function() PVPReadyDialog_Display(self, 1, "Warsong Gulch", 0, "BATTLEGROUND", "", "DAMAGER"); bar:Show() end)
 
 			end
 
@@ -5681,7 +5682,7 @@
 			-- Add background color
 			editFrame.t = editFrame:CreateTexture(nil, "BACKGROUND")
 			editFrame.t:SetAllPoints()
-			editFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
+			-- editFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
 
 			-- Set textures
 			editFrame.LeftTex:SetTexture(editFrame.RightTex:GetTexture()); editFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
@@ -5701,7 +5702,7 @@
 			titleFrame.CharCount:Hide()
 			titleFrame.t = titleFrame:CreateTexture(nil, "BACKGROUND")
 			titleFrame.t:SetAllPoints()
-			titleFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
+			-- titleFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
 			titleFrame.LeftTex:SetTexture(titleFrame.RightTex:GetTexture()); titleFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
 			titleFrame.BottomTex:SetTexture(titleFrame.TopTex:GetTexture()); titleFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
 			titleFrame.BottomRightTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
@@ -5854,7 +5855,7 @@
 
 						-- Handle flight time not correct or flight does not exist in database
 						local timeStart = GetTime()
-						C_Timer.After(1, function()
+						LibCompat.After(1, function()
 							if UnitOnTaxi("player") then
 								-- Player is on a taxi so register when taxi lands
 								flightFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
@@ -5924,7 +5925,7 @@
 								local speed = -2
 
 								if LeaPlusLC["FlightBarSpeech"] == "On" then
-									C_Timer.After(1, function()
+									LibCompat.After(1, function()
 										C_VoiceChat.SpeakText(0, L["Flight commenced."], destination, speed, GetCVar("Sound_MasterVolume") * 100)
 									end)
 									mybar:AddUpdateFunction(function(bar)
@@ -6585,7 +6586,7 @@
 					local resTimer = GetCorpseRecoveryDelay()
 					if resTimer and resTimer > 0 then
 						-- Resurrect has a delay so wait before resurrecting
-						C_Timer.After(resTimer + 1, function()
+						LibCompat.After(resTimer + 1, function()
 							if not UnitAffectingCombat(arg1) or LeaPlusLC["AutoResNoCombat"] == "Off" then
 								if LeaPlusLC["AutoAcceptRes"] == "On" then
 									if not DoNotAcceptResurrect() then
@@ -6753,7 +6754,7 @@
 			LeaPlusCB["ShowHelm"]:HookScript("OnClick", function()
 				LeaPlusCB["ShowHelm"]:Disable()
 				LeaPlusCB["ShowHelm"]:SetAlpha(1.0)
-				C_Timer.After(0.5, function()
+				LibCompat.After(0.5, function()
 					if ShowingHelm() then
 						ShowHelm(false)
 					else
@@ -6770,7 +6771,7 @@
 			LeaPlusCB["ShowCloak"]:HookScript("OnClick", function()
 				LeaPlusCB["ShowCloak"]:Disable()
 				LeaPlusCB["ShowCloak"]:SetAlpha(1.0)
-				C_Timer.After(0.5, function()
+				LibCompat.After(0.5, function()
 					if ShowingCloak() then
 						ShowCloak(false)
 					else
@@ -7042,7 +7043,7 @@
 				playerActor:SetUnit("player")
 				-- Set animation
 				playerActor:SetAnimation(0)
-				C_Timer.After(0.1,function()
+				LibCompat.After(0.1,function()
 					playerActor:SetAnimation(animTable[math.floor(LeaPlusCB["DressupAnim"]:GetValue() + 0.5)], 0, 1, 1)
 				end)
 			end)
@@ -7056,7 +7057,7 @@
 				if UnitIsPlayer("target") then
 					DressUpFrame.DressUpModel:SetUnit("target")
 					DressUpFrame.DressUpModel:Undress()
-					C_Timer.After(0.01, function()
+					LibCompat.After(0.01, function()
 						for i = 1, 19 do
 							local itemName = GetInventoryItemID("player", i)
 							if itemName then
@@ -7079,7 +7080,7 @@
 						playerActor:SetUnit("target")
 						-- Set animation
 						playerActor:SetAnimation(0)
-						C_Timer.After(0.1,function()
+						LibCompat.After(0.1,function()
 							playerActor:SetAnimation(animTable[math.floor(LeaPlusCB["DressupAnim"]:GetValue() + 0.5)], 0, 1, 1)
 						end)
 					end
@@ -7113,10 +7114,10 @@
 					LeaPlusCB["DressUpTargetSelfBtn"]:SetScript("OnEvent", function()
 						DressUpFrame.DressUpModel:SetUnit("player")
 						DressUpFrame.DressUpModel:Undress()
-						C_Timer.After(0.01, function()
+						LibCompat.After(0.01, function()
 							for i = 1, 19 do
 								local itemName = GetInventoryItemID("target", i)
-								C_Timer.After(0.01, function()
+								LibCompat.After(0.01, function()
 									if itemName then
 										DressUpFrame.DressUpModel:TryOn("item:" .. itemName)
 									end
@@ -7201,7 +7202,7 @@
 						-- CharacterStatsTBC is installed
 						RunScript('CSC_HideStatsPanel()')
 						if startup then
-							C_Timer.After(0.1, function()
+							LibCompat.After(0.1, function()
 								CharacterModelFrame:ClearAllPoints()
 								CharacterModelFrame:SetPoint("TOPLEFT", PaperDollFrame, 66, -76)
 								CharacterModelFrame:SetPoint("BOTTOMRIGHT", PaperDollFrame, -86, 134)
@@ -7226,7 +7227,7 @@
 						-- CharacterStatsTBC is installed
 						RunScript('CSC_ShowStatsPanel()')
 						if startup then
-							C_Timer.After(0.1, function()
+							LibCompat.After(0.1, function()
 								CharacterModelFrame:ClearAllPoints()
 								CharacterModelFrame:SetPoint("TOPLEFT", PaperDollFrame, 66, -76)
 								CharacterModelFrame:SetPoint("BOTTOMRIGHT", PaperDollFrame, -86, 243)
@@ -7451,7 +7452,7 @@
 						end
 						-- Release automatically
 						local delay = LeaPlusLC["AutoReleaseDelay"] / 1000
-						C_Timer.After(delay, function()
+						LibCompat.After(delay, function()
 							local dialog = StaticPopup_Visible("DEATH")
 							if dialog then
 								if IsShiftKeyDown() then
@@ -7801,13 +7802,13 @@
 				if setting and LeaPlusLC["SetWeatherDensity"] == "On" then
 					if setting == "graphicsParticleDensity" then
 						if GetCVar("WeatherDensity") ~= LeaPlusLC["WeatherLevel"] then
-							C_Timer.After(0.1, function()
+							LibCompat.After(0.1, function()
 								SetCVar("WeatherDensity", LeaPlusLC["WeatherLevel"])
 							end)
 						end
 					elseif setting == "raidGraphicsParticleDensity" then
 						if GetCVar("RAIDweatherDensity") ~= LeaPlusLC["WeatherLevel"] then
-							C_Timer.After(0.1, function()
+							LibCompat.After(0.1, function()
 								SetCVar("RAIDweatherDensity", LeaPlusLC["WeatherLevel"])
 							end)
 						end
@@ -8487,7 +8488,7 @@
 
 			SetCVar("chatClassColorOverride", "0")
 
-			C_Timer.After(0.1, function()
+			LibCompat.After(0.1, function()
 
 				-- Set local channel colors and lock checkboxes
 				for i = 1, 18 do
@@ -8660,14 +8661,10 @@
 				if arg1 == "RightButton" then
 
 					-- No modifier key toggles the options panel
-					if LeaPlusLC:IsPlusShowing() then
-						LeaPlusLC:HideFrames()
-						LeaPlusLC:HideConfigPanels()
-					else
-						LeaPlusLC:HideFrames()
-						LeaPlusLC["PageF"]:Show()
-					end
-					LeaPlusLC["Page" .. LeaPlusLC["LeaStartPage"]]:Show()
+					-- if LeaPlusLC:IsPlusShowing() then
+ReloadUI()
+					-- end
+					-- LeaPlusLC["Page" .. LeaPlusLC["LeaStartPage"]]:Show()
 
 				end
 
@@ -9021,7 +9018,7 @@
 			end)
 
 			-- Create drag frame
-			local dragframe = CreateFrame("FRAME", nil, nil, "BackdropTemplate")
+			local dragframe = CreateFrame("FRAME", nil, nil)
 			dragframe:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, 2.5)
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
@@ -9031,7 +9028,7 @@
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -9271,7 +9268,7 @@
 				if not currentframe then
 					-- No frame selected so select the player frame
 					currentframe = PlayerFrame:GetName()
-					LeaPlusLC["DragPlayerFrame"].t:SetColorTexture(0.0, 1.0, 0.0,0.5)
+					-- LeaPlusLC["DragPlayerFrame"].t:SetColorTexture(0.0, 1.0, 0.0,0.5)
 				end
 				-- Set the scale slider value to the selected frame
 				LeaPlusCB["FrameScale"]:SetValue(LeaPlusDB["Frames"][currentframe]["Scale"])
@@ -9385,7 +9382,7 @@
 			-- Create drag frames
 			local function LeaPlusMakeDrag(dragframe,realframe)
 
-				local dragframe = CreateFrame("Frame", nil, nil, "BackdropTemplate")
+				local dragframe = CreateFrame("Frame", nil, nil)
 				LeaPlusLC[dragframe] = dragframe
 				dragframe:SetSize(realframe:GetSize())
 				dragframe:SetPoint("TOP", realframe, "TOP", 0, 2.5)
@@ -9415,9 +9412,9 @@
 
 					-- Set all drag frames to blue then tint the selected frame to green
 					for k,v in pairs(FrameTable) do
-						LeaPlusLC[k].t:SetColorTexture(0.0, 0.5, 1.0, 0.5)
+						-- LeaPlusLC[k].t:SetColorTexture(0.0, 0.5, 1.0, 0.5)
 					end
-					dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+					-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
 
 					-- Set currentframe variable to selected frame and set the scale slider value
 					currentframe = realframe:GetName()
@@ -9432,7 +9429,7 @@
 
 				dragframe.t = dragframe:CreateTexture()
 				dragframe.t:SetAllPoints()
-				dragframe.t:SetColorTexture(0.0, 0.5, 1.0, 0.5)
+				-- dragframe.t:SetColorTexture(0.0, 0.5, 1.0, 0.5)
 				dragframe.t:SetAlpha(0.5)
 
 				dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -9583,7 +9580,7 @@
 			UIWidgetTopCenterContainerFrame:SetScale(LeaPlusLC["WidgetScale"])
 
 			-- Create drag frame
-			local dragframe = CreateFrame("FRAME", nil, nil, "BackdropTemplate")
+			local dragframe = CreateFrame("FRAME", nil, nil)
 			dragframe:SetPoint("CENTER", topCenterHolder, "CENTER", 0, 1)
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
@@ -9593,7 +9590,7 @@
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -9787,7 +9784,7 @@
 			FocusFrame:SetScale(LeaPlusLC["FocusScale"])
 
 			-- Create drag frame
-			local dragframe = CreateFrame("FRAME", nil, nil, "BackdropTemplate")
+			local dragframe = CreateFrame("FRAME", nil, nil)
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
 			dragframe:SetToplevel(true)
@@ -9796,7 +9793,7 @@
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
+			-- dragframe.t:SetColorTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -10127,7 +10124,7 @@
 			-- Add background color
 			editFrame.t = editFrame:CreateTexture(nil, "BACKGROUND")
 			editFrame.t:SetAllPoints()
-			editFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
+			-- editFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
 
 			-- Set textures
 			editFrame.LeftTex:SetTexture(editFrame.RightTex:GetTexture()); editFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
@@ -10147,7 +10144,7 @@
 			titleFrame.CharCount:Hide()
 			titleFrame.t = titleFrame:CreateTexture(nil, "BACKGROUND")
 			titleFrame.t:SetAllPoints()
-			titleFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
+			-- titleFrame.t:SetColorTexture(0.00, 0.00, 0.0, 0.6)
 			titleFrame.LeftTex:SetTexture(titleFrame.RightTex:GetTexture()); titleFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
 			titleFrame.BottomTex:SetTexture(titleFrame.TopTex:GetTexture()); titleFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
 			titleFrame.BottomRightTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
@@ -10295,7 +10292,7 @@
 				end
 				titleFrame.m:SetText(L["Messages"] .. ": " .. totalMsgCount)
 				editFrame:SetVerticalScroll(0)
-				C_Timer.After(0.1, function() editFrame.ScrollBar.ScrollDownButton:Click() end)
+				LibCompat.After(0.1, function() editFrame.ScrollBar.ScrollDownButton:Click() end)
 				editFrame:Show()
 				editBox:ClearFocus()
 			end
@@ -10740,7 +10737,7 @@
 			LT["ColorBlind"] = GetCVar("colorblindMode")
 
 			-- 	Create drag frame
-			local TipDrag = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+			local TipDrag = CreateFrame("Frame", nil, UIParent)
 			TipDrag:SetToplevel(true);
 			TipDrag:SetClampedToScreen(false);
 			TipDrag:SetSize(130, 64);
@@ -10761,7 +10758,7 @@
 			-- Create texture
 			TipDrag.t = TipDrag:CreateTexture();
 			TipDrag.t:SetAllPoints();
-			TipDrag.t:SetColorTexture(0.0, 0.5, 1.0, 0.5);
+			-- TipDrag.t:SetColorTexture(0.0, 0.5, 1.0, 0.5);
 			TipDrag.t:SetAlpha(0.5);
 
 			---------------------------------------------------------------------------------------------------------
@@ -11471,10 +11468,18 @@
 		if LeaPlusLC["ViewPortEnable"] == "On" then
 
 			-- Create border textures
-			local BordTop = WorldFrame:CreateTexture(nil, "ARTWORK"); BordTop:SetColorTexture(0, 0, 0, 1); BordTop:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0); BordTop:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
-			local BordBot = WorldFrame:CreateTexture(nil, "ARTWORK"); BordBot:SetColorTexture(0, 0, 0, 1); BordBot:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0); BordBot:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
-			local BordLeft = WorldFrame:CreateTexture(nil, "ARTWORK"); BordLeft:SetColorTexture(0, 0, 0, 1); BordLeft:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0); BordLeft:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
-			local BordRight = WorldFrame:CreateTexture(nil, "ARTWORK"); BordRight:SetColorTexture(0, 0, 0, 1); BordRight:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0); BordRight:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
+			local BordTop = WorldFrame:CreateTexture(nil, "ARTWORK"); 
+			-- BordTop:SetColorTexture(0, 0, 0, 1); 
+			BordTop:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0); BordTop:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
+			local BordBot = WorldFrame:CreateTexture(nil, "ARTWORK"); 
+			-- BordBot:SetColorTexture(0, 0, 0, 1); 
+			BordBot:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0); BordBot:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
+			local BordLeft = WorldFrame:CreateTexture(nil, "ARTWORK"); 
+			-- BordLeft:SetColorTexture(0, 0, 0, 1); 
+			BordLeft:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0); BordLeft:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
+			local BordRight = WorldFrame:CreateTexture(nil, "ARTWORK"); 
+			-- BordRight:SetColorTexture(0, 0, 0, 1); 
+			BordRight:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0); BordRight:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
 
 			-- Create viewport configuration panel
 			local SideViewport = LeaPlusLC:CreatePanel("Enable viewport", "SideViewport")
@@ -11713,7 +11718,7 @@
 
 		-- Show first run message
 		if not LeaPlusDB["FirstRunMessageSeen"] then
-			C_Timer.After(1, function()
+			LibCompat.After(1, function()
 				LeaPlusLC:Print(L["Enter"] .. " |cff00ff00" .. "/run leaplus()" .. "|r " .. L["or click the minimap button to open Leatrix Plus."])
 				LeaPlusDB["FirstRunMessageSeen"] = true
 			end)
@@ -11781,14 +11786,14 @@
 			-- Plot vertical lines
 			for i = 0, wline do
 				local t = LeaPlusLC.grid:CreateTexture(nil, 'BACKGROUND')
-				if i == wline / 2 then t:SetColorTexture(1, 0, 0, 0.5) else t:SetColorTexture(0, 0, 0, 0.5) end
+				-- if i == wline / 2 then t:SetColorTexture(1, 0, 0, 0.5) else t:SetColorTexture(0, 0, 0, 0.5) end
 				t:SetPoint('TOPLEFT', grid, 'TOPLEFT', i * w / wline - 1, 0)
 				t:SetPoint('BOTTOMRIGHT', grid, 'BOTTOMLEFT', i * w / wline + 1, 0)
 			end
 			-- Plot horizontal lines
 			for i = 0, hline do
 				local t = LeaPlusLC.grid:CreateTexture(nil, 'BACKGROUND')
-				if i == hline / 2 then	t:SetColorTexture(1, 0, 0, 0.5) else t:SetColorTexture(0, 0, 0, 0.5) end
+				-- if i == hline / 2 then	t:SetColorTexture(1, 0, 0, 0.5) else t:SetColorTexture(0, 0, 0, 0.5) end
 				t:SetPoint('TOPLEFT', grid, 'TOPLEFT', 0, -i * h / hline + 1)
 				t:SetPoint('BOTTOMRIGHT', grid, 'TOPRIGHT', 0, -i * h / hline - 1)
 			end
@@ -11896,14 +11901,14 @@
 
 				-- Create hover texture
 				mbtn.t = mbtn:CreateTexture(nil, "BACKGROUND")
-				mbtn.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+				-- mbtn.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
 				mbtn.t:SetAlpha(0.7)
 				mbtn.t:SetAllPoints()
 				mbtn.t:Hide()
 
 				-- Create highlight texture
 				mbtn.s = mbtn:CreateTexture(nil, "BACKGROUND")
-				mbtn.s:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+				-- mbtn.s:SetColorTexture(0.3, 0.3, 0.00, 0.8)
 				mbtn.s:SetAlpha(1.0)
 				mbtn.s:SetAllPoints()
 				mbtn.s:Hide()
@@ -12046,7 +12051,7 @@
 				if strfind(playlist[tracknumber], "#") then
 					if strfind(playlist[tracknumber], ".mp3") then
 						-- Track is a sound file with track time so create track timer
-						LeaPlusLC.TrackTimer = C_Timer.NewTimer(trackTime + 1, function()
+						LeaPlusLC.TrackTimer = LibCompat.NewTimer(trackTime + 1, function()
 							if musicHandle then StopSound(musicHandle) end
 							if tracknumber == #playlist then
 								-- Playlist is at the end, restart from first track
@@ -12259,7 +12264,7 @@
 				button.t:SetPoint("TOPLEFT", button, 0, 0)
 				button.t:SetSize(516, 16)
 
-				button.t:SetColorTexture(0.3, 0.3, 0.0, 0.8)
+				-- button.t:SetColorTexture(0.3, 0.3, 0.0, 0.8)
 				button.t:SetAlpha(0.7)
 				button.t:Hide()
 
@@ -12268,7 +12273,7 @@
 				button.s:SetPoint("TOPLEFT", button, 0, 0)
 				button.s:SetSize(516, 16)
 
-				button.s:SetColorTexture(0.3, 0.4, 0.00, 0.6)
+				-- button.s:SetColorTexture(0.3, 0.4, 0.00, 0.6)
 				button.s:Hide()
 
 				button:SetScript("OnEnter", function()
@@ -12297,7 +12302,7 @@
 						-- Restart player if it stopped between tracks during loading screen
 						if playlist and tracknumber and playlist[tracknumber] and not willPlay and not musicHandle then
 							tracknumber = tracknumber - 1
-							C_Timer.After(0.1, PlayTrack)
+							LibCompat.After(0.1, PlayTrack)
 						end
 					end
 				end)
@@ -12523,7 +12528,7 @@
 					local id, player = BNGetFriendInviteInfo(i)
 					if id and player then
 						BNDeclineFriendInvite(id)
-						C_Timer.After(0.1, function()
+						LibCompat.After(0.1, function()
 							LeaPlusLC:Print(L["A friend request from"] .. " " .. player .. " " .. L["was automatically declined."])
 						end)
 					end
@@ -12710,7 +12715,7 @@
 				local sName = C_SummonInfo.GetSummonConfirmSummoner()
 				local sLocation = C_SummonInfo.GetSummonConfirmAreaName()
 				LeaPlusLC:Print(L["The summon from"] .. " " .. sName .. " (" .. sLocation .. ") " .. L["will be automatically accepted in 10 seconds unless cancelled."])
-				C_Timer.After(10, function()
+				LibCompat.After(10, function()
 					local sNameNew = C_SummonInfo.GetSummonConfirmSummoner()
 					local sLocationNew = C_SummonInfo.GetSummonConfirmAreaName()
 					if sName == sNameNew and sLocation == sLocationNew then
@@ -13634,7 +13639,7 @@
 		-- Set the background color
 		Side.t = Side:CreateTexture(nil, "BACKGROUND")
 		Side.t:SetAllPoints()
-		Side.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+		-- Side.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
 
 		-- Add a close Button
 		Side.c = CreateFrame("Button", nil, Side, "UIPanelCloseButton")
@@ -13888,7 +13893,7 @@
 		eb:SetScript("OnEnterPressed", eb.ClearFocus)
 
 		-- Add editbox border and backdrop
-		eb.f = CreateFrame("FRAME", nil, eb, "BackdropTemplate")
+		eb.f = CreateFrame("FRAME", nil, eb)
 		eb.f:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = false, tileSize = 16, edgeSize = 16, insets = { left = 5, right = 5, top = 5, bottom = 5 }})
 		eb.f:SetPoint("LEFT", -6, 0)
 		eb.f:SetWidth(eb:GetWidth()+6)
@@ -13946,11 +13951,11 @@
 			mbtn:GetHighlightTexture():SetTexCoord(0, 0.125, 0.4375, 0.5)
 
 			-- Hide the default textures
-			mbtn:HookScript("OnShow", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
-			mbtn:HookScript("OnEnable", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
-			mbtn:HookScript("OnDisable", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
-			mbtn:HookScript("OnMouseDown", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
-			mbtn:HookScript("OnMouseUp", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
+			-- mbtn:HookScript("OnShow", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
+			-- mbtn:HookScript("OnEnable", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
+			-- mbtn:HookScript("OnDisable", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
+			-- mbtn:HookScript("OnMouseDown", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
+			-- mbtn:HookScript("OnMouseUp", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
 
 		end
 
@@ -13993,7 +13998,7 @@
 		dbtn:SetScript("OnLeave", GameTooltip_Hide)
 
 		-- Create dropdown list
-		local ddlist =  CreateFrame("Frame",nil,frame, "BackdropTemplate")
+		local ddlist =  CreateFrame("Frame",nil,frame)
 		LeaPlusCB["ListFrame"..ddname] = ddlist
 		ddlist:SetPoint("TOP",0,-42)
 		ddlist:SetWidth(frame:GetWidth())
@@ -14031,7 +14036,7 @@
 
 			dditem.t = dditem:CreateTexture(nil, "BACKGROUND")
 			dditem.t:SetAllPoints()
-			dditem.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+			-- dditem.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
 			dditem.t:Hide();
 
 			dditem:SetScript("OnEnter", function() dditem.t:Show() end)
@@ -14101,7 +14106,7 @@
 		-- Add background color
 		PageF.t = PageF:CreateTexture(nil, "BACKGROUND")
 		PageF.t:SetAllPoints()
-		PageF.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+		-- PageF.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
 
 		-- Add textures
 		LeaPlusLC:CreateBar("FootTexture", PageF, 570, 48, "BOTTOM", 0.5, 0.5, 0.5, 1.0, "Interface\\ACHIEVEMENTFRAME\\UI-GuildAchievement-Parchment-Horizontal-Desaturated.png")
@@ -14243,7 +14248,7 @@
 					if tonumber(arg1) and tonumber(arg1) < 999999999 then
 						local questCompleted = C_QuestLog.IsQuestFlaggedCompleted(arg1)
 						local questTitle = C_QuestLog.GetQuestInfo(arg1) or L["Unknown"]
-						C_Timer.After(0.5, function()
+						LibCompat.After(0.5, function()
 							local questTitle = C_QuestLog.GetQuestInfo(arg1) or L["Unknown"]
 							if questCompleted then
 								LeaPlusLC:Print(questTitle .. " (" .. arg1 .. "):" .. "|cffffffff " .. L["Completed."])
@@ -14798,7 +14803,8 @@
 				if not LeaPlusLC.HelpFrame then
 					local frame = CreateFrame("FRAME", nil, UIParent)
 					frame:SetSize(570, 340); frame:SetFrameStrata("FULLSCREEN_DIALOG"); frame:SetFrameLevel(100)
-					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints(); frame.tex:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints(); 
+					-- frame.tex:SetColorTexture(0.05, 0.05, 0.05, 0.9)
 					frame.close = CreateFrame("Button", nil, frame, "UIPanelCloseButton"); frame.close:SetSize(30, 30); frame.close:SetPoint("TOPRIGHT", 0, 0); frame.close:SetScript("OnClick", function() frame:Hide() end)
 					frame:ClearAllPoints(); frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 					frame:SetClampedToScreen(true)
@@ -15124,7 +15130,7 @@
 							end
 						end
 						-- Reinvite
-						C_Timer.After(0.1, function()
+						LibCompat.After(0.1, function()
 							for k, v in pairs(groupNames) do
 								C_PartyInfo.InviteUnit(v)
 							end
@@ -15142,7 +15148,8 @@
 					-- Panel frame
 					local frame = CreateFrame("FRAME", nil, UIParent)
 					frame:SetSize(294, 86); frame:SetFrameStrata("FULLSCREEN_DIALOG"); frame:SetFrameLevel(100); frame:SetScale(2)
-					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints(); frame.tex:SetColorTexture(0.05, 0.05, 0.05, 0.9)
+					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints(); 
+					-- frame.tex:SetColorTexture(0.05, 0.05, 0.05, 0.9)
 					frame.close = CreateFrame("Button", nil, frame, "UIPanelCloseButton"); frame.close:SetSize(30, 30); frame.close:SetPoint("TOPRIGHT", 0, 0); frame.close:SetScript("OnClick", function() frame:Hide() end)
 					frame:ClearAllPoints(); frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 					frame:SetClampedToScreen(true)
@@ -15177,7 +15184,7 @@
 						if endSound then
 							if endSound > 3000000 then endSound = 3000000 endBox:SetText(endSound) end
 							frame.btn:SetText("WAIT")
-							C_Timer.After(0.1, function()
+							LibCompat.After(0.1, function()
 								for i = 1, 3000000 do
 									MuteSoundFile(i)
 								end
@@ -15190,7 +15197,7 @@
 						else
 							frame.btn:SetText("INVALID")
 							frame.btn:EnableMouse(false)
-							C_Timer.After(2, function()
+							LibCompat.After(2, function()
 								frame.btn:SetText("SET LIMIT")
 								frame.btn:EnableMouse(true)
 							end)
@@ -15203,7 +15210,7 @@
 					frame.MuteAllBtn:SetPoint("TOPLEFT", frame.btn, "TOPRIGHT", 20, 0)
 					frame.MuteAllBtn:SetScript("OnClick", function()
 						frame.MuteAllBtn:SetText("WAIT")
-						C_Timer.After(0.1, function()
+						LibCompat.After(0.1, function()
 							for i = 1, 3000000 do
 								MuteSoundFile(i)
 							end
@@ -15219,7 +15226,7 @@
 					frame.UnmuteAllBtn:SetPoint("TOPLEFT", frame.MuteAllBtn, "BOTTOMLEFT", 0, -10)
 					frame.UnmuteAllBtn:SetScript("OnClick", function()
 						frame.UnmuteAllBtn:SetText("WAIT")
-						C_Timer.After(0.1, function()
+						LibCompat.After(0.1, function()
 							for i = 1, 3000000 do
 								UnmuteSoundFile(i)
 							end
@@ -15695,13 +15702,13 @@
 
 		mbtn.t = mbtn:CreateTexture(nil, "BACKGROUND")
 		mbtn.t:SetAllPoints()
-		mbtn.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+		-- mbtn.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
 		mbtn.t:SetAlpha(0.7)
 		mbtn.t:Hide()
 
 		mbtn.s = mbtn:CreateTexture(nil, "BACKGROUND")
 		mbtn.s:SetAllPoints()
-		mbtn.s:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+		-- mbtn.s:SetColorTexture(0.3, 0.3, 0.00, 0.8)
 		mbtn.s:Hide()
 
 		mbtn.f = mbtn:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')

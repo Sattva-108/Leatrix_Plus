@@ -1,4 +1,4 @@
-## Interface: 30401
+## Interface: 30300
 
 ## Title: Leatrix Plus
 ## Title-zhCN: Leatrix Plus [|cffeda55f功能百宝箱|r]
@@ -15,6 +15,13 @@
 ## OptionalDeps: Leatrix_enUS, ElvUI, Glass
 
 ## X-Curse-Project-ID: 463863
+
+libs\LibStub\LibStub.lua
+libs\LibCompat-1.0\lib.xml
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+
 
 Leatrix_Plus_Library.lua
 Leatrix_Plus_Locale.lua
