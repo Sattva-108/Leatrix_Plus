@@ -6101,91 +6101,107 @@
 
 			-- Function to set resurrect event
 			local function SetResEvent()
-				if LeaPlusLC["AutoAcceptRes"] == "On" then
-					AcceptResPanel:RegisterEvent("RESURRECT_REQUEST")
-				else
-					AcceptResPanel:UnregisterEvent("RESURRECT_REQUEST")
-				end
+			    -- print("Setting resurrect event")
+			    if LeaPlusLC["AutoAcceptRes"] == "On" then
+			        AcceptResPanel:RegisterEvent("RESURRECT_REQUEST")
+			    else
+			        AcceptResPanel:UnregisterEvent("RESURRECT_REQUEST")
+			    end
 			end
 
 			-- Run function when option is clicked and on startup if option is enabled
-			LeaPlusCB["AutoAcceptRes"]:HookScript("OnClick", SetResEvent)
-			if LeaPlusLC["AutoAcceptRes"] == "On" then SetResEvent() end
+			LeaPlusCB["AutoAcceptRes"]:HookScript("OnClick", function()
+			    -- print("AutoAcceptRes clicked")
+			    SetResEvent()
+			end)
 
-			-- Function to not accept resurrection based on certain conditions
-			local function DoNotAcceptResurrect()
-				local mapID = C_Map.GetBestMapForUnit("player") or nil
-				if mapID and mapID == 162 then -- Naxxramas Construct Quarter
-					-- Check party or raid for debuffs
-					local group = IsInRaid() and "raid" or "party"
-					for i = 1, GetNumGroupMembers() do
-						local unit = group .. i
-						if unit and UnitExists(unit) then
-							for j = 1, 40 do
-								local void, void, void, void, void, void, void, void, void, spellID = UnitDebuff(unit, j)
-								if spellID then
-									if spellID == 28059 or spellID == 28084 then
-										-- Thaddius positive and negative charge debuffs
-										LeaPlusLC:Print("Resurrection not accepted.  Someone in your group has a charge debuff.")
-										return true
-									end
-								end
-							end
-						end
-					end
-				end
+			if LeaPlusLC["AutoAcceptRes"] == "On" then 
+			    SetResEvent() 
 			end
 
+			-- -- Function to not accept resurrection based on certain conditions
+			-- local function DoNotAcceptResurrect()
+			--     print("Checking conditions to accept resurrect")
+			--     local mapID = C_Map.GetBestMapForUnit("player") or nil
+			    
+			--     if mapID and mapID == 162 then -- Naxxramas Construct Quarter
+			--         print("In Naxxramas Construct Quarter")
+			        
+			--         -- Check party or raid for debuffs
+			--         local group = IsInRaid() and "raid" or "party"
+			--         for i = 1, GetNumGroupMembers() do
+			--             local unit = group .. i
+			--             if unit and UnitExists(unit) then
+			--                 for j = 1, 40 do
+			--                     local void, void, void, void, void, void, void, void, void, spellID = UnitDebuff(unit, j)
+			--                     if spellID then
+			--                         if spellID == 28059 or spellID == 28084 then
+			--                             -- Thaddius positive and negative charge debuffs
+			--                             print("Resurrection not accepted. Someone in your group has a charge debuff.")
+			--                             return true
+			--                         end
+			--                     end
+			--                 end
+			--             end
+			--         end
+			--     end
+			-- end
+
 			-- Handle event
-			AcceptResPanel:SetScript("OnEvent", function(self, event, arg1)
-				if event == "RESURRECT_REQUEST" then
+			AcceptResPanel:SetScript("OnEvent", function(self, event, ...)
+			    if event == "RESURRECT_REQUEST" then
+			        -- print("Received resurrect request")
+			        
+			        -- -- Exclude Chained Spirit (Zul'Gurub)
+			        -- local chainLoc
 
-					-- Exclude Chained Spirit (Zul'Gurub)
-					local chainLoc
+			        -- -- Exclude Chained Spirit (Zul'Gurub)
+			        -- chainLoc = "Chained Spirit"
+			        -- if     GameLocale == "zhCN" then chainLoc = "被禁锢的灵魂"
+			        -- elseif GameLocale == "zhTW" then chainLoc = "禁錮之魂"
+			        -- elseif GameLocale == "ruRU" then chainLoc = "Скованный дух"
+			        -- elseif GameLocale == "koKR" then chainLoc = "구속된 영혼"
+			        -- elseif GameLocale == "esMX" then chainLoc = "Espíritu encadenado"
+			        -- elseif GameLocale == "ptBR" then chainLoc = "Espírito Acorrentado"
+			        -- elseif GameLocale == "deDE" then chainLoc = "Angeketteter Geist"
+			        -- elseif GameLocale == "esES" then chainLoc = "Espíritu encadenado"
+			        -- elseif GameLocale == "frFR" then chainLoc = "Esprit enchaîné"
+			        -- elseif GameLocale == "itIT" then chainLoc = "Spirito Incatenato"
+			        -- end
+			        -- if arg1 == chainLoc then return    end
 
-					-- Exclude Chained Spirit (Zul'Gurub)
-					chainLoc = "Chained Spirit"
-					if 	   GameLocale == "zhCN" then chainLoc = "被禁锢的灵魂"
-					elseif GameLocale == "zhTW" then chainLoc = "禁錮之魂"
-					elseif GameLocale == "ruRU" then chainLoc = "Скованный дух"
-					elseif GameLocale == "koKR" then chainLoc = "구속된 영혼"
-					elseif GameLocale == "esMX" then chainLoc = "Espíritu encadenado"
-					elseif GameLocale == "ptBR" then chainLoc = "Espírito Acorrentado"
-					elseif GameLocale == "deDE" then chainLoc = "Angeketteter Geist"
-					elseif GameLocale == "esES" then chainLoc = "Espíritu encadenado"
-					elseif GameLocale == "frFR" then chainLoc = "Esprit enchaîné"
-					elseif GameLocale == "itIT" then chainLoc = "Spirito Incatenato"
-					end
-					if arg1 == chainLoc then return	end
+			        -- Resurrect
+			        -- local resTimer = GetCorpseRecoveryDelay()
+			        -- if resTimer and resTimer > 0 then
+			    	if LeaPlusLC["AutoAcceptRes"] == "On" then
+			            -- Resurrect has a delay so wait before resurrecting
+			            -- print("Waiting to resurrect...")
+			            -- LibCompat.After(resTimer + 1, function()
+			                if not LibCompat.IsGroupInCombat() or LeaPlusLC["AutoResNoCombat"] == "Off" then
+			                    if LeaPlusLC["AutoAcceptRes"] == "On" then
+			                        -- if not DoNotAcceptResurrect() then
+			                            -- print("Accepting resurrect...")
+			                            AcceptResurrect()
+			                            StaticPopup_Hide("RESURRECT_NO_TIMER")
+			                        -- end
+			                    end
+			                end
+			            -- end)
+			        else
+			            -- Resurrect has no delay so resurrect now
+			            if not LibCompat.IsGroupInCombat() or LeaPlusLC["AutoResNoCombat"] == "On" then
+			                -- if not DoNotAcceptResurrect() then
+			                    -- print("Accepting resurrect...")
+			                    AcceptResurrect()
+			                    StaticPopup_Hide("RESURRECT_NO_TIMER")
+			                -- end
+			            end
+			        end
 
-					-- Resurrect
-					local resTimer = GetCorpseRecoveryDelay()
-					if resTimer and resTimer > 0 then
-						-- Resurrect has a delay so wait before resurrecting
-						LibCompat.After(resTimer + 1, function()
-							if not UnitAffectingCombat(arg1) or LeaPlusLC["AutoResNoCombat"] == "Off" then
-								if LeaPlusLC["AutoAcceptRes"] == "On" then
-									if not DoNotAcceptResurrect() then
-										AcceptResurrect()
-										StaticPopup_Hide("RESURRECT_NO_TIMER")
-									end
-								end
-							end
-						end)
-					else
-						-- Resurrect has no delay so resurrect now
-						if not UnitAffectingCombat(arg1) or LeaPlusLC["AutoResNoCombat"] == "Off" then
-							if not DoNotAcceptResurrect() then
-								AcceptResurrect()
-								StaticPopup_Hide("RESURRECT_NO_TIMER")
-							end
-						end
-					end
-
-					return
-
-				end
+			        return
+			    end
 			end)
+
 
 		end
 
