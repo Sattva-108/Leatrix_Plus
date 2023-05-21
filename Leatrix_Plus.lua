@@ -404,13 +404,14 @@
 
 	end
 
-	-- Check if player is in LFG queue (battleground)
+	-- Check if player is in LFG queue
 	function LeaPlusLC:IsInLFGQueue()
-		for i = 1, GetMaxBattlefieldID() do
-			local status = GetBattlefieldStatus(i)
-			if status == "queued" or status == "confirmed" then
+		if LeaPlusLC["GameVer"] == "5" then
+			if GetLFGQueueStats(LE_LFG_CATEGORY_LFD) or GetLFGQueueStats(LE_LFG_CATEGORY_LFR) or GetLFGQueueStats(LE_LFG_CATEGORY_RF) then
 				return true
 			end
+		else
+			if MiniMapLFGFrame:IsShown() then return true end
 		end
 	end
 
@@ -1734,7 +1735,7 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			function addon:QUEST_PROGRESS ()
-								if LeaPlusLC["AutomateQuests"] == "Off" then return end
+				if LeaPlusLC["AutomateQuests"] == "Off" then return end
 				if not self:canAutomate() then return end
 				if IsQuestCompletable() then
 					CompleteQuest()
