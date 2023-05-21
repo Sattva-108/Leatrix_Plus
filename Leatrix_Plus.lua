@@ -442,52 +442,55 @@
 		end
 	end
 
-	-- Check if a name is in your friends list or guild (does not check realm as realm is unknown for some checks)
-	function LeaPlusLC:FriendCheck(name, guid)
+-- Check if a name is in your friends list or guild (does not check realm as realm is unknown for some checks)
+function LeaPlusLC:FriendCheck(name)
 
 		-- Do nothing if name is empty (such as whispering from the Battle.net app)
 		if not name then return end
 
 		-- Update friends list
-		C_FriendList.ShowFriends()
+		ShowFriends()
 
-		-- Remove realm
-		name = strsplit("-", name, 2)
+		-- Remove realm if it exists
+		if name ~= nil then
+			name = strsplit("-", name, 2)
+		end
 
 		-- Check character friends
-		for i = 1, C_FriendList.GetNumFriends() do
-			-- Return true is character name matches and GUID matches if there is one (realm is not checked)
-			local friendInfo = C_FriendList.GetFriendInfoByIndex(i)
-			local charFriendName = C_FriendList.GetFriendInfoByIndex(i).name
-			charFriendName = strsplit("-", charFriendName, 2)
-			if (name == charFriendName) and (guid and (guid == friendInfo.guid) or true) then
+		for i = 1, GetNumFriends() do
+			local friendName, _, _, _, friendConnected = GetFriendInfo(i)
+			if friendName ~= nil then -- Check if name is not nil
+				friendName = strsplit("-", friendName, 2)
+			end
+
+			if (name == friendName) and friendConnected then -- Check if name matches and friend is connected
 				return true
 			end
 		end
 
-		-- Check Battle.net friends
-		local numfriends = BNGetNumFriends()
-		for i = 1, numfriends do
-			local numtoons = C_BattleNet.GetFriendNumGameAccounts(i)
-			for j = 1, numtoons do
-				local gameAccountInfo = C_BattleNet.GetFriendGameAccountInfo(i, j)
-				local characterName = gameAccountInfo.characterName
-				local client = gameAccountInfo.clientProgram
-				if client == "WoW" and characterName == name then
-					return true
-				end
-			end
-		end
+		-- -- Check Battle.net friends -- obviously disable as there is no bnet friends in 3.3.5 and 2.4.3
+		-- local numfriends = BNGetNumFriends()
+		-- for i = 1, numfriends do
+		-- 	local numtoons = C_BattleNet.GetFriendNumGameAccounts(i)
+		-- 	for j = 1, numtoons do
+		-- 		local gameAccountInfo = C_BattleNet.GetFriendGameAccountInfo(i, j)
+		-- 		local characterName = gameAccountInfo.characterName
+		-- 		local client = gameAccountInfo.clientProgram
+		-- 		if client == "WoW" and characterName == name then
+		-- 			return true
+		-- 		end
+		-- 	end
+		-- end
 
 		-- Check guild members if guild is enabled (new members may need to press J to refresh roster)
 		if LeaPlusLC["FriendlyGuild"] == "On" then
 			local gCount = GetNumGuildMembers()
 			for i = 1, gCount do
-				local gName, void, void, void, void, void, void, void, gOnline, void, void, void, void, gMobile, void, void, gGUID = GetGuildRosterInfo(i)
-				if gOnline and not gMobile then
+				local gName, void, void, void, void, void, void, void, gOnline = GetGuildRosterInfo(i)
+				if gOnline then
 					gName = strsplit("-", gName, 2)
-					-- Return true if character name matches including GUID if there is one
-					if (name == gName) and (guid and (guid == gGUID) or true) then
+					-- Return true if character name matches
+					if (name == gName) then
 						return true
 					end
 				end
@@ -2267,7 +2270,7 @@
 							-- Guilded character and guild repair option is enabled
 							if CanGuildBankRepair() then
 								-- Character has permission to repair so try guild funds but fallback on character funds (if daily gold limit is reached)
-								RepairAllItems(1)
+								RepairAllItems(1) --test 2.4.3
 								RepairAllItems()
 							else
 								-- Character does not have permission to repair so use character funds
