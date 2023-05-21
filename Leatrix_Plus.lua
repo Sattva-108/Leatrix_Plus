@@ -1524,24 +1524,24 @@
 				end
 			end
 
-					-- Reset Message flag when gossip window is closed
-		local function ResetMessageFlag()
-			isMessagePrinted = false
-		end
-
-			-- Create gossip event frame
-			local gossipFrame = CreateFrame("FRAME")
-
-		-- Function to setup events
-		local function SetupEvents()
-			if LeaPlusLC["AutomateGossip"] == "On" then
-				gossipFrame:RegisterEvent("GOSSIP_SHOW")
-				gossipFrame:RegisterEvent("GOSSIP_CLOSED") -- Added line to register GOSSIP_CLOSED event
-			else
-				gossipFrame:UnregisterEvent("GOSSIP_SHOW")
-				gossipFrame:UnregisterEvent("GOSSIP_CLOSED") -- Added line to unregister GOSSIP_CLOSED event
+			-- Reset Message flag when gossip window is closed
+			local function ResetMessageFlag()
+				isMessagePrinted = false
 			end
-		end
+
+				-- Create gossip event frame
+				local gossipFrame = CreateFrame("FRAME")
+
+			-- Function to setup events
+			local function SetupEvents()
+				if LeaPlusLC["AutomateGossip"] == "On" then
+					gossipFrame:RegisterEvent("GOSSIP_SHOW")
+					gossipFrame:RegisterEvent("GOSSIP_CLOSED") -- Added line to register GOSSIP_CLOSED event
+				else
+					gossipFrame:UnregisterEvent("GOSSIP_SHOW")
+					gossipFrame:UnregisterEvent("GOSSIP_CLOSED") -- Added line to unregister GOSSIP_CLOSED event
+				end
+			end
 
 			-- Setup events when option is clicked and on startup (if option is enabled)
 			LeaPlusCB["AutomateGossip"]:HookScript("OnClick", SetupEvents)
@@ -1577,44 +1577,51 @@
 
 			}
 
+			--===== create ignore NPC table to not mess with npcTable and for future user options =====--
+			local npcIgnore = {
+
+				-- Innkeepers
+				5111, 6740
+
+			}
 
 
-
-			-- Event handler
-		gossipFrame:SetScript("OnEvent", function(self, event, ...)
-			if event == "GOSSIP_SHOW" then
-				-- Special treatment for specific NPCs
-				local npcGuid = UnitGUID("target") or nil
-				if npcGuid and not IsShiftKeyDown() then
-					local npcID = LibCompat.GetUnitCreatureId("target")
-					-- print(npcID)
-					if npcID then
-						-- Open rogue doors in Dalaran (Broken Isles) automatically
-						if npcID == "96782"		-- Lucian Trias
-						or npcID == "93188"		-- Mongar
-						or npcID == "97004"		-- "Red" Jack Findle
-						then
-							SkipGossip()
-							return
-						end
-						-- Skip gossip with no alt key requirement
-						if npcID == "132969"	-- Katy Stampwhistle (toy)
-						or npcID == "104201"	-- Katy Stampwhistle (npc)
-						or tContains(npcTable, tonumber(npcID))
-						then
-							SkipGossip(true) 	-- true means skip alt key requirement
-							return
+				-- Event handler
+			gossipFrame:SetScript("OnEvent", function(self, event, ...)
+				if event == "GOSSIP_SHOW" then
+					-- Special treatment for specific NPCs
+					local npcGuid = UnitGUID("target") or nil
+					if npcGuid and not IsShiftKeyDown() then
+						local npcID = LibCompat.GetUnitCreatureId("target")
+						-- print(npcID)
+						if npcID then
+							-- Open rogue doors in Dalaran (Broken Isles) automatically
+							if npcID == "96782"		-- Lucian Trias
+							or npcID == "93188"		-- Mongar
+							or npcID == "97004"		-- "Red" Jack Findle
+							then
+								SkipGossip()
+								return
+							end
+							-- Skip gossip with no alt key requirement
+							if npcID == "132969"	-- Katy Stampwhistle (toy)
+							or npcID == "104201"	-- Katy Stampwhistle (npc)
+							or tContains(npcTable, tonumber(npcID))
+							and not tContains(npcIgnore, tonumber(npcID))
+							then
+								SkipGossip(true) 	-- true means skip alt key requirement
+								return
+							end
 						end
 					end
+					-- Process gossip
+					SkipGossip()
+					
+				elseif event == "GOSSIP_CLOSED" then
+					-- Reset Message flag when gossip window is closed
+					ResetMessageFlag()
 				end
-				-- Process gossip
-				SkipGossip()
-				
-			elseif event == "GOSSIP_CLOSED" then
-				-- Reset Message flag when gossip window is closed
-				ResetMessageFlag()
-			end
-		end)
+			end)
 
 		end
 
@@ -7034,11 +7041,11 @@
 			-- Release in battlegrounds
 			hooksecurefunc("StaticPopup_Show", function(sType)
 				if sType and sType == "DEATH" and LeaPlusLC["AutoReleasePvP"] == "On" then
-					if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then return end
+					if HasSoulstone() then return end
 					local InstStat, InstType = IsInInstance()
 					if InstStat and InstType == "pvp" then
 						-- Exclude specific maps
-						local mapID = C_Map.GetBestMapForUnit("player") or nil
+						local mapID = GetCurrentMapAreaID() or nil -- 2.4.3 need test
 						if mapID then
 							if mapID == 1459 and LeaPlusLC["AutoReleaseNoAlterac"] == "On" then return end -- Alterac Valley
 						end
