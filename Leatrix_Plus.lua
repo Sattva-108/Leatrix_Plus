@@ -5602,7 +5602,7 @@
 			-- Stop the progress bar under various circumstances
 			hooksecurefunc("TaxiRequestEarlyLanding", CeaseProgress)
 			hooksecurefunc("AcceptBattlefieldPort", CeaseProgress)
-			hooksecurefunc(C_SummonInfo, "ConfirmSummon", CeaseProgress)
+			hooksecurefunc("ConfirmSummon", CeaseProgress)
 
 			-- Show flight time in node tooltips
 			hooksecurefunc("TaxiNodeOnButtonEnter", function(button)
@@ -5681,7 +5681,7 @@
 			hooksecurefunc("TaxiNodeOnButtonEnter", StopLandingEvent)
 			hooksecurefunc("TaxiRequestEarlyLanding", StopLandingEvent)
 			hooksecurefunc("AcceptBattlefieldPort", StopLandingEvent)
-			hooksecurefunc(C_SummonInfo, "ConfirmSummon", StopLandingEvent)
+			hooksecurefunc("ConfirmSummon", StopLandingEvent)
 
 			----------------------------------------------------------------------
 			-- Drag frame
@@ -12238,15 +12238,16 @@
 
 		if event == "CONFIRM_SUMMON" then
 			if not UnitAffectingCombat("player") then
-				local sName = C_SummonInfo.GetSummonConfirmSummoner()
-				local sLocation = C_SummonInfo.GetSummonConfirmAreaName()
-				LeaPlusLC:Print(L["The summon from"] .. " " .. sName .. " (" .. sLocation .. ") " .. L["will be automatically accepted in 10 seconds unless cancelled."])
+				local sName = GetSummonConfirmSummoner()
+				local sLocation = GetSummonConfirmAreaName()
+				LeaPlusLC:Print(L["The summon from"] .. " |cFFFFFFFF" .. sName .. "|r - |cFFFFFF00(" .. sLocation .. ")|r " .. L["will be automatically accepted in |cFF00FF0010 seconds|r unless cancelled."])
+
 				LibCompat.After(10, function()
-					local sNameNew = C_SummonInfo.GetSummonConfirmSummoner()
-					local sLocationNew = C_SummonInfo.GetSummonConfirmAreaName()
+					local sNameNew = GetSummonConfirmSummoner()
+					local sLocationNew = GetSummonConfirmAreaName()
 					if sName == sNameNew and sLocation == sLocationNew then
 						-- Automatically accept summon after 10 seconds if summoner name and location have not changed
-						C_SummonInfo.ConfirmSummon()
+						ConfirmSummon()
 						StaticPopup_Hide("CONFIRM_SUMMON")
 					end
 				end)
