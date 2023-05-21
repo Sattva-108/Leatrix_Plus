@@ -19,6 +19,11 @@
 	local GameLocale = GetLocale()
 	local void
 
+
+		--===== Check for if 3.3.5 or 2.4.3 game client. =====--
+	local isTBC = select(4, GetBuildInfo()) == 20400 -- true if TBC 2.4.3
+	local isWOTLK = select(4, GetBuildInfo()) == 30300 -- true if WOTLK 3.3.5
+
 	-- Version
 	LeaPlusLC["AddonVer"] = "3.0.131"
 
@@ -1702,6 +1707,7 @@ function LeaPlusLC:FriendCheck(name)
 
 		----------------------------------------------------------------------
 		--	Automate quests (no reload required)
+		-- 	Code from idQuestAutomation 2.4.3
 		----------------------------------------------------------------------
 
 		do
@@ -1728,6 +1734,7 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			function addon:QUEST_PROGRESS ()
+								if LeaPlusLC["AutomateQuests"] == "Off" then return end
 				if not self:canAutomate() then return end
 				if IsQuestCompletable() then
 					CompleteQuest()
@@ -1735,6 +1742,7 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			function addon:QUEST_LOG_UPDATE ()
+				if LeaPlusLC["AutomateQuests"] == "Off" then return end
 				if not self:canAutomate() then return end
 				local start_entry = GetQuestLogSelection()
 				local num_entries = GetNumQuestLogEntries()
@@ -1762,6 +1770,7 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			function addon:GOSSIP_SHOW ()
+				if LeaPlusLC["AutomateQuests"] == "Off" then return end
 				if not self:canAutomate() then return end
 
 				local button
@@ -1784,6 +1793,7 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			function addon:QUEST_GREETING (...)
+				if LeaPlusLC["AutomateQuests"] == "Off" then return end
 				if not self:canAutomate() then return end
 
 				local button
@@ -1803,11 +1813,13 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			function addon:QUEST_DETAIL ()
+				if LeaPlusLC["AutomateQuests"] == "Off" then return end
 				if not self:canAutomate() then return end
 				AcceptQuest()
 			end
 
 			function addon:QUEST_COMPLETE (event)
+				if LeaPlusLC["AutomateQuests"] == "Off" then return end
 				if not self:canAutomate() then return end
 				if GetNumQuestChoices() <= 1 then
 					GetQuestReward(QuestFrameRewardPanel.itemChoice)
@@ -1819,6 +1831,8 @@ function LeaPlusLC:FriendCheck(name)
 					self[event](self, ...)
 				end
 			end
+
+
 
 			addon:SetScript('OnEvent', addon.onevent)
 			addon:RegisterEvent('GOSSIP_SHOW')
@@ -12091,40 +12105,41 @@ function LeaPlusLC:FriendCheck(name)
 		-- Block friend requests
 		----------------------------------------------------------------------
 
-		-- Function to decline friend requests
-		local function DeclineReqs()
-			if LeaPlusLC["NoFriendRequests"] == "On" then
-				for i = BNGetNumFriendInvites(), 1, -1 do
-					local id, player = BNGetFriendInviteInfo(i)
-					if id and player then
-						BNDeclineFriendInvite(id)
-						LibCompat.After(0.1, function()
-							LeaPlusLC:Print(L["A friend request from"] .. " " .. player .. " " .. L["was automatically declined."])
-						end)
-					end
-				end
-			end
-		end
 
-		-- Event frame for incoming friend requests
-		local DecEvt = CreateFrame("FRAME")
-		DecEvt:SetScript("OnEvent", DeclineReqs)
+		-- -- Function to decline friend requests
+		-- local function DeclineReqs()
+		-- 	if LeaPlusLC["NoFriendRequests"] == "On" then
+		-- 		for i = BNGetNumFriendInvites(), 1, -1 do
+		-- 			local id, player = BNGetFriendInviteInfo(i)
+		-- 			if id and player then
+		-- 				BNDeclineFriendInvite(id)
+		-- 				LibCompat.After(0.1, function()
+		-- 					LeaPlusLC:Print(L["A friend request from"] .. " " .. player .. " " .. L["was automatically declined."])
+		-- 				end)
+		-- 			end
+		-- 		end
+		-- 	end
+		-- end
 
-		-- Function to register or unregister the event
-		local function ControlEvent()
-			if LeaPlusLC["NoFriendRequests"] == "On" then
-				DecEvt:RegisterEvent("BN_FRIEND_INVITE_ADDED")
-				DeclineReqs()
-			else
-				DecEvt:UnregisterEvent("BN_FRIEND_INVITE_ADDED")
-			end
-		end
+		-- -- Event frame for incoming friend requests
+		-- local DecEvt = CreateFrame("FRAME")
+		-- DecEvt:SetScript("OnEvent", DeclineReqs)
 
-		-- Set event status when option is enabled
-		LeaPlusCB["NoFriendRequests"]:HookScript("OnClick", ControlEvent)
+		-- -- Function to register or unregister the event
+		-- local function ControlEvent()
+		-- 	if LeaPlusLC["NoFriendRequests"] == "On" then
+		-- 		DecEvt:RegisterEvent("BN_FRIEND_INVITE_ADDED")
+		-- 		DeclineReqs()
+		-- 	else
+		-- 		DecEvt:UnregisterEvent("BN_FRIEND_INVITE_ADDED")
+		-- 	end
+		-- end
 
-		-- Set event status on startup
-		ControlEvent()
+		-- -- Set event status when option is enabled
+		-- LeaPlusCB["NoFriendRequests"]:HookScript("OnClick", ControlEvent)
+
+		-- -- Set event status on startup
+		-- ControlEvent()
 
 		----------------------------------------------------------------------
 		-- Invite from whisper (configuration panel)
@@ -12421,7 +12436,7 @@ function LeaPlusLC:FriendCheck(name)
 				-- Social
 				LeaPlusLC:LoadVarChk("NoDuelRequests", "Off")				-- Block duels
 				LeaPlusLC:LoadVarChk("NoPartyInvites", "Off")				-- Block party invites
-				LeaPlusLC:LoadVarChk("NoFriendRequests", "Off")				-- Block friend requests
+				-- LeaPlusLC:LoadVarChk("NoFriendRequests", "Off")				-- Block friend requests
 				LeaPlusLC:LoadVarChk("NoSharedQuests", "Off")				-- Block shared quests
 
 				LeaPlusLC:LoadVarChk("AcceptPartyFriends", "Off")			-- Party from friends
@@ -12830,7 +12845,7 @@ function LeaPlusLC:FriendCheck(name)
 			-- Social
 			LeaPlusDB["NoDuelRequests"] 		= LeaPlusLC["NoDuelRequests"]
 			LeaPlusDB["NoPartyInvites"]			= LeaPlusLC["NoPartyInvites"]
-			LeaPlusDB["NoFriendRequests"]		= LeaPlusLC["NoFriendRequests"]
+			-- LeaPlusDB["NoFriendRequests"]		= LeaPlusLC["NoFriendRequests"]
 			LeaPlusDB["NoSharedQuests"]			= LeaPlusLC["NoSharedQuests"]
 
 			LeaPlusDB["AcceptPartyFriends"]		= LeaPlusLC["AcceptPartyFriends"]
@@ -14978,7 +14993,7 @@ function LeaPlusLC:FriendCheck(name)
 				-- Social
 				LeaPlusDB["NoDuelRequests"] = "On"				-- Block duels
 				LeaPlusDB["NoPartyInvites"] = "Off"				-- Block party invites
-				LeaPlusDB["NoFriendRequests"] = "Off"			-- Block friend requests
+				-- LeaPlusDB["NoFriendRequests"] = "Off"			-- Block friend requests
 				LeaPlusDB["NoSharedQuests"] = "Off"				-- Block shared quests
 
 				LeaPlusDB["AcceptPartyFriends"] = "On"			-- Party from friends
@@ -15396,7 +15411,7 @@ function LeaPlusLC:FriendCheck(name)
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Blocks"					, 	146, -72);
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoDuelRequests"			, 	"Block duels"					,	146, -92, 	false,	"If checked, duel requests will be blocked unless the player requesting the duel is a friend.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoPartyInvites"			, 	"Block party invites"			, 	146, -112, 	false,	"If checked, party invitations will be blocked unless the player inviting you is a friend.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoFriendRequests"			, 	"Block friend requests"			, 	146, -132, 	false,	"If checked, BattleTag and Real ID friend requests will be automatically declined.|n|nEnabling this option will automatically decline any pending requests.")
+	-- LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoFriendRequests"			, 	"Block friend requests"			, 	146, -132, 	false,	"If checked, BattleTag and Real ID friend requests will be automatically declined.|n|nEnabling this option will automatically decline any pending requests.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoSharedQuests"			, 	"Block shared quests"			, 	146, -152, 	false,	"If checked, shared quests will be declined unless the player sharing the quest is a friend.")
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Groups"					, 	340, -72);
