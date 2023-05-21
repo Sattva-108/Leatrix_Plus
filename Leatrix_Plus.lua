@@ -1596,7 +1596,7 @@
 					if gossipType == "binder"
 					or gossipType == "trainer"						
 					then return end
-					
+
 					if npcGuid and not IsShiftKeyDown() then
 						local npcID = LibCompat.GetUnitCreatureId("target")
 						-- print(npcID)
@@ -1846,6 +1846,7 @@
 
 		----------------------------------------------------------------------
 		--	Sell junk automatically (no reload required)
+		-- 	Not 2.4.3 compatible
 		----------------------------------------------------------------------
 
 		do
@@ -2129,11 +2130,12 @@
 				if SellJunkFrame:IsShown() then
 					local void, itemLink = self:GetItem()
 					if itemLink then
-						local itemID = GetItemInfoFromHyperlink(itemLink)
+						local itemID = itemLink:match("item:(%d+):")
 						if itemID then self:AddLine(L["Item ID"] .. ": " .. itemID) end
 					end
 				end
 			end)
+
 
 			-- Vendor function
 			local function SellJunkFunc()
@@ -2144,43 +2146,53 @@
 
 				-- Traverse bags and sell grey items
 				for BagID = 0, 4 do
-					for BagSlot = 1, C_Container.GetContainerNumSlots(BagID) do
-						CurrentItemLink = C_Container.GetContainerItemLink(BagID, BagSlot)
-						if CurrentItemLink then
-							void, void, Rarity, void, void, void, void, void, void, void, ItemPrice = GetItemInfo(CurrentItemLink)
-							-- Don't sell whitelisted items
-							local itemID = GetItemInfoFromHyperlink(CurrentItemLink)
-							if itemID and whiteList[itemID] then
-								if Rarity == 0 then
-									-- Junk item to keep
-									Rarity = 3
-									ItemPrice = 0
-								elseif Rarity == 1 then
-									-- White item to sell
-									Rarity = 0
-								end
-							end
-							-- Continue
-							local cInfo = C_Container.GetContainerItemInfo(BagID, BagSlot)
-							local itemCount = cInfo.stackCount
-							if Rarity == 0 and ItemPrice ~= 0 then
-								SoldCount = SoldCount + 1
-								if MerchantFrame:IsShown() then
-									-- If merchant frame is open, vendor the item
-									C_Container.UseContainerItem(BagID, BagSlot)
-									-- Perform actions on first iteration
-									if SellJunkTicker._remainingIterations == IterationCount then
-										-- Calculate total price
-										totalPrice = totalPrice + (ItemPrice * itemCount)
-									end
+				    for BagSlot = 1, GetContainerNumSlots(BagID) do
+				        local itemId = GetContainerItemID(BagID, BagSlot)
+				        if itemId then
+				            local CurrentItemLink = select(2, GetItemInfo(itemId))
+				            if CurrentItemLink then
+				                local itemName, _, Rarity, _, _, _, _, _, _, _, ItemPrice = GetItemInfo(CurrentItemLink)
+				                -- Don't sell whitelisted items
+				                if whiteList[itemId] then
+				                    if Rarity == 0 then
+				                        -- Junk item to keep
+				                        Rarity = 3
+				                        ItemPrice = 0
+				                    elseif Rarity == 1 then
+				                        -- White item to sell
+				                        Rarity = 0
+				                    end
+				                end
+
+								local texture, itemCount, locked, quality, readable = GetContainerItemInfo(BagID, BagSlot)
+								if itemCount then
+								    -- The item has a valid itemCount, so we can proceed
+								    if Rarity == 0 and ItemPrice ~= 0 then
+								        SoldCount = SoldCount + 1
+								        if MerchantFrame:IsShown() then
+								            -- If merchant frame is open, vendor the item
+								            UseContainerItem(BagID, BagSlot)
+								            -- Perform actions on first iteration
+								            if SellJunkTicker._remainingIterations == IterationCount then
+								                -- Calculate total price
+								                totalPrice = totalPrice + (ItemPrice * itemCount)
+								            end
+								        else
+								            -- If merchant frame is not open, stop selling
+								            StopSelling()
+								            return
+								        end
+								    end
 								else
-									-- If merchant frame is not open, stop selling
-									StopSelling()
-									return
+								    -- The item count is nil, so we cannot proceed
+								    print("Item count is nil!")
 								end
-							end
-						end
-					end
+
+				            end
+				        end
+				    end
+
+
 
 				end
 

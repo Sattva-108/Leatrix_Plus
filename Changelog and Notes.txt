@@ -31,7 +31,7 @@ AutoGossip				 - Add user defined NPCID to automate gossipX (any option)
 
 AutoGossip				 - Add ability to automate gossip cycles. (if after first gossip need to select more gossips)
 
-AutoGossip				 - Remove Innkeepers (!) , Trainers (?) from automation.
+AutoGossip				 - Need to make user option to automate inn / trainer .
 
 Minimap enhance			 - Add NPC specific tracking icons on minimap. 
 
@@ -54,6 +54,10 @@ Error Frame				 - Allow only one line of error text option
 Tooltip					 - If player has tooltip hidden in combat, make an option to toggle tooltip if "Alt" key is hold.
 
 Faster Loot				 - Make the config options (disable sound, change sound, error filter, smaller error frame, faster fading - make all this optional)
+
+AutoSellJunk			 - Make user able to shift click the item to add to "keep list"
+
+AutoSellJunk			 - Make user be able to alt-ctrl (or other bind) click on an item in bag to sell the item on next vendor visit.
 
 
 
