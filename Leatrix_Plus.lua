@@ -1577,13 +1577,13 @@
 
 			}
 
-			--===== create ignore NPC table to not mess with npcTable and for future user options =====--
-			local npcIgnore = {
+			-- --===== create ignore NPC table to not mess with npcTable and for future user options =====--
+			-- local npcIgnore = {
 
-				-- Innkeepers
-				5111, 6740
+			-- 	-- Innkeepers
+			-- 	5111, 6740
 
-			}
+			-- }
 
 
 				-- Event handler
@@ -1591,6 +1591,12 @@
 				if event == "GOSSIP_SHOW" then
 					-- Special treatment for specific NPCs
 					local npcGuid = UnitGUID("target") or nil
+
+					local void, gossipType = GetGossipOptions()
+					if gossipType == "binder"
+					or gossipType == "trainer"						
+					then return end
+					
 					if npcGuid and not IsShiftKeyDown() then
 						local npcID = LibCompat.GetUnitCreatureId("target")
 						-- print(npcID)
@@ -1607,7 +1613,7 @@
 							if npcID == "132969"	-- Katy Stampwhistle (toy)
 							or npcID == "104201"	-- Katy Stampwhistle (npc)
 							or tContains(npcTable, tonumber(npcID))
-							and not tContains(npcIgnore, tonumber(npcID))
+							-- and not tContains(npcIgnore, tonumber(npcID))
 							then
 								SkipGossip(true) 	-- true means skip alt key requirement
 								return

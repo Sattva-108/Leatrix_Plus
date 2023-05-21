@@ -16,7 +16,9 @@ AutoQuest		 		- May be backport retail quest accept.
 --------------------------------------------------------------------------------
 
 
-Auto-Ress in BG 		 - With option "Exclude Alterac" will it not auto-res in Alterac BG?
+Auto-Ress in BG 		 - With option "Exclude Alterac" will it not auto-res in Alterac BG ?
+
+Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ? 
 
 
 
@@ -29,7 +31,7 @@ AutoGossip				 - Add user defined NPCID to automate gossipX (any option)
 
 AutoGossip				 - Add ability to automate gossip cycles. (if after first gossip need to select more gossips)
 
-AutoGossip				 - Add 
+AutoGossip				 - Remove Innkeepers (!) , Trainers (?) from automation.
 
 Minimap enhance			 - Add NPC specific tracking icons on minimap. 
 
@@ -61,14 +63,23 @@ Faster Loot				 - Make the config options (disable sound, change sound, error fi
 
 
 Links to wowhead-wotlk in Quest Log for every quest.
+
 Improve Quest Accept conditions (aka skip welcome window and block shared aka escort quests)
+
 Add more tweaks to Auction House extras module.
+
 Square minimap
+
 Restore Chat Messages history after relog
+
 Hide keybind text
+
 Hide macro text
+
 Resize mail text
+
 Train All Button
+
 Copy chat links
 
 
