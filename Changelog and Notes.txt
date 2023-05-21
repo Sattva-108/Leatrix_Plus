@@ -1,40 +1,75 @@
 
-	TODO List:
+
+--------------------------------------------------------------------------------
+-- Backport to-do:
+--------------------------------------------------------------------------------
 
 
-Backport:
+Main Panel		 		- Need to fix transparency of settings in Settings main window. 
 
-Need to fix transparency of settings in Settings main window. 
-May be backport retail quest accept.
-
+AutoQuest		 		- May be backport retail quest accept.
 
 
 
+--------------------------------------------------------------------------------
+-- What needs to be tested:
+--------------------------------------------------------------------------------
 
-Functions:
 
-Add NPC specific tracking icons on minimap. 
-	Improve Quest Accept conditions (aka skip welcome window and block shared aka escort quests)
-	Frame mover
-	Square minimap
-	Restore Chat Messages history after relog
-	Hide keybind text
-	Hide macro text
-	Resize mail text
-	Train All Button
-	Ready Timer for RDF/BG
-Copy chat links
+Auto-Ress in BG 		 - With option "Exclude Alterac" will it not auto-res in Alterac BG?
+
+
+
+--------------------------------------------------------------------------------
+-- Functions to-do:
+--------------------------------------------------------------------------------
+
+
+AutoGossip				 - Add user defined NPCID to automate gossipX (any option)
+
+AutoGossip				 - Add ability to automate gossip cycles. (if after first gossip need to select more gossips)
+
+AutoGossip				 - Add 
+
+Minimap enhance			 - Add NPC specific tracking icons on minimap. 
+
+Ready Timer				 - for RDF/BG
+
+Automation				 - Remove transforms ( Jack-o'-Lantern, Hallowed Wand, Witch, Turkey and Spraybot transformations? etc. )
+
+Interraction bindings	 - Add Quest / Vendor Bindings ( e.g. keyboard keys for Inkeepeer: 1 - Set Home, 2 - Vendor; )
+
+World Map				 - Reveal Map								
+
+Action Bar				 - Make buttons full red if out of range (instead of blizzard red text only)
+
+Auto-Spirit Res.		 - Add function to auto ressurect once interracted with Spirit Healer
+
+Error Frame				 - Allow some error texts like mining, herbing
+
+Error Frame				 - Allow only one line of error text option
+
+Tooltip					 - If player has tooltip hidden in combat, make an option to toggle tooltip if "Alt" key is hold.
+
+Faster Loot				 - Make the config options (disable sound, change sound, error filter, smaller error frame, faster fading - make all this optional)
+
+
+
+--------------------------------------------------------------------------------
+-- Not sure if need to do yet:
+--------------------------------------------------------------------------------
+
+
 Links to wowhead-wotlk in Quest Log for every quest.
-	Remove transforms (Jack-o'-Lantern, Hallowed Wand, Witch, Turkey and Spraybot transformations? etc.)
-	Flight Path timer
-Import Quest / Vendor Bindings
-Make Action Bar buttons full red if out of range (instead of blizzard text red only)
-Auto-Spirit Res.
-Allow some error texts like mining, herbing
-Allow only one line of error text option
-If player has tooltip hidden in combat, make an option to toggle tooltip if "Alt" key is hold.
+Improve Quest Accept conditions (aka skip welcome window and block shared aka escort quests)
 Add more tweaks to Auction House extras module.
-Need to add exceptions for automating the gossip. (But first need to find NPCs that need exceptions, or make user be able to add exceptions)
-Make the config options for Faster Loot module. (disable sound, change sound, error filter, smaller error frame, faster fading - make all this optional)
+Square minimap
+Restore Chat Messages history after relog
+Hide keybind text
+Hide macro text
+Resize mail text
+Train All Button
+Copy chat links
+
 
 
