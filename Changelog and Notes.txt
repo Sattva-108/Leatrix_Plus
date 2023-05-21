@@ -3,12 +3,17 @@
 
 
 Backport:
-Need to see why does it always open on home page via minimap button.
+
 Need to fix transparency of settings in Settings main window. 
+May be backport retail quest accept.
+
+
 
 
 
 Functions:
+
+Add NPC specific tracking icons on minimap. 
 	Improve Quest Accept conditions (aka skip welcome window and block shared aka escort quests)
 	Frame mover
 	Square minimap
