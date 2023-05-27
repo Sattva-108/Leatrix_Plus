@@ -60,6 +60,8 @@ AutoSellJunk			 - Make user able to shift click the item to add to "keep list"
 
 AutoSellJunk			 - Make user be able to alt-ctrl (or other bind) click on an item in bag to sell the item on next vendor visit.
 
+HideChatButtons			 - Add Configuration to enable certain chat buttons.
+
 
 
 --------------------------------------------------------------------------------

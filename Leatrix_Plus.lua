@@ -1240,10 +1240,10 @@ function LeaPlusLC:FriendCheck(name)
 				end
 			end
 
-			-- Process new chat frames and combat log
-			hooksecurefunc("FloatingChatFrame_UpdateBackgroundAnchors", function(self)
-				self:SetClampRectInsets(0, 0, 0, 0);
-			end)
+			-- -- Process new chat frames and combat log
+			-- hooksecurefunc("FloatingChatFrame_UpdateBackgroundAnchors", function(self)
+			-- 	self:SetClampRectInsets(0, 0, 0, 0);
+			-- end)
 
 			-- Process temporary chat frames
 			hooksecurefunc("FCF_OpenTemporaryWindow", function()
@@ -9571,7 +9571,7 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			-- Function to hide chat buttons
-			local function HideButtons(chtfrm)
+			local function HideButtons(chtfrm)			
 				_G[chtfrm .. "ButtonFrameUpButton"]:SetParent(tframe)
 				_G[chtfrm .. "ButtonFrameDownButton"]:SetParent(tframe)
 				_G[chtfrm .. "ButtonFrameMinimizeButton"]:SetParent(tframe)
@@ -9579,6 +9579,7 @@ function LeaPlusLC:FriendCheck(name)
 				_G[chtfrm .. "ButtonFrameDownButton"]:Hide();
 				_G[chtfrm .. "ButtonFrameMinimizeButton"]:Hide();
 				_G[chtfrm .. "ButtonFrame"]:SetSize(0.1,0.1)
+				_G[chtfrm .. "ButtonFrame"]:SetAlpha(0);
 			end
 
 			-- Function to highlight chat tabs and click to scroll to bottom
@@ -9637,14 +9638,14 @@ function LeaPlusLC:FriendCheck(name)
 				_G[chtfrm .. "Tab"].newglow:SetVertexColor(0.6, 0.6, 1, 1)
 				_G[chtfrm .. "Tab"].newglow:Hide()
 
-				-- Show new bottom button when old one glows
-				_G[chtfrm .. "ButtonFrameBottomButtonFlash"]:HookScript("OnShow", function(self,arg1)
-					_G[chtfrm .. "Tab"].newglow:Show()
-				end)
+				-- -- Show new bottom button when old one glows
+				-- _G[chtfrm .. "ButtonFrameBottomButtonFlash"]:HookScript("OnShow", function(self,arg1)
+				-- 	_G[chtfrm .. "Tab"].newglow:Show()
+				-- end)
 
-				_G[chtfrm .. "ButtonFrameBottomButtonFlash"]:HookScript("OnHide", function(self,arg1)
-					_G[chtfrm .. "Tab"].newglow:Hide()
-				end)
+				-- _G[chtfrm .. "ButtonFrameBottomButtonFlash"]:HookScript("OnHide", function(self,arg1)
+				-- 	_G[chtfrm .. "Tab"].newglow:Hide()
+				-- end)
 
 				-- Match new bottom button size to tab
 				_G[chtfrm .. "Tab"]:HookScript("OnSizeChanged", function()
@@ -9655,7 +9656,9 @@ function LeaPlusLC:FriendCheck(name)
 
 			-- Hide chat menu buttons
 			ChatFrameMenuButton:SetParent(tframe)
-			ChatFrameChannelButton:SetParent(tframe)
+			-- ChatFrameChannelButton:SetParent(tframe)
+			FriendsMicroButton:SetParent(tframe)
+			
 
 			-- Set options for normal and existing chat frames
 			for i = 1, 50 do
@@ -9682,7 +9685,7 @@ function LeaPlusLC:FriendCheck(name)
 			end)
 
 			-- Hide text to speech button
-			TextToSpeechButton:SetParent(tframe)
+			-- TextToSpeechButton:SetParent(tframe)
 
 		end
 
@@ -12259,7 +12262,7 @@ function LeaPlusLC:FriendCheck(name)
 			if (not UnitExists("party1") or LibCompat.UnitIsGroupLeader("player") or LibCompat.UnitIsGroupAssistant("player")) and strlower(strtrim(arg1)) == strlower(LeaPlusLC["InvKey"]) then
 				if not LeaPlusLC:IsInLFGQueue() then
 					if event == "CHAT_MSG_WHISPER" then
-						local void, void, void, void, viod, void, void, void, void, guid = ...
+						local void, void, void, void, void, void, void, void, void, guid = ...
 						if LeaPlusLC:FriendCheck(arg2, guid) or LeaPlusLC["InviteFriendsOnly"] == "Off" then
 							InviteUnit(arg2)
 						end
