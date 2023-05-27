@@ -8121,7 +8121,7 @@ function LeaPlusLC:FriendCheck(name)
 
 		if LeaPlusLC["ClassColorsInChat"] == "On" and not LeaLockList["ClassColorsInChat"] then
 
-			SetCVar("chatClassColorOverride", "0")
+			-- SetCVar("chatClassColorOverride", "0")
 
 			LibCompat.After(0.1, function()
 
@@ -13121,8 +13121,8 @@ function LeaPlusLC:FriendCheck(name)
 			ChangeChatColor("RAID", 1, 0.50, 0)
 			ChangeChatColor("RAID_LEADER", 1, 0.28, 0.04)
 
-			-- Use class colors in chat (LeaPlusLC["ClassColorsInChat"])
-			SetCVar("chatClassColorOverride", "1")
+			-- -- Use class colors in chat (LeaPlusLC["ClassColorsInChat"])
+			-- SetCVar("chatClassColorOverride", "1")
 
 			-- Mute game sounds (LeaPlusLC["MuteGameSounds"])
 			for k, v in pairs(LeaPlusLC["muteTable"]) do
