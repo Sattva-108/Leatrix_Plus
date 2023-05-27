@@ -9754,11 +9754,11 @@ function LeaPlusLC:FriendCheck(name)
 
 			local titleBox = titleFrame.EditBox
 			titleBox:Hide()
-			titleBox:SetEnabled(false)
+			-- titleBox:SetEnabled(false)
 
 			-- Drag to resize
 			editFrame:SetResizable(true)
-			editFrame:SetResizeBounds(600, 170, 600, 560)
+			-- editFrame:SetResizeBounds(600, 170, 600, 560)
 
 			titleFrame:HookScript("OnMouseDown", function(self, btn)
 				if btn == "LeftButton" then
@@ -9783,7 +9783,7 @@ function LeaPlusLC:FriendCheck(name)
 			editBox:SetAltArrowKeyMode(false)
 			editBox:SetTextInsets(4, 4, 4, 4)
 			editBox:SetWidth(editFrame:GetWidth() - 30)
-			editBox:SetSecurityDisablePaste()
+			-- editBox:SetSecurityDisablePaste()
 			editBox:SetMaxLetters(0)
 
 			-- Manage focus
@@ -9864,10 +9864,10 @@ function LeaPlusLC:FriendCheck(name)
 						end
 
 						-- Handle colors
-						if r and g and b then
-							local colorCode = RGBToColorCode(r, g, b)
-							chatMessage = colorCode .. chatMessage
-						end
+						-- if r and g and b then
+						-- 	-- local colorCode = RGBToColorCode(r, g, b)
+						-- 	chatMessage = colorCode .. chatMessage
+						-- end
 
 						chatMessage = gsub(chatMessage, "|T.-|t", "") -- Remove textures
 						chatMessage = gsub(chatMessage, "|A.-|a", "") -- Remove atlases
@@ -9878,7 +9878,7 @@ function LeaPlusLC:FriendCheck(name)
 				end
 				titleFrame.m:SetText(L["Messages"] .. ": " .. totalMsgCount)
 				editFrame:SetVerticalScroll(0)
-				LibCompat.After(0.1, function() editFrame.ScrollBar.ScrollDownButton:Click() end)
+				-- LibCompat.After(0.1, function() editFrame.ScrollBar.ScrollDownButton:Click() end)
 				editFrame:Show()
 				editBox:ClearFocus()
 			end

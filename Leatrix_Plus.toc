@@ -16,6 +16,8 @@
 
 ## X-Curse-Project-ID: 463863
 
+Leatrix_InputScrollFrameTemplate.xml
+
 libs\LibStub\LibStub.lua
 libs\LibCompat-1.0\lib.xml
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
