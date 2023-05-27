@@ -11,7 +11,18 @@
 			</KeyValues>
 			<Layers>
 				<Layer level="BACKGROUND">
-					<Texture parentKey="TopLeftTex" file="Interface\Common\Common-Input-Border-TL">
+
+	<!-- 					<Texture file="Interface\BUTTONS\WHITE8X8" parentKey="Bg">
+		<Color r="0" g="0" b="0" a="0.2"/>
+		<Size>
+			<AbsDimension x="600" y="300"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT"/>
+		</Anchors>
+	</Texture> -->
+
+<!-- 					<Texture parentKey="TopLeftTex" file="Interface\Common\Common-Input-Border-TL">
 						<Size x="8" y="8"/>
 						<Anchors>
 							<Anchor point="TOPLEFT" x="-5" y="5"/>
@@ -64,7 +75,7 @@
 							<Anchor point="TOPLEFT" relativeKey="$parent.LeftTex" relativePoint="TOPRIGHT"/>
 							<Anchor point="BOTTOMRIGHT" relativeKey="$parent.RightTex" relativePoint="BOTTOMLEFT"/>
 						</Anchors>
-					</Texture>
+					</Texture> -->
 				</Layer>
 				<Layer level="OVERLAY">
 					<FontString inherits="GameFontDisableLarge" parentKey="CharCount">

@@ -9702,63 +9702,91 @@ function LeaPlusLC:FriendCheck(name)
 			editFrame:ClearAllPoints()
 			editFrame:SetPoint("BOTTOM", 0, 130)
 			editFrame:SetSize(600, LeaPlusLC["RecentChatSize"])
-			editFrame:SetFrameStrata("MEDIUM")
+			editFrame:SetFrameStrata("HIGH")
 			editFrame:SetToplevel(true)
 			editFrame:Hide()
 			editFrame.CharCount:Hide()
+			editFrame:SetHitRectInsets(10, 10, 10, 10)
 
-			-- Add background color
-			editFrame.t = editFrame:CreateTexture(nil, "BACKGROUND")
-			editFrame.t:SetAllPoints()
-			editFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
 
-			-- Set textures
-			editFrame.LeftTex:SetTexture(editFrame.RightTex:GetTexture()); editFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
-			editFrame.BottomTex:SetTexture(editFrame.TopTex:GetTexture()); editFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
-			editFrame.BottomRightTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
-			editFrame.BottomLeftTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.BottomLeftTex:SetTexCoord(1, 0, 1, 0)
-			editFrame.TopLeftTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.TopLeftTex:SetTexCoord(1, 0, 0, 1)
+			-- Set solid white color for background instead of using 8x8 texture
+			editFrame:SetBackdrop({
+			  bgFile = "Interface\\BUTTONS\\WHITE8X8", -- use 8x8 texture
+			  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+			  tile = true,
+			  tileEdge = true,
+			  tileSize = 16,
+			  edgeSize = 16,
+			  insets = { left = 4, right = 4, top = 4, bottom = 4 }
+			})
+			editFrame:SetBackdropColor(0.00, 0.00, 0.0, 0.3) -- set transparency
+
+			-- -- Add background color
+			-- editFrame.t = editFrame:CreateTexture(nil, "BACKGROUND")
+			-- editFrame.t:SetAllPoints()
+			-- editFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
+
+			-- -- Set textures
+			-- editFrame.LeftTex:SetTexture(editFrame.RightTex:GetTexture()); editFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
+			-- editFrame.BottomTex:SetTexture(editFrame.TopTex:GetTexture()); editFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
+			-- editFrame.BottomRightTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
+			-- editFrame.BottomLeftTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.BottomLeftTex:SetTexCoord(1, 0, 1, 0)
+			-- editFrame.TopLeftTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.TopLeftTex:SetTexCoord(1, 0, 0, 1)
+
 
 			-- Create title bar
 			local titleFrame = CreateFrame("ScrollFrame", nil, editFrame, "InputScrollFrameTemplate")
 			titleFrame:ClearAllPoints()
-			titleFrame:SetPoint("TOP", 0, 32)
-			titleFrame:SetSize(600, 24)
+			titleFrame:SetPoint("TOP", 0, 40)
+			titleFrame:SetSize(600, 36)
 			titleFrame:SetFrameStrata("MEDIUM")
 			titleFrame:SetToplevel(true)
 			titleFrame:SetHitRectInsets(-6, -6, -6, -6)
-			titleFrame.CharCount:Hide()
-			titleFrame.t = titleFrame:CreateTexture(nil, "BACKGROUND")
-			titleFrame.t:SetAllPoints()
-			titleFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
-			titleFrame.LeftTex:SetTexture(titleFrame.RightTex:GetTexture()); titleFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
-			titleFrame.BottomTex:SetTexture(titleFrame.TopTex:GetTexture()); titleFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
-			titleFrame.BottomRightTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
-			titleFrame.BottomLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomLeftTex:SetTexCoord(1, 0, 1, 0)
-			titleFrame.TopLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.TopLeftTex:SetTexCoord(1, 0, 0, 1)
+
+			-- titleFrame.CharCount:Hide()
+			-- titleFrame.t = titleFrame:CreateTexture(nil, "BACKGROUND")
+			-- titleFrame.t:SetAllPoints()
+			-- titleFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
+			-- titleFrame.LeftTex:SetTexture(titleFrame.RightTex:GetTexture()); titleFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
+			-- titleFrame.BottomTex:SetTexture(titleFrame.TopTex:GetTexture()); titleFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
+			-- titleFrame.BottomRightTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
+			-- titleFrame.BottomLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomLeftTex:SetTexCoord(1, 0, 1, 0)
+			-- titleFrame.TopLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.TopLeftTex:SetTexCoord(1, 0, 0, 1)
+
+			-- Set background texture for titleFrame
+			titleFrame:SetBackdrop({
+			  bgFile = "Interface\\BUTTONS\\WHITE8X8", -- use 8x8 texture
+			  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+			  tile = true,
+			  tileEdge = true,
+			  tileSize = 16,
+			  edgeSize = 16,
+			  insets = { left = 4, right = 4, top = 4, bottom = 4 }
+			})
+			titleFrame:SetBackdropColor(0.00, 0.00, 0.0, 0.3) -- set transparency
 
 			-- Add message count
 			titleFrame.m = titleFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-			titleFrame.m:SetPoint("LEFT", 4, 0)
+			titleFrame.m:SetPoint("LEFT", 9, 0)
 			titleFrame.m:SetText(L["Messages"] .. ": 0")
 			titleFrame.m:SetFont(titleFrame.m:GetFont(), 16, nil)
 
 			-- Add right-click to close message
 			titleFrame.x = titleFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-			titleFrame.x:SetPoint("RIGHT", -4, 0)
+			titleFrame.x:SetPoint("RIGHT", -9, 0)
 			titleFrame.x:SetText(L["Drag to size"] .. " | " .. L["Right-click to close"])
 			titleFrame.x:SetFont(titleFrame.x:GetFont(), 16, nil)
 			titleFrame.x:SetWidth(600 - titleFrame.m:GetStringWidth() - 30)
 			titleFrame.x:SetWordWrap(false)
 			titleFrame.x:SetJustifyH("RIGHT")
 
-			local titleBox = titleFrame.EditBox
-			titleBox:Hide()
-			-- titleBox:SetEnabled(false)
+
+
 
 			-- Drag to resize
 			editFrame:SetResizable(true)
-			-- editFrame:SetResizeBounds(600, 170, 600, 560)
+			editFrame:SetMinResize(600, 50)
+			editFrame:SetMaxResize(600, 680)
 
 			titleFrame:HookScript("OnMouseDown", function(self, btn)
 				if btn == "LeftButton" then
@@ -9781,7 +9809,7 @@ function LeaPlusLC:FriendCheck(name)
 			-- Create editbox
 			local editBox = editFrame.EditBox
 			editBox:SetAltArrowKeyMode(false)
-			editBox:SetTextInsets(4, 4, 4, 4)
+			editBox:SetTextInsets(10, 10, 10, 10)
 			editBox:SetWidth(editFrame:GetWidth() - 30)
 			-- editBox:SetSecurityDisablePaste()
 			editBox:SetMaxLetters(0)
@@ -9813,7 +9841,7 @@ function LeaPlusLC:FriendCheck(name)
 			end)
 
 			-- Disable text changes while still allowing editing controls to work
-			editBox:EnableKeyboard(false)
+			editBox:EnableKeyboard(true)
 			editBox:SetScript("OnKeyDown", function() end)
 
 			--- Clear highlighted text if escape key is pressed
@@ -9827,6 +9855,10 @@ function LeaPlusLC:FriendCheck(name)
 				editBox:HighlightText(0, 0)
 				editBox:ClearFocus()
 			end)
+
+			-- local titleBox = titleFrame.EditBox
+			-- titleBox:Hide()
+			-- titleBox:Disable(true)
 
 			-- Populate recent chat frame with chat messages
 			local function ShowChatbox(chtfrm)

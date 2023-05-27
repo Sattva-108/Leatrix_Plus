@@ -26,6 +26,8 @@ Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ?
 -- Functions to-do:
 --------------------------------------------------------------------------------
 
+RecentChatWindow		 - Need to fix channel colors. 
+
 Social					 - Add Block Guild Invites
 
 AutoGossip				 - Add user defined NPCID to automate gossipX (any option)
