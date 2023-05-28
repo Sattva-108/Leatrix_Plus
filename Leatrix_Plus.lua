@@ -3030,35 +3030,35 @@ function LeaPlusLC:FriendCheck(name)
 
 			--	Error message events
 			local OrigErrHandler = UIErrorsFrame:GetScript('OnEvent')
-			UIErrorsFrame:SetScript('OnEvent', function (self, event, id, err, ...)
-				if event == "UI_ERROR_MESSAGE" then
-					-- Hide error messages
-					if LeaPlusLC["ShowErrorsFlag"] == 1 then
-						if 	err == ERR_INV_FULL or
-							err == ERR_QUEST_LOG_FULL or
-							err == ERR_RAID_GROUP_ONLY or
-							err == ERR_PET_SPELL_DEAD or
-							err == ERR_PLAYER_DEAD or
-							err == ERR_FEIGN_DEATH_RESISTED or
-							err == SPELL_FAILED_TARGET_NO_POCKETS or
-							err == ERR_ALREADY_PICKPOCKETED then
-							return OrigErrHandler(self, event, id, err, ...)
+				UIErrorsFrame:SetScript('OnEvent', function (self, event, err, ...)
+					if event == "UI_ERROR_MESSAGE" then
+						-- Hide error messages
+						if LeaPlusLC["ShowErrorsFlag"] == 1 then
+							if 	err == ERR_INV_FULL or
+								err == ERR_QUEST_LOG_FULL or
+								err == ERR_RAID_GROUP_ONLY or
+								err == ERR_PET_SPELL_DEAD or
+								err == ERR_PLAYER_DEAD or
+								err == ERR_FEIGN_DEATH_RESISTED or
+								err == SPELL_FAILED_TARGET_NO_POCKETS or
+								err == ERR_ALREADY_PICKPOCKETED or
+								string.match(err, "Requires") then -- add this line
+								return OrigErrHandler(self, event, err, ...)
+							end
+						else
+							return OrigErrHandler(self, event, err, ...)
 						end
-					else
-						return OrigErrHandler(self, event, id, err, ...)
+					elseif event == 'UI_INFO_MESSAGE'  then
+						-- Show information messages
+						return OrigErrHandler(self, event, err, ...)
 					end
-				elseif event == 'UI_INFO_MESSAGE'  then
-					-- Show information messages
-					return OrigErrHandler(self, event, id, err, ...)
-				end
-			end)
+				end)
 
+			end
+
+			-- Release memory
+			LeaPlusLC.Isolated = nil
 		end
-
-		-- Release memory
-		LeaPlusLC.Isolated = nil
-
-	end
 
 ----------------------------------------------------------------------
 --	L40: Player

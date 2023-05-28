@@ -27,6 +27,10 @@ Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ?
 -- Functions to-do:
 --------------------------------------------------------------------------------
 
+HideErrorMessages		 - Add locales for "Requires", for herbalism,mining,lockpicking skill requirements.
+
+HideErrorMessages		 - Make option to reduce Error Messages to 1 line. With option to make them fade faster.
+
 RestoreChatHistory		 - Fix Channel colors.
 
 RecentChatWindow		 - Need to add mouse scrolling.
