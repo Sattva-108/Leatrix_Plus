@@ -2749,7 +2749,7 @@ function LeaPlusLC:FriendCheck(name)
 			local BookTextPanel = LeaPlusLC:CreatePanel("Resize book text", "BookTextPanel")
 
 			LeaPlusLC:MakeTx(BookTextPanel, "Text size", 16, -72)
-			LeaPlusLC:MakeSL(BookTextPanel, "LeaPlusBookFontSize", "Drag to set the font size of book text.", 10, 36, 1, 16, -92, "%.0f")
+			LeaPlusLC:MakeSL(BookTextPanel, "LeaPlusBookFontSize", "Drag to set the font size of book text.\n\nReading books, not spellbook", 10, 36, 1, 16, -92, "%.0f")
 
 			-- Function to set the text size
 			local function BookSizeUpdate()
@@ -2781,7 +2781,7 @@ function LeaPlusLC:FriendCheck(name)
 
 			end)
 
-			-- Show configuration panal when options panel button is clicked
+			-- Show configuration panel when options panel button is clicked
 			LeaPlusCB["BookTextBtn"]:SetScript("OnClick", function()
 				if IsShiftKeyDown() and IsControlKeyDown() then
 					-- Preset profile
@@ -3642,7 +3642,7 @@ function LeaPlusLC:FriendCheck(name)
 				if LeaPlusLC["SquareMinimap"] == "On" then
 					LibDBIconStub:SetButtonRadius(26 + ((LeaPlusLC["MinimapSize"] - 140) * 0.165))
 				else
-					LibDBIconStub:SetButtonRadius(1)
+					-- LibDBIconStub:SetButtonRadius(1)
 				end
 			end
 
@@ -4051,6 +4051,8 @@ function LeaPlusLC:FriendCheck(name)
 
 				LeaPlusLC.SetButtonTooltip = SetButtonTooltip -- Used in LibDBIcon callback
 
+
+
 				-- Hide existing LibDBIcon icons
 				local buttons = LibDBIconStub:GetButtonList()
 				for i = 1, #buttons do
@@ -4075,80 +4077,80 @@ function LeaPlusLC:FriendCheck(name)
 				-- Hide new LibDBIcon icons
 				-- LibDBIcon_IconCreated: Done in LibDBIcon callback function
 
-				-- Toggle button frame
-				Minimap:SetScript("OnMouseUp", function(frame, button)
-					if button == "RightButton" then
-						if bFrame:IsShown() then
-							bFrame:Hide()
-						else bFrame:Show()
-							-- Position button frame
-							local side
-							local m = Minimap:GetCenter()
-							local b = Minimap:GetEffectiveScale()
-							local w = GetScreenWidth()
-							local s = UIParent:GetEffectiveScale()
-							bFrame:ClearAllPoints()
-							if m * b > (w * s / 2) then
-								side = "Right"
-								bFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -10, -0)
-							else
-								side = "Left"
-								bFrame:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMRIGHT", 10, 0)
-							end
-							-- Show button frame
-							local x, y, row, col = 0, 0, 0, 0
-							local buttons = LibDBIconStub:GetButtonList()
-							-- Calculate buttons per row
-							local buttonsPerRow
-							local totalButtons = #buttons
-								if totalButtons > 36 then buttonsPerRow = 10
-							elseif totalButtons > 32 then buttonsPerRow = 9
-							elseif totalButtons > 28 then buttonsPerRow = 8
-							elseif totalButtons > 24 then buttonsPerRow = 7
-							elseif totalButtons > 20 then buttonsPerRow = 6
-							elseif totalButtons > 16 then buttonsPerRow = 5
-							elseif totalButtons > 12 then buttonsPerRow = 4
-							elseif totalButtons > 8 then buttonsPerRow = 3
-							elseif totalButtons > 4 then buttonsPerRow = 2
-							else
-								buttonsPerRow = 1
-							end
-							-- Build button grid
-							for i = 1, totalButtons do
-								local buttonName = strlower(buttons[i])
-								if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
-									local button = LibDBIconStub:GetMinimapButton(buttons[i])
-									if button.db then
-										if buttonName == "armory" then button.db.hide = false end -- Armory addon sets hidden to true
-										if not button.db.hide then
-											button:SetParent(bFrame)
-											button:ClearAllPoints()
-											if side == "Left" then
-												-- Minimap is on left side of screen
-												button:SetPoint("TOPLEFT", bFrame, "TOPLEFT", x, y)
-												col = col + 1; if col >= buttonsPerRow then col = 0; row = row + 1; x = 0; y = y - 30 else x = x + 30 end
-											else
-												-- Minimap is on right side of screen
-												button:SetPoint("TOPRIGHT", bFrame, "TOPRIGHT", x, y)
-												col = col + 1; if col >= buttonsPerRow then col = 0; row = row + 1; x = 0; y = y - 30 else x = x - 30 end
-											end
-											if totalButtons <= buttonsPerRow then
-												bFrame:SetWidth(totalButtons * 30)
-											else
-												bFrame:SetWidth(buttonsPerRow * 30)
-											end
-											local void, void, void, void, e = button:GetPoint()
-											bFrame:SetHeight(0 - e + 30)
-											LibDBIconStub:Show(buttons[i])
-										end
-									end
-								end
-							end
-						end
-					else
-						Minimap_OnClick(frame, button)
-					end
-				end)
+				-- -- Toggle button frame
+				-- Minimap:SetScript("OnMouseUp", function(frame, button)
+				-- 	if button == "RightButton" then
+				-- 		if bFrame:IsShown() then
+				-- 			bFrame:Hide()
+				-- 		else bFrame:Show()
+				-- 			-- Position button frame
+				-- 			local side
+				-- 			local m = Minimap:GetCenter()
+				-- 			local b = Minimap:GetEffectiveScale()
+				-- 			local w = GetScreenWidth()
+				-- 			local s = UIParent:GetEffectiveScale()
+				-- 			bFrame:ClearAllPoints()
+				-- 			if m * b > (w * s / 2) then
+				-- 				side = "Right"
+				-- 				bFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -10, -0)
+				-- 			else
+				-- 				side = "Left"
+				-- 				bFrame:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMRIGHT", 10, 0)
+				-- 			end
+				-- 			-- Show button frame
+				-- 			local x, y, row, col = 0, 0, 0, 0
+				-- 			local buttons = LibDBIconStub:GetButtonList()
+				-- 			-- Calculate buttons per row
+				-- 			local buttonsPerRow
+				-- 			local totalButtons = #buttons
+				-- 				if totalButtons > 36 then buttonsPerRow = 10
+				-- 			elseif totalButtons > 32 then buttonsPerRow = 9
+				-- 			elseif totalButtons > 28 then buttonsPerRow = 8
+				-- 			elseif totalButtons > 24 then buttonsPerRow = 7
+				-- 			elseif totalButtons > 20 then buttonsPerRow = 6
+				-- 			elseif totalButtons > 16 then buttonsPerRow = 5
+				-- 			elseif totalButtons > 12 then buttonsPerRow = 4
+				-- 			elseif totalButtons > 8 then buttonsPerRow = 3
+				-- 			elseif totalButtons > 4 then buttonsPerRow = 2
+				-- 			else
+				-- 				buttonsPerRow = 1
+				-- 			end
+				-- 			-- Build button grid
+				-- 			for i = 1, totalButtons do
+				-- 				local buttonName = strlower(buttons[i])
+				-- 				if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
+				-- 					local button = LibDBIconStub:GetMinimapButton(buttons[i])
+				-- 					if button.db then
+				-- 						if buttonName == "armory" then button.db.hide = false end -- Armory addon sets hidden to true
+				-- 						if not button.db.hide then
+				-- 							button:SetParent(bFrame)
+				-- 							button:ClearAllPoints()
+				-- 							if side == "Left" then
+				-- 								-- Minimap is on left side of screen
+				-- 								button:SetPoint("TOPLEFT", bFrame, "TOPLEFT", x, y)
+				-- 								col = col + 1; if col >= buttonsPerRow then col = 0; row = row + 1; x = 0; y = y - 30 else x = x + 30 end
+				-- 							else
+				-- 								-- Minimap is on right side of screen
+				-- 								button:SetPoint("TOPRIGHT", bFrame, "TOPRIGHT", x, y)
+				-- 								col = col + 1; if col >= buttonsPerRow then col = 0; row = row + 1; x = 0; y = y - 30 else x = x - 30 end
+				-- 							end
+				-- 							if totalButtons <= buttonsPerRow then
+				-- 								bFrame:SetWidth(totalButtons * 30)
+				-- 							else
+				-- 								bFrame:SetWidth(buttonsPerRow * 30)
+				-- 							end
+				-- 							local void, void, void, void, e = button:GetPoint()
+				-- 							bFrame:SetHeight(0 - e + 30)
+				-- 							LibDBIconStub:Show(buttons[i])
+				-- 						end
+				-- 					end
+				-- 				end
+				-- 			end
+				-- 		end
+				-- 	else
+				-- 		Minimap_OnClick(frame, button)
+				-- 	end
+				-- end)
 
 			end
 
@@ -4238,14 +4240,14 @@ function LeaPlusLC:FriendCheck(name)
 
 				-- Rescale addon buttons if combine addon buttons is disabled
 				if LeaPlusLC["CombineAddonButtons"] == "Off" then
-					-- Scale existing buttons
-					local buttons = LibDBIconStub:GetButtonList()
-					for i = 1, #buttons do
-						local button = LibDBIconStub:GetMinimapButton(buttons[i])
-						button:SetScale(0.75)
-					end
-					-- Scale new buttons
-					-- LibDBIcon_IconCreated: Done in LiBDBIcon callback function
+					-- -- Scale existing buttons
+					-- local buttons = LibDBIconStub:GetButtonList()
+					-- for i = 1, #buttons do
+					-- 	local button = LibDBIconStub:GetMinimapButton(buttons[i])
+					-- 	button:SetScale(0.75)
+					-- end
+					-- -- Scale new buttons
+					-- -- LibDBIcon_IconCreated: Done in LiBDBIcon callback function
 				end
 
 				-- Refresh buttons
@@ -4257,14 +4259,15 @@ function LeaPlusLC:FriendCheck(name)
 				_G.GetMinimapShape = function() return "ROUND" end
 				Minimap:SetMaskTexture([[Interface\CharacterFrame\TempPortraitAlphaMask]])
 
-				-- Calendar button
-				miniFrame.ClearAllPoints(GameTimeFrame)
-				GameTimeFrame:SetPoint("TOPRIGHT", MinimapBackdrop, "TOPRIGHT", -11, 4)
-				GameTimeFrame:SetParent(MinimapBackdrop)
+				-- -- Calendar button
+				-- miniFrame.ClearAllPoints(GameTimeFrame)
+				-- GameTimeFrame:SetPoint("TOPRIGHT", MinimapBackdrop, "TOPRIGHT", -11, 4)
+				-- GameTimeFrame:SetParent(MinimapBackdrop)
 
-				-- World map button
-				miniFrame.ClearAllPoints(MiniMapWorldMapButton)
-				LibDBIconStub:SetButtonToPosition(MiniMapWorldMapButton, 20)
+				-- -- World map button
+				-- miniFrame.ClearAllPoints(MiniMapWorldMapButton)
+				-- -- LibDBIconStub:SetButtonToPosition(MiniMapWorldMapButton, 20)
+				-- MiniMapWorldMapButton:SetPoint("TOPRIGHT", MinimapBackdrop, "TOPRIGHT", -21, -1)
 
 			end
 
@@ -4380,24 +4383,24 @@ function LeaPlusLC:FriendCheck(name)
 				local function SetHideButtons()
 					if LeaPlusLC["HideMiniAddonButtons"] == "On" then
 						-- Hide existing buttons
-						local buttons = LibDBIconStub:GetButtonList()
-						for i = 1, #buttons do
-							local buttonName = strlower(buttons[i])
-							if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
-								LibDBIconStub:ShowOnEnter(buttons[i], true)
-							end
-						end
+						-- local buttons = LibDBIconStub:GetButtonList()
+						-- for i = 1, #buttons do
+						-- 	local buttonName = strlower(buttons[i])
+						-- 	if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
+						-- 		LibDBIconStub:ShowOnEnter(buttons[i], true)
+						-- 	end
+						-- end
 						-- Hide new buttons
 						-- LibDBIcon_IconCreated: Done in LibDBIcon callback function
 					else
 						-- Show existing buttons
-						local buttons = LibDBIconStub:GetButtonList()
-						for i = 1, #buttons do
-							local buttonName = strlower(buttons[i])
-							if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
-								LibDBIconStub:ShowOnEnter(buttons[i], false)
-							end
-						end
+						-- local buttons = LibDBIconStub:GetButtonList()
+						-- for i = 1, #buttons do
+						-- 	local buttonName = strlower(buttons[i])
+						-- 	if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
+						-- 		LibDBIconStub:ShowOnEnter(buttons[i], false)
+						-- 	end
+						-- end
 						-- Show new buttons
 						-- LibDBIcon_IconCreated: Done in LibDBIcon callback function
 					end
@@ -4623,7 +4626,7 @@ function LeaPlusLC:FriendCheck(name)
 				if LeaPlusLC["MinimapNoScale"] == "On" then
 					Minimap:SetIgnoreParentScale(true)
 				else
-					Minimap:SetIgnoreParentScale(false)
+					-- Minimap:SetIgnoreParentScale(false)
 				end
 			end
 
@@ -4700,131 +4703,89 @@ function LeaPlusLC:FriendCheck(name)
 			-- Hide tracking button
 			if LeaPlusLC["HideMiniTracking"] == "On" then
 
-				-- Hide tracking button initially
+				-- set the initial alpha value to 0 to hide the tracking button
 				MiniMapTracking:SetAlpha(0)
-				MiniMapTracking:Hide()
 
-				-- Create tracking button fade out animation
-				MiniMapTracking.fadeOut = MiniMapTracking:CreateAnimationGroup()
-				local animOut = MiniMapTracking.fadeOut:CreateAnimation("Alpha")
-				animOut:SetOrder(1)
-				animOut:SetDuration(0.2)
-				animOut:SetFromAlpha(1)
-				animOut:SetToAlpha(0)
-				animOut:SetStartDelay(1)
-				MiniMapTracking.fadeOut:SetToFinalAlpha(true)
-
-				-- Show tracking button when entering minimap
-				Minimap:HookScript("OnEnter", function()
-					MiniMapTracking.fadeOut:Stop()
-					MiniMapTracking:SetAlpha(1)
-				end)
-
-				-- Hide tracking button when leaving minimap if pointer is not over tracking button
-				Minimap:HookScript("OnLeave", function()
-					if not MouseIsOver(MiniMapTracking) then
-						MiniMapTracking.fadeOut:Play()
-					end
-				end)
-
-				-- Hide tracking button when leaving tracking button
-				MiniMapTracking:HookScript("OnLeave", function()
-					MiniMapTracking.fadeOut:Play()
-				end)
-
-				-- Hook existing LibDBIcon buttons to include tracking button
-				local buttons = LibDBIconStub:GetButtonList()
-				for i = 1, #buttons do
-					local button = LibDBIconStub:GetMinimapButton(buttons[i])
-					if button then
-						button:HookScript("OnEnter", function()
-							MiniMapTracking.fadeOut:Stop()
+				-- create a new frame to handle the OnUpdate event
+				local myFrame = CreateFrame("FRAME")
+				myFrame:SetScript("OnUpdate", function(self, elapsed)
+					-- check if the pointer is over the minimap
+					if MouseIsOver(Minimap) then
+						MiniMapTracking:SetAlpha(1)
+					else
+						-- check if the pointer is over the tracking button
+						if MouseIsOver(MiniMapTracking) then 
 							MiniMapTracking:SetAlpha(1)
-						end)
-						button:HookScript("OnLeave", function()
-							MiniMapTracking.fadeOut:Play()
-						end)
-					end
-				end
-
-				-- Hook new LibDBIcon buttons to include tracking button
-				-- LibDBIcon_IconCreated: Done in LibDBIcon callback function
-
-				-- Show tracking button when button alpha is set to 1
-				hooksecurefunc(MiniMapTracking, "SetAlpha", function(self, alphavalue)
-					if alphavalue and alphavalue == 1 then
-						MiniMapTracking:Show()
+						else
+							MiniMapTracking:SetAlpha(0)
+						end
 					end
 				end)
 
-				-- Hide tracking button when fadeout animation has finished
-				MiniMapTracking.fadeOut:HookScript("OnFinished", function()
-					MiniMapTracking:Hide()
-				end)
 
 			end
 
-			-- LibDBIcon callback (search LibDBIcon_IconCreated to find calls to this)
-			LibDBIconStub.RegisterCallback(miniFrame, "LibDBIcon_IconCreated", function(self, button, name)
+			-- -- LibDBIcon callback (search LibDBIcon_IconCreated to find calls to this)
+			-- LibDBIconStub.RegisterCallback(miniFrame, "LibDBIcon_IconCreated", function(self, button, name)
 
-				-- Combine addon buttons: Hide new LibDBIcon icons
-				if LeaPlusLC["CombineAddonButtons"] == "On" then
-					--LibCompat.After(0.1, function() -- Removed for now
-						local buttonName = strlower(name)
-						if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
-							if button.db and not button.db.hide then
-								button:Hide()
-								button:SetScript("OnShow", function() if not LeaPlusLC.bFrame:IsShown() then button:Hide() end end)
-							end
-							-- Create background texture
-							local bFrameBg = button:CreateTexture(nil, "BACKGROUND")
-							bFrameBg:SetTexture("Interface\\ChatFrame\\ChatFrameBackground")
-							bFrameBg:SetPoint("CENTER")
-							bFrameBg:SetSize(30, 30)
-							bFrameBg:SetVertexColor(0, 0, 0, 0.5)
-						elseif strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) and LeaPlusLC["SquareMinimap"] == "On" then
-							button:SetScale(0.75)
-						end
-						-- Move GameTooltip to below the minimap in case the button uses it
-						button:HookScript("OnEnter", LeaPlusLC.SetButtonTooltip)
-					--end)
-				end
+			-- 	-- Combine addon buttons: Hide new LibDBIcon icons
+			-- 	if LeaPlusLC["CombineAddonButtons"] == "On" then
+			-- 		--LibCompat.After(0.1, function() -- Removed for now
+			-- 			local buttonName = strlower(name)
+			-- 			if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
+			-- 				if button.db and not button.db.hide then
+			-- 					button:Hide()
+			-- 					button:SetScript("OnShow", function() if not LeaPlusLC.bFrame:IsShown() then button:Hide() end end)
+			-- 				end
+			-- 				-- Create background texture
+			-- 				local bFrameBg = button:CreateTexture(nil, "BACKGROUND")
+			-- 				bFrameBg:SetTexture("Interface\\ChatFrame\\ChatFrameBackground")
+			-- 				bFrameBg:SetPoint("CENTER")
+			-- 				bFrameBg:SetSize(30, 30)
+			-- 				bFrameBg:SetVertexColor(0, 0, 0, 0.5)
+			-- 			elseif strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) and LeaPlusLC["SquareMinimap"] == "On" then
+			-- 				button:SetScale(0.75)
+			-- 			end
+			-- 			-- Move GameTooltip to below the minimap in case the button uses it
+			-- 			button:HookScript("OnEnter", LeaPlusLC.SetButtonTooltip)
+			-- 		--end)
+			-- 	end
 
-				-- Square minimap: Set scale of new LibDBIcon icons
-				if LeaPlusLC["SquareMinimap"] == "On" and LeaPlusLC["CombineAddonButtons"] == "Off" then
-					button:SetScale(0.75)
-				end
+			-- 	-- Square minimap: Set scale of new LibDBIcon icons
+			-- 	if LeaPlusLC["SquareMinimap"] == "On" and LeaPlusLC["CombineAddonButtons"] == "Off" then
+			-- 		button:SetScale(0.75)
+			-- 	end
 
-				-- Hide addon buttons: Hide new LibDBIcon icons
-				if LeaPlusLC["CombineAddonButtons"] == "Off" then
-					local buttonName = strlower(name)
-					if LeaPlusLC["HideMiniAddonButtons"] == "On" then
-						-- Hide addon buttons is enabled
-						if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
-							LibDBIconStub:ShowOnEnter(name, true)
-						end
-					else
-						-- Hide addon buttons is disabled
-						if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
-							LibDBIconStub:ShowOnEnter(name, false)
-						end
-					end
-				end
+			-- 	-- Hide addon buttons: Hide new LibDBIcon icons
+			-- 	if LeaPlusLC["CombineAddonButtons"] == "Off" then
+			-- 		local buttonName = strlower(name)
+			-- 		if LeaPlusLC["HideMiniAddonButtons"] == "On" then
+			-- 			-- Hide addon buttons is enabled
+			-- 			if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
+			-- 				LibDBIconStub:ShowOnEnter(name, true)
+			-- 			end
+			-- 		else
+			-- 			-- Hide addon buttons is disabled
+			-- 			if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
+			-- 				LibDBIconStub:ShowOnEnter(name, false)
+			-- 			end
+			-- 		end
+			-- 	end
 
-				-- Hide tracking button
-				if LeaPlusLC["HideMiniTracking"] == "On" then
-					button:HookScript("OnEnter", function()
-						-- Show tracking button when entering LibDBIcon button
-						MiniMapTracking.fadeOut:Stop()
-						MiniMapTracking:SetAlpha(1)
-					end)
-					button:HookScript("OnLeave", function()
-						-- Hide tracking button when leaving LibDBIcon button
-						MiniMapTracking.fadeOut:Play()
-					end)
-				end
+			-- 	-- Hide tracking button
+			-- 	if LeaPlusLC["HideMiniTracking"] == "On" then
+			-- 		button:HookScript("OnEnter", function()
+			-- 			-- Show tracking button when entering LibDBIcon button
+			-- 			MiniMapTracking.fadeOut:Stop()
+			-- 			MiniMapTracking:SetAlpha(1)
+			-- 		end)
+			-- 		button:HookScript("OnLeave", function()
+			-- 			-- Hide tracking button when leaving LibDBIcon button
+			-- 			MiniMapTracking.fadeOut:Play()
+			-- 		end)
+			-- 	end
 
-			end)
+			-- end)
 
 		end
 
