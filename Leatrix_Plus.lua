@@ -5982,8 +5982,8 @@ function LeaPlusLC:FriendCheck(name)
 
 		if LeaPlusLC["FilterChatMessages"] == "On" then
 
-			-- Load LibChatAnims
-			Leatrix_Plus:LeaPlusLCA()
+			-- -- Load LibChatAnims
+			-- Leatrix_Plus:LeaPlusLCA()
 
 			-- Create configuration panel
 			local ChatFilterPanel = LeaPlusLC:CreatePanel("Filter chat messages", "ChatFilterPanel")
@@ -6011,7 +6011,7 @@ function LeaPlusLC:FriendCheck(name)
 			end)
 
 			local charName = GetUnitName("player")
-			local charRealm = GetNormalizedRealmName()
+			local charRealm = GetRealmName()
 			local nameRealm = charName .. "%%-" .. charRealm
 
 			-- Chat filter
