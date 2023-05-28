@@ -11,6 +11,10 @@ AutoQuest		 		- May be backport retail quest accept.
 
 RecentChatWindow		- Need to rename .xml file and the backported template name.
 
+MinimapButton			- Either add functions to alt-click and other on button or remove descriptions in GUI.
+
+ElvUI	 				- Need to see what disabled for when ElvUI is loaded. May be something is not made in 3.3.5 ElvUI backport, but still disabled.
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -26,6 +30,8 @@ Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ?
 --------------------------------------------------------------------------------
 -- Functions to-do:
 --------------------------------------------------------------------------------
+
+RecentChatWindow 		 - Ctrl-click on tab should be toggling the window..
 
 HideErrorMessages		 - Add locales for "Requires", for herbalism,mining,lockpicking skill requirements.
 
@@ -88,17 +94,13 @@ Add more tweaks to Auction House extras module.
 
 Square minimap
 
-Restore Chat Messages history after relog
-
-Hide keybind text
-
-Hide macro text
-
 Resize mail text
 
 Train All Button
 
 Copy chat links
+
+Add a number of skill requirement to the tooltip to gather herb,mine node, when mouseovering it.
 
 
 

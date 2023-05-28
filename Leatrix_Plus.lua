@@ -2694,11 +2694,11 @@ function LeaPlusLC:FriendCheck(name)
 			-- Function to set the text size
 			local function MailSizeUpdate()
 				local MailFont, void, flags = QuestFont:GetFont()
-				OpenMailBodyText:SetFont("h1", MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags)
-				OpenMailBodyText:SetFont("h2", MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags)
-				OpenMailBodyText:SetFont("h3", MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags)
-				OpenMailBodyText:SetFont("p", MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags)
-				MailEditBox:GetEditBox():SetFont(MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags) -- in DF, this is replaced with SendMailBodyEditBox
+				OpenMailBodyText:SetFont(MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags)
+				OpenMailBodyText:SetFont(MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags)
+				OpenMailBodyText:SetFont(MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags)
+				OpenMailBodyText:SetFont(MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags)
+				SendMailBodyEditBox:SetFont(MailFont, LeaPlusLC["LeaPlusMailFontSize"], flags)
 			end
 
 			-- Set text size after changing slider and on startup
@@ -3042,7 +3042,7 @@ function LeaPlusLC:FriendCheck(name)
 								err == ERR_FEIGN_DEATH_RESISTED or
 								err == SPELL_FAILED_TARGET_NO_POCKETS or
 								err == ERR_ALREADY_PICKPOCKETED or
-								string.match(err, "Requires") then -- add this line
+								string.match(err, "Requires") then
 								return OrigErrHandler(self, event, err, ...)
 							end
 						else
