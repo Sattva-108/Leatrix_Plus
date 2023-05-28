@@ -2619,11 +2619,11 @@ function LeaPlusLC:FriendCheck(name)
 
 		if LeaPlusLC["QuestFontChange"] == "On" and not LeaLockList["QuestFontChange"] then
 
-			-- Set gossip frame scroll box layout (fix for game patch 3.4.1)
-			GossipFrame.GreetingPanel.ScrollBox:SetHeight(320)
-			GossipFrame.GreetingPanel.ScrollBar:ClearAllPoints()
-			GossipFrame.GreetingPanel.ScrollBar:SetPoint("TOPLEFT", GossipFrame.GreetingPanel.ScrollBox, "TOPRIGHT", 4, 9)
-			GossipFrame.GreetingPanel.ScrollBar:SetPoint("BOTTOMLEFT", GossipFrame.GreetingPanel.ScrollBox, "BOTTOMRIGHT", 4, -14)
+			-- -- Set gossip frame scroll box layout (fix for game patch 3.4.1)
+			-- GossipFrame.GreetingPanel.ScrollBox:SetHeight(320)
+			-- GossipFrame.GreetingPanel.ScrollBar:ClearAllPoints()
+			-- GossipFrame.GreetingPanel.ScrollBar:SetPoint("TOPLEFT", GossipFrame.GreetingPanel.ScrollBox, "TOPRIGHT", 4, 9)
+			-- GossipFrame.GreetingPanel.ScrollBar:SetPoint("BOTTOMLEFT", GossipFrame.GreetingPanel.ScrollBox, "BOTTOMRIGHT", 4, -14)
 
 			-- Create configuration panel
 			local QuestTextPanel = LeaPlusLC:CreatePanel("Resize quest text", "QuestTextPanel")
