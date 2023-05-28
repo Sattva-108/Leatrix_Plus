@@ -3497,6 +3497,7 @@ function LeaPlusLC:FriendCheck(name)
 
 			-- Use function from Dragonflight
 			local function FCF_IsChatWindowIndexActive(chatWindowIndex)
+				-- print("exectuing FCF func")
 				local shown = select(7, FCF_GetChatWindowInfo(chatWindowIndex))
 				if shown then
 					return true
@@ -3508,27 +3509,35 @@ function LeaPlusLC:FriendCheck(name)
 			-- Save chat messages on logout
 			historyFrame:SetScript("OnEvent", function(self, event)
 				if event == "PLAYER_LOGOUT" then
-					local name, realm = UnitFullName("player")
-					if not realm then realm = GetNormalizedRealmName() end
+					-- print(event)
+					local name, realm = LibCompat.UnitFullName("player")
+					if not realm then realm = GetRealmName() end
+					-- print(name .. realm)
 					if name and realm then
 						LeaPlusDB["ChatHistoryName"] = name .. "-" .. realm
-						LeaPlusDB["ChatHistoryTime"] = GetServerTime()
+						-- print(LeaPlusDB["ChatHistoryName"])
+						LeaPlusDB["ChatHistoryTime"] = time()
+						-- print(LeaPlusDB["ChatHistoryTime"])
 						for i = 1, 50 do
 							if i ~= 2 and _G["ChatFrame" .. i] then
 								if FCF_IsChatWindowIndexActive(i) then
+									-- print("window active")
 									LeaPlusDB["ChatHistory" .. i] = {}
 									local chtfrm = _G["ChatFrame" .. i]
 									local NumMsg = chtfrm:GetNumMessages()
 									local StartMsg = 1
 									if NumMsg > 128 then StartMsg = NumMsg - 127 end
+									-- print(NumMsg)
 									for iMsg = StartMsg, NumMsg do
 										local chatMessage, r, g, b, chatTypeID = chtfrm:GetMessageInfo(iMsg)
 										if chatMessage then
-											if r and g and b then
-												local colorCode = RGBToColorCode(r, g, b)
-												chatMessage = colorCode .. chatMessage
-											end
+											-- if r and g and b then
+												-- local colorCode = RGBToColorCode(r, g, b)
+											chatMessage = chatMessage
+												-- print(chatMessage)
+											-- end
 											tinsert(LeaPlusDB["ChatHistory" .. i], chatMessage)
+											-- print("Inserted Chat Message: ".. chatMessage)
 										end
 									end
 								end
@@ -3539,12 +3548,16 @@ function LeaPlusLC:FriendCheck(name)
 			end)
 
 			-- Restore chat messages on login
-			local name, realm = UnitFullName("player")
-			if not realm then realm = GetNormalizedRealmName() end
+			local name, realm = LibCompat.UnitFullName("player")
+			if not realm then realm = GetRealmName() end
 			if name and realm then
 				if LeaPlusDB["ChatHistoryName"] and LeaPlusDB["ChatHistoryTime"] then
-					local timeDiff = GetServerTime() - LeaPlusDB["ChatHistoryTime"]
-					if LeaPlusDB["ChatHistoryName"] == name .. "-" .. realm and timeDiff and timeDiff < 10 then -- reload must be done within 15 seconds
+					-- print(LeaPlusDB["ChatHistoryName"])
+					-- print(LeaPlusDB["ChatHistoryTime"])
+					local timeDiff = time() - LeaPlusDB["ChatHistoryTime"]
+										-- print(timeDiff)
+					if timeDiff and timeDiff < 10 then -- reload must be done within 15 seconds
+
 
 						-- Store chat messages from current session and clear chat
 						for i = 1, 50 do
@@ -3555,10 +3568,10 @@ function LeaPlusLC:FriendCheck(name)
 								for iMsg = 1, NumMsg do
 									local chatMessage, r, g, b, chatTypeID = chtfrm:GetMessageInfo(iMsg)
 									if chatMessage then
-										if r and g and b then
-											local colorCode = RGBToColorCode(r, g, b)
-											chatMessage = colorCode .. chatMessage
-										end
+										-- if r and g and b then
+											-- local colorCode = RGBToColorCode(r, g, b)
+											chatMessage = chatMessage
+										-- end
 										tinsert(LeaPlusDB["ChatTemp" .. i], chatMessage)
 									end
 								end

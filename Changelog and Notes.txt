@@ -1,7 +1,7 @@
 
 
 --------------------------------------------------------------------------------
--- Backport to-do:
+-- Backport to-do before release:
 --------------------------------------------------------------------------------
 
 
@@ -9,6 +9,7 @@ Main Panel		 		- Need to fix transparency of settings in Settings main window.
 
 AutoQuest		 		- May be backport retail quest accept.
 
+RecentChatWindow		- Need to rename .xml file and the backported template name.
 
 
 --------------------------------------------------------------------------------
@@ -25,6 +26,10 @@ Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ?
 --------------------------------------------------------------------------------
 -- Functions to-do:
 --------------------------------------------------------------------------------
+
+RestoreChatHistory		 - Fix Channel colors.
+
+RecentChatWindow		 - Need to add mouse scrolling.
 
 RecentChatWindow		 - Need to fix channel colors. 
 
