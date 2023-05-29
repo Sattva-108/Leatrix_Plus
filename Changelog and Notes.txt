@@ -19,6 +19,8 @@ General					- Check all Preset profiles to make sure user doesn't have option be
 
 EnhanceMinimap			- "Example Input" needs Locales!
 
+InviteFromWhispers		- Need to fix visual bag in config panel.
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -28,7 +30,6 @@ EnhanceMinimap			- "Example Input" needs Locales!
 Auto-Ress in BG 		 - With option "Exclude Alterac" will it not auto-res in Alterac BG ?
 
 Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ? 
-
 
 
 --------------------------------------------------------------------------------
@@ -111,5 +112,7 @@ Add a number of skill requirement to the tooltip to gather herb,mine node, when 
 Minimap - Zone Text Bar should toggle the minimap.
 
 Minimap - Tracking button animation fade-in-out.
+
+Minimap - distance of buttons OnEnter alpha trigger user option?
 
 

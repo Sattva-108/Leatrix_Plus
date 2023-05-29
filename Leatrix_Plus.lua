@@ -4424,55 +4424,78 @@ function LeaPlusLC:FriendCheck(name)
 
 						-- This function will capture all children attached to the minimap, and add them to our table.
 						local function GetMinimapChildren()
-						-- First, we clear our table to ensure there are no duplicates.
-						wipe(minimapButtons)
+							-- First, we clear our table to ensure there are no duplicates.
+							wipe(minimapButtons)
 
-						-- Next, we get the total number of children attached to the minimap frame.
-						local numChildren = Minimap:GetNumChildren()
+							-- Next, we get the total number of children attached to the minimap frame.
+							local numChildren = Minimap:GetNumChildren()
 
-						-- Now, we loop through each child and check if it's a minimap button.
-						for i = 1, numChildren do
-						local child = select(i, Minimap:GetChildren())
-						if child and child:IsObjectType("Button") and child:GetName() then
-						-- If the child is a minimap button, we add it to our table.
-						minimapButtons[child:GetName()] = child
-						end
-						end
+							-- Now, we loop through each child and check if it's a minimap button.
+							for i = 1, numChildren do
+								local child = select(i, Minimap:GetChildren())
+								if child and child:IsObjectType("Button") and child:GetName() then
+								-- If the child is a minimap button, we add it to our table.
+								minimapButtons[child:GetName()] = child
+								end
+							end
 						end
 
 						local function HideMinimapButtons()
 							local searchStr = LeaPlusDB["MiniExcludeList"]
+							-- Thanks to https://github.com/s0h2x/pretty_minimap for good list of buttons to ignore!
 							local keepVisible = {
-								"ZGV"
+								"ZGV",
+								"Spy",
+								"MiniMapBattlefieldFrame",
+								"GatherMatePin",
+								"HandyNotesPin",
+								"Archy",
+								"GatherNote",
+								"poiWorldMapPOIFrame",
+								"WorldMapPOIFrame",
+								"QuestMapPOI"
 							}
 							if searchStr == "" then
-								-- Set alpha of all buttons to 0 if MiniExcludeList is empty
-								for _, button in pairs(minimapButtons) do
-									if not string.find(button:GetName(), keepVisible[1]) then
-										-- Button name doesn't contain substring 'keepVisible[1]', so adjust its alpha
-										button:SetAlpha(0)
-									end
-								end
-							else
-								-- Set alpha of buttons that match MiniExcludeList to 0
-								local excludedNames = {strsplit(",", searchStr)} -- Split MiniExcludeList by comma
-								for name, button in pairs(minimapButtons) do
-									if not string.find(button:GetName(), keepVisible[1]) then
-										-- Check if button name doesn't contain substring 'keepVisible[1]'
-										local match = false
-										for _, excludedName in ipairs(excludedNames) do
-											if string.find(name, strtrim(excludedName)) ~= nil then
-												match = true
-												break
-											end
-										end
-										if not match then
-											button:SetAlpha(0)
-										end
-									end
-								end
-							end
+						        -- Set alpha of all buttons to 0 if MiniExcludeList is empty
+						        for _, button in pairs(minimapButtons) do
+						        	local match = false
+						        	for _, visible in ipairs(keepVisible) do
+						        		if string.find(button:GetName(), visible) then
+						        			match = true
+						        			break
+						        		end
+						        	end
+						        	if not match then
+						        		button:SetAlpha(0)
+						        	end
+						        end
+						    else
+						        -- Set alpha of buttons that match MiniExcludeList to 0
+						        local excludedNames = {strsplit(",", searchStr)} -- Split MiniExcludeList by comma
+						        for name, button in pairs(minimapButtons) do
+						        	local match = false
+						        	for _, visible in ipairs(keepVisible) do
+						        		if string.find(button:GetName(), visible) then
+						        			match = true
+						        			break
+						        		end
+						        	end
+						        	if not match then
+						                -- Check if button name doesn't contain any substring in 'keepVisible'
+						                for _, excludedName in ipairs(excludedNames) do
+						                	if string.find(name, strtrim(excludedName)) ~= nil then
+						                		match = true
+						                		break
+						                	end
+						                end
+						                if not match then
+						                	button:SetAlpha(0)
+						                end
+						            end
+						        end
+						    end
 						end
+
 
 
 
@@ -4500,13 +4523,15 @@ function LeaPlusLC:FriendCheck(name)
 						            local child = select(i, Minimap:GetChildren())
 						            if child and child:IsObjectType("Button") then
 						                local x, y = child:GetCenter()
-						                x, y = x * child:GetEffectiveScale(), y * child:GetEffectiveScale()
-						                local cx, cy = GetCursorPosition()
-						                local dist = sqrt((x - cx) ^ 2 + (y - cy) ^ 2) / 1.5 -- Double the distance
+						                if x and y then -- Check if x and y are not nil
+						                    x, y = x * child:GetEffectiveScale(), y * child:GetEffectiveScale()
+						                    local cx, cy = GetCursorPosition()
+						                    local dist = sqrt((x - cx) ^ 2 + (y - cy) ^ 2) / 3 -- Triple the distance of buttons OnEnter alpha trigger 
 
-						                if dist < child:GetWidth() / 2 then
-						                    mouseOverChild = true
-						                    break
+						                    if dist < child:GetWidth() / 2 then
+						                        mouseOverChild = true
+						                        break
+						                    end
 						                end
 						            end
 						        end
@@ -4518,6 +4543,7 @@ function LeaPlusLC:FriendCheck(name)
 						        end
 						    end)
 						end
+
 
 
 						-- This function is called when the mouse leaves the minimap area.
