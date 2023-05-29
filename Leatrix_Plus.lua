@@ -330,6 +330,36 @@
 		LeaPlusCB[frame]:SetScript("OnEnter", LeaPlusLC.TipSee)
 	end
 
+	-- Frame Stack Function Toggle
+	local function toggleFrameStack(msg)
+	    UIParentLoadAddOn("Blizzard_DebugTools")
+	    if msg == tostring(true) then
+	        FrameStackTooltip_Toggle(true)
+	    else
+	        FrameStackTooltip_Toggle()
+	    end
+	end
+
+	SLASH_FRAMESTACK1 = "/fs"
+	SlashCmdList["FRAMESTACK"] = toggleFrameStack
+
+	-- Create a FrameStack button
+	function LeaPlusLC:CreateFrameStackButton(frame, panel, parent, tip)
+		LeaPlusLC:CfgBtn(frame, panel)
+		LeaPlusCB[frame]:ClearAllPoints()
+		LeaPlusCB[frame]:SetPoint("LEFT", parent, "RIGHT", -parent:GetWidth() + parent:GetStringWidth(), 0)
+		LeaPlusCB[frame]:SetSize(25, 25)
+		LeaPlusCB[frame].t:SetTexture("Interface\\COMMON\\help-i.blp")
+		LeaPlusCB[frame].t:SetTexCoord(0, 1, 0, 1)
+		LeaPlusCB[frame].t:SetVertexColor(0.9, 0.8, 0.0)
+		LeaPlusCB[frame]:SetHighlightTexture("Interface\\COMMON\\help-i.blp")
+		LeaPlusCB[frame]:GetHighlightTexture():SetTexCoord(0, 1, 0, 1)
+		LeaPlusCB[frame].tiptext = L[tip]
+		LeaPlusCB[frame]:SetScript("OnEnter", LeaPlusLC.TipSee)
+		LeaPlusCB[frame]:SetScript("OnClick", function() toggleFrameStack(true) end)
+	end
+
+
 	-- Show a footer
 	function LeaPlusLC:MakeFT(frame, text, left, width)
 		local footer = LeaPlusLC:MakeTx(frame, text, left, 96)
@@ -600,6 +630,7 @@ function LeaPlusLC:FriendCheck(name)
 
 		-- Interface
 		or	(LeaPlusLC["MinimapModder"]			~= LeaPlusDB["MinimapModder"])			-- Enhance minimap
+		or	(LeaPlusLC["HideMiniAddonButtons"]	~= LeaPlusDB["HideMiniAddonButtons"])	-- Enhance minimap	
 		or	(LeaPlusLC["SquareMinimap"]			~= LeaPlusDB["SquareMinimap"])			-- Square minimap
 		or	(LeaPlusLC["CombineAddonButtons"]	~= LeaPlusDB["CombineAddonButtons"])	-- Combine addon buttons
 		or	(LeaPlusLC["HideMiniTracking"]		~= LeaPlusDB["HideMiniTracking"])		-- Hide tracking button
@@ -3666,7 +3697,7 @@ function LeaPlusLC:FriendCheck(name)
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniZoneText", "Hide the zone text bar", 16, -112, false, "If checked, the zone text bar will be hidden.")
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniMapButton", "Hide the world map button", 16, -132, false, "If checked, the world map button will be hidden.")
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniTracking", "Hide the tracking button", 16, -152, true, "If checked, the tracking button will be hidden while the pointer is not over the minimap.")
-			LeaPlusLC:MakeCB(SideMinimap, "HideMiniAddonButtons", "Hide addon buttons", 16, -172, false, "If checked, addon buttons will be hidden while the pointer is not over the minimap.")
+			LeaPlusLC:MakeCB(SideMinimap, "HideMiniAddonButtons", "Hide addon buttons", 16, -172, true, "If checked, addon buttons will be hidden while the pointer is not over the minimap.")
 			LeaPlusLC:MakeCB(SideMinimap, "CombineAddonButtons", "Combine addon buttons", 16, -192, true, "If checked, addon buttons will be combined into a single button frame which you can toggle by right-clicking the minimap.|n|nNote that enabling this option will lock out the 'Hide addon buttons' setting.")
 			LeaPlusLC:MakeCB(SideMinimap, "SquareMinimap", "Square minimap", 16, -212, true, "If checked, the minimap shape will be square.")
 			LeaPlusLC:MakeCB(SideMinimap, "ShowWhoPinged", "Show who pinged", 16, -232, false, "If checked, when someone pings the minimap, their name will be shown.  This does not apply to your pings.")
@@ -3712,6 +3743,10 @@ function LeaPlusLC:FriendCheck(name)
 				titleTX:SetWidth(534)
 				titleTX:SetWordWrap(false)
 				titleTX:SetJustifyH("LEFT")
+
+				-- Show framestack button to help user make an exclusion for certain addon button / blizzard button from hiding.
+				LeaPlusLC:CreateFrameStackButton("ExcludedButtonsFrameStackButton", ExcludedButtonsPanel, titleTX, "Enter item IDs separated by commas.  Item IDs can be found in item tooltips while this panel is showing.|n|nJunk items entered here will not be sold automatically.|n|nWhite items entered here will be sold automatically.|n|nThe editbox tooltip will show you more information about the items you have entered.")
+
 
 				-- Add second excluded button
 				local MiniExcludedButton2 = LeaPlusLC:CreateButton("MiniExcludedButton2", ExcludedButtonsPanel, "Buttons", "TOPLEFT", 16, -72, 0, 25, true, "Click to toggle the addon buttons editor.")
@@ -3799,7 +3834,7 @@ function LeaPlusLC:FriendCheck(name)
 
 				end)
 
-				-- Show configuration panal when options panel button is clicked
+				-- Show configuration panel when options panel button is clicked
 				LeaPlusCB["MiniExcludedButton"]:SetScript("OnClick", function()
 					if IsShiftKeyDown() and IsControlKeyDown() then
 						-- Preset profile
@@ -3824,7 +3859,7 @@ function LeaPlusLC:FriendCheck(name)
 						end
 					end
 					if msg ~= "" then
-						msg = L["Supported Addons"] .. "|n|n" .. msg:sub(1, (strlen(msg) - 2)) .. "."
+						msg = "Example Input" .. "|n|n" .. msg:sub(1, (strlen(msg) - 2)) .. "."
 					else
 						msg = L["No supported addons."]
 					end
@@ -4276,102 +4311,102 @@ function LeaPlusLC:FriendCheck(name)
 			----------------------------------------------------------------------
 
 			-- Replace non-standard buttons for addons that don't use the standard LibDBIcon library
-			do
+			-- do
 
-				-- Make custom LibDBIcon buttons for addons that don't use LibDBIcon
-				local CustomAddonTable = {}
-				LeaPlusDB["CustomAddonButtons"] = LeaPlusDB["CustomAddonButtons"] or {}
+			-- 	-- Make custom LibDBIcon buttons for addons that don't use LibDBIcon
+			-- 	local CustomAddonTable = {}
+			-- 	LeaPlusDB["CustomAddonButtons"] = LeaPlusDB["CustomAddonButtons"] or {}
 
-				-- Function to create a LibDBIcon button
-				local function CreateBadButton(name)
+			-- 	-- Function to create a LibDBIcon button
+			-- 	local function CreateBadButton(name)
 
-					-- Get non-standard button texture
-					local finalTex = "Interface\\HELPFRAME\\HelpIcon-KnowledgeBase"
+			-- 		-- Get non-standard button texture
+			-- 		local finalTex = "Interface\\HELPFRAME\\HelpIcon-KnowledgeBase"
 
-					if _G[name .. "Icon"] then
-						if _G[name .. "Icon"]:GetObjectType() == "Texture" then
-							local gTex = _G[name .. "Icon"]:GetTexture()
-							if gTex then
-								finalTex = gTex
-							end
-						end
-					else
-						for i = 1, select('#', _G[name]:GetRegions()) do
-							local region = select(i, _G[name]:GetRegions())
-							if region.GetTexture then
-								local x, y = region:GetSize()
-								if x and x < 30 then
-									finalTex = region:GetTexture()
-								end
-							end
-						end
-					end
+			-- 		if _G[name .. "Icon"] then
+			-- 			if _G[name .. "Icon"]:GetObjectType() == "Texture" then
+			-- 				local gTex = _G[name .. "Icon"]:GetTexture()
+			-- 				if gTex then
+			-- 					finalTex = gTex
+			-- 				end
+			-- 			end
+			-- 		else
+			-- 			for i = 1, select('#', _G[name]:GetRegions()) do
+			-- 				local region = select(i, _G[name]:GetRegions())
+			-- 				if region.GetTexture then
+			-- 					local x, y = region:GetSize()
+			-- 					if x and x < 30 then
+			-- 						finalTex = region:GetTexture()
+			-- 					end
+			-- 				end
+			-- 			end
+			-- 		end
 
-					if not finalTex then finalTex = "Interface\\HELPFRAME\\HelpIcon-KnowledgeBase" end
+			-- 		if not finalTex then finalTex = "Interface\\HELPFRAME\\HelpIcon-KnowledgeBase" end
 
-					local zeroButton = LibStub("LibDataBroker-1.1"):NewDataObject("LeaPlusCustomIcon_" .. name, {
-						type = "data source",
-						text = name,
-						icon = finalTex,
-						OnClick = function(self, btn)
-							if _G[name] then
-								if string.find(name, "LibDBIcon") then
-									-- It's a fake LibDBIcon
-									local mouseUp = _G[name]:GetScript("OnMouseUp")
-									if mouseUp then
-										mouseUp(self, btn)
-									end
-								else
-									-- It's a genuine LibDBIcon
-									local clickUp = _G[name]:GetScript("OnClick")
-									if clickUp then
-										_G[name]:Click(btn)
-									end
-								end
-							end
-						end,
-						OnTooltipShow = function(tooltip)
-							if not tooltip or not tooltip.AddLine then return end
-							tooltip:AddLine(name)
-							tooltip:AddLine(L["This is a custom button."], 1, 1, 1)
-							tooltip:AddLine(L["Please ask the addon author to use LibDBIcon."], 1, 1, 1)
-							tooltip:AddLine(L["There is a helpful guide on leatrix.com."], 1, 1, 1)
-						end,
-					})
-					LeaPlusDB["CustomAddonButtons"][name] = LeaPlusDB["CustomAddonButtons"][name] or {}
-					LeaPlusDB["CustomAddonButtons"][name].hide = false
-					CustomAddonTable[name] = name
-					local icon = LibStub("LibDBIcon-1.0", true)
-					icon:Register("LeaPlusCustomIcon_" .. name, zeroButton, LeaPlusDB["CustomAddonButtons"][name])
+			-- 		local zeroButton = LibStub("LibDataBroker-1.1"):NewDataObject("LeaPlusCustomIcon_" .. name, {
+			-- 			type = "data source",
+			-- 			text = name,
+			-- 			icon = finalTex,
+			-- 			OnClick = function(self, btn)
+			-- 				if _G[name] then
+			-- 					if string.find(name, "LibDBIcon") then
+			-- 						-- It's a fake LibDBIcon
+			-- 						local mouseUp = _G[name]:GetScript("OnMouseUp")
+			-- 						if mouseUp then
+			-- 							mouseUp(self, btn)
+			-- 						end
+			-- 					else
+			-- 						-- It's a genuine LibDBIcon
+			-- 						local clickUp = _G[name]:GetScript("OnClick")
+			-- 						if clickUp then
+			-- 							_G[name]:Click(btn)
+			-- 						end
+			-- 					end
+			-- 				end
+			-- 			end,
+			-- 			OnTooltipShow = function(tooltip)
+			-- 				if not tooltip or not tooltip.AddLine then return end
+			-- 				tooltip:AddLine(name)
+			-- 				tooltip:AddLine(L["This is a custom button."], 1, 1, 1)
+			-- 				tooltip:AddLine(L["Please ask the addon author to use LibDBIcon."], 1, 1, 1)
+			-- 				tooltip:AddLine(L["There is a helpful guide on leatrix.com."], 1, 1, 1)
+			-- 			end,
+			-- 		})
+			-- 		LeaPlusDB["CustomAddonButtons"][name] = LeaPlusDB["CustomAddonButtons"][name] or {}
+			-- 		LeaPlusDB["CustomAddonButtons"][name].hide = false
+			-- 		CustomAddonTable[name] = name
+			-- 		local icon = LibStub("LibDBIcon-1.0", true)
+			-- 		icon:Register("LeaPlusCustomIcon_" .. name, zeroButton, LeaPlusDB["CustomAddonButtons"][name])
 
-				end
+			-- 	end
 
-				-- Function to loop through minimap children to find custom addon buttons
-				local function MakeButtons()
-					local temp = {Minimap:GetChildren()}
-					for i = 1, #temp do
-						if temp[i] then
-							local btn = temp[i]
-							local name = btn:GetName()
-							local btype = btn:GetObjectType()
-							if name and btype == "Button" and not CustomAddonTable[name] and btn:GetNumRegions() >= 3 and not issecurevariable(name) and btn:IsShown() then
-								if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), strlower("##" .. name)) then
-									if not string.find(name, "LibDBIcon") or name == "LibDBIcon10_MethodRaidTools" then
-										CreateBadButton(name)
-										btn:Hide()
-										btn:SetScript("OnShow", function() btn:Hide() end)
-									end
-								end
-							end
-						end
-					end
-				end
+			-- 	-- Function to loop through minimap children to find custom addon buttons
+			-- 	local function MakeButtons()
+			-- 		local temp = {Minimap:GetChildren()}
+			-- 		for i = 1, #temp do
+			-- 			if temp[i] then
+			-- 				local btn = temp[i]
+			-- 				local name = btn:GetName()
+			-- 				local btype = btn:GetObjectType()
+			-- 				if name and btype == "Button" and not CustomAddonTable[name] and btn:GetNumRegions() >= 3 and not issecurevariable(name) and btn:IsShown() then
+			-- 					if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), strlower("##" .. name)) then
+			-- 						if not string.find(name, "LibDBIcon") or name == "LibDBIcon10_MethodRaidTools" then
+			-- 							CreateBadButton(name)
+			-- 							btn:Hide()
+			-- 							btn:SetScript("OnShow", function() btn:Hide() end)
+			-- 						end
+			-- 					end
+			-- 				end
+			-- 			end
+			-- 		end
+			-- 	end
 
-				-- Run the function a few times on startup
-				LibCompat.NewTicker(2, MakeButtons, 3)
-				LibCompat.After(0.1, MakeButtons)
+			-- 	-- Run the function a few times on startup
+			-- 	LibCompat.NewTicker(2, MakeButtons, 3)
+			-- 	LibCompat.After(0.1, MakeButtons)
 
-			end
+			-- end
 
 			----------------------------------------------------------------------
 			-- Hide addon buttons
@@ -4382,28 +4417,148 @@ function LeaPlusLC:FriendCheck(name)
 				-- Function to set button state
 				local function SetHideButtons()
 					if LeaPlusLC["HideMiniAddonButtons"] == "On" then
-						-- Hide existing buttons
-						-- local buttons = LibDBIconStub:GetButtonList()
-						-- for i = 1, #buttons do
-						-- 	local buttonName = strlower(buttons[i])
-						-- 	if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
-						-- 		LibDBIconStub:ShowOnEnter(buttons[i], true)
-						-- 	end
-						-- end
-						-- Hide new buttons
-						-- LibDBIcon_IconCreated: Done in LibDBIcon callback function
-					else
-						-- Show existing buttons
-						-- local buttons = LibDBIconStub:GetButtonList()
-						-- for i = 1, #buttons do
-						-- 	local buttonName = strlower(buttons[i])
-						-- 	if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
-						-- 		LibDBIconStub:ShowOnEnter(buttons[i], false)
-						-- 	end
-						-- end
-						-- Show new buttons
-						-- LibDBIcon_IconCreated: Done in LibDBIcon callback function
+
+
+						-- First, we create an empty table to hold all of our minimap buttons.
+						local minimapButtons = {}
+
+						-- This function will capture all children attached to the minimap, and add them to our table.
+						local function GetMinimapChildren()
+						-- First, we clear our table to ensure there are no duplicates.
+						wipe(minimapButtons)
+
+						-- Next, we get the total number of children attached to the minimap frame.
+						local numChildren = Minimap:GetNumChildren()
+
+						-- Now, we loop through each child and check if it's a minimap button.
+						for i = 1, numChildren do
+						local child = select(i, Minimap:GetChildren())
+						if child and child:IsObjectType("Button") and child:GetName() then
+						-- If the child is a minimap button, we add it to our table.
+						minimapButtons[child:GetName()] = child
+						end
+						end
+						end
+
+						local function HideMinimapButtons()
+							local searchStr = LeaPlusDB["MiniExcludeList"]
+							local keepVisible = {
+								"ZGV"
+							}
+							if searchStr == "" then
+								-- Set alpha of all buttons to 0 if MiniExcludeList is empty
+								for _, button in pairs(minimapButtons) do
+									if not string.find(button:GetName(), keepVisible[1]) then
+										-- Button name doesn't contain substring 'keepVisible[1]', so adjust its alpha
+										button:SetAlpha(0)
+									end
+								end
+							else
+								-- Set alpha of buttons that match MiniExcludeList to 0
+								local excludedNames = {strsplit(",", searchStr)} -- Split MiniExcludeList by comma
+								for name, button in pairs(minimapButtons) do
+									if not string.find(button:GetName(), keepVisible[1]) then
+										-- Check if button name doesn't contain substring 'keepVisible[1]'
+										local match = false
+										for _, excludedName in ipairs(excludedNames) do
+											if string.find(name, strtrim(excludedName)) ~= nil then
+												match = true
+												break
+											end
+										end
+										if not match then
+											button:SetAlpha(0)
+										end
+									end
+								end
+							end
+						end
+
+
+
+
+
+
+
+						-- This function shows the minimap buttons by setting their alpha to 1.
+						local function ShowMinimapButtons()
+						    for name, button in pairs(minimapButtons) do
+						        button:SetAlpha(1)
+						    end
+						end
+
+
+
+
+						-- This function is called when the mouse enters the minimap area.
+						local function Minimap_OnEnter()
+						    -- If the mouse is over a child, we show all minimap buttons.
+						    Minimap:HookScript("OnUpdate", function(self, elapsed)
+						        local numChildren = Minimap:GetNumChildren()
+						        local mouseOverChild = false
+						        for i = 1, numChildren do
+						            local child = select(i, Minimap:GetChildren())
+						            if child and child:IsObjectType("Button") then
+						                local x, y = child:GetCenter()
+						                x, y = x * child:GetEffectiveScale(), y * child:GetEffectiveScale()
+						                local cx, cy = GetCursorPosition()
+						                local dist = sqrt((x - cx) ^ 2 + (y - cy) ^ 2) / 1.5 -- Double the distance
+
+						                if dist < child:GetWidth() / 2 then
+						                    mouseOverChild = true
+						                    break
+						                end
+						            end
+						        end
+
+						        if not mouseOverChild then
+						            HideMinimapButtons()
+						        else
+						            ShowMinimapButtons()
+						        end
+						    end)
+						end
+
+
+						-- This function is called when the mouse leaves the minimap area.
+						local function Minimap_OnLeave()
+						    HideMinimapButtons()
+						end
+
+						-- Finally, we create a timer that will capture new minimap children every 0.5 seconds.
+						LibCompat.NewTicker(1, function()
+						    GetMinimapChildren()
+						end)
+
+						-- We set up the minimap to respond to mouse events.
+						Minimap:SetScript("OnEnter", Minimap_OnEnter)
+						Minimap:SetScript("OnLeave", Minimap_OnLeave)
+
+						local ticks = 0 -- keep track of how many times the function has been called
+						local ticker = nil -- keep track of the timer object
+
+						local function OnLoginHide(eventName, ...)
+						    ticker = LibCompat.NewTicker(0.3, function()
+						        ticks = ticks + 1 -- increment the tick counter
+						        -- print("tick #".. ticks)
+						        HideMinimapButtons()
+						        if ticks >= 10 then -- stop after 6 seconds have passed (20 ticks * 0.3 seconds per tick)
+						            LibCompat.CancelTimer(ticker) -- stop the timer
+						        end
+						    end)
+						end
+
+
+						-- Register the OnLoginHide function to fire when the "PLAYER_ENTERING_WORLD" event occurs.
+						local eventFrame = CreateFrame("FRAME")
+						eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+						-- eventFrame:RegisterEvent("PLAYER_LOGIN")
+						eventFrame:SetScript("OnEvent", OnLoginHide)
+
+
 					end
+
 				end
 
 				-- Assign file level scope (it's used in reset and preset)
@@ -4703,23 +4858,27 @@ function LeaPlusLC:FriendCheck(name)
 			-- Hide tracking button
 			if LeaPlusLC["HideMiniTracking"] == "On" then
 
-				-- set the initial alpha value to 0 to hide the tracking button
-				MiniMapTracking:SetAlpha(0)
+	            MiniMapTracking:Hide()
 
-				-- create a new frame to handle the OnUpdate event
-				local myFrame = CreateFrame("FRAME")
-				myFrame:SetScript("OnUpdate", function(self, elapsed)
-					-- check if the pointer is over the minimap
-					if MouseIsOver(Minimap) then
-						MiniMapTracking:SetAlpha(1)
-					else
-						-- check if the pointer is over the tracking button
-						if MouseIsOver(MiniMapTracking) then 
-							MiniMapTracking:SetAlpha(1)
+
+				Minimap:SetScript("OnMouseUp", function(self, button)
+
+					if button == "RightButton"  then
+						MiniMapTrackingDropDown:SetScript("OnShow", function(self)
+							local x, y = GetCursorPosition()
+							self:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
+						end)
+						ToggleDropDownMenu(1, nil, MiniMapTrackingDropDown, "cursor", -3, -3)
+					elseif button == "MiddleButton" then
+						if not WorldMapFrame:IsShown() then
+							ShowUIPanel(WorldMapFrame);
 						else
-							MiniMapTracking:SetAlpha(0)
+							HideUIPanel(WorldMapFrame);    
 						end
+					elseif button == "LeftButton" then
+						Minimap_OnClick(self)
 					end
+
 				end)
 
 

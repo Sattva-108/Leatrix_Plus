@@ -17,6 +17,8 @@ ElvUI	 				- Need to see what disabled for when ElvUI is loaded. May be somethin
 
 General					- Check all Preset profiles to make sure user doesn't have option being enabled, that is not working.
 
+EnhanceMinimap			- "Example Input" needs Locales!
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -30,8 +32,10 @@ Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ?
 
 
 --------------------------------------------------------------------------------
--- Functions to-do:
+-- Stuff to-do:
 --------------------------------------------------------------------------------
+
+Minimap					 - Hide Minimap POI Arrow option.
 
 RecentChatWindow 		 - Ctrl-click on tab should be toggling the window..
 
