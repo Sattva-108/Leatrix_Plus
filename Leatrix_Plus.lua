@@ -3671,7 +3671,7 @@ function LeaPlusLC:FriendCheck(name)
 			-- Function to set button radius
 			local function SetButtonRad()
 				if LeaPlusLC["SquareMinimap"] == "On" then
-					LibDBIconStub:SetButtonRadius(26 + ((LeaPlusLC["MinimapSize"] - 140) * 0.165))
+					-- LibDBIconStub:SetButtonRadius(26 + ((LeaPlusLC["MinimapSize"] - 140) * 0.165))
 				else
 					-- LibDBIconStub:SetButtonRadius(1)
 				end
@@ -3722,13 +3722,15 @@ function LeaPlusLC:FriendCheck(name)
 			LeaPlusLC:MakeTx(SideMinimap, "Scale", 356, -72)
 			LeaPlusLC:MakeSL(SideMinimap, "MinimapScale", "Drag to set the minimap scale.|n|nAdjusting this slider makes the minimap and all the elements bigger.", 1, 4, 0.1, 356, -92, "%.2f")
 
-			LeaPlusLC:MakeTx(SideMinimap, "Square size", 356, -132)
-			LeaPlusLC:MakeSL(SideMinimap, "MinimapSize", "Drag to set the square minimap size.|n|nAdjusting this slider makes the minimap bigger but keeps the elements the same size.", 140, 560, 1, 356, -152, "%.0f")
+			-- set x position for now to 10000, FIXME
+			LeaPlusLC:MakeTx(SideMinimap, "Square size", 10000, -132)
+			LeaPlusLC:MakeSL(SideMinimap, "MinimapSize", "Drag to set the square minimap size.|n|nAdjusting this slider makes the minimap bigger but keeps the elements the same size.", 140, 560, 1, 10000, -152, "%.0f")
 
-			LeaPlusLC:MakeTx(SideMinimap, "Cluster scale", 356, -192)
-			LeaPlusLC:MakeSL(SideMinimap, "MiniClusterScale", "Drag to set the cluster scale.|n|nNote: Adjusting the cluster scale affects the entire cluster including frames attached to it such as the quest watch frame.|n|nIt will also cause the default UI right-side action bars to scale when you login.  If you use the default UI right-side action bars, you may want to leave this at 100%.", 1, 2, 0.1, 356, -212, "%.2f")
+			LeaPlusLC:MakeTx(SideMinimap, "Cluster scale", 356, -132)
+			LeaPlusLC:MakeSL(SideMinimap, "MiniClusterScale", "Drag to set the cluster scale.|n|nNote: Adjusting the cluster scale affects the entire cluster including frames attached to it such as the quest watch frame.|n|nIt will also cause the default UI right-side action bars to scale when you login.  If you use the default UI right-side action bars, you may want to leave this at 100%.", 1, 2, 0.1, 356, -152, "%.2f")
 
-			LeaPlusLC:MakeCB(SideMinimap, "MinimapNoScale", "Not minimap", 356, -242, false, "If checked, adjusting the cluster scale will not affect the minimap scale.")
+			-- set x position for now to 10000, FIXME
+			LeaPlusLC:MakeCB(SideMinimap, "MinimapNoScale", "Not minimap", 10000, -242, false, "If checked, adjusting the cluster scale will not affect the minimap scale.")
 
 			----------------------------------------------------------------------
 			-- Addon buttons editor
@@ -4236,10 +4238,10 @@ function LeaPlusLC:FriendCheck(name)
 				miniFrame.ClearAllPoints(MiniMapTracking)
 				MiniMapTracking:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -20, -40)
 
-				-- Mail button
-				MiniMapMailFrame:SetScale(0.75)
-				miniFrame.ClearAllPoints(MiniMapMailFrame)
-				MiniMapMailFrame:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -19, -75)
+				-- -- Mail button
+				-- MiniMapMailFrame:SetScale(0.75)
+				-- miniFrame.ClearAllPoints(MiniMapMailFrame)
+				-- MiniMapMailFrame:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -19, -75)
 
 				-- Battleground queue button
 				MiniMapBattlefieldFrame:SetScale(0.75)
@@ -4266,12 +4268,84 @@ function LeaPlusLC:FriendCheck(name)
 				miniFrame.ClearAllPoints(MinimapZoomOut)
 				MinimapZoomOut:SetPoint("TOP", MinimapZoomIn, "BOTTOM", 0, 0)
 
-				-- Calendar button
+
+				--------------------------------------------------------------------------------
+				-- Style the Minimap Mail Button
+				--------------------------------------------------------------------------------
+
+
+				miniFrame.ClearAllPoints(MiniMapMailFrame)
+	            -- Hide Circle around mail button
+	            MiniMapMailFrame:DisableDrawLayer("OVERLAY")
+	            -- Get the texture of MiniMapMailFrame
+	            local mailIcon = MiniMapMailFrame:GetRegions()
+	            mailIcon:SetTexture("Interface\\Minimap\\TRACKING\\Mailbox")
+	            -- Set the scale of the icon
+	            MiniMapMailFrame:SetScale(1.2)
+	            -- MiniMapMailFrame:SetFrameLevel(2) 
+	            -- Move the icon to the top right of the minimap
+	            MiniMapMailFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", 19, 14)
+	            	            MiniMapMailFrame:SetHitRectInsets(10, 10, 5, 8)
+	            -- Flag to track if mail icon is hidden
+	            local isHidden = false
+
+	            -- Function to toggle mail icon visibility
+	            local function toggleMailIcon()
+	                if isHidden then
+	                    mailIcon:Show()
+	                    isHidden = false
+	                else
+	                    mailIcon:Hide()
+	                    GameTooltip:Hide() -- re-show the tooltip to update its size
+	                    isHidden = true
+	                    -- UIErrorsFrame:AddMessage("Mail button is hidden. Right click again to show.", 0.1, 1.0, 0.1, 1.0, 3)
+	                end
+	            end
+
+	            -- Make the mail icon hide/show on right-click
+	            MiniMapMailFrame:SetScript("OnMouseUp", function(self, button)
+	                if button == "RightButton" then
+	                    toggleMailIcon()
+	                end
+	            end)
+
+
+	            -- Add new tooltip to the mail button
+	            local originalMailFrame_OnEnter = MiniMapMailFrame:GetScript("OnEnter")
+
+	            local function modifiedMailFrame_OnEnter(self)
+	                originalMailFrame_OnEnter(self)
+
+	                GameTooltip:AddLine("  ", 1, 1, 1, true)
+	                GameTooltip:AddLine("|cffeda55fRight-Click|r |cff99ff00to toggle minimap button.|r")
+
+	                GameTooltip:SetMinimumWidth(200) -- set the minimum width of the tooltip
+	                GameTooltip:Show() -- re-show the tooltip to update its size
+	            end
+
+	            MiniMapMailFrame:SetScript("OnEnter", modifiedMailFrame_OnEnter)
+
+				--------------------------------------------------------------------------------
+				-- Style the Calendar Mail Button
+				--------------------------------------------------------------------------------
+
+
 				miniFrame.ClearAllPoints(GameTimeFrame)
-				GameTimeFrame:SetPoint("BOTTOM", MiniMapWorldMapButton, "TOP", 0, 2)
-				GameTimeFrame:SetParent(MinimapBackdrop)
-				GameTimeFrame:SetScale(0.75)
-				GameTimeFrame:SetSize(32, 32)
+	            -- Set the scale of the icon
+	            GameTimeFrame:SetScale(0.8)
+	            -- Move the icon to the top right of the minimap
+	            GameTimeFrame:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 19, 14)
+
+	            --------------------------------------------------------------------------------
+	            --------------------------------------------------------------------------------
+
+
+				-- Calendar button
+				-- miniFrame.ClearAllPoints(GameTimeFrame)
+				-- GameTimeFrame:SetPoint("BOTTOM", Minimap, "TOP", 0, 2)
+				-- GameTimeFrame:SetParent(MinimapBackdrop)
+				-- GameTimeFrame:SetScale(0.75)
+				-- GameTimeFrame:SetSize(32, 32)
 
 				-- Debug buttons
 				local LeaPlusMiniMapDebug = nil
@@ -4754,12 +4828,12 @@ function LeaPlusLC:FriendCheck(name)
 						local regions = {TimeManagerClockButton:GetRegions()}
 						regions[1]:Hide()
 						TimeManagerClockButton:ClearAllPoints()
-						TimeManagerClockButton:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", -15, -8)
-						TimeManagerClockButton:SetHitRectInsets(15, 10, 5, 8)
+						TimeManagerClockButton:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 10, -8)
+						TimeManagerClockButton:SetHitRectInsets(10, 10, 5, 8)
 						TimeManagerClockButton:SetFrameLevel(100)
 						local timeBG = TimeManagerClockButton:CreateTexture(nil, "BACKGROUND")
 						timeBG:SetTexture("Interface\\ChatFrame\\ChatFrameBackground")
-						timeBG:SetPoint("TOPLEFT", 15, -5)
+						timeBG:SetPoint("TOPLEFT", 8, -5)
 						timeBG:SetPoint("BOTTOMRIGHT", -10, 8)
 						timeBG:SetVertexColor(0, 0, 0, 0.6)
 					end
