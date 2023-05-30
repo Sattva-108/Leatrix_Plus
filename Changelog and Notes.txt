@@ -21,6 +21,8 @@ EnhanceMinimap			- "Example Input" needs Locales!
 
 InviteFromWhispers		- Need to fix visual bag in config panel.
 
+EnhanceMinimap			- Hide Tracking needs updated description! About right clicking minimap. 
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -114,5 +116,9 @@ Minimap - Zone Text Bar should toggle the minimap.
 Minimap - Tracking button animation fade-in-out.
 
 Minimap - distance of buttons OnEnter alpha trigger user option?
+
+Minimap - show time by user option.
+
+Minimap - add alt+shift click to reset position of minimap.
 
 

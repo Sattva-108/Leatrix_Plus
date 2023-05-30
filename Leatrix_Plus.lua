@@ -3744,8 +3744,8 @@ function LeaPlusLC:FriendCheck(name)
 				titleTX:SetWordWrap(false)
 				titleTX:SetJustifyH("LEFT")
 
-				-- Show framestack button to help user make an exclusion for certain addon button / blizzard button from hiding.
-				LeaPlusLC:CreateFrameStackButton("ExcludedButtonsFrameStackButton", ExcludedButtonsPanel, titleTX, "Enter item IDs separated by commas.  Item IDs can be found in item tooltips while this panel is showing.|n|nJunk items entered here will not be sold automatically.|n|nWhite items entered here will be sold automatically.|n|nThe editbox tooltip will show you more information about the items you have entered.")
+				-- -- Show framestack button to help user make an exclusion for certain addon button / blizzard button from hiding.
+				-- LeaPlusLC:CreateFrameStackButton("ExcludedButtonsFrameStackButton", ExcludedButtonsPanel, titleTX, "Enter item IDs separated by commas.  Item IDs can be found in item tooltips while this panel is showing.|n|nJunk items entered here will not be sold automatically.|n|nWhite items entered here will be sold automatically.|n|nThe editbox tooltip will show you more information about the items you have entered.")
 
 
 				-- Add second excluded button
@@ -3756,6 +3756,17 @@ function LeaPlusLC:FriendCheck(name)
 					ExcludedButtonsPanel:Hide(); SideMinimap:Show()
 					return
 				end)
+
+
+				-- Add second Framestack button
+				local MiniExcludedButton2 = LeaPlusLC:CreateButton("FramestackButton2", ExcludedButtonsPanel, "Framestack", "TOPLEFT", 16, -72, 0, 25, true, "Click to toggle framestack, to view names of minimap buttons, and then be able to exclude them by entering their name.")
+				LeaPlusCB["FramestackButton2"]:ClearAllPoints()
+				LeaPlusCB["FramestackButton2"]:SetPoint("LEFT", ExcludedButtonsPanel.h, "RIGHT", 80, 0)
+				-- LeaPlusCB["FramestackButton2"]:SetScript("OnClick", function()
+				-- 	ExcludedButtonsPanel:Hide(); SideMinimap:Show()
+				-- 	return
+				-- end)
+				LeaPlusCB["FramestackButton2"]:SetScript("OnClick", function() toggleFrameStack(true) end)
 
 				-- Add large editbox
 				local eb = CreateFrame("Frame", nil, ExcludedButtonsPanel)
@@ -3921,6 +3932,7 @@ function LeaPlusLC:FriendCheck(name)
 
 					-- Do nothing if unit has not changed
 					if UnitIsUnit(unit, "player") or UnitIsUnit(unit, lastUnit) and x == lastX and y == lastY then return end
+					-- if UnitIsUnit(unit, lastUnit) and x == lastX and y == lastY then print("end") return end					
 					lastUnit, lastX, lastY = unit, x, y
 
 					-- Show name in class color
@@ -3931,7 +3943,7 @@ function LeaPlusLC:FriendCheck(name)
 
 							-- Set frame details
 							pFrame.f:SetFormattedText("|cff%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
-							pFrame:SetSize(pFrame.f:GetUnboundedStringWidth() + 12, 20)
+							pFrame:SetSize(pFrame.f:GetStringWidth() + 12, 20)
 
 							-- Hide frame after 5 seconds
 							pFrame:Show()
@@ -4559,6 +4571,7 @@ function LeaPlusLC:FriendCheck(name)
 						-- We set up the minimap to respond to mouse events.
 						Minimap:SetScript("OnEnter", Minimap_OnEnter)
 						Minimap:SetScript("OnLeave", Minimap_OnLeave)
+					
 
 						local ticks = 0 -- keep track of how many times the function has been called
 						local ticker = nil -- keep track of the timer object
