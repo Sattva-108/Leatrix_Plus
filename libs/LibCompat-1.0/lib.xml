@@ -5,7 +5,7 @@
 <Script file="Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua"/>
 <!--@end-no-lib-strip@-->
 <Include file="Libs\LibGroupTalents-1.0\lib.xml"/>
-<Include file="Backdrop\Backdrop.xml"/>
+<!-- <Include file="Backdrop\Backdrop.xml"/> -->
 <Include file="Templates.xml"/>
 <Script file="LibCompat-1.0.lua"/>
 </Ui>

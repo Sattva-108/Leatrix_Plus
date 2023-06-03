@@ -38,6 +38,8 @@ Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ?
 -- Stuff to-do:
 --------------------------------------------------------------------------------
 
+HideMiniButtons			 - Make a copy edit box with  a link to "guide" for Frame Stack 
+
 MinimapEnhance			 - MinimapNoScale and MinimapSize options needs fixing. For now moved them 10000px out of the GUI.
 
 Minimap					 - Hide Minimap POI Arrow option.

@@ -4040,88 +4040,109 @@ function LeaPlusLC:FriendCheck(name)
 				LeaPlusLC:LockItem(LeaPlusCB["HideMiniAddonButtons"], true)
 				LeaPlusCB["HideMiniAddonButtons"].tiptext = LeaPlusCB["HideMiniAddonButtons"].tiptext .. "|n|n|cff00AAFF" .. L["Cannot be used with Combine addon buttons."]
 
-				-- Create button frame (parenting to cluster ensures bFrame scales correctly)
-				local bFrame = CreateFrame("FRAME", nil, MinimapCluster)
-				bFrame:ClearAllPoints()
-				bFrame:SetPoint("TOPLEFT", Minimap, "TOPRIGHT", 4, 4)
-				bFrame:Hide()
-				bFrame:SetFrameLevel(8)
 
-				LeaPlusLC.bFrame = bFrame -- Used in LibDBIcon callback
-				_G["LeaPlusGlobalMinimapCombinedButtonFrame"] = bFrame -- For third party addons
+local LDB = LibStub("LibDataBroker-1.1")
 
-				-- Hide button frame automatically
-				local ButtonFrameTicker
-				bFrame:HookScript("OnShow", function()
-					if ButtonFrameTicker then ButtonFrameTicker:Cancel() end
-					ButtonFrameTicker = LibCompat.NewTicker(2, function()
-						if ItemRackMenuFrame and ItemRackMenuFrame:IsShown() and ItemRackMenuFrame:IsMouseOver() then return end
-						if not bFrame:IsMouseOver() and not Minimap:IsMouseOver() then
-							bFrame:Hide()
-							if ButtonFrameTicker then ButtonFrameTicker:Cancel() end
-						end
-					end, 15)
-				end)
+-- Create a frame to hold the buttons
+local buttonFrame = CreateFrame("Frame", nil, UIParent)
+buttonFrame:SetSize(30, 30)
+buttonFrame:SetPoint("TOPLEFT", Minimap, "TOPRIGHT", 5, 0)
 
-				-- Match scale with minimap
-				if LeaPlusLC["SquareMinimap"] == "On" then
-					bFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.75)
-				else
-					bFrame:SetScale(LeaPlusLC["MinimapScale"])
-				end
-				LeaPlusCB["MinimapScale"]:HookScript("OnValueChanged", function()
-					if LeaPlusLC["SquareMinimap"] == "On" then
-						bFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.75)
-					else
-						bFrame:SetScale(LeaPlusLC["MinimapScale"])
-					end
-				end)
-
-				-- Position LibDBIcon tooltips when shown
-				LibDBIconTooltip:HookScript("OnShow", function()
-					GameTooltip:Hide()
-					LibDBIconTooltip:ClearAllPoints()
-					if bFrame:GetPoint() == "BOTTOMLEFT" then
-						LibDBIconTooltip:SetPoint("TOPLEFT", Minimap, "BOTTOMLEFT", 0, -6)
-					else
-						LibDBIconTooltip:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 0, -6)
-					end
-				end)
-
-				-- Function to position GameTooltip below the minimap
-				local function SetButtonTooltip()
-					GameTooltip:ClearAllPoints()
-					if bFrame:GetPoint() == "BOTTOMLEFT" then
-						GameTooltip:SetPoint("TOPLEFT", Minimap, "BOTTOMLEFT", 0, -6)
-					else
-						GameTooltip:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 0, -6)
-					end
-				end
-
-				LeaPlusLC.SetButtonTooltip = SetButtonTooltip -- Used in LibDBIcon callback
+-- Loop through all LDB objects and add buttons to the frame if their names match
+for name, obj in LDB:DataObjectIterator() do
+  if name:match("^LibDBIcon10_") then
+  	print(name)
+      local button = obj.icon
+      button:SetParent(buttonFrame)
+      button:SetSize(30, 30)
+      button:SetFrameLevel(4) -- Set the frame level to be above the minimap and other frames
+  end
+end
 
 
 
-				-- Hide existing LibDBIcon icons
-				local buttons = LibDBIconStub:GetButtonList()
-				for i = 1, #buttons do
-					local button = LibDBIconStub:GetMinimapButton(buttons[i])
-					local buttonName = strlower(buttons[i])
-					if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
-						button:Hide()
-						button:SetScript("OnShow", function() if not bFrame:IsShown() then button:Hide() end end)
-						-- Create background texture
-						local bFrameBg = button:CreateTexture(nil, "BACKGROUND")
-						bFrameBg:SetTexture("Interface\\ChatFrame\\ChatFrameBackground")
-						bFrameBg:SetPoint("CENTER")
-						bFrameBg:SetSize(30, 30)
-						bFrameBg:SetVertexColor(0, 0, 0, 0.5)
-					elseif strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) and LeaPlusLC["SquareMinimap"] == "On" then
-						button:SetScale(0.75)
-					end
-					-- Move GameTooltip to below the minimap in case the button uses it
-					button:HookScript("OnEnter", SetButtonTooltip)
-				end
+				-- -- Create button frame (parenting to cluster ensures bFrame scales correctly)
+				-- local bFrame = CreateFrame("FRAME", nil, MinimapCluster)
+				-- bFrame:ClearAllPoints()
+				-- bFrame:SetPoint("TOPLEFT", Minimap, "TOPRIGHT", 4, 4)
+				-- bFrame:Hide()
+				-- bFrame:SetFrameLevel(8)
+
+				-- LeaPlusLC.bFrame = bFrame -- Used in LibDBIcon callback
+				-- _G["LeaPlusGlobalMinimapCombinedButtonFrame"] = bFrame -- For third party addons
+
+				-- -- Hide button frame automatically
+				-- local ButtonFrameTicker
+				-- bFrame:HookScript("OnShow", function()
+				-- 	if ButtonFrameTicker then ButtonFrameTicker:Cancel() end
+				-- 	ButtonFrameTicker = LibCompat.NewTicker(2, function()
+				-- 		if ItemRackMenuFrame and ItemRackMenuFrame:IsShown() and ItemRackMenuFrame:IsMouseOver() then return end
+				-- 		if not bFrame:IsMouseOver() and not Minimap:IsMouseOver() then
+				-- 			bFrame:Hide()
+				-- 			if ButtonFrameTicker then ButtonFrameTicker:Cancel() end
+				-- 		end
+				-- 	end, 15)
+				-- end)
+
+				-- -- Match scale with minimap
+				-- if LeaPlusLC["SquareMinimap"] == "On" then
+				-- 	bFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.75)
+				-- else
+				-- 	bFrame:SetScale(LeaPlusLC["MinimapScale"])
+				-- end
+				-- LeaPlusCB["MinimapScale"]:HookScript("OnValueChanged", function()
+				-- 	if LeaPlusLC["SquareMinimap"] == "On" then
+				-- 		bFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.75)
+				-- 	else
+				-- 		bFrame:SetScale(LeaPlusLC["MinimapScale"])
+				-- 	end
+				-- end)
+
+				-- -- Position LibDBIcon tooltips when shown
+				-- LibDBIconTooltip:HookScript("OnShow", function()
+				-- 	GameTooltip:Hide()
+				-- 	LibDBIconTooltip:ClearAllPoints()
+				-- 	if bFrame:GetPoint() == "BOTTOMLEFT" then
+				-- 		LibDBIconTooltip:SetPoint("TOPLEFT", Minimap, "BOTTOMLEFT", 0, -6)
+				-- 	else
+				-- 		LibDBIconTooltip:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 0, -6)
+				-- 	end
+				-- end)
+
+				-- -- Function to position GameTooltip below the minimap
+				-- local function SetButtonTooltip()
+				-- 	GameTooltip:ClearAllPoints()
+				-- 	if bFrame:GetPoint() == "BOTTOMLEFT" then
+				-- 		GameTooltip:SetPoint("TOPLEFT", Minimap, "BOTTOMLEFT", 0, -6)
+				-- 	else
+				-- 		GameTooltip:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 0, -6)
+				-- 	end
+				-- end
+
+				-- LeaPlusLC.SetButtonTooltip = SetButtonTooltip -- Used in LibDBIcon callback
+
+
+
+				-- -- Hide existing LibDBIcon icons
+				-- local buttons = LibDBIconStub:GetButtonList()
+				-- for i = 1, #buttons do
+				-- 	local button = LibDBIconStub:GetMinimapButton(buttons[i])
+				-- 	local buttonName = strlower(buttons[i])
+				-- 	if not strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) then
+				-- 		button:Hide()
+				-- 		button:SetScript("OnShow", function() if not bFrame:IsShown() then button:Hide() end end)
+				-- 		-- Create background texture
+				-- 		local bFrameBg = button:CreateTexture(nil, "BACKGROUND")
+				-- 		bFrameBg:SetTexture("Interface\\ChatFrame\\ChatFrameBackground")
+				-- 		bFrameBg:SetPoint("CENTER")
+				-- 		bFrameBg:SetSize(30, 30)
+				-- 		bFrameBg:SetVertexColor(0, 0, 0, 0.5)
+				-- 	elseif strfind(strlower(LeaPlusDB["MiniExcludeList"]), buttonName) and LeaPlusLC["SquareMinimap"] == "On" then
+				-- 		button:SetScale(0.75)
+				-- 	end
+				-- 	-- Move GameTooltip to below the minimap in case the button uses it
+				-- 	button:HookScript("OnEnter", SetButtonTooltip)
+				-- end
 
 				-- Hide new LibDBIcon icons
 				-- LibDBIcon_IconCreated: Done in LibDBIcon callback function
