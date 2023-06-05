@@ -4244,11 +4244,16 @@ function LeaPlusLC:FriendCheck(name)
 				            end
 				        end
 				    end
+				    print("Number of buttons in first column: " .. (numButtons % maxButtonsPerColumn))
 
 				    -- Resize the minimapFrame based on the number of columns and buttons.
 				    local frameHeight = buttonWidth * maxButtonsPerColumn + buttonSpacing * (maxButtonsPerColumn - 1)
 				    minimapFrame:SetWidth(numColumns * (buttonWidth + buttonSpacing))
-				    minimapFrame:SetHeight(frameHeight)
+				    if numButtons <= maxButtonsPerColumn then
+					    minimapFrame:SetHeight(buttonWidth * numButtons + buttonSpacing * (numButtons - 1))
+					else
+					    minimapFrame:SetHeight(frameHeight)
+					end
 
 				    -- print("Number of buttons: " .. numButtons)
 				end
