@@ -4040,24 +4040,245 @@ function LeaPlusLC:FriendCheck(name)
 				LeaPlusLC:LockItem(LeaPlusCB["HideMiniAddonButtons"], true)
 				LeaPlusCB["HideMiniAddonButtons"].tiptext = LeaPlusCB["HideMiniAddonButtons"].tiptext .. "|n|n|cff00AAFF" .. L["Cannot be used with Combine addon buttons."]
 
+				-- First, we create a new frame to hold all the minimap buttons.
+				local minimapFrame = CreateFrame("Frame", "Leatrix_ButtonGrabber", UIParent)
+				minimapFrame:SetSize(1, 1)
+				minimapFrame:SetPoint("CENTER", UIParent, "CENTER", 0, -10)
+				minimapFrame:SetBackdrop({
+				bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+				edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+				tile = true,
+				tileSize = 16,
+				edgeSize = 16,
+				insets = { left = 4, right = 4, top = 4, bottom = 4 }
+				})
+				minimapFrame:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
+				minimapFrame:SetBackdropBorderColor(1, 1, 1, 0.5)
 
-local LDB = LibStub("LibDataBroker-1.1")
 
--- Create a frame to hold the buttons
-local buttonFrame = CreateFrame("Frame", nil, UIParent)
-buttonFrame:SetSize(30, 30)
-buttonFrame:SetPoint("TOPLEFT", Minimap, "TOPRIGHT", 5, 0)
+				-- --===== Some code for testing - adds buttons to minimap =====--
 
--- Loop through all LDB objects and add buttons to the frame if their names match
-for name, obj in LDB:DataObjectIterator() do
-  if name:match("^LibDBIcon10_") then
-  	print(name)
-      local button = obj.icon
-      button:SetParent(buttonFrame)
-      button:SetSize(30, 30)
-      button:SetFrameLevel(4) -- Set the frame level to be above the minimap and other frames
-  end
-end
+				-- -- Load the libraries required for button creation.
+				-- local LibDataBroker = LibStub:GetLibrary("LibDataBroker-1.1")
+				-- local LibDBIcon = LibStub:GetLibrary("LibDBIcon-1.0")
+
+				-- -- Create the data broker objects for the custom buttons.
+				-- local button1 = LibDataBroker:NewDataObject("Button1", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\inv_enchant_dustillusion",
+				-- })
+
+				-- local button2 = LibDataBroker:NewDataObject("Button2", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\spell_holy_prayerofhealing02",
+				-- })
+
+				-- local button3 = LibDataBroker:NewDataObject("Button3", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\spell_nature_earthquake",
+				-- })
+
+				-- local button4 = LibDataBroker:NewDataObject("Button4", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\inv_misc_summerfest_braziergreen",
+				-- })
+
+				-- local button5 = LibDataBroker:NewDataObject("Button5", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\inv_misc_toy_02",
+				-- })
+
+				-- local button6 = LibDataBroker:NewDataObject("Button6", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\inv_misc_toy_02",
+				-- })
+
+
+
+
+				-- -- Register the data broker objects with LibDBIcon to create minimap buttons.
+				-- LibDBIcon:Register("Button1", button1, {
+				--     icon = "Interface\\Icons\\inv_enchant_dustillusion",
+				-- })
+
+				-- LibDBIcon:Register("Button2", button2, {
+				--     icon = "Interface\\Icons\\spell_holy_prayerofhealing02",
+				-- })
+
+				-- LibDBIcon:Register("Button3", button3, {
+				--     icon = "Interface\\Icons\\spell_nature_earthquake",
+				-- })
+
+				-- LibDBIcon:Register("Button4", button4, {
+				--     icon = "Interface\\Icons\\inv_misc_summerfest_braziergreen",
+				-- })
+
+				-- LibDBIcon:Register("Button5", button5, {
+				--     icon = "Interface\\Icons\\inv_misc_toy_02",
+				-- })
+
+				-- LibDBIcon:Register("Button6", button6, {
+				--     icon = "Interface\\Icons\\inv_misc_toy_02",
+				-- })
+
+
+
+				-- Define a table of minimap buttons to ignore
+				local WHITE_LIST = {
+				    'MiniMapBattlefieldFrame',
+				    'MiniMapTrackingButton',
+				    'MiniMapMailFrame',
+				    'HelpOpenTicketButton',
+				    'GatherMatePin',
+				    'HandyNotesPin',
+				    'TimeManagerClockButton',
+				    'Archy',
+				    'GatherNote',
+				    'MinimMap',
+				    'Spy_MapNoteList_mini',
+				    'ZGV',
+				    'poiWorldMapPOIFrame',
+				    'WorldMapPOIFrame',
+				    'QuestMapPOI',
+				    'GameTimeFrame',
+				    'ZygorGuidesViewerMapIcon',
+					"Node",
+					"Note",
+					"Pin",
+					"GuildInstance",
+					-- GuildMap3
+					"GuildMap3Mini",
+					-- LibRockConfig
+					"LibRockConfig-1.0_MinimapButton",
+					-- Nauticus
+					"NauticusMiniIcon",
+					"WestPointer",
+					-- QuestPointer
+					"poiMinimap"
+				}
+
+
+
+				local numColumns = 1 -- initialize the number of rows as a global variable
+				local numButtons = 0 -- initialize the number of buttons
+
+				local function MoveMinimapChildren()
+				    local buttonWidth = 34 -- adjust this value to match the width of your minimap buttons
+				    local buttonSpacing = 2 -- adjust this value to match the spacing between your minimap buttons
+				    local maxButtonsPerColumn = 5 -- maximum number of buttons per column
+				    local maxColumns = 3 -- maximum number of columns
+
+				    if InCombatLockdown() then 
+				        return -- Stop execution if player is in combat.
+				    end
+
+				    local excludedPatterns = {}
+				    for pattern in string.gmatch(LeaPlusDB["MiniExcludeList"], "[^,]+") do
+				        table.insert(excludedPatterns, pattern)
+				    end
+
+				    local children = {Minimap:GetChildren()}
+				    local x = 0 -- initial x position
+				    local y = 0 -- initial y position
+
+				    for i, child in ipairs(children) do
+				        if child and child:IsObjectType("Button") and child:GetName() then
+				            local isWhitelisted = false
+				            for _, name in ipairs(WHITE_LIST) do
+				                if string.find(child:GetName(), name) then
+				                    isWhitelisted = true
+				                    -- print(child:GetName() .. " is whitelisted") 
+				                    break
+				                end
+				            end
+				            if not isWhitelisted then
+				                local isExcluded = false
+				                for _, pattern in ipairs(excludedPatterns) do
+				                    if string.find(child:GetName(), pattern) then
+				                        isExcluded = true
+				                        -- print(child:GetName() .. " is excluded") 
+				                        break
+				                    end
+				                end
+				                if not isExcluded then
+				                    local point, parent, relativePoint, xOfs, yOfs = child:GetPoint()
+				                    if parent == Minimap and point == "CENTER" then
+				                        -- If the child is a minimap button and is positioned in the center of the Minimap frame, we move it to the minimapFrame and set its position.
+				                        child:SetParent(minimapFrame)
+				                        child:ClearAllPoints()
+				                        child:SetPushedTexture(nil)
+				                        child:SetHighlightTexture(nil)
+				                        child:SetDisabledTexture(nil)
+
+										if numButtons >= maxButtonsPerColumn * numColumns then
+										    -- We've reached the maximum number of buttons per column, so we move to the next column.
+										    if numColumns >= maxColumns then
+										        -- We've reached the maximum number of columns, so we stop adding buttons.
+										        break
+										    end
+										    numColumns = numColumns + 1
+										    numButtons = (numColumns - 1) * maxButtonsPerColumn -- calculate the number of buttons on the previous columns
+										    x = x - buttonWidth - buttonSpacing -- increment x position by a negative value to move to the left
+										    y = 0
+										end
+
+										local newY = y + (numButtons % maxButtonsPerColumn) * (buttonWidth + buttonSpacing) -- calculate y position for new button at the bottom right
+
+										child:SetPoint("BOTTOMRIGHT", minimapFrame, "BOTTOMRIGHT", x - 5, newY + 2) -- set point to BOTTOMRIGHT to move button to the bottom right corner
+
+
+				                        -- Loop through the regions of the minimap button and remove any unwanted textures.
+				                        for j = 1, child:GetNumRegions() do
+				                            local region = select(j, child:GetRegions())
+				                            if region:GetObjectType() == "Texture" then
+				                                local texture = region:GetTexture()
+				                                if texture and (string.find(texture, "Border") or string.find(texture, "Background") or string.find(texture, "AlphaMask")) then
+				                                    region:SetTexture(nil)
+				                                end
+				                            end
+				                        end
+
+				                        numButtons = numButtons + 1
+				                    end
+				                end
+				            end
+				        end
+				    end
+
+				    -- Resize the minimapFrame based on the number of columns and buttons.
+				    local frameHeight = buttonWidth * maxButtonsPerColumn + buttonSpacing * (maxButtonsPerColumn - 1)
+				    minimapFrame:SetWidth(numColumns * (buttonWidth + buttonSpacing))
+				    minimapFrame:SetHeight(frameHeight)
+
+				    -- print("Number of buttons: " .. numButtons)
+				end
+
+
+					
+
+				local ticks = 0 -- keep track of how many times the function has been called
+				local ticker = nil -- keep track of the timer object
+
+				local function OnLoginHideCombine(eventName, ...)
+				    ticker = LibCompat.NewTicker(0.3, function()
+				        ticks = ticks + 1 -- increment the tick counter
+				        -- print("tick #".. ticks)
+				        MoveMinimapChildren()
+				        if ticks >= 5 then -- stop after 6 seconds have passed (20 ticks * 0.3 seconds per tick)
+				            LibCompat.CancelTimer(ticker) -- stop the timer
+				        end
+				    end)
+				end
+
+
+				-- Register the OnLoginHideCombine function to fire when the "PLAYER_ENTERING_WORLD" event occurs.
+				local eventFrame = CreateFrame("FRAME")
+				eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+				-- eventFrame:RegisterEvent("PLAYER_LOGIN")
+				eventFrame:SetScript("OnEvent", OnLoginHideCombine)
+
+
 
 
 
