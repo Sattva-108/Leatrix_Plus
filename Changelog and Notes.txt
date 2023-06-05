@@ -23,6 +23,10 @@ InviteFromWhispers		- Need to fix visual bag in config panel.
 
 EnhanceMinimap			- Hide Tracking needs updated description! About right clicking minimap. 
 
+CombineAddonButtons 	- Make frame movable?  
+
+MinimapEnhance			- Replace non-standard buttons option! Aka those that don't use LibDBIcon, or may be just set size of them ? 
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -37,6 +41,10 @@ Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ?
 --------------------------------------------------------------------------------
 -- Stuff to-do:
 --------------------------------------------------------------------------------
+
+MinimapEnhance			 - Add Timer module, just like ShaguTweaks.
+
+CombineAddonButtons		 - Make it change position from left to right if minimap is on left side of screen.
 
 HideMiniButtons			 - Make a copy edit box with  a link to "guide" for Frame Stack 
 

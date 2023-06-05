@@ -4043,14 +4043,14 @@ function LeaPlusLC:FriendCheck(name)
 				-- First, we create a new frame to hold all the minimap buttons.
 				local minimapFrame = CreateFrame("Frame", "Leatrix_ButtonGrabber", UIParent)
 				minimapFrame:SetSize(1, 1)
-				minimapFrame:SetPoint("CENTER", UIParent, "CENTER", 0, -10)
+				minimapFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -2, -1)
 				minimapFrame:SetBackdrop({
 				bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-				edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+				edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
 				tile = true,
 				tileSize = 16,
-				edgeSize = 16,
-				insets = { left = 4, right = 4, top = 4, bottom = 4 }
+				edgeSize = 3,
+				-- insets = { left = 4, right = 4, top = 4, bottom = 4 }
 				})
 				minimapFrame:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
 				minimapFrame:SetBackdropBorderColor(1, 1, 1, 0.5)
@@ -4062,31 +4062,75 @@ function LeaPlusLC:FriendCheck(name)
 				-- local LibDataBroker = LibStub:GetLibrary("LibDataBroker-1.1")
 				-- local LibDBIcon = LibStub:GetLibrary("LibDBIcon-1.0")
 
+				-- --===== Button 1 =====--
+
 				-- -- Create the data broker objects for the custom buttons.
 				-- local button1 = LibDataBroker:NewDataObject("Button1", {
 				--     type = "launcher",
 				--     icon = "Interface\\Icons\\inv_enchant_dustillusion",
 				-- })
 
+				-- -- Register the data broker objects with LibDBIcon to create minimap buttons.
+				-- LibDBIcon:Register("Button1", button1, {
+				--     icon = "Interface\\Icons\\inv_enchant_dustillusion",
+				-- })
+
+
+				-- --===== Button 2 =====--
+
 				-- local button2 = LibDataBroker:NewDataObject("Button2", {
 				--     type = "launcher",
 				--     icon = "Interface\\Icons\\spell_holy_prayerofhealing02",
 				-- })
+
+				-- LibDBIcon:Register("Button2", button2, {
+				--     icon = "Interface\\Icons\\spell_holy_prayerofhealing02",
+				-- })
+
+
+				-- --===== Button 3 =====--
 
 				-- local button3 = LibDataBroker:NewDataObject("Button3", {
 				--     type = "launcher",
 				--     icon = "Interface\\Icons\\spell_nature_earthquake",
 				-- })
 
+
+				-- LibDBIcon:Register("Button3", button3, {
+				--     icon = "Interface\\Icons\\spell_nature_earthquake",
+				-- })
+
+
+
+				-- --===== Button 4 =====--
+
 				-- local button4 = LibDataBroker:NewDataObject("Button4", {
 				--     type = "launcher",
 				--     icon = "Interface\\Icons\\inv_misc_summerfest_braziergreen",
 				-- })
 
+
+				-- LibDBIcon:Register("Button4", button4, {
+				--     icon = "Interface\\Icons\\inv_misc_summerfest_braziergreen",
+				-- })
+
+
+
+				-- --===== Button 5 =====--
+
 				-- local button5 = LibDataBroker:NewDataObject("Button5", {
 				--     type = "launcher",
 				--     icon = "Interface\\Icons\\inv_misc_toy_02",
 				-- })
+
+
+				-- LibDBIcon:Register("Button5", button5, {
+				--     icon = "Interface\\Icons\\inv_misc_toy_02",
+				-- })
+
+
+
+				-- --===== Button 6 =====--
 
 				-- local button6 = LibDataBroker:NewDataObject("Button6", {
 				--     type = "launcher",
@@ -4094,36 +4138,14 @@ function LeaPlusLC:FriendCheck(name)
 				-- })
 
 
-
-
-				-- -- Register the data broker objects with LibDBIcon to create minimap buttons.
-				-- LibDBIcon:Register("Button1", button1, {
-				--     icon = "Interface\\Icons\\inv_enchant_dustillusion",
-				-- })
-
-				-- LibDBIcon:Register("Button2", button2, {
-				--     icon = "Interface\\Icons\\spell_holy_prayerofhealing02",
-				-- })
-
-				-- LibDBIcon:Register("Button3", button3, {
-				--     icon = "Interface\\Icons\\spell_nature_earthquake",
-				-- })
-
-				-- LibDBIcon:Register("Button4", button4, {
-				--     icon = "Interface\\Icons\\inv_misc_summerfest_braziergreen",
-				-- })
-
-				-- LibDBIcon:Register("Button5", button5, {
-				--     icon = "Interface\\Icons\\inv_misc_toy_02",
-				-- })
-
 				-- LibDBIcon:Register("Button6", button6, {
 				--     icon = "Interface\\Icons\\inv_misc_toy_02",
 				-- })
 
 
 
-				-- Define a table of minimap buttons to ignore
+				--===== Define a table of minimap buttons to ignore =====--
+
 				local WHITE_LIST = {
 				    'MiniMapBattlefieldFrame',
 				    'MiniMapTrackingButton',
@@ -4159,12 +4181,12 @@ function LeaPlusLC:FriendCheck(name)
 
 
 
-				local numColumns = 1 -- initialize the number of rows as a global variable
+				local numColumns = 1 -- initialize the number of Columns as a global variable
 				local numButtons = 0 -- initialize the number of buttons
 
 				local function MoveMinimapChildren()
 				    local buttonWidth = 34 -- adjust this value to match the width of your minimap buttons
-				    local buttonSpacing = 2 -- adjust this value to match the spacing between your minimap buttons
+				    local buttonSpacing = -6 -- adjust this value to match the spacing between your minimap buttons
 				    local maxButtonsPerColumn = 5 -- maximum number of buttons per column
 				    local maxColumns = 3 -- maximum number of columns
 
@@ -4209,6 +4231,8 @@ function LeaPlusLC:FriendCheck(name)
 				                        child:SetPushedTexture(nil)
 				                        child:SetHighlightTexture(nil)
 				                        child:SetDisabledTexture(nil)
+										child:SetScript("OnDragStart", nil)
+										child:SetScript("OnDragStop", nil)
 
 										if numButtons >= maxButtonsPerColumn * numColumns then
 										    -- We've reached the maximum number of buttons per column, so we move to the next column.
@@ -4224,7 +4248,8 @@ function LeaPlusLC:FriendCheck(name)
 
 										local newY = y + (numButtons % maxButtonsPerColumn) * (buttonWidth + buttonSpacing) -- calculate y position for new button at the bottom right
 
-										child:SetPoint("BOTTOMRIGHT", minimapFrame, "BOTTOMRIGHT", x - 5, newY + 2) -- set point to BOTTOMRIGHT to move button to the bottom right corner
+										child:SetPoint("BOTTOMRIGHT", minimapFrame, "BOTTOMRIGHT", x - 3, newY + 2) -- set point to BOTTOMRIGHT to move button to the bottom right corner
+
 
 
 				                        -- Loop through the regions of the minimap button and remove any unwanted textures.
@@ -4232,6 +4257,10 @@ function LeaPlusLC:FriendCheck(name)
 				                            local region = select(j, child:GetRegions())
 				                            if region:GetObjectType() == "Texture" then
 				                                local texture = region:GetTexture()
+				                                --===== Make Buttons Square =====--
+				                                region:SetTexCoord(0.2, 0.8, 0.2, 0.8)
+				                                child:HookScript("OnLeave", function() region:SetTexCoord(0.2, 0.8, 0.2, 0.8) end)
+				                                --===== Remove round texture around buttons =====--
 				                                if texture and (string.find(texture, "Border") or string.find(texture, "Background") or string.find(texture, "AlphaMask")) then
 				                                    region:SetTexture(nil)
 				                                end
@@ -4244,11 +4273,11 @@ function LeaPlusLC:FriendCheck(name)
 				            end
 				        end
 				    end
-				    print("Number of buttons in first column: " .. (numButtons % maxButtonsPerColumn))
+				    -- print("Number of buttons in first column: " .. (numButtons % maxButtonsPerColumn))
 
 				    -- Resize the minimapFrame based on the number of columns and buttons.
 				    local frameHeight = buttonWidth * maxButtonsPerColumn + buttonSpacing * (maxButtonsPerColumn - 1)
-				    minimapFrame:SetWidth(numColumns * (buttonWidth + buttonSpacing))
+				    minimapFrame:SetWidth(numColumns * (buttonWidth + buttonSpacing) + 6)
 				    if numButtons <= maxButtonsPerColumn then
 					    minimapFrame:SetHeight(buttonWidth * numButtons + buttonSpacing * (numButtons - 1))
 					else
@@ -4257,6 +4286,22 @@ function LeaPlusLC:FriendCheck(name)
 
 				    -- print("Number of buttons: " .. numButtons)
 				end
+
+								-- Match scale with minimap
+				if LeaPlusLC["SquareMinimap"] == "On" then
+					minimapFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.85)
+				else
+					minimapFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.90)
+					minimapFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -5, -1)
+				end
+				LeaPlusCB["MinimapScale"]:HookScript("OnValueChanged", function()
+					if LeaPlusLC["SquareMinimap"] == "On" then
+						minimapFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.85)
+					else
+						minimapFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.90)
+					minimapFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -5, -1)
+					end
+				end)
 
 
 					
@@ -4461,8 +4506,8 @@ function LeaPlusLC:FriendCheck(name)
 
 				-- Create black border around map
 				local miniBorder = CreateFrame("Frame", nil, Minimap)
-				miniBorder:SetPoint("TOPLEFT", -3, 3)
-				miniBorder:SetPoint("BOTTOMRIGHT", 3, -3)
+				miniBorder:SetPoint("TOPLEFT", -1, 1)
+				miniBorder:SetPoint("BOTTOMRIGHT", 1, -1)
 				miniBorder:SetAlpha(0.8)
 				miniBorder:SetBackdrop({
 					edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
@@ -5075,7 +5120,7 @@ function LeaPlusLC:FriendCheck(name)
 						local regions = {TimeManagerClockButton:GetRegions()}
 						regions[1]:Hide()
 						TimeManagerClockButton:ClearAllPoints()
-						TimeManagerClockButton:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 10, -8)
+						TimeManagerClockButton:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 10, -6)
 						TimeManagerClockButton:SetHitRectInsets(10, 10, 5, 8)
 						TimeManagerClockButton:SetFrameLevel(100)
 						local timeBG = TimeManagerClockButton:CreateTexture(nil, "BACKGROUND")
@@ -5083,6 +5128,11 @@ function LeaPlusLC:FriendCheck(name)
 						timeBG:SetPoint("TOPLEFT", 8, -5)
 						timeBG:SetPoint("BOTTOMRIGHT", -10, 8)
 						timeBG:SetVertexColor(0, 0, 0, 0.6)
+						TimeManagerFrame:ClearAllPoints()
+						TimeManagerFrame:SetPoint("TOP", Minimap, "BOTTOM", 0, 0)
+					else
+						TimeManagerFrame:ClearAllPoints()
+						TimeManagerFrame:SetPoint("TOP", Minimap, "BOTTOM", 0, 0)	
 					end
 				end
 			end
@@ -5175,7 +5225,7 @@ function LeaPlusLC:FriendCheck(name)
 				Minimap:SetScale(1)
 				SetMiniScale()
 				-- Reset map position
-				LeaPlusLC["MinimapA"], LeaPlusLC["MinimapR"], LeaPlusLC["MinimapX"], LeaPlusLC["MinimapY"] = "TOPRIGHT", "TOPRIGHT", -17, -22
+				LeaPlusLC["MinimapA"], LeaPlusLC["MinimapR"], LeaPlusLC["MinimapX"], LeaPlusLC["MinimapY"] = "TOPRIGHT", "TOPRIGHT", -17, -45
 				Minimap:ClearAllPoints()
 				Minimap:SetPoint(LeaPlusLC["MinimapA"], UIParent, LeaPlusLC["MinimapR"], LeaPlusLC["MinimapX"], LeaPlusLC["MinimapY"])
 				-- Hide world map button
