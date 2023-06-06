@@ -10879,10 +10879,10 @@ function LeaPlusLC:FriendCheck(name)
 						if LeaPlusLC["TooltipAnchorMenu"] == 3 then
 							tooltip:SetOwner(parent, "ANCHOR_CURSOR")
 							return
+						-- elseif LeaPlusLC["TooltipAnchorMenu"] == 4 then
+						-- 	tooltip:SetOwner(parent, "ANCHOR_CURSOR_LEFT", LeaPlusLC["TipCursorX"], LeaPlusLC["TipCursorY"])
+						-- 	return
 						elseif LeaPlusLC["TooltipAnchorMenu"] == 4 then
-							tooltip:SetOwner(parent, "ANCHOR_CURSOR_LEFT", LeaPlusLC["TipCursorX"], LeaPlusLC["TipCursorY"])
-							return
-						elseif LeaPlusLC["TooltipAnchorMenu"] == 5 then
 							tooltip:SetOwner(parent, "ANCHOR_CURSOR_RIGHT", LeaPlusLC["TipCursorX"], LeaPlusLC["TipCursorY"])
 							return
 						end
@@ -10913,9 +10913,11 @@ function LeaPlusLC:FriendCheck(name)
 			TipDrag:Hide();
 			TipDrag:SetFrameStrata("TOOLTIP")
 			TipDrag:SetMovable(true)
+			TipDrag:EnableMouse(true)
+			TipDrag:RegisterForDrag("LeftButton")
 			TipDrag:SetBackdropColor(0.0, 0.5, 1.0);
 			TipDrag:SetBackdrop({
-				edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+				edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 				tile = false, tileSize = 0, edgeSize = 16,
 				insets = { left = 0, right = 0, top = 0, bottom = 0 }});
 
@@ -10927,8 +10929,15 @@ function LeaPlusLC:FriendCheck(name)
 			-- Create texture
 			TipDrag.t = TipDrag:CreateTexture();
 			TipDrag.t:SetAllPoints();
-			TipDrag.t:SetVertexColor(0.0, 0.5, 1.0, 0.5);
+			TipDrag.t:SetTexture(0.0, 0.5, 1.0,0.5)
 			TipDrag.t:SetAlpha(0.5);
+
+
+			-- Create moving message
+			local LeaPlusMoveTipMsg = UIParent:CreateFontString(nil, "OVERLAY", 'GameFontNormalLarge')
+			LeaPlusMoveTipMsg:SetPoint("CENTER", 0, 0)
+			LeaPlusMoveTipMsg:SetText("Drag the tooltip frame then right-click it to finish.")
+			LeaPlusMoveTipMsg:Hide();
 
 			---------------------------------------------------------------------------------------------------------
 			-- Tooltip movement settings
@@ -10960,7 +10969,7 @@ function LeaPlusLC:FriendCheck(name)
 			LeaPlusCB["TipHideInCombat"]:HookScript("OnClick", SetTipHideShiftOverrideFunc)
 			SetTipHideShiftOverrideFunc()
 
-			LeaPlusLC:CreateDropDown("TooltipAnchorMenu", "Anchor", SideTip, 146, "TOPLEFT", 356, -115, {L["None"], L["Overlay"], L["Cursor"], L["Cursor Left"], L["Cursor Right"]}, "")
+			LeaPlusLC:CreateDropDown("TooltipAnchorMenu", "Anchor", SideTip, 146, "TOPLEFT", 356, -115, {L["None"], L["Overlay"], L["Cursor"], L["Cursor Right"]}, "")
 
 			local XOffsetHeading = LeaPlusLC:MakeTx(SideTip, "X Offset", 356, -132)
 			LeaPlusLC:MakeSL(SideTip, "TipCursorX", "Drag to set the cursor X offset.", -128, 128, 1, 356, -152, "%.0f")
@@ -11053,7 +11062,14 @@ function LeaPlusLC:FriendCheck(name)
 				if btn == "LeftButton" then
 					void, void, void, LTax, LTay = TipDrag:GetPoint()
 					TipDrag:StartMoving()
+					LeaPlusMoveTipMsg:Show()
 					void, void, void, LTbx, LTby = TipDrag:GetPoint()
+
+				elseif btn == "RightButton" then
+					LeaPlusMoveTipMsg:Hide();
+					if TipDrag:IsShown() then
+						TipDrag:Hide();
+					end
 				end
 			end)
 			TipDrag:SetScript("OnMouseUp", function(self, btn)
