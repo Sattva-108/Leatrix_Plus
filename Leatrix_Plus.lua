@@ -8052,7 +8052,7 @@ function LeaPlusLC:FriendCheck(name)
 			local function TradeSkillFunc(frame)
 
 				-- Make the tradeskill frame double-wide
-				UIPanelWindows["TradeSkillFrame"] = {area = "override", pushable = 3, xoffset = -16, yoffset = 12, bottomClampOverride = 140 + 12, width = 714, height = 487, whileDead = 1}
+				UIPanelWindows["TradeSkillFrame"] = {area = "override", pushable = 3, xoffset = 0, yoffset = 12, bottomClampOverride = 140 + 12, width = 714, height = 487, whileDead = 1}
 
 				-- Size the tradeskill frame
 				_G["TradeSkillFrame"]:SetWidth(714)
@@ -8111,7 +8111,9 @@ function LeaPlusLC:FriendCheck(name)
 				local DetailsInset = _G["TradeSkillFrame"]:CreateTexture(nil, "ARTWORK")
 				DetailsInset:SetSize(302, 339+ tall)
 				DetailsInset:SetPoint("TOPLEFT", _G["TradeSkillFrame"], "TOPLEFT", 348, -72)
-				DetailsInset:SetTexture("Interface\\DressUpFrame\\DressUpBackground-NightElf1")
+				DetailsInset:SetTexture("Interface\\addons\\Leatrix_Plus\\assets\\ui-guildachievement-parchment-horizontal-desaturated.blp")
+				-- DetailsInset:SetTexture(0.2, 0.2, 0.2, 1)
+
 
 				-- Hide expand tab (left of All button)
 				_G["TradeSkillExpandTabLeft"]:Hide()
@@ -8279,7 +8281,7 @@ function LeaPlusLC:FriendCheck(name)
 						SetHeadersButton()
 					else
 						self.collapsed = 1
-						QuestLogListScrollFrameScrollBar:SetValue(0)
+						-- QuestLogListScrollFrameScrollBar:SetValue(0)
 						CollapseQuestHeader(0)
 						SetHeadersButton()
 					end
@@ -12110,16 +12112,14 @@ function LeaPlusLC:FriendCheck(name)
 
 				-- Create hover texture
 				mbtn.t = mbtn:CreateTexture(nil, "BACKGROUND")
-						mbtn.t:SetTexture("Interface\\Buttons\\WHITE8X8")
-				mbtn.t:SetVertexColor(0.3, 0.3, 0.00, 0.8)
+				mbtn.t:SetTexture(0.3, 0.3, 0.00, 0.8)
 				mbtn.t:SetAlpha(0.7)
 				mbtn.t:SetAllPoints()
 				mbtn.t:Hide()
 
 				-- Create highlight texture
 				mbtn.s = mbtn:CreateTexture(nil, "BACKGROUND")
-						mbtn.s:SetTexture("Interface\\Buttons\\WHITE8X8")
-				mbtn.s:SetVertexColor(0.3, 0.3, 0.00, 0.8)
+				mbtn.s:SetTexture(0.3, 0.3, 0.00, 0.8)
 				mbtn.s:SetAlpha(1.0)
 				mbtn.s:SetAllPoints()
 				mbtn.s:Hide()
@@ -12475,7 +12475,7 @@ function LeaPlusLC:FriendCheck(name)
 				button.t:SetPoint("TOPLEFT", button, 0, 0)
 				button.t:SetSize(516, 16)
 
-				button.t:SetVertexColor(0.3, 0.3, 0.0, 0.8)
+				button.t:SetTexture(0.3, 0.3, 0.0, 0.8)
 				button.t:SetAlpha(0.7)
 				button.t:Hide()
 
@@ -13852,7 +13852,7 @@ function LeaPlusLC:FriendCheck(name)
 		-- Set the background color
 		Side.t = Side:CreateTexture(nil, "BACKGROUND")
 		Side.t:SetAllPoints()
-		Side.t:SetVertexColor(0.05, 0.05, 0.05, 0.9)
+		Side.t:SetTexture(0.05, 0.05, 0.05, 0.9)
 
 		-- Add a close Button
 		Side.c = CreateFrame("Button", nil, Side, "UIPanelCloseButton")
@@ -13894,8 +13894,8 @@ function LeaPlusLC:FriendCheck(name)
 		end)
 
 		-- Set textures
-		LeaPlusLC:CreateBar("FootTexture", Side, 570, 48, "BOTTOM", 0.5, 0.5, 0.5, 1.0, "Interface\\DressUpFrame\\DressUpBackground-NightElf1")
-		LeaPlusLC:CreateBar("MainTexture", Side, 570, 323, "TOPRIGHT", 0.7, 0.7, 0.7, 0.7,  "Interface\\DressUpFrame\\DressUpBackground-NightElf1")
+		LeaPlusLC:CreateBar("FootTexture", Side, 570, 48, "BOTTOM", 0.5, 0.5, 0.5, 1.0, "Interface\\addons\\Leatrix_Plus\\assets\\ui-guildachievement-parchment-horizontal-desaturated.blp")
+		LeaPlusLC:CreateBar("MainTexture", Side, 570, 323, "TOPRIGHT", 0.7, 0.7, 0.7, 0.9,  "Interface\\addons\\Leatrix_Plus\\assets\\ui-guildachievement-parchment-horizontal-desaturated.blp")
 
 		-- Allow movement
 		Side:EnableMouse(true)
@@ -14169,8 +14169,16 @@ function LeaPlusLC:FriendCheck(name)
 			-- mbtn:HookScript("OnShow", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
 			-- mbtn:HookScript("OnEnable", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
 			-- mbtn:HookScript("OnDisable", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
-			-- mbtn:HookScript("OnMouseDown", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
+			-- mbtn:HookScript("OnMouseDown", function() mbtn:GetPushedTexture():Hide() end)
 			-- mbtn:HookScript("OnMouseUp", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
+
+
+			--===== 3.3.5 texture disables =====--
+
+			-- mbtn:GetNormalTexture():SetTexture(nil)
+			mbtn:GetPushedTexture():SetTexture(nil)
+			-- mbtn:GetDisabledTexture():SetTexture(nil)
+			-- mbtn:GetHighlightTexture():SetTexture(nil)
 
 		end
 
@@ -14251,7 +14259,7 @@ function LeaPlusLC:FriendCheck(name)
 
 			dditem.t = dditem:CreateTexture(nil, "BACKGROUND")
 			dditem.t:SetAllPoints()
-			dditem.t:SetVertexColor(0.3, 0.3, 0.00, 0.8)
+			dditem.t:SetTexture(0.3, 0.3, 0.00, 0.8)
 			dditem.t:Hide();
 
 			dditem:SetScript("OnEnter", function() dditem.t:Show() end)
@@ -14321,12 +14329,12 @@ function LeaPlusLC:FriendCheck(name)
 		-- Add background color
 		PageF.t = PageF:CreateTexture(nil, "BACKGROUND")
 		PageF.t:SetAllPoints()
-		PageF.t:SetVertexColor(0.05, 0.05, 0.05, 0.9)
+		PageF.t:SetTexture(0.05, 0.05, 0.05, 0.9)
 
 		-- Add textures
-	LeaPlusLC:CreateBar("FootTexture", PageF, 570, 42, "BOTTOM", 0.3, 0.3, 1.0, 0.9, "Interface\\GLUES\\MODELS\\UI_MAINMENU\\GRADIENT")
-	LeaPlusLC:CreateBar("MainTexture", PageF, 440, 348, "TOPRIGHT", 0.8, 0.8, 0.8, 0.9, "Interface\\DressUpFrame\\DressUpBackground-NightElf1")
-	LeaPlusLC:CreateBar("MenuTexture", PageF, 130, 348, "TOPLEFT", 0.6, 0.6, 0.6, 0.9, "Interface\\GLUES\\MODELS\\UI_MAINMENU\\GRADIENT")
+	LeaPlusLC:CreateBar("FootTexture", PageF, 570, 42, "BOTTOM", 0.5, 0.5, 0.5, 1.0, "Interface\\addons\\Leatrix_Plus\\assets\\ui-guildachievement-parchment-horizontal-desaturated.blp")
+	LeaPlusLC:CreateBar("MainTexture", PageF, 440, 348, "TOPRIGHT", 0.7, 0.7, 0.7, 0.7, "Interface\\addons\\Leatrix_Plus\\assets\\ui-guildachievement-parchment-horizontal-desaturated.blp")
+	LeaPlusLC:CreateBar("MenuTexture", PageF, 130, 348, "TOPLEFT", 0.7, 0.7, 0.7, 0.7, "Interface\\addons\\Leatrix_Plus\\assets\\ui-guildachievement-parchment-horizontal-desaturated.blp")
 
 		-- Set panel position when shown
 		PageF:SetScript("OnShow", function()
@@ -14365,7 +14373,7 @@ function LeaPlusLC:FriendCheck(name)
 		CloseB:SetScript("OnClick", LeaPlusLC.HideFrames)
 
 		-- Add web link Button
-		local PageFAlertButton = LeaPlusLC:CreateButton("PageFAlertButton", PageF, "You should keybind web link!", "BOTTOMLEFT", 16, 10, 0, 25, true, "You should set a keybind for the web link feature.  It's very useful.|n|nOpen the key bindings window (accessible from the game menu) and click Leatrix Plus.|n|nSet a keybind for Show web link.|n|nNow when your pointer is over an item, NPC or spell (and more), press your keybind to get a web link.", true)
+		local PageFAlertButton = LeaPlusLC:CreateButton("PageFAlertButton", PageF, "You should keybind web link!", "BOTTOMLEFT", 16, 10, 0, 25, true, "You should set a keybind for the web link feature.  It's very useful.|n|nOpen the key bindings window (accessible from the game menu) and click Leatrix Plus.|n|nSet a keybind for Show web link.|n|nNow when your pointer is over an item, NPC or spell (and more), press your keybind to get a web link.")
 		PageFAlertButton:SetPushedTextOffset(0, 0)
 		PageF:HookScript("OnShow", function()
 			if GetBindingKey("LEATRIX_PLUS_GLOBAL_WEBLINK") then PageFAlertButton:Hide() else PageFAlertButton:Show() end
