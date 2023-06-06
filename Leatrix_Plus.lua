@@ -580,7 +580,7 @@ function LeaPlusLC:FriendCheck(name)
 		LeaPlusLC:LockOption("BookFontChange", "BookTextBtn", true)					-- Resize book text
 		LeaPlusLC:LockOption("MinimapModder", "ModMinimapBtn", true)				-- Enhance minimap
 		LeaPlusLC:LockOption("TipModEnable", "MoveTooltipButton", true)				-- Enhance tooltip
-		LeaPlusLC:LockOption("EnhanceDressup", "EnhanceDressupBtn", true)			-- Enhance dressup
+		-- LeaPlusLC:LockOption("EnhanceDressup", "EnhanceDressupBtn", true)			-- Enhance dressup
 		LeaPlusLC:LockOption("EnhanceQuestLog", "EnhanceQuestLogBtn", true)			-- Enhance quest log
 		LeaPlusLC:LockOption("EnhanceTrainers", "EnhanceTrainersBtn", true)			-- Enhance trainers
 		LeaPlusLC:LockOption("ShowCooldowns", "CooldownsButton", true)				-- Show cooldowns
@@ -6992,196 +6992,196 @@ function LeaPlusLC:FriendCheck(name)
 
 		if LeaPlusLC["EnhanceDressup"] == "On" then
 
-			-- Create configuration panel
-			local DressupPanel = LeaPlusLC:CreatePanel("Enhance dressup", "DressupPanel")
+			-- -- Create configuration panel
+			-- local DressupPanel = LeaPlusLC:CreatePanel("Enhance dressup", "DressupPanel")
 
-			LeaPlusLC:MakeTx(DressupPanel, "Settings", 16, -72)
-			LeaPlusLC:MakeCB(DressupPanel, "DressupItemButtons", "Show item buttons", 16, -92, false, "If checked, item buttons will be shown in the dressing room.  You can click the item buttons to remove individual items from the model.")
-			LeaPlusLC:MakeCB(DressupPanel, "DressupAnimControl", "Show animation slider", 16, -112, false, "If checked, an animation slider will be shown in the dressing room.")
+			-- LeaPlusLC:MakeTx(DressupPanel, "Settings", 16, -72)
+			-- LeaPlusLC:MakeCB(DressupPanel, "DressupItemButtons", "Show item buttons", 16, -92, false, "If checked, item buttons will be shown in the dressing room.  You can click the item buttons to remove individual items from the model.")
+			-- LeaPlusLC:MakeCB(DressupPanel, "DressupAnimControl", "Show animation slider", 16, -112, false, "If checked, an animation slider will be shown in the dressing room.")
 
-			-- Help button hidden
-			DressupPanel.h:Hide()
+			-- -- Help button hidden
+			-- DressupPanel.h:Hide()
 
-			-- Back button handler
-			DressupPanel.b:SetScript("OnClick", function()
-				DressupPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page5"]:Show()
-				return
-			end)
+			-- -- Back button handler
+			-- DressupPanel.b:SetScript("OnClick", function()
+			-- 	DressupPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page5"]:Show()
+			-- 	return
+			-- end)
 
-			-- Reset button handler
-			DressupPanel.r:SetScript("OnClick", function()
+			-- -- Reset button handler
+			-- DressupPanel.r:SetScript("OnClick", function()
 
-				-- Refresh configuration panel
-				DressupPanel:Hide(); DressupPanel:Show()
+			-- 	-- Refresh configuration panel
+			-- 	DressupPanel:Hide(); DressupPanel:Show()
 
-			end)
+			-- end)
 
-			-- Show configuration panal when options panel button is clicked
-			LeaPlusCB["EnhanceDressupBtn"]:SetScript("OnClick", function()
-				if IsShiftKeyDown() and IsControlKeyDown() then
-					-- Preset profile
-				else
-					DressupPanel:Show()
-					LeaPlusLC:HideFrames()
-				end
-			end)
+			-- -- Show configuration panal when options panel button is clicked
+			-- LeaPlusCB["EnhanceDressupBtn"]:SetScript("OnClick", function()
+			-- 	if IsShiftKeyDown() and IsControlKeyDown() then
+			-- 		-- Preset profile
+			-- 	else
+			-- 		DressupPanel:Show()
+			-- 		LeaPlusLC:HideFrames()
+			-- 	end
+			-- end)
 
 			----------------------------------------------------------------------
 			-- Item buttons
 			----------------------------------------------------------------------
 
-			do
+			-- do
 
-				local buttons = {}
-				local slotTable = {"HeadSlot", "ShoulderSlot", "BackSlot", "ChestSlot", "ShirtSlot", "TabardSlot", "WristSlot", "HandsSlot", "WaistSlot", "LegsSlot", "FeetSlot", "MainHandSlot", "SecondaryHandSlot"}
-				local texTable = {"INV_Misc_Desecrated_ClothHelm", "INV_Misc_Desecrated_ClothShoulder", "INV_Misc_Cape_01", "INV_Misc_Desecrated_ClothChest", "INV_Shirt_01", "INV_Shirt_GuildTabard_01", "INV_Misc_Desecrated_ClothBracer", "INV_Misc_Desecrated_ClothGlove", "INV_Misc_Desecrated_ClothBelt", "INV_Misc_Desecrated_ClothPants", "INV_Misc_Desecrated_ClothBoots", "INV_Sword_01", "INV_Shield_01"}
+			-- 	local buttons = {}
+			-- 	local slotTable = {"HeadSlot", "ShoulderSlot", "BackSlot", "ChestSlot", "ShirtSlot", "TabardSlot", "WristSlot", "HandsSlot", "WaistSlot", "LegsSlot", "FeetSlot", "MainHandSlot", "SecondaryHandSlot"}
+			-- 	local texTable = {"INV_Misc_Desecrated_ClothHelm", "INV_Misc_Desecrated_ClothShoulder", "INV_Misc_Cape_01", "INV_Misc_Desecrated_ClothChest", "INV_Shirt_01", "INV_Shirt_GuildTabard_01", "INV_Misc_Desecrated_ClothBracer", "INV_Misc_Desecrated_ClothGlove", "INV_Misc_Desecrated_ClothBelt", "INV_Misc_Desecrated_ClothPants", "INV_Misc_Desecrated_ClothBoots", "INV_Sword_01", "INV_Shield_01"}
 
-				local function MakeSlotButton(number, slot, anchor, x, y)
+			-- 	local function MakeSlotButton(number, slot, anchor, x, y)
 
-					-- Create slot button
-					local slotBtn = CreateFrame("Button", nil, DressUpFrame)
-					slotBtn:SetFrameStrata("HIGH")
-					slotBtn:SetSize(30, 30)
-					slotBtn.slot = slot
-					slotBtn:ClearAllPoints()
-					slotBtn:SetPoint(anchor, x, y)
-					slotBtn:RegisterForClicks("LeftButtonUp")
-					slotBtn:SetMotionScriptsWhileDisabled(true)
+			-- 		-- Create slot button
+			-- 		local slotBtn = CreateFrame("Button", nil, DressUpFrame)
+			-- 		slotBtn:SetFrameStrata("HIGH")
+			-- 		slotBtn:SetSize(30, 30)
+			-- 		slotBtn.slot = slot
+			-- 		slotBtn:ClearAllPoints()
+			-- 		slotBtn:SetPoint(anchor, x, y)
+			-- 		slotBtn:RegisterForClicks("LeftButtonUp")
+			-- 		slotBtn:SetMotionScriptsWhileDisabled(true)
 
-					-- Slot button click
-					slotBtn:SetScript("OnClick", function(self, btn)
-						if btn == "LeftButton" then
-							local slotID = GetInventorySlotInfo(self.slot)
-							DressUpFrame.DressUpModel:UndressSlot(slotID)
-						end
-					end)
+			-- 		-- Slot button click
+			-- 		slotBtn:SetScript("OnClick", function(self, btn)
+			-- 			if btn == "LeftButton" then
+			-- 				local slotID = GetInventorySlotInfo(self.slot)
+			-- 				DressUpModel:UndressSlot(slotID)
+			-- 			end
+			-- 		end)
 
-					-- Slot button tooltip
-					slotBtn:SetScript("OnEnter", function(self)
-						GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-						if self.item then
-							GameTooltip:SetHyperlink(self.item)
-						else
-							if self.slot then
-								GameTooltip:SetText(_G[string.upper(self.slot)])
-							end
-						end
-					end)
-					slotBtn:SetScript("OnLeave", GameTooltip_Hide)
+			-- 		-- Slot button tooltip
+			-- 		slotBtn:SetScript("OnEnter", function(self)
+			-- 			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+			-- 			if self.item then
+			-- 				GameTooltip:SetHyperlink(self.item)
+			-- 			else
+			-- 				if self.slot then
+			-- 					GameTooltip:SetText(_G[string.upper(self.slot)])
+			-- 				end
+			-- 			end
+			-- 		end)
+			-- 		slotBtn:SetScript("OnLeave", GameTooltip_Hide)
 
-					-- Slot button textures
-					slotBtn.t = slotBtn:CreateTexture(nil, "BACKGROUND")
-					slotBtn.t:SetSize(30, 30)
-					slotBtn.t:SetPoint("CENTER")
-					slotBtn.t:SetDesaturated(true)
-					slotBtn.t:SetTexture("interface\\icons\\" .. texTable[number])
+			-- 		-- Slot button textures
+			-- 		slotBtn.t = slotBtn:CreateTexture(nil, "BACKGROUND")
+			-- 		slotBtn.t:SetSize(30, 30)
+			-- 		slotBtn.t:SetPoint("CENTER")
+			-- 		slotBtn.t:SetDesaturated(true)
+			-- 		slotBtn.t:SetTexture("interface\\icons\\" .. texTable[number])
 
-					slotBtn.h = slotBtn:CreateTexture()
-					slotBtn.h:SetSize(30, 30)
-					slotBtn.h:SetPoint("CENTER")
-					slotBtn.h:SetAtlas("bags-glow-white")
-					slotBtn.h:SetBlendMode("ADD")
-					slotBtn:SetHighlightTexture(slotBtn.h)
+			-- 		slotBtn.h = slotBtn:CreateTexture()
+			-- 		slotBtn.h:SetSize(30, 30)
+			-- 		slotBtn.h:SetPoint("CENTER")
+			-- 		slotBtn.h:SetTexture("bags-glow-white")
+			-- 		slotBtn.h:SetBlendMode("ADD")
+			-- 		slotBtn:SetHighlightTexture(slotBtn.h)
 
-					-- Add slot button to table
-					tinsert(buttons, slotBtn)
+			-- 		-- Add slot button to table
+			-- 		tinsert(buttons, slotBtn)
 
-				end
+			-- 	end
 
-				-- Show left column slot buttons
-				for i = 1, 7 do
-					MakeSlotButton(i, slotTable[i], "TOPLEFT", 22, -80 + -35 * (i - 1))
-				end
+			-- 	-- Show left column slot buttons
+			-- 	for i = 1, 7 do
+			-- 		MakeSlotButton(i, slotTable[i], "TOPLEFT", 22, -80 + -35 * (i - 1))
+			-- 	end
 
-				-- Show right column slot buttons
-				for i = 8, 13 do
-					MakeSlotButton(i, slotTable[i], "TOPRIGHT", -46, -80 + -35 * (i - 8))
-				end
+			-- 	-- Show right column slot buttons
+			-- 	for i = 8, 13 do
+			-- 		MakeSlotButton(i, slotTable[i], "TOPRIGHT", -46, -80 + -35 * (i - 8))
+			-- 	end
 
-				-- Function to set item buttons
-				local function ToggleItemButtons()
-					if LeaPlusLC["DressupItemButtons"] == "On" then
-						for i = 1, #buttons do buttons[i]:Show() end
-					else
-						for i = 1, #buttons do buttons[i]:Hide() end
-					end
-				end
-				LeaPlusLC.ToggleItemButtons = ToggleItemButtons
+			-- 	-- Function to set item buttons
+			-- 	local function ToggleItemButtons()
+			-- 		if LeaPlusLC["DressupItemButtons"] == "On" then
+			-- 			for i = 1, #buttons do buttons[i]:Show() end
+			-- 		else
+			-- 			for i = 1, #buttons do buttons[i]:Hide() end
+			-- 		end
+			-- 	end
+			-- 	LeaPlusLC.ToggleItemButtons = ToggleItemButtons
 
-				-- Set item buttons for option click, startup, reset click and preset click
-				LeaPlusCB["DressupItemButtons"]:HookScript("OnClick", ToggleItemButtons)
-				ToggleItemButtons()
-				DressupPanel.r:HookScript("OnClick", function()
-					LeaPlusLC["DressupItemButtons"] = "On"
-					ToggleItemButtons()
-					DressupPanel:Hide(); DressupPanel:Show()
-				end)
-				LeaPlusCB["EnhanceDressupBtn"]:HookScript("OnClick", function()
-					if IsShiftKeyDown() and IsControlKeyDown() then
-						LeaPlusLC["DressupItemButtons"] = "On"
-						ToggleItemButtons()
-					end
-				end)
+			-- 	-- Set item buttons for option click, startup, reset click and preset click
+			-- 	LeaPlusCB["DressupItemButtons"]:HookScript("OnClick", ToggleItemButtons)
+			-- 	ToggleItemButtons()
+			-- 	DressupPanel.r:HookScript("OnClick", function()
+			-- 		LeaPlusLC["DressupItemButtons"] = "On"
+			-- 		ToggleItemButtons()
+			-- 		DressupPanel:Hide(); DressupPanel:Show()
+			-- 	end)
+			-- 	LeaPlusCB["EnhanceDressupBtn"]:HookScript("OnClick", function()
+			-- 		if IsShiftKeyDown() and IsControlKeyDown() then
+			-- 			LeaPlusLC["DressupItemButtons"] = "On"
+			-- 			ToggleItemButtons()
+			-- 		end
+			-- 	end)
 
-			end
+			-- end
 
 			----------------------------------------------------------------------
 			-- Animation slider (must be before bottom row buttons)
 			----------------------------------------------------------------------
 
-			local animTable = {0, 4, 5, 143, 119, 26, 25, 27, 28, 108, 120, 51, 124, 52, 125, 126, 62, 63, 41, 42, 43, 44, 132, 38, 14, 115, 193, 48, 110, 109, 134, 197, 0}
-			local lastSetting
+			-- local animTable = {0, 4, 5, 143, 119, 26, 25, 27, 28, 108, 120, 51, 124, 52, 125, 126, 62, 63, 41, 42, 43, 44, 132, 38, 14, 115, 193, 48, 110, 109, 134, 197, 0}
+			-- local lastSetting
 
-			LeaPlusLC["DressupAnim"] = 0 -- Defined here since the setting is not saved
-			LeaPlusLC:MakeSL(DressUpFrame, "DressupAnim", "", 1, #animTable - 1, 1, 356, -92, "%.0f")
-			LeaPlusCB["DressupAnim"]:ClearAllPoints()
-			LeaPlusCB["DressupAnim"]:SetPoint("BOTTOM", -12, 112)
-			LeaPlusCB["DressupAnim"]:SetWidth(226)
-			LeaPlusCB["DressupAnim"]:SetFrameLevel(5)
-			LeaPlusCB["DressupAnim"]:HookScript("OnValueChanged", function(self, setting)
-				local playerActor = DressUpFrame.DressUpModel
-				setting = math.floor(setting + 0.5)
-				if playerActor and setting ~= lastSetting then
-					lastSetting = setting
-					DressUpFrame.DressUpModel:SetAnimation(animTable[setting], 0, 1, 1)
-					-- print(animTable[setting]) -- Debug
-				end
-			end)
+			-- LeaPlusLC["DressupAnim"] = 0 -- Defined here since the setting is not saved
+			-- LeaPlusLC:MakeSL(DressUpFrame, "DressupAnim", "", 1, #animTable - 1, 1, 356, -92, "%.0f")
+			-- LeaPlusCB["DressupAnim"]:ClearAllPoints()
+			-- LeaPlusCB["DressupAnim"]:SetPoint("BOTTOM", -12, 112)
+			-- LeaPlusCB["DressupAnim"]:SetWidth(226)
+			-- LeaPlusCB["DressupAnim"]:SetFrameLevel(5)
+			-- LeaPlusCB["DressupAnim"]:HookScript("OnValueChanged", function(self, setting)
+			-- 	local playerActor = DressUpModel
+			-- 	setting = math.floor(setting + 0.5)
+			-- 	if playerActor and setting ~= lastSetting then
+			-- 		lastSetting = setting
+			-- 		-- DressUpModel:SetAnimation(animTable[setting], 0, 1, 1)
+			-- 		-- print(animTable[setting]) -- Debug
+			-- 	end
+			-- end)
 
-			-- Function to show animation control
-			local function SetAnimationSlider()
-				if LeaPlusLC["DressupAnimControl"] == "On" then
-					LeaPlusCB["DressupAnim"]:Show()
-				else
-					LeaPlusCB["DressupAnim"]:Hide()
-				end
-				LeaPlusCB["DressupAnim"]:SetValue(1)
-			end
+			-- -- Function to show animation control
+			-- local function SetAnimationSlider()
+			-- 	if LeaPlusLC["DressupAnimControl"] == "On" then
+			-- 		LeaPlusCB["DressupAnim"]:Show()
+			-- 	else
+			-- 		LeaPlusCB["DressupAnim"]:Hide()
+			-- 	end
+			-- 	LeaPlusCB["DressupAnim"]:SetValue(1)
+			-- end
 
-			-- Set animation control with option, startup, preset and reset
-			LeaPlusCB["DressupAnimControl"]:HookScript("OnClick", SetAnimationSlider)
-			SetAnimationSlider()
-			LeaPlusCB["EnhanceDressupBtn"]:HookScript("OnClick", function()
-				if IsShiftKeyDown() and IsControlKeyDown() then
-					LeaPlusLC["DressupAnimControl"] = "On"
-					SetAnimationSlider()
-				end
-			end)
-			DressupPanel.r:HookScript("OnClick", function()
-				LeaPlusLC["DressupAnimControl"] = "On"
-				SetAnimationSlider()
-				DressupPanel:Hide(); DressupPanel:Show()
-			end)
+			-- -- Set animation control with option, startup, preset and reset
+			-- LeaPlusCB["DressupAnimControl"]:HookScript("OnClick", SetAnimationSlider)
+			-- SetAnimationSlider()
+			-- LeaPlusCB["EnhanceDressupBtn"]:HookScript("OnClick", function()
+			-- 	if IsShiftKeyDown() and IsControlKeyDown() then
+			-- 		LeaPlusLC["DressupAnimControl"] = "On"
+			-- 		SetAnimationSlider()
+			-- 	end
+			-- end)
+			-- DressupPanel.r:HookScript("OnClick", function()
+			-- 	LeaPlusLC["DressupAnimControl"] = "On"
+			-- 	SetAnimationSlider()
+			-- 	DressupPanel:Hide(); DressupPanel:Show()
+			-- end)
 
-			-- Reset animation when dressup frame is shown and model is reset
-			hooksecurefunc(DressUpFrame, "Show", SetAnimationSlider)
-			DressUpFrameResetButton:HookScript("OnClick", SetAnimationSlider)
+			-- -- Reset animation when dressup frame is shown and model is reset
+			-- hooksecurefunc(DressUpFrame, "Show", SetAnimationSlider)
+			-- DressUpFrameResetButton:HookScript("OnClick", SetAnimationSlider)
 
-			-- Skin slider for ElvUI
-			if LeaPlusLC.ElvUI then
-				_G.LeaPlusGlobalDressupAnim = LeaPlusCB["DressupAnim"]
-				LeaPlusLC.ElvUI:GetModule("Skins"):HandleSliderFrame(_G.LeaPlusGlobalDressupAnim, false)
-			end
+			-- -- Skin slider for ElvUI
+			-- if LeaPlusLC.ElvUI then
+			-- 	_G.LeaPlusGlobalDressupAnim = LeaPlusCB["DressupAnim"]
+			-- 	LeaPlusLC.ElvUI:GetModule("Skins"):HandleSliderFrame(_G.LeaPlusGlobalDressupAnim, false)
+			-- end
 
 			----------------------------------------------------------------------
 			-- Buttons
@@ -7216,7 +7216,7 @@ function LeaPlusLC:FriendCheck(name)
 			LeaPlusCB["DressUpNudeBtn"]:SetPoint("RIGHT", DressUpFrameResetButton, "LEFT", 0, 0)
 			SetButton(LeaPlusCB["DressUpNudeBtn"], "N", "Remove all items")
 			LeaPlusCB["DressUpNudeBtn"]:SetScript("OnClick", function()
-				DressUpFrame.DressUpModel:Undress()
+				DressUpModel:Undress()
 			end)
 
 			-- Show me
@@ -7225,13 +7225,13 @@ function LeaPlusLC:FriendCheck(name)
 			LeaPlusCB["DressUpShowMeBtn"]:SetPoint("RIGHT", LeaPlusCB["DressUpNudeBtn"], "LEFT", 0, 0)
 			SetButton(LeaPlusCB["DressUpShowMeBtn"], "M", "Show me")
 			LeaPlusCB["DressUpShowMeBtn"]:SetScript("OnClick", function()
-				local playerActor = DressUpFrame.DressUpModel
+				local playerActor = DressUpModel
 				playerActor:SetUnit("player")
 				-- Set animation
-				playerActor:SetAnimation(0)
-				LibCompat.After(0.1,function()
-					playerActor:SetAnimation(animTable[math.floor(LeaPlusCB["DressupAnim"]:GetValue() + 0.5)], 0, 1, 1)
-				end)
+				-- playerActor:SetAnimation(0)
+				-- LibCompat.After(0.1,function()
+				-- 	playerActor:SetAnimation(animTable[math.floor(LeaPlusCB["DressupAnim"]:GetValue() + 0.5)], 0, 1, 1)
+				-- end)
 			end)
 
 			-- Show my outfit on target
@@ -7241,13 +7241,13 @@ function LeaPlusLC:FriendCheck(name)
 			SetButton(LeaPlusCB["DressUpOutfitOnTargetBtn"], "O", "Show my outfit on target")
 			LeaPlusCB["DressUpOutfitOnTargetBtn"]:SetScript("OnClick", function()
 				if UnitIsPlayer("target") then
-					DressUpFrame.DressUpModel:SetUnit("target")
-					DressUpFrame.DressUpModel:Undress()
+					DressUpModel:SetUnit("target")
+					DressUpModel:Undress()
 					LibCompat.After(0.01, function()
 						for i = 1, 19 do
 							local itemName = GetInventoryItemID("player", i)
 							if itemName then
-								DressUpFrame.DressUpModel:TryOn("item:" .. itemName)
+								DressUpModel:TryOn("item:" .. itemName)
 							end
 						end
 					end)
@@ -7261,28 +7261,28 @@ function LeaPlusLC:FriendCheck(name)
 			SetButton(LeaPlusCB["DressUpTargetBtn"], "T", "Show target model")
 			LeaPlusCB["DressUpTargetBtn"]:SetScript("OnClick", function()
 				if UnitIsPlayer("target") then
-					local playerActor = DressUpFrame.DressUpModel
+					local playerActor = DressUpModel
 					if playerActor then
 						playerActor:SetUnit("target")
 						-- Set animation
-						playerActor:SetAnimation(0)
-						LibCompat.After(0.1,function()
-							playerActor:SetAnimation(animTable[math.floor(LeaPlusCB["DressupAnim"]:GetValue() + 0.5)], 0, 1, 1)
-						end)
+						-- playerActor:SetAnimation(0)
+						-- LibCompat.After(0.1,function()
+						-- 	playerActor:SetAnimation(animTable[math.floor(LeaPlusCB["DressupAnim"]:GetValue() + 0.5)], 0, 1, 1)
+						-- end)
 					end
 				end
 			end)
 
-			-- Toggle buttons
-			LeaPlusLC:CreateButton("DressUpButonsBtn", DressUpFrameResetButton, "B", "BOTTOMLEFT", 26, 79, 80, 22, false, "")
-			LeaPlusCB["DressUpButonsBtn"]:ClearAllPoints()
-			LeaPlusCB["DressUpButonsBtn"]:SetPoint("RIGHT", LeaPlusCB["DressUpTargetBtn"], "LEFT", 0, 0)
-			SetButton(LeaPlusCB["DressUpButonsBtn"], "B", "Toggle buttons")
-			LeaPlusCB["DressUpButonsBtn"]:SetScript("OnClick", function()
-				if LeaPlusLC["DressupItemButtons"] == "On" then LeaPlusLC["DressupItemButtons"] = "Off" else LeaPlusLC["DressupItemButtons"] = "On" end
-				LeaPlusLC:ToggleItemButtons()
-				if DressupPanel:IsShown() then DressupPanel:Hide(); DressupPanel:Show() end
-			end)
+			-- -- Toggle buttons
+			-- LeaPlusLC:CreateButton("DressUpButonsBtn", DressUpFrameResetButton, "B", "BOTTOMLEFT", 26, 79, 80, 22, false, "")
+			-- LeaPlusCB["DressUpButonsBtn"]:ClearAllPoints()
+			-- LeaPlusCB["DressUpButonsBtn"]:SetPoint("RIGHT", LeaPlusCB["DressUpTargetBtn"], "LEFT", 0, 0)
+			-- SetButton(LeaPlusCB["DressUpButonsBtn"], "B", "Toggle buttons")
+			-- LeaPlusCB["DressUpButonsBtn"]:SetScript("OnClick", function()
+			-- 	if LeaPlusLC["DressupItemButtons"] == "On" then LeaPlusLC["DressupItemButtons"] = "Off" else LeaPlusLC["DressupItemButtons"] = "On" end
+			-- 	LeaPlusLC:ToggleItemButtons()
+			-- 	if DressupPanel:IsShown() then DressupPanel:Hide(); DressupPanel:Show() end
+			-- end)
 
 			-- Show nearby target outfit on me button
 			--[[LeaPlusLC:CreateButton("DressUpTargetSelfBtn", DressUpFrameResetButton, "S", "BOTTOMLEFT", 26, 79, 80, 22, false, "")
@@ -7298,14 +7298,14 @@ function LeaPlusLC:FriendCheck(name)
 					NotifyInspect("target")
 					LeaPlusCB["DressUpTargetSelfBtn"]:RegisterEvent("INSPECT_READY")
 					LeaPlusCB["DressUpTargetSelfBtn"]:SetScript("OnEvent", function()
-						DressUpFrame.DressUpModel:SetUnit("player")
-						DressUpFrame.DressUpModel:Undress()
+						DressUpModel:SetUnit("player")
+						DressUpModel:Undress()
 						LibCompat.After(0.01, function()
 							for i = 1, 19 do
 								local itemName = GetInventoryItemID("target", i)
 								LibCompat.After(0.01, function()
 									if itemName then
-										DressUpFrame.DressUpModel:TryOn("item:" .. itemName)
+										DressUpModel:TryOn("item:" .. itemName)
 									end
 								end)
 							end
@@ -7317,11 +7317,11 @@ function LeaPlusLC:FriendCheck(name)
 
 			-- Change player actor to player when reset button is clicked (needed because target button changes it)
 			DressUpFrameResetButton:HookScript("OnClick", function()
-				DressUpFrame.DressUpModel:SetUnit("player")
+				DressUpModel:SetUnit("player")
 			end)
 
 			-- Auction house
-			local BtnStrata, BtnLevel = SideDressUpModelResetButton:GetFrameStrata(), SideDressUpModelResetButton:GetFrameLevel()
+			local BtnStrata, BtnLevel = UIParent:GetFrameStrata(), UIParent:GetFrameLevel()
 
 			-- Add buttons to auction house dressup frame
 			LeaPlusLC:CreateButton("DressUpSideBtn", SideDressUpModelResetButton, "Tabard", "BOTTOMLEFT", -36, -31, 60, 22, false, "")
@@ -7358,11 +7358,11 @@ function LeaPlusLC:FriendCheck(name)
 			----------------------------------------------------------------------
 
 			-- Hide model rotation controls
-			CharacterModelFrameRotateLeftButton:HookScript("OnShow", CharacterModelFrameRotateLeftButton.Hide)
-			CharacterModelFrameRotateRightButton:HookScript("OnShow", CharacterModelFrameRotateRightButton.Hide)
-			DressUpModelFrameRotateLeftButton:HookScript("OnShow", DressUpModelFrameRotateLeftButton.Hide)
-			DressUpModelFrameRotateRightButton:HookScript("OnShow", DressUpModelFrameRotateRightButton.Hide)
-			SideDressUpModelControlFrame:HookScript("OnShow", SideDressUpModelControlFrame.Hide)
+			-- CharacterModelFrameRotateLeftButton:HookScript("OnShow", CharacterModelFrameRotateLeftButton.Hide)
+			-- CharacterModelFrameRotateRightButton:HookScript("OnShow", CharacterModelFrameRotateRightButton.Hide)
+			-- DressUpModelFrameRotateLeftButton:HookScript("OnShow", DressUpModelFrameRotateLeftButton.Hide)
+			-- DressUpModelFrameRotateRightButton:HookScript("OnShow", DressUpModelFrameRotateRightButton.Hide)
+			-- SideDressUpModelControlFrame:HookScript("OnShow", SideDressUpModelControlFrame.Hide)
 
 			----------------------------------------------------------------------
 			-- Hide dressup stats button
@@ -7479,8 +7479,8 @@ function LeaPlusLC:FriendCheck(name)
 			----------------------------------------------------------------------
 
 			-- Enable zooming for character frame and dressup frame
-			CharacterModelFrame:HookScript("OnMouseWheel", Model_OnMouseWheel)
-			DressUpModelFrame:HookScript("OnMouseWheel", Model_OnMouseWheel)
+			-- CharacterModelFrame:HookScript("OnMouseWheel", Model_OnMouseWheel)
+			-- DressUpModelFrame:HookScript("OnMouseWheel", Model_OnMouseWheel)
 
 			-- Slightly shorter character model frame for CharacterStatsTBC
 			if IsAddOnLoaded("CharacterStatsTBC") then
@@ -7489,91 +7489,91 @@ function LeaPlusLC:FriendCheck(name)
 				CharacterModelFrame:SetPoint("BOTTOMRIGHT", PaperDollFrame, -86, 220)
 			end
 
-			-- Enable panning for character frame
-			CharacterModelFrame:HookScript("OnMouseDown", function(self, btn)
-				if btn == "RightButton" then
-					Model_StartPanning(self)
-				end
-			end)
+			-- -- Enable panning for character frame
+			-- CharacterModelFrame:HookScript("OnMouseDown", function(self, btn)
+			-- 	if btn == "RightButton" then
+			-- 		Model_StartPanning(self)
+			-- 	end
+			-- end)
 
-			CharacterModelFrame:HookScript("OnMouseUp", function(self, btn)
-				Model_StopPanning(self)
-			end)
+			-- CharacterModelFrame:HookScript("OnMouseUp", function(self, btn)
+			-- 	Model_StopPanning(self)
+			-- end)
 
-			-- Enable panning for dressup frame
-			DressUpModelFrame:HookScript("OnMouseDown", function(self, btn)
-				if btn == "RightButton" then
-					Model_StartPanning(self)
-				end
-			end)
+			-- -- Enable panning for dressup frame
+			-- DressUpModelFrame:HookScript("OnMouseDown", function(self, btn)
+			-- 	if btn == "RightButton" then
+			-- 		Model_StartPanning(self)
+			-- 	end
+			-- end)
 
-			DressUpModelFrame:HookScript("OnMouseUp", function(self, btn)
-				Model_StopPanning(self)
-			end)
+			-- DressUpModelFrame:HookScript("OnMouseUp", function(self, btn)
+			-- 	Model_StopPanning(self)
+			-- end)
 
-			DressUpModelFrame:ClearAllPoints()
-			DressUpModelFrame:SetPoint("TOPLEFT", DressUpFrame, 22, -76)
-			DressUpModelFrame:SetPoint("BOTTOMRIGHT", DressUpFrame, -46, 106)
+			-- DressUpModelFrame:ClearAllPoints()
+			-- DressUpModelFrame:SetPoint("TOPLEFT", DressUpFrame, 22, -76)
+			-- DressUpModelFrame:SetPoint("BOTTOMRIGHT", DressUpFrame, -46, 106)
 
-			-- Reset dressup frame when reset button clicked
-			DressUpFrameResetButton:HookScript("OnClick", function()
-				DressUpModelFrame.rotation = 0
-				DressUpModelFrame:SetRotation(0)
-				DressUpModelFrame:SetPosition(0, 0, 0)
-				DressUpModelFrame.zoomLevel = 0
-				DressUpModelFrame:SetPortraitZoom(0)
-				DressUpModelFrame:RefreshCamera()
-			end)
+			-- -- Reset dressup frame when reset button clicked
+			-- DressUpFrameResetButton:HookScript("OnClick", function()
+			-- 	DressUpModelFrame.rotation = 0
+			-- 	DressUpModelFrame:SetRotation(0)
+			-- 	DressUpModelFrame:SetPosition(0, 0, 0)
+			-- 	DressUpModelFrame.zoomLevel = 0
+			-- 	DressUpModelFrame:SetPortraitZoom(0)
+			-- 	DressUpModelFrame:RefreshCamera()
+			-- end)
 
-			-- Reset side dressup when reset button clicked
-			SideDressUpModelResetButton:HookScript("OnClick", function()
-				SideDressUpModel.rotation = 0
-				SideDressUpModel:SetRotation(0)
-				SideDressUpModel:SetPosition(0, 0, -0.1)
-				SideDressUpModel.zoomLevel = 0
-				SideDressUpModel:SetPortraitZoom(0)
-				SideDressUpModel:RefreshCamera()
-			end)
+			-- -- Reset side dressup when reset button clicked
+			-- SideDressUpModelResetButton:HookScript("OnClick", function()
+			-- 	SideDressUpModel.rotation = 0
+			-- 	SideDressUpModel:SetRotation(0)
+			-- 	SideDressUpModel:SetPosition(0, 0, -0.1)
+			-- 	SideDressUpModel.zoomLevel = 0
+			-- 	SideDressUpModel:SetPortraitZoom(0)
+			-- 	SideDressUpModel:RefreshCamera()
+			-- end)
 
-			----------------------------------------------------------------------
-			-- Inspect system
-			----------------------------------------------------------------------
+			-- ----------------------------------------------------------------------
+			-- -- Inspect system
+			-- ----------------------------------------------------------------------
 
-			-- Inspect System
-			local function DoInspectSystemFunc()
+			-- -- Inspect System
+			-- local function DoInspectSystemFunc()
 
-				-- Hide model rotation controls
-				InspectModelFrameRotateLeftButton:Hide()
-				InspectModelFrameRotateRightButton:Hide()
+			-- 	-- -- Hide model rotation controls
+			-- 	-- InspectModelFrameRotateLeftButton:Hide()
+			-- 	-- InspectModelFrameRotateRightButton:Hide()
 
-				-- Enable zooming
-				InspectModelFrame:HookScript("OnMouseWheel", Model_OnMouseWheel)
+			-- 	-- Enable zooming
+			-- 	InspectModelFrame:HookScript("OnMouseWheel", Model_OnMouseWheel)
 
-				-- Enable panning
-				InspectModelFrame:HookScript("OnMouseDown", function(self, btn)
-					if btn == "RightButton" then
-						Model_StartPanning(self)
-					end
-				end)
+			-- 	-- Enable panning
+			-- 	InspectModelFrame:HookScript("OnMouseDown", function(self, btn)
+			-- 		if btn == "RightButton" then
+			-- 			Model_StartPanning(self)
+			-- 		end
+			-- 	end)
 
-				InspectModelFrame:HookScript("OnMouseUp", function(self, btn)
-					Model_StopPanning(self)
-				end)
+			-- 	InspectModelFrame:HookScript("OnMouseUp", function(self, btn)
+			-- 		Model_StopPanning(self)
+			-- 	end)
 
-			end
+			-- end
 
-			if IsAddOnLoaded("Blizzard_InspectUI") then
-				DoInspectSystemFunc()
-			else
-				local waitFrame = CreateFrame("FRAME")
-				waitFrame:RegisterEvent("ADDON_LOADED")
-				waitFrame:SetScript("OnEvent", function(self, event, arg1)
-					if arg1 == "Blizzard_InspectUI" then
-						DoInspectSystemFunc()
-						waitFrame:UnregisterAllEvents()
-					end
-				end)
-			end
+			-- if IsAddOnLoaded("Blizzard_InspectUI") then
+			-- 	DoInspectSystemFunc()
+			-- else
+			-- 	local waitFrame = CreateFrame("FRAME")
+			-- 	waitFrame:RegisterEvent("ADDON_LOADED")
+			-- 	waitFrame:SetScript("OnEvent", function(self, event, arg1)
+			-- 		if arg1 == "Blizzard_InspectUI" then
+			-- 			DoInspectSystemFunc()
+			-- 			waitFrame:UnregisterAllEvents()
+			-- 		end
+			-- 	end)
+			-- end
 
 		end
 
@@ -10984,6 +10984,7 @@ function LeaPlusLC:FriendCheck(name)
 			local function SetAnchorControls()
 				-- Hide overlay if anchor is set to none
 				if LeaPlusLC["TooltipAnchorMenu"] == 1 then
+					LeaPlusMoveTipMsg:Hide()
 					TipDrag:Hide()
 				else
 					TipDrag:Show()
@@ -11017,6 +11018,7 @@ function LeaPlusLC:FriendCheck(name)
 
 			-- Back button handler
 			SideTip.b:SetScript("OnClick", function()
+				LeaPlusMoveTipMsg:Hide()
 				SideTip:Hide();
 				if TipDrag:IsShown() then
 					TipDrag:Hide();
@@ -11044,6 +11046,7 @@ function LeaPlusLC:FriendCheck(name)
 				SetAnchorControls()
 				LeaPlusLC:SetTipScale()
 				SideTip:Hide(); SideTip:Show();
+				LeaPlusMoveTipMsg:Hide()
 			end)
 
 			-- Show drag frame with configuration panel if anchor is not set to none
@@ -16132,7 +16135,7 @@ function LeaPlusLC:FriendCheck(name)
 
 	LeaPlusLC:CfgBtn("ModMinimapBtn", LeaPlusCB["MinimapModder"])
 	LeaPlusLC:CfgBtn("MoveTooltipButton", LeaPlusCB["TipModEnable"])
-	LeaPlusLC:CfgBtn("EnhanceDressupBtn", LeaPlusCB["EnhanceDressup"])
+	-- LeaPlusLC:CfgBtn("EnhanceDressupBtn", LeaPlusCB["EnhanceDressup"])
 	LeaPlusLC:CfgBtn("EnhanceQuestLogBtn", LeaPlusCB["EnhanceQuestLog"])
 	LeaPlusLC:CfgBtn("EnhanceTrainersBtn", LeaPlusCB["EnhanceTrainers"])
 	LeaPlusLC:CfgBtn("CooldownsButton", LeaPlusCB["ShowCooldowns"])
