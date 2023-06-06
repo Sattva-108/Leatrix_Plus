@@ -51,10 +51,18 @@
 --	L00: Leatrix Plus
 ----------------------------------------------------------------------
 
+
+
+
 	-- Initialise variables
 	LeaPlusLC["ShowErrorsFlag"] = 1
 	LeaPlusLC["NumberOfPages"] = 9
 	LeaPlusLC["RaidColors"] = RAID_CLASS_COLORS
+
+	-- for class, color in pairs(RAID_CLASS_COLORS) do
+    -- 	print(class, color.r, color.g, color.b)
+	-- end
+
 
 	-- Create event frame
 	local LpEvt = CreateFrame("FRAME")
@@ -11256,7 +11264,8 @@ function LeaPlusLC:FriendCheck(name)
 				LT["TipUnitName"], LT["TipUnitRealm"] = UnitName(LT["Unit"])
 				LT["TipIsPlayer"] = UnitIsPlayer(LT["Unit"])
 				LT["UnitLevel"] = UnitLevel(LT["Unit"])
-				LT["UnitClass"] = UnitClassBase(LT["Unit"])
+				-- LT["UnitClass"] = UnitClassBase(LT["Unit"])
+				local _,TipUnitClass = UnitClassBase(LT["Unit"])
 				LT["PlayerControl"] = UnitPlayerControlled(LT["Unit"])
 				LT["PlayerRace"] = UnitRace(LT["Unit"])
 
@@ -11286,19 +11295,36 @@ function LeaPlusLC:FriendCheck(name)
 					end
 				end
 
-				-- Determine class color
-				if LT["UnitClass"] then
-					-- Define male or female (for certain locales)
-					LT["Sex"] = UnitSex(LT["Unit"])
-					if LT["Sex"] == 2 then
-						LT["Class"] = TipMClass[LT["UnitClass"]]
-					else
-						LT["Class"] = TipFClass[LT["UnitClass"]]
-					end
-					-- Define class color
-					LT["ClassCol"] = LeaPlusLC["RaidColors"][LT["UnitClass"]]
-					LT["LpTipClassColor"] = "|cff" .. string.format("%02x%02x%02x", LT["ClassCol"].r * 255, LT["ClassCol"].g * 255, LT["ClassCol"].b * 255)
+				if TipUnitClass then					
+				  -- print("LT['UnitClass']:", LT['UnitClass'])
+
+				  LT["Sex"] = UnitSex(LT["Unit"])
+				  -- print("LT['Sex']:", LT['Sex'])
+
+				  if LT["Sex"] == 2 then
+				    LT["Class"] = TipMClass[TipUnitClass]
+				  else
+				    LT["Class"] = TipFClass[TipUnitClass]
+				  end
+				  -- print(TipUnitClass)
+
+
+
+
+				  LT["ClassCol"] = LeaPlusLC["RaidColors"][TipUnitClass]
+				  -- print(LeaPlusLC["RaidColors"])
+				  -- print(LT["ClassCol"])
+
+				  if LT["ClassCol"] then
+				    LT["LpTipClassColor"] = "|cff" .. string.format("%02x%02x%02x", LT["ClassCol"].r * 255, LT["ClassCol"].g * 255, LT["ClassCol"].b * 255)
+				  else
+				    -- print("No raid color defined for class:", TipUnitClass)
+				  end
 				end
+
+
+
+
 
 				----------------------------------------------------------------------
 				-- Name line
@@ -11388,7 +11414,9 @@ function LeaPlusLC:FriendCheck(name)
 							if LT["UnitLevel"] == -1 then
 								LT["InfoText"] = LT["InfoText"] .. ("|cffff3333" .. "??-ro" .. " " .. ttLevel .. "|cffffffff")
 							else
-								LT["LevelColor"] = GetCreatureDifficultyColor(LT["UnitLevel"])
+								-- LT["LevelColor"] = GetCreatureDifficultyColor(LT["UnitLevel"])
+								LT["LevelColor"] = GetQuestDifficultyColor(LT["UnitLevel"])
+								-- (GetQuestDifficultyColor(UnitLevel(LeaPlusTT["LpTipUnitTarget"])))
 								LT["LevelColor"] = string.format('%02x%02x%02x', LT["LevelColor"].r * 255, LT["LevelColor"].g * 255, LT["LevelColor"].b * 255)
 								LT["InfoText"] = LT["InfoText"] .. ("|cff" .. LT["LevelColor"] .. LT["UnitLevel"] .. LT["LevelLocale"] .. "|cffffffff")
 							end
@@ -11406,7 +11434,7 @@ function LeaPlusLC:FriendCheck(name)
 							if LT["UnitLevel"] == -1 then
 								LT["InfoText"] = ("|cffff3333" .. ttLevel .. " ??|cffffffff")
 							else
-								LT["LevelColor"] = GetCreatureDifficultyColor(LT["UnitLevel"])
+								LT["LevelColor"] = GetQuestDifficultyColor(LT["UnitLevel"])
 								LT["LevelColor"] = string.format('%02x%02x%02x', LT["LevelColor"].r * 255, LT["LevelColor"].g * 255, LT["LevelColor"].b * 255)
 								LT["InfoText"] = ("|cff" .. LT["LevelColor"] .. LT["LevelLocale"] .. " " .. LT["UnitLevel"] .. "|cffffffff")
 							end
@@ -11434,7 +11462,7 @@ function LeaPlusLC:FriendCheck(name)
 				----------------------------------------------------------------------
 
 				if not (LT["TipIsPlayer"]) and LT["Reaction"] < 4 and not (LT["PlayerControl"]) then
-					if UnitIsTapDenied(LT["Unit"]) then
+					if UnitIsTapped(LT["Unit"]) then
 						LT["NameText"] = "|c8888bbbb" .. LT["TipUnitName"] .. "|r"
 					else
 						LT["NameText"] = "|cffff3333" .. LT["TipUnitName"] .. "|r"
@@ -11482,7 +11510,7 @@ function LeaPlusLC:FriendCheck(name)
 
 							-- Mobs within level range
 							else
-								LT["MobColor"] = GetCreatureDifficultyColor(LT["UnitLevel"])
+								LT["MobColor"] = GetQuestDifficultyColor(LT["UnitLevel"])
 								LT["MobColor"] = string.format('%02x%02x%02x', LT["MobColor"].r * 255, LT["MobColor"].g * 255, LT["MobColor"].b * 255)
 								LT["InfoText"] = LT["InfoText"] .. "|cff" .. LT["MobColor"] .. LT["UnitLevel"] .. LT["LevelLocale"] .. "|cffffffff "
 							end
@@ -11495,7 +11523,7 @@ function LeaPlusLC:FriendCheck(name)
 
 							-- Mobs within level range
 							else
-								LT["MobColor"] = GetCreatureDifficultyColor(LT["UnitLevel"])
+								LT["MobColor"] = GetQuestDifficultyColor(LT["UnitLevel"])
 								LT["MobColor"] = string.format('%02x%02x%02x', LT["MobColor"].r * 255, LT["MobColor"].g * 255, LT["MobColor"].b * 255)
 								LT["InfoText"] = "|cff" .. LT["MobColor"] .. LT["LevelLocale"] .. " " .. LT["UnitLevel"] .. "|cffffffff "
 							end
@@ -11563,8 +11591,9 @@ function LeaPlusLC:FriendCheck(name)
 
 					-- If it's not you, but it's a player, show target in class color
 					elseif UnitIsPlayer(LT["Unit"] .. "target") then
-						LT["TargetBase"] = UnitClassBase(LT["Unit"] .. "target")
-						LT["TargetCol"] = LeaPlusLC["RaidColors"][LT["TargetBase"]]
+						-- LT["TargetBase"] = UnitClassBase(LT["Unit"] .. "target")
+						local _,TargetBase = UnitClassBase(LT["Unit"] .. "target")
+						LT["TargetCol"] = LeaPlusLC["RaidColors"][TargetBase]
 						LT["TargetCol"] = "|cff" .. string.format('%02x%02x%02x', LT["TargetCol"].r * 255, LT["TargetCol"].g * 255, LT["TargetCol"].b * 255)
 						LT["Target"] = (LT["TargetCol"] .. LT["Target"])
 
