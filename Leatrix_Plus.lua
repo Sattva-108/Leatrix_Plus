@@ -158,7 +158,7 @@
 			-- Add feedback label
 			eFrame.x = eFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 			eFrame.x:SetPoint("TOPRIGHT", x, y)
-eFrame.x:SetText("|cff00ff00Feedback Discord:|r |cffadd8e6Sattva#7238|r")
+			eFrame.x:SetText("|cff00ff00Feedback Discord:|r |cffadd8e6Sattva#7238|r")
 
 			eFrame.x:SetPoint("TOPRIGHT", eFrame, "TOPRIGHT", -12, -52)
 			hooksecurefunc(eFrame.f, "SetText", function()
@@ -7718,7 +7718,7 @@ function LeaPlusLC:FriendCheck(name)
 			local function TrainerFunc(frame)
 
 				-- Make the frame double-wide
-				UIPanelWindows["ClassTrainerFrame"] = {area = "override", pushable = 0, xoffset = -16, yoffset = 12, bottomClampOverride = 140 + 12, width = 714, height = 487, whileDead = 1}
+				UIPanelWindows["ClassTrainerFrame"] = {area = "override", pushable = 0, xoffset = 0, yoffset = 12, bottomClampOverride = 140 + 12, width = 714, height = 487, whileDead = 1}
 
 				-- Size the frame
 				_G["ClassTrainerFrame"]:SetSize(714, 487 + tall)
@@ -7764,6 +7764,27 @@ function LeaPlusLC:FriendCheck(name)
 						ClassTrainerListScrollFrame:SetHeight(336 + tall)
 						ClassTrainerDetailScrollFrame:SetHeight(336 + tall)
 					end)
+
+					--===== 3.3.5 - Hooking blizzard func to not change the Skills width if no scrollbar (was overlapping before) =====--
+
+					local function modified_ClassTrainerFrame_Update()
+					    -- Your modifications to the function here
+					    -- Set button width to 313 if scrollbar is hidden
+					    for i = 1, CLASS_TRAINER_SKILLS_DISPLAYED do
+					        local skillButton = _G["ClassTrainerSkill"..i];
+					        if ( skillButton ) then
+					            if ( not ClassTrainerListScrollFrame:IsShown() ) then
+					                skillButton:SetWidth(293);
+					            else
+					                skillButton:SetWidth(293);
+					            end
+					        end
+					    end
+					end
+
+					-- Hook the modified function to the ClassTrainerFrame_Update event
+					hooksecurefunc("ClassTrainerFrame_Update", modified_ClassTrainerFrame_Update)
+
 
 				end
 
@@ -7897,8 +7918,12 @@ function LeaPlusLC:FriendCheck(name)
 							skillsAvailable = true
 						end
 					end
-					LeaPlusCB["TrainAllButton"]:SetEnabled(skillsAvailable)
-					-- Refresh tooltip
+			    if skillsAvailable then
+			        LeaPlusCB["TrainAllButton"]:Enable()
+			    else
+			        LeaPlusCB["TrainAllButton"]:Disable()
+			    end
+								-- Refresh tooltip
 					if LeaPlusCB["TrainAllButton"]:IsMouseOver() and skillsAvailable then
 						LeaPlusCB["TrainAllButton"]:GetScript("OnEnter")(LeaPlusCB["TrainAllButton"])
 					end
