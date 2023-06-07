@@ -131,7 +131,9 @@
 			eFrame:SetSize(700, 110)
 			eFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 150)
 			eFrame:SetFrameStrata("FULLSCREEN_DIALOG")
-			eFrame:SetFrameLevel(5000)
+			-- eFrame:SetFrameLevel(5000)
+			eFrame:EnableMouse(true)
+			eFrame:EnableKeyboard()
 			eFrame:SetScript("OnMouseDown", function(self, btn)
 				if btn == "RightButton" then
 					eFrame:Hide()
@@ -140,7 +142,7 @@
 			-- Add background color
 			eFrame.t = eFrame:CreateTexture(nil, "BACKGROUND")
 			eFrame.t:SetAllPoints()
-			eFrame.t:SetVertexColor(0.05, 0.05, 0.05, 0.9)
+			eFrame.t:SetTexture(0.05, 0.05, 0.05, 0.9)
 			-- Add copy title
 			eFrame.f = eFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 			eFrame.f:SetPoint("TOPLEFT", x, y)
@@ -156,7 +158,8 @@
 			-- Add feedback label
 			eFrame.x = eFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 			eFrame.x:SetPoint("TOPRIGHT", x, y)
-			eFrame.x:SetText(L["feedback@leatrix.com"])
+eFrame.x:SetText("|cff00ff00Feedback Discord:|r |cffadd8e6Sattva#7238|r")
+
 			eFrame.x:SetPoint("TOPRIGHT", eFrame, "TOPRIGHT", -12, -52)
 			hooksecurefunc(eFrame.f, "SetText", function()
 				eFrame.f:SetWidth(676 - eFrame.x:GetStringWidth() - 26)
@@ -173,10 +176,13 @@
 			eFrame.b:SetSize(672, 24)
 			eFrame.b:SetFontObject("GameFontNormalLarge")
 			eFrame.b:SetTextColor(1.0, 1.0, 1.0, 1)
-			eFrame.b:SetBlinkSpeed(0)
+			eFrame.b:DisableDrawLayer("BACKGROUND")
+			-- eFrame.b:SetBlinkSpeed(0)
 			eFrame.b:SetHitRectInsets(99, 99, 99, 99)
 			eFrame.b:SetAutoFocus(true)
 			eFrame.b:SetAltArrowKeyMode(true)
+			eFrame.b:EnableMouse(true)
+			eFrame.b:EnableKeyboard(true)
 			-- Editbox texture
 			eFrame.t = CreateFrame("FRAME", nil, eFrame.b)
 			eFrame.t:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = false, tileSize = 16, edgeSize = 16, insets = { left = 5, right = 5, top = 5, bottom = 5 }})
@@ -185,8 +191,9 @@
 			eFrame.t:SetHeight(eFrame.b:GetHeight())
 			eFrame.t:SetBackdropColor(1.0, 1.0, 1.0, 0.3)
 			-- Handler
+			-- it doesnt work in 3.3.5
 			eFrame.b:SetScript("OnKeyDown", function(void, key)
-				if key == "C" and IsControlKeyDown() then
+				if key == "c" and IsControlKeyDown() then
 					LibCompat.After(0.1, function()
 						eFrame:Hide()
 						ActionStatus_DisplayMessage(L["Copied to clipboard."], true)
@@ -198,10 +205,13 @@
 				end
 			end)
 			-- Prevent changes
+			-- eFrame.b:SetScript("OnEscapePressed", function() eFrame:Hide() end)
+			-- eFrame.b:SetScript("OnEnterPressed", eFrame.b.HighlightText)
+			-- eFrame.b:SetScript("OnMouseDown", eFrame.b.ClearFocus)
+			-- eFrame.b:SetScript("OnMouseUp", eFrame.b.HighlightText)
+			eFrame.b:SetScript("OnChar", function() eFrame.b:SetText(word); eFrame.b:HighlightText(); end);
+			eFrame.b:SetScript("OnMouseUp", function() eFrame.b:HighlightText(); end);
 			eFrame.b:SetScript("OnEscapePressed", function() eFrame:Hide() end)
-			eFrame.b:SetScript("OnEnterPressed", eFrame.b.HighlightText)
-			eFrame.b:SetScript("OnMouseDown", eFrame.b.ClearFocus)
-			eFrame.b:SetScript("OnMouseUp", eFrame.b.HighlightText)
 			eFrame.b:SetFocus(true)
 			eFrame.b:HighlightText()
 			eFrame:Show()
@@ -7341,8 +7351,8 @@ function LeaPlusLC:FriendCheck(name)
 
 			-- Skin buttons for ElvUI
 			if LeaPlusLC.ElvUI then
-				_G.LeaPlusGlobalDressUpButtonsButton = LeaPlusCB["DressUpButonsBtn"]
-				LeaPlusLC.ElvUI:GetModule("Skins"):HandleButton(_G.LeaPlusGlobalDressUpButtonsButton)
+				-- _G.LeaPlusGlobalDressUpButtonsButton = LeaPlusCB["DressUpButonsBtn"]
+				-- LeaPlusLC.ElvUI:GetModule("Skins"):HandleButton(_G.LeaPlusGlobalDressUpButtonsButton)
 
 				_G.LeaPlusGlobalDressUpShowMeButton = LeaPlusCB["DressUpShowMeBtn"]
 				LeaPlusLC.ElvUI:GetModule("Skins"):HandleButton(_G.LeaPlusGlobalDressUpShowMeButton)
@@ -14105,6 +14115,7 @@ function LeaPlusLC:FriendCheck(name)
 		eb:SetMaxLetters(maxchars)
 		eb:SetScript("OnEscapePressed", eb.ClearFocus)
 		eb:SetScript("OnEnterPressed", eb.ClearFocus)
+		eb:DisableDrawLayer("BACKGROUND")
 
 		-- Add editbox border and backdrop
 		eb.f = CreateFrame("FRAME", nil, eb)
