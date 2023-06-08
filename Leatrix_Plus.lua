@@ -8882,22 +8882,32 @@ function LeaPlusLC:FriendCheck(name)
 
 		if LeaPlusLC["AhExtras"] == "On" then
 
-			local function AuctionFunc()
-
-				-- Set default auction duration value to saved settings or default settings
-				AuctionFrameAuctions.duration = LeaPlusDB["AHDuration"] or 3
+			local function AuctionFunc()				
 
 				-- Update duration radio button
-				AuctionsShortAuctionButton:SetChecked(false)
-				AuctionsMediumAuctionButton:SetChecked(false)
-				AuctionsLongAuctionButton:SetChecked(false)
-				if AuctionFrameAuctions.duration == 1 then
-					AuctionsShortAuctionButton:SetChecked(true)
-				elseif AuctionFrameAuctions.duration == 2 then
-					AuctionsMediumAuctionButton:SetChecked(true)
-				elseif AuctionFrameAuctions.duration == 3 then
-					AuctionsLongAuctionButton:SetChecked(true)
-				end
+
+				-- if AuctionFrameAuctions.duration == 1 then
+				-- 	AuctionsShortAuctionButton:SetChecked(true)
+				-- elseif AuctionFrameAuctions.duration == 2 then
+				-- 	AuctionsMediumAuctionButton:SetChecked(true)
+				-- elseif AuctionFrameAuctions.duration == 3 then
+				-- 	AuctionsLongAuctionButton:SetChecked(true)
+				-- end
+
+				--===== 3.3.5 Took And Modified code from Panda Leatrix :) =====--
+				hooksecurefunc("DurationDropDown_Initialize", function(self)
+					if not LeaPlusDB["AHDuration"] or type(LeaPlusDB["AHDuration"]) ~= "number" or LeaPlusDB["AHDuration"] < 1 or LeaPlusDB["AHDuration"] > 3 then 
+						LeaPlusDB["AHDuration"] = AuctionFrameAuctions.duration;
+					else
+						AuctionFrameAuctions.duration = LeaPlusDB["AHDuration"];
+					end
+				end)
+
+				hooksecurefunc("DurationDropDown_OnClick", function(self)
+					LeaPlusDB["AHDuration"] = AuctionFrameAuctions.duration;
+				end)
+
+
 
 				-- Functions
 				local function CreateAuctionCB(name, anchor, x, y, text)
@@ -8927,6 +8937,13 @@ function LeaPlusLC:FriendCheck(name)
 
 				-- Show the correct fields in the AH frame and match prices
 				local function SetupAh()
+
+					if LeaPlusLC["AhGoldOnly"] == "On" and LeaPlusLC["AhBuyoutOnly"] == "On" then
+						LeaPlusCB["AhTabConfirm"]:Show()
+					else
+						LeaPlusCB["AhTabConfirm"]:Hide()
+					end
+
 					if LeaPlusLC["AhBuyoutOnly"] == "On" then
 						-- Hide the start price
 						StartPrice:SetAlpha(0);
@@ -8940,34 +8957,51 @@ function LeaPlusLC:FriendCheck(name)
 					end
 					-- If gold only is on, set copper and silver to 99
 					if LeaPlusLC["AhGoldOnly"] == "On" then
-						StartPriceCopper:SetText("99"); StartPriceCopper:Disable();
-						StartPriceSilver:SetText("99"); StartPriceSilver:Disable();
-						BuyoutPriceCopper:SetText("99"); BuyoutPriceCopper:Disable();
-						BuyoutPriceSilver:SetText("99"); BuyoutPriceSilver:Disable();
+						StartPriceCopper:SetText("00"); StartPriceCopper:Hide();
+						StartPriceSilver:SetText("00"); StartPriceSilver:Hide();
+						BuyoutPriceCopper:SetText("00"); BuyoutPriceCopper:Hide();
+						BuyoutPriceSilver:SetText("00"); BuyoutPriceSilver:Hide();
 					else
-						StartPriceCopper:Enable();
-						StartPriceSilver:Enable();
-						BuyoutPriceCopper:Enable();
-						BuyoutPriceSilver:Enable();
+						StartPriceCopper:Show();
+						StartPriceSilver:Show();
+						BuyoutPriceCopper:Show();
+						BuyoutPriceSilver:Show();
 					end
 					-- Validate the auction (mainly for the create auction button status)
 					AuctionsFrameAuctions_ValidateAuction()
 				end
 
-				-- Create checkboxes
-				CreateAuctionCB("AhBuyoutOnly", "BOTTOMLEFT", 200, 16, "Buyout Only")
-				CreateAuctionCB("AhGoldOnly", "BOTTOMLEFT", 320, 16, "Gold Only")
+				if not LeaPlusLC.ElvUI then
+					-- Create checkboxes
+					CreateAuctionCB("AhBuyoutOnly", "BOTTOMLEFT", 200, 16, "Buyout Only")
+					CreateAuctionCB("AhGoldOnly", "BOTTOMLEFT", 320, 16, "Gold Only")
+					CreateAuctionCB("AhTabConfirm", "BOTTOMLEFT", 440, 16, "Tab Confirm")
+				end
+
+				if LeaPlusLC.ElvUI then
+					-- Create checkboxes
+					CreateAuctionCB("AhBuyoutOnly", "BOTTOMLEFT", 215, 30, "Buyout Only")
+					CreateAuctionCB("AhGoldOnly", "BOTTOMLEFT", 335, 30, "Gold Only")
+					CreateAuctionCB("AhTabConfirm", "BOTTOMLEFT", 555, 16, "Tab Creates Auction")
+				end
 
 				-- Reposition Gold Only checkbox so it does not overlap Buyout Only checkbox label
 				LeaPlusCB["AhGoldOnly"]:ClearAllPoints()
 				LeaPlusCB["AhGoldOnly"]:SetPoint("LEFT", LeaPlusCB["AhBuyoutOnly"].f, "RIGHT", 20, 0)
 
+				-- Reposition Gold Only checkbox so it does not overlap Buyout Only checkbox label
+				LeaPlusCB["AhTabConfirm"]:ClearAllPoints()
+				LeaPlusCB["AhTabConfirm"]:SetPoint("LEFT", LeaPlusCB["AhGoldOnly"].f, "RIGHT", 20, 0)
+				LeaPlusCB["AhTabConfirm"]:Hide()
+
 				-- Set click boundaries
 				LeaPlusCB["AhBuyoutOnly"]:SetHitRectInsets(0, -LeaPlusCB["AhBuyoutOnly"].f:GetStringWidth() + 6, 0, 0);
 				LeaPlusCB["AhGoldOnly"]:SetHitRectInsets(0, -LeaPlusCB["AhGoldOnly"].f:GetStringWidth() + 6, 0, 0);
+				LeaPlusCB["AhTabConfirm"]:SetHitRectInsets(0, -LeaPlusCB["AhTabConfirm"].f:GetStringWidth() + 6, 0, 0);
 
 				LeaPlusCB["AhBuyoutOnly"]:HookScript('OnClick', SetupAh);
 				LeaPlusCB["AhBuyoutOnly"]:HookScript('OnShow', SetupAh);
+				LeaPlusCB["AhTabConfirm"]:HookScript('OnShow', SetupAh);
 
 				AuctionFrameAuctions:HookScript("OnShow", SetupAh)
 				BuyoutPriceGold:HookScript("OnTextChanged", SetupAh)
@@ -8980,7 +9014,7 @@ function LeaPlusLC:FriendCheck(name)
 				-- Lock the create auction button if buyout gold box is empty (when using buyout only and gold only)
 				AuctionsCreateAuctionButton:HookScript("OnEnable", function()
 					-- Do nothing if wow token frame is showing
-					if AuctionsWowTokenAuctionFrame:IsShown() then return end
+					-- if AuctionsWowTokenAuctionFrame:IsShown() then return end
 					-- Lock the create auction button if both checkboxes are enabled and buyout gold price is empty
 					if LeaPlusLC["AhGoldOnly"] == "On" and LeaPlusLC["AhBuyoutOnly"] == "On" then
 						if BuyoutPriceGold:GetText() == "" then
@@ -9002,39 +9036,44 @@ function LeaPlusLC:FriendCheck(name)
 
 				-- Create find button
 				AuctionsItemText:Hide()
-				LeaPlusLC:CreateButton("FindAuctionButton", AuctionsStackSizeMaxButton, "Find Item", "CENTER", 0, 68, 0, 21, false, "")
-				LeaPlusCB["FindAuctionButton"]:SetParent(AuctionFrameAuctions)
+
+				if not LeaPlusLC.ElvUI then
+					LeaPlusLC:CreateButton("FindAuctionButton", AuctionsStackSizeMaxButton, "Find Item", "CENTER", -5, 73, 0, 21, false, "")
+					LeaPlusCB["FindAuctionButton"]:SetParent(AuctionFrameAuctions)
+				end
 
 				if LeaPlusLC.ElvUI then
+					LeaPlusLC:CreateButton("FindAuctionButton", AuctionsStackSizeMaxButton, "Find Item", "CENTER", 37, 75, 0, 21, false, "")
+					LeaPlusCB["FindAuctionButton"]:SetParent(AuctionFrameAuctions)
 					_G.LeaPlusGlobalFindItemButton = LeaPlusCB["FindAuctionButton"]
 					LeaPlusLC.ElvUI:GetModule("Skins"):HandleButton(_G.LeaPlusGlobalFindItemButton)
 				end
 
 				-- Show find button when the auctions tab is shown
 				AuctionFrameAuctions:HookScript("OnShow", function()
-					LeaPlusCB["FindAuctionButton"]:SetEnabled(GetAuctionSellItemInfo() and true or false)
+					LeaPlusCB["FindAuctionButton"]:SetAlpha(GetAuctionSellItemInfo() and 1 or 0)
 				end)
 
 				-- Show find button when a new item is added
 				AuctionsItemButton:HookScript("OnEvent", function(self, event)
 					if event == "NEW_AUCTION_UPDATE" then
-						LeaPlusCB["FindAuctionButton"]:SetEnabled(GetAuctionSellItemInfo() and true or false)
+						LeaPlusCB["FindAuctionButton"]:SetAlpha(GetAuctionSellItemInfo() and 1 or 0)
 					end
 				end)
 
 				LeaPlusCB["FindAuctionButton"]:SetScript("OnClick", function()
 					if GetAuctionSellItemInfo() then
-						if BrowseWowTokenResults:IsShown() then
-							-- Stop if Game Time filter is currently shown
-							AuctionFrameTab1:Click()
-							LeaPlusLC:Print("To use the Find Item button, you need to deselect the WoW Token category.")
-						else
-							-- Otherwise, search for the required item
-							local name = GetAuctionSellItemInfo()
-							BrowseName:SetText('"' .. name .. '"')
-							AuctionFrameBrowse_Search() -- Workaround for quoted search from QueryAuctionItems(name, 0, 0, 0, false, 0, false, true)
-							AuctionFrameTab1:Click()
-						end
+						-- if BrowseWowTokenResults:IsShown() then
+						-- 	-- Stop if Game Time filter is currently shown
+						-- 	AuctionFrameTab1:Click()
+						-- 	LeaPlusLC:Print("To use the Find Item button, you need to deselect the WoW Token category.")
+						-- else
+						-- Otherwise, search for the required item
+						local name = GetAuctionSellItemInfo()
+						BrowseName:SetText('' .. name .. '')
+						AuctionFrameBrowse_Search() -- Workaround for quoted search from QueryAuctionItems(name, 0, 0, 0, false, 0, false, true)
+						AuctionFrameTab1:Click()
+
 					end
 				end)
 
@@ -9045,10 +9084,10 @@ function LeaPlusLC:FriendCheck(name)
 						ClearCursor();
 						-- Set copper and silver prices to 99 if gold mode is on
 						if LeaPlusLC["AhGoldOnly"] == "On" then
-							StartPriceCopper:SetText("99")
-							StartPriceSilver:SetText("99")
-							BuyoutPriceCopper:SetText("99")
-							BuyoutPriceSilver:SetText("99")
+							StartPriceCopper:SetText("00")
+							StartPriceSilver:SetText("00")
+							BuyoutPriceCopper:SetText("00")
+							BuyoutPriceSilver:SetText("00")
 						end
 					end
 				end)
@@ -9063,7 +9102,7 @@ function LeaPlusLC:FriendCheck(name)
 				StartPriceGold:HookScript("OnTabPressed", function()
 					if not IsShiftKeyDown() then
 						if LeaPlusLC["AhBuyoutOnly"] == "Off" and LeaPlusLC["AhGoldOnly"] == "On" then
-							BuyoutPriceGold:SetFocus()
+							BuyoutPriceGold:SetFocus(true)
 						end
 					end
 				end)
@@ -9071,10 +9110,57 @@ function LeaPlusLC:FriendCheck(name)
 				BuyoutPriceGold:HookScript("OnTabPressed", function()
 					if IsShiftKeyDown() then
 						if LeaPlusLC["AhBuyoutOnly"] == "Off" and LeaPlusLC["AhGoldOnly"] == "On" then
-							StartPriceGold:SetFocus()
+							StartPriceGold:SetFocus(true)
 						end
 					end
 				end)
+
+				BuyoutPriceGold:HookScript("OnTabPressed", function()
+						if LeaPlusLC["AhTabConfirm"] == "On"  then
+							AuctionsCreateAuctionButton:Click()
+						end
+				end)
+
+				local function AddItemToAuction(button, bag, slot)
+				    if IsAltKeyDown() then
+				        local name = GetItemInfo(bag, slot)
+				        ClearCursor()
+				        PickupContainerItem(bag, slot)
+				        ClickAuctionSellItemButton()
+				        if GetAuctionSellItemInfo() == name then
+				            PickupContainerItem(bag, slot)
+				        end
+				    else
+				        button:SetAttribute("type", "macro")
+				        button:SetAttribute("macrotext", "/click AuctionsItemButton")
+				        button:Click()
+				    end
+				end
+
+				local function GetActiveAuctionTabID()
+				    local activeTab = PanelTemplates_GetSelectedTab(AuctionFrame)
+				    if activeTab == AuctionFrameTab1:GetID() then
+				        return 1
+				    elseif activeTab == AuctionFrameTab2:GetID() then
+				        return 2
+				    elseif activeTab == AuctionFrameTab3:GetID() then
+				        return 3
+				    end
+				end
+
+				hooksecurefunc("ContainerFrameItemButton_OnModifiedClick", function(self, button)
+				    local bag, slot = self:GetParent():GetID(), self:GetID()
+				    if button == "LeftButton" and not CursorHasItem() then
+				        if not AuctionFrame:IsShown() then return end
+				        local activeTabID = GetActiveAuctionTabID()
+				        if activeTabID == 1 or activeTabID == 2 or activeTabID == 3 then
+				            AddItemToAuction(self, bag, slot)
+				            AuctionFrameTab3:Click()
+				        end
+				    end
+				end)
+
+
 			end
 
 			-- Run function when Blizzard addon is loaded
@@ -9105,7 +9191,7 @@ function LeaPlusLC:FriendCheck(name)
 					-- Set the volume
 					SetCVar("Sound_MasterVolume", LeaPlusLC["LeaPlusMaxVol"]);
 					-- Format the slider text
-					LeaPlusCB["LeaPlusMaxVol"].f:SetFormattedText("%.0f", LeaPlusLC["LeaPlusMaxVol"] * 20)
+					LeaPlusCB["LeaPlusMaxVol"].f:SetFormattedText("%.0f", LeaPlusLC["LeaPlusMaxVol"] * 100)
 				end
 			end
 
@@ -13243,6 +13329,7 @@ function LeaPlusLC:FriendCheck(name)
 				LeaPlusLC:LoadVarChk("AhExtras", "Off")						-- Show auction controls
 				LeaPlusLC:LoadVarChk("AhBuyoutOnly", "Off")					-- Auction buyout only
 				LeaPlusLC:LoadVarChk("AhGoldOnly", "Off")					-- Auction gold only
+				LeaPlusLC:LoadVarChk("AhTabConfirm", "Off")					-- Auction confirm on TAB pressed
 
 				LeaPlusLC:LoadVarChk("ShowCooldowns", "Off")				-- Show cooldowns
 				LeaPlusLC:LoadVarChk("ShowCooldownID", "On")				-- Show cooldown ID in tips
@@ -13654,6 +13741,7 @@ function LeaPlusLC:FriendCheck(name)
 			LeaPlusDB["AhExtras"]				= LeaPlusLC["AhExtras"]
 			LeaPlusDB["AhBuyoutOnly"]			= LeaPlusLC["AhBuyoutOnly"]
 			LeaPlusDB["AhGoldOnly"]				= LeaPlusLC["AhGoldOnly"]
+			LeaPlusDB["AhTabConfirm"]			= LeaPlusLC["AhTabConfirm"]		
 
 			LeaPlusDB["ShowCooldowns"]			= LeaPlusLC["ShowCooldowns"]
 			LeaPlusDB["ShowCooldownID"]			= LeaPlusLC["ShowCooldownID"]

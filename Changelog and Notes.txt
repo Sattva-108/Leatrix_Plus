@@ -27,6 +27,8 @@ CombineAddonButtons 	- Make frame movable?
 
 MinimapEnhance			- Replace non-standard buttons option! Aka those that don't use LibDBIcon, or may be just set size of them ? 
 
+AhEnhance				- Need to make new description for alt click, tab confirm. And do locales.
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -111,14 +113,6 @@ Links to wowhead-wotlk in Quest Log for every quest.
 
 Improve Quest Accept conditions (aka skip welcome window and block shared aka escort quests)
 
-Add more tweaks to Auction House extras module.
-
-Square minimap
-
-Resize mail text
-
-Train All Button
-
 Copy chat links
 
 Add a number of skill requirement to the tooltip to gather herb,mine node, when mouseovering it.
@@ -135,4 +129,6 @@ Minimap - add alt+shift click to reset position of minimap.
 
 EnhanceDressup - Make clicks, wheel, to rotate, pan, zoom.
 
+Chat - Alt-Click in chat to invite.
 
+AutomateGossip - Give options to enable hearthstone/ trainer automation
