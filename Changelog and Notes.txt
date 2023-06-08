@@ -133,4 +133,6 @@ Minimap - show time by user option.
 
 Minimap - add alt+shift click to reset position of minimap.
 
+EnhanceDressup - Make clicks, wheel, to rotate, pan, zoom.
+
 

@@ -7769,7 +7769,7 @@ function LeaPlusLC:FriendCheck(name)
 
 					local function modified_ClassTrainerFrame_Update()
 					    -- Your modifications to the function here
-					    -- Set button width to 313 if scrollbar is hidden
+					    -- Set button width to 293 if scrollbar is hidden
 					    for i = 1, CLASS_TRAINER_SKILLS_DISPLAYED do
 					        local skillButton = _G["ClassTrainerSkill"..i];
 					        if ( skillButton ) then
@@ -7839,7 +7839,7 @@ function LeaPlusLC:FriendCheck(name)
 				local DetailsInset = _G["ClassTrainerFrame"]:CreateTexture(nil, "ARTWORK")
 				DetailsInset:SetSize(302, 339 + tall)
 				DetailsInset:SetPoint("TOPLEFT", _G["ClassTrainerFrame"], "TOPLEFT", 348, -72)
-				DetailsInset:SetTexture("Interface\\DressUpFrame\\DressUpBackground-NightElf1")
+				DetailsInset:SetTexture("Interface\\addons\\Leatrix_Plus\\assets\\ui-guildachievement-parchment-horizontal-desaturated.blp")
 
 				-- Move bottom button row
 				_G["ClassTrainerTrainButton"]:ClearAllPoints()
@@ -10285,7 +10285,7 @@ function LeaPlusLC:FriendCheck(name)
 		if LeaPlusLC["RecentChatWindow"] == "On" and not LeaLockList["RecentChatWindow"] then
 
 			-- Create recent chat frame
-			local editFrame = CreateFrame("ScrollFrame", nil, UIParent, "InputScrollFrameTemplate")
+			local editFrame = CreateFrame("ScrollFrame", "LeatrixEditFrame", UIParent, "Leatrix_InputScrollFrameTemplate")
 
 			-- Set frame parameters
 			editFrame:ClearAllPoints()
@@ -10297,7 +10297,6 @@ function LeaPlusLC:FriendCheck(name)
 			editFrame.CharCount:Hide()
 			editFrame:SetHitRectInsets(10, 10, 10, 10)
 
-
 			-- Set solid white color for background instead of using 8x8 texture
 			editFrame:SetBackdrop({
 			  bgFile = "Interface\\BUTTONS\\WHITE8X8", -- use 8x8 texture
@@ -10308,7 +10307,12 @@ function LeaPlusLC:FriendCheck(name)
 			  edgeSize = 16,
 			  insets = { left = 4, right = 4, top = 4, bottom = 4 }
 			})
-			editFrame:SetBackdropColor(0.00, 0.00, 0.0, 0.3) -- set transparency
+			editFrame:SetBackdropColor(0.00, 0.00, 0.0, 0.6) -- set transparency
+
+			--===== Create Scroll Frame =====--
+			local scroll = CreateFrame("ScrollFrame", "LeatrixChatScroll", editFrame, "UIPanelScrollFrameTemplate")
+			scroll:SetPoint("TOPLEFT", editFrame, 26, -36)
+			scroll:SetPoint("BOTTOMRIGHT", editFrame, "BOTTOMRIGHT", -34, 8)
 
 			-- -- Add background color
 			-- editFrame.t = editFrame:CreateTexture(nil, "BACKGROUND")
@@ -10324,7 +10328,7 @@ function LeaPlusLC:FriendCheck(name)
 
 
 			-- Create title bar
-			local titleFrame = CreateFrame("ScrollFrame", nil, editFrame, "InputScrollFrameTemplate")
+			local titleFrame = CreateFrame("ScrollFrame", nil, editFrame, "Leatrix_InputScrollFrameTemplate")
 			titleFrame:ClearAllPoints()
 			titleFrame:SetPoint("TOP", 0, 40)
 			titleFrame:SetSize(600, 36)
@@ -10352,7 +10356,7 @@ function LeaPlusLC:FriendCheck(name)
 			  edgeSize = 16,
 			  insets = { left = 4, right = 4, top = 4, bottom = 4 }
 			})
-			titleFrame:SetBackdropColor(0.00, 0.00, 0.0, 0.3) -- set transparency
+			titleFrame:SetBackdropColor(0.00, 0.00, 0.0, 0.6) -- set transparency
 
 			-- Add message count
 			titleFrame.m = titleFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
@@ -10399,7 +10403,7 @@ function LeaPlusLC:FriendCheck(name)
 			local editBox = editFrame.EditBox
 			editBox:SetAltArrowKeyMode(false)
 			editBox:SetTextInsets(10, 10, 10, 10)
-			editBox:SetWidth(editFrame:GetWidth() - 30)
+			editBox:SetWidth(editFrame:GetWidth() - 50)
 			-- editBox:SetSecurityDisablePaste()
 			editBox:SetMaxLetters(0)
 
@@ -10410,6 +10414,12 @@ function LeaPlusLC:FriendCheck(name)
 				end
 			end)
 
+			-- Define a boolean variable to keep track of the editFrame visibility
+			local isNormWindowShown = false;
+			local isTempWindowShown = false;
+
+
+
 			-- Close frame with right-click of editframe or editbox
 			local function CloseRecentChatWindow()
 				editBox:SetText("")
@@ -10418,15 +10428,15 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			editFrame:SetScript("OnMouseDown", function(self, btn)
-				if btn == "RightButton" then CloseRecentChatWindow() end
+				if btn == "RightButton" then CloseRecentChatWindow() isNormWindowShown = false; isTempWindowShown = false; end
 			end)
 
 			editBox:SetScript("OnMouseDown", function(self, btn)
-				if btn == "RightButton" then CloseRecentChatWindow() end
+				if btn == "RightButton" then CloseRecentChatWindow() isNormWindowShown = false; isTempWindowShown = false; end
 			end)
 
 			titleFrame:HookScript("OnMouseDown", function(self, btn)
-				if btn == "RightButton" then CloseRecentChatWindow() end
+				if btn == "RightButton" then CloseRecentChatWindow() isNormWindowShown = false; isTempWindowShown = false; end
 			end)
 
 			-- Disable text changes while still allowing editing controls to work
@@ -10435,14 +10445,30 @@ function LeaPlusLC:FriendCheck(name)
 
 			--- Clear highlighted text if escape key is pressed
 			editBox:HookScript("OnEscapePressed", function()
-				editBox:HighlightText(0, 0)
-				editBox:ClearFocus()
+				CloseRecentChatWindow() isNormWindowShown = false; isTempWindowShown = false;
 			end)
 
 			-- Clear highlighted text and clear focus if enter key is pressed
 			editBox:SetScript("OnEnterPressed", function()
 				editBox:HighlightText(0, 0)
 				editBox:ClearFocus()
+			end)
+
+			--===== Hide ScrollBar if window too small. =====--
+			function HideScrollBar()
+			  if editFrame:GetHeight() < 80 then
+			    scroll:Hide()
+			  else
+			    scroll:Show()
+			  end
+			end
+
+			editFrame:HookScript("OnSizeChanged", HideScrollBar)
+
+			HideScrollBar()
+
+			editFrame:SetScript("OnUpdate", function(self, elapsed)
+			  HideScrollBar()
 			end)
 
 			-- local titleBox = titleFrame.EditBox
@@ -10504,16 +10530,29 @@ function LeaPlusLC:FriendCheck(name)
 				editBox:ClearFocus()
 			end
 
+			scroll:SetScrollChild(editBox)
+
+
+
 			-- Hook normal chat frame tab clicks
 			for i = 1, 50 do
-				if _G["ChatFrame" .. i] then
-					_G["ChatFrame" .. i .. "Tab"]:HookScript("OnClick", function()
-						if IsControlKeyDown() then
-							editBox:SetFont(_G["ChatFrame" .. i]:GetFont())
-							ShowChatbox(_G["ChatFrame" .. i])
-						end
-					end)
-				end
+			    if _G["ChatFrame" .. i] then
+			        _G["ChatFrame" .. i .. "Tab"]:HookScript("OnClick", function()
+			            if IsControlKeyDown() then
+			                editBox:SetFont(_G["ChatFrame" .. i]:GetFont())
+			                ShowChatbox(_G["ChatFrame" .. i])
+			                
+			                -- toggle editFrame visibility based on the current state
+			                if isNormWindowShown then
+			                    editFrame:Hide()
+			                    isNormWindowShown = false
+			                else
+			                    editFrame:Show()
+			                    isNormWindowShown = true
+			                end
+			            end
+			        end)
+			    end
 			end
 
 			-- Hook temporary chat frame tab clicks
@@ -10524,6 +10563,15 @@ function LeaPlusLC:FriendCheck(name)
 						if IsControlKeyDown() then
 							editBox:SetFont(_G[cf]:GetFont())
 							ShowChatbox(_G[cf])
+
+			                -- toggle editFrame visibility based on the current state
+			                if isTempWindowShown then
+			                    editFrame:Hide()
+			                    isTempWindowShown = false
+			                else
+			                    editFrame:Show()
+			                    isTempWindowShown = true
+			                end
 						end
 					end)
 				end
