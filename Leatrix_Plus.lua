@@ -1379,7 +1379,7 @@ function LeaPlusLC:FriendCheck(name)
 				aEB:SetBlinkSpeed(0)
 				aEB:SetJustifyH("RIGHT")
 				aEB:SetAutoFocus(false)
-				aEB:EnableKeyboard(false)
+				aEB:EnableKeyboard(true)
 				aEB:SetHitRectInsets(90, 0, 0, 0)
 				aEB:SetScript("OnKeyDown", function() end)
 				aEB:SetScript("OnMouseUp", function()
@@ -1470,7 +1470,7 @@ function LeaPlusLC:FriendCheck(name)
 			mEB:SetFontObject("GameFontNormal")
 			mEB:SetBlinkSpeed(0)
 			mEB:SetAutoFocus(false)
-			mEB:EnableKeyboard(false)
+			mEB:EnableKeyboard(true)
 			mEB:SetHitRectInsets(0, 90, 0, 0)
 			mEB:SetScript("OnKeyDown", function() end)
 			mEB:SetScript("OnMouseUp", function()
@@ -1494,7 +1494,7 @@ function LeaPlusLC:FriendCheck(name)
 			-- Function to set editbox value
 			local function SetQuestInBox(questListID)
 
-				local questTitle, void, void, isHeader, void, void, void, questID = GetQuestLogTitle(questListID)
+				local questTitle, void, void, void, isHeader, void, void, void, questID = GetQuestLogTitle(questListID)
 				if questID and not isHeader then
 
 					-- Hide editbox if quest ID is invalid

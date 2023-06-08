@@ -27,7 +27,7 @@ CombineAddonButtons 	- Make frame movable?
 
 MinimapEnhance			- Replace non-standard buttons option! Aka those that don't use LibDBIcon, or may be just set size of them ? 
 
-AhEnhance				- Need to make new description for alt click, tab confirm. And do locales.
+AhExtras				- Need to make new description for alt click, tab confirm. And do locales.
 
 
 --------------------------------------------------------------------------------
