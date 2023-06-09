@@ -594,7 +594,7 @@ function LeaPlusLC:FriendCheck(name)
 		-- LeaPlusLC:LockOption("EnhanceDressup", "EnhanceDressupBtn", true)			-- Enhance dressup
 		LeaPlusLC:LockOption("EnhanceQuestLog", "EnhanceQuestLogBtn", true)			-- Enhance quest log
 		LeaPlusLC:LockOption("EnhanceTrainers", "EnhanceTrainersBtn", true)			-- Enhance trainers
-		LeaPlusLC:LockOption("ShowCooldowns", "CooldownsButton", true)				-- Show cooldowns
+		-- LeaPlusLC:LockOption("ShowCooldowns", "CooldownsButton", true)				-- Show cooldowns
 		LeaPlusLC:LockOption("ShowPlayerChain", "ModPlayerChain", true)				-- Show player chain
 		LeaPlusLC:LockOption("ShowWowheadLinks", "ShowWowheadLinksBtn", true)		-- Show Wowhead links
 		LeaPlusLC:LockOption("ShowFlightTimes", "ShowFlightTimesBtn", true)			-- Show flight times
@@ -662,7 +662,7 @@ function LeaPlusLC:FriendCheck(name)
 		or	(LeaPlusLC["EnhanceTrainers"]		~= LeaPlusDB["EnhanceTrainers"])		-- Enhance trainers
 		or	(LeaPlusLC["ShowVolume"]			~= LeaPlusDB["ShowVolume"])				-- Show volume slider
 		or	(LeaPlusLC["AhExtras"]				~= LeaPlusDB["AhExtras"])				-- Show auction controls
-		or	(LeaPlusLC["ShowCooldowns"]			~= LeaPlusDB["ShowCooldowns"])			-- Show cooldowns
+		-- or	(LeaPlusLC["ShowCooldowns"]			~= LeaPlusDB["ShowCooldowns"])			-- Show cooldowns
 		or	(LeaPlusLC["DurabilityStatus"]		~= LeaPlusDB["DurabilityStatus"])		-- Show durability status
 		or	(LeaPlusLC["ShowVanityControls"]	~= LeaPlusDB["ShowVanityControls"])		-- Show vanity controls
 		or	(LeaPlusLC["ShowBagSearchBox"]		~= LeaPlusDB["ShowBagSearchBox"])		-- Show bag search box
@@ -10669,342 +10669,346 @@ function LeaPlusLC:FriendCheck(name)
 		-- Show cooldowns
 		----------------------------------------------------------------------
 
-		if LeaPlusLC["ShowCooldowns"] == "On" then
+		-- if LeaPlusLC["ShowCooldowns"] == "On" then
 
-			-- Create main table structure in saved variables if it doesn't exist
-			if LeaPlusDB["Cooldowns"] == nil then
-				LeaPlusDB["Cooldowns"] = {}
-			end
+		-- 	-- Create main table structure in saved variables if it doesn't exist
+		-- 	if LeaPlusDB["Cooldowns"] == nil then
+		-- 		LeaPlusDB["Cooldowns"] = {}
+		-- 	end
 
-			-- Create class tables if they don't exist
-			local classList = {"WARRIOR", "PALADIN", "HUNTER", "SHAMAN", "ROGUE", "DRUID", "MAGE", "WARLOCK", "PRIEST", "DEATHKNIGHT"}
-			for index = 1, #classList do
-				if LeaPlusDB["Cooldowns"][classList[index]] == nil then
-					LeaPlusDB["Cooldowns"][classList[index]] = {}
-				end
-			end
+		-- 	-- Create class tables if they don't exist
+		-- 	local classList = {"WARRIOR", "PALADIN", "HUNTER", "SHAMAN", "ROGUE", "DRUID", "MAGE", "WARLOCK", "PRIEST", "DEATHKNIGHT"}
+		-- 	for index = 1, #classList do
+		-- 		if LeaPlusDB["Cooldowns"][classList[index]] == nil then
+		-- 			LeaPlusDB["Cooldowns"][classList[index]] = {}
+		-- 		end
+		-- 	end
 
-			-- Get current class
-			local PlayerClass = select(2, UnitClass("player"))
-			local activeSpec = 1 -- Fixed to 1 for Classic
+		-- 	-- Get current class
+		-- 	local PlayerClass = select(2, UnitClass("player"))
+		-- 	local activeSpec = 1 -- Fixed to 1 for Classic
 
-			-- Create local tables to store cooldown frames and editboxes
-			local icon = {} -- Used to store cooldown frames
-			local SpellEB = {} -- Used to store editbox values
-			local iCount = 5 -- Number of cooldowns
+		-- 	-- Create local tables to store cooldown frames and editboxes
+		-- 	local icon = {} -- Used to store cooldown frames
+		-- 	local SpellEB = {} -- Used to store editbox values
+		-- 	local iCount = 5 -- Number of cooldowns
 
-			-- Create cooldown frames
-			for i = 1, iCount do
+		-- 	-- Create cooldown frames
+		-- 	for i = 1, iCount do
 
-				-- Create cooldown frame
-				icon[i] = CreateFrame("Frame", nil, UIParent)
-				icon[i]:SetFrameStrata("BACKGROUND")
-				icon[i]:SetWidth(20)
-				icon[i]:SetHeight(20)
+		-- 		-- Create cooldown frame
+		-- 		icon[i] = CreateFrame("Frame", nil, UIParent)
+		-- 		icon[i]:SetFrameStrata("BACKGROUND")
+		-- 		icon[i]:SetWidth(20)
+		-- 		icon[i]:SetHeight(20)
 
-				-- Create cooldown icon
-				icon[i].c = CreateFrame("Cooldown", nil, icon[i], "CooldownFrameTemplate")
-				icon[i].c:SetAllPoints()
-				icon[i].c:SetReverse(true)
+		-- 		-- Create cooldown icon
+		-- 		icon[i].c = CreateFrame("Cooldown", nil, icon[i], "CooldownFrameTemplate")
+		-- 		icon[i].c:SetAllPoints()
+		-- 		-- icon[i].c:SetReverse(true)
 
-				-- Create blank texture (will be assigned a cooldown texture later)
-				icon[i].t = icon[i]:CreateTexture(nil,"BACKGROUND")
-				icon[i].t:SetAllPoints()
+		-- 		-- Create blank texture (will be assigned a cooldown texture later)
+		-- 		icon[i].t = icon[i]:CreateTexture(nil,"BACKGROUND")
+		-- 		icon[i].t:SetAllPoints()
 
-				-- Show icon above target frame and set initial scale
-				icon[i]:ClearAllPoints()
-				icon[i]:SetPoint("TOPLEFT", TargetFrame, "TOPLEFT", 6 + (22 * (i - 1)), 5)
-				icon[i]:SetScale(TargetFrame:GetScale())
+		-- 		-- Show icon above target frame and set initial scale
+		-- 		icon[i]:ClearAllPoints()
+		-- 		icon[i]:SetPoint("TOPLEFT", TargetFrame, "TOPLEFT", 6 + (22 * (i - 1)), 5)
+		-- 		icon[i]:SetScale(TargetFrame:GetScale())
 
-				-- Show tooltip
-				icon[i]:SetScript("OnEnter", function(self)
-					GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 15, -25)
-					GameTooltip:SetText(GetSpellInfo(LeaPlusCB["Spell" .. i]:GetText()))
-				end)
+		-- 		-- Show tooltip
+		-- 		icon[i]:SetScript("OnEnter", function(self)
+		-- 			GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 15, -25)
+		-- 			GameTooltip:SetText(GetSpellInfo(LeaPlusCB["Spell" .. i]:GetText()))
+		-- 		end)
 
-				-- Hide tooltip
-				icon[i]:SetScript("OnLeave", GameTooltip_Hide)
+		-- 		-- Hide tooltip
+		-- 		icon[i]:SetScript("OnLeave", GameTooltip_Hide)
 
-			end
+		-- 	end
 
-			-- Change cooldown icon scale when player frame scale changes
-			PlayerFrame:HookScript("OnSizeChanged", function()
-				if LeaPlusLC["CooldownsOnPlayer"] == "On" then
-					for i = 1, iCount do
-						icon[i]:SetScale(PlayerFrame:GetScale())
-					end
-				end
-			end)
+		-- 	-- Change cooldown icon scale when player frame scale changes
+		-- 	PlayerFrame:HookScript("OnSizeChanged", function()
+		-- 		if LeaPlusLC["CooldownsOnPlayer"] == "On" then
+		-- 			for i = 1, iCount do
+		-- 				icon[i]:SetScale(PlayerFrame:GetScale())
+		-- 			end
+		-- 		end
+		-- 	end)
 
-			-- Change cooldown icon scale when target frame scale changes
-			TargetFrame:HookScript("OnSizeChanged", function()
-				if LeaPlusLC["CooldownsOnPlayer"] == "Off" then
-					for i = 1, iCount do
-						icon[i]:SetScale(TargetFrame:GetScale())
-					end
-				end
-			end)
+		-- 	-- Change cooldown icon scale when target frame scale changes
+		-- 	TargetFrame:HookScript("OnSizeChanged", function()
+		-- 		if LeaPlusLC["CooldownsOnPlayer"] == "Off" then
+		-- 			for i = 1, iCount do
+		-- 				icon[i]:SetScale(TargetFrame:GetScale())
+		-- 			end
+		-- 		end
+		-- 	end)
 
-			-- Function to show cooldown textures in the cooldown frames (run when icons are loaded or changed)
-			local function ShowIcon(i, id, owner)
+		-- 	-- Function to show cooldown textures in the cooldown frames (run when icons are loaded or changed)
+		-- 	local function ShowIcon(i, id, owner)
 
-				local void
+		-- 		local void
 
-				-- Get spell information
-				local spell, void, path = GetSpellInfo(id)
-				if spell and path then
+		-- 		-- Get spell information
+		-- 		local spell, void, path = GetSpellInfo(id)
+		-- 		print(path)
+		-- 		print(spell)
+		-- 		if spell and path then
 
-					-- Set icon texture to the spell texture
-					icon[i].t:SetTexture(path)
+		-- 			-- Set icon texture to the spell texture
+		-- 			icon[i].t:SetTexture(path)
 
-					-- Set top level and raise frame strata (ensures tooltips show properly)
-					icon[i]:SetToplevel(true)
-					icon[i]:SetFrameStrata("LOW")
+		-- 			-- Set top level and raise frame strata (ensures tooltips show properly)
+		-- 			icon[i]:SetToplevel(true)
+		-- 			icon[i]:SetFrameStrata("LOW")
 
-					-- Handle events
-					icon[i]:RegisterUnitEvent("UNIT_AURA", owner)
-					icon[i]:RegisterUnitEvent("UNIT_PET", "player")
-					icon[i]:SetScript("OnEvent", function(self, event, arg1)
+		-- 			-- Handle events
+		-- 			-- 3.3.5 FIXME
+		-- 			icon[i]:RegisterUnitEvent("UNIT_AURA", owner)
+		-- 			icon[i]:RegisterUnitEvent("UNIT_PET", "player")
+		-- 			icon[i]:SetScript("OnEvent", function(self, event, arg1)
 
-						-- If pet was dismissed (or otherwise disappears such as when flying), hide pet cooldowns
-						if event == "UNIT_PET" then
-							if not UnitExists("pet") then
-								if LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"] then
-									icon[i]:Hide()
-								end
-							end
+		-- 				-- If pet was dismissed (or otherwise disappears such as when flying), hide pet cooldowns
+		-- 				if event == "UNIT_PET" then
+		-- 					if not UnitExists("pet") then
+		-- 						if LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"] then
+		-- 							icon[i]:Hide()
+		-- 						end
+		-- 					end
 
-						-- Ensure cooldown belongs to the owner we are watching (player or pet)
-						elseif arg1 == owner then
+		-- 				-- Ensure cooldown belongs to the owner we are watching (player or pet)
+		-- 				elseif arg1 == owner then
 
-							-- Hide the cooldown frame (required for cooldowns to disappear after the duration)
-							icon[i]:Hide()
+		-- 					-- Hide the cooldown frame (required for cooldowns to disappear after the duration)
+		-- 					icon[i]:Hide()
 
-							-- If buff matches cooldown we want, start the cooldown
-							for q = 1, 40 do
-								local void, void, void, void, length, expire, void, void, void, spellID = UnitBuff(owner, q)
-								if spellID and id == spellID then
-									icon[i]:Show()
-									local start = expire - length
-									CooldownFrame_Set(icon[i].c, start, length, 1)
-								end
-							end
+		-- 					-- If buff matches cooldown we want, start the cooldown
+		-- 					for q = 1, 40 do
+		-- 						local void, void, void, void, void, length, expire, void, void, void, spellID = UnitBuff(owner, q)
+		-- 						if spellID and id == spellID then
+		-- 							icon[i]:Show()
+		-- 							local start = expire - length
+		-- 							CooldownFrame_SetTimer(icon[i].c, start, length, 1)
+		-- 						end
+		-- 					end
 
-						end
-					end)
+		-- 				end
+		-- 			end)
 
-				else
+		-- 		else
 
-					-- Spell does not exist so stop watching it
-					icon[i]:SetScript("OnEvent", nil)
-					icon[i]:Hide()
+		-- 			-- Spell does not exist so stop watching it
+		-- 			icon[i]:SetScript("OnEvent", nil)
+		-- 			icon[i]:Hide()
 
-				end
+		-- 		end
 
-			end
+		-- 	end
 
-			-- Create configuration panel
-			local CooldownPanel = LeaPlusLC:CreatePanel("Show cooldowns", "CooldownPanel")
+		-- 	-- Create configuration panel
+		-- 	local CooldownPanel = LeaPlusLC:CreatePanel("Show cooldowns", "CooldownPanel")
 
-			-- Function to refresh the editbox tooltip with the spell name
-			local function RefSpellTip(self,elapsed)
-				local spellinfo, void, icon = GetSpellInfo(self:GetText())
-				if spellinfo and spellinfo ~= "" and icon and icon ~= "" then
-					GameTooltip:SetOwner(self, "ANCHOR_NONE")
-					GameTooltip:ClearAllPoints()
-					GameTooltip:SetPoint("RIGHT", self, "LEFT", -10, 0)
-					GameTooltip:SetText("|T" .. icon .. ":0|t " .. spellinfo, nil, nil, nil, nil, true)
-				else
-					GameTooltip:Hide()
-				end
-			end
+		-- 	-- Function to refresh the editbox tooltip with the spell name
+		-- 	local function RefSpellTip(self,elapsed)
+		-- 		local spellinfo, void, icon = GetSpellInfo(self:GetText())
+		-- 		if spellinfo and spellinfo ~= "" and icon and icon ~= "" then
+		-- 			GameTooltip:SetOwner(self, "ANCHOR_NONE")
+		-- 			GameTooltip:ClearAllPoints()
+		-- 			GameTooltip:SetPoint("RIGHT", self, "LEFT", -10, 0)
+		-- 			GameTooltip:SetText("|T" .. icon .. ":0|t " .. spellinfo, nil, nil, nil, nil, true)
+		-- 		else
+		-- 			GameTooltip:Hide()
+		-- 		end
+		-- 	end
 
-			-- Function to create spell ID editboxes and pet checkboxes
-			local function MakeSpellEB(num, x, y, tab, shifttab)
+		-- 	-- Function to create spell ID editboxes and pet checkboxes
+		-- 	local function MakeSpellEB(num, x, y, tab, shifttab)
 
-				-- Create editbox for spell ID
-                SpellEB[num] = LeaPlusLC:CreateEditBox("Spell" .. num, CooldownPanel, 70, 6, "TOPLEFT", x, y - 20, "Spell" .. tab, "Spell" .. shifttab)
-				SpellEB[num]:SetNumeric(true)
+		-- 		-- Create editbox for spell ID
+        --         SpellEB[num] = LeaPlusLC:CreateEditBox("Spell" .. num, CooldownPanel, 70, 6, "TOPLEFT", x, y - 20, "Spell" .. tab, "Spell" .. shifttab)
+		-- 		SpellEB[num]:SetNumeric(true)
 
-				-- Set initial value (for current spec)
-				SpellEB[num]:SetText(LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. num .. "Idn"] or "")
+		-- 		-- Set initial value (for current spec)
+		-- 		SpellEB[num]:SetText(LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. num .. "Idn"] or "")
 
-				-- Refresh tooltip when mouse is hovering over the editbox
-				SpellEB[num]:SetScript("OnEnter", function()
-					SpellEB[num]:SetScript("OnUpdate", RefSpellTip)
-				end)
-				SpellEB[num]:SetScript("OnLeave", function()
-					SpellEB[num]:SetScript("OnUpdate", nil)
-					GameTooltip:Hide()
-				end)
+		-- 		-- Refresh tooltip when mouse is hovering over the editbox
+		-- 		SpellEB[num]:SetScript("OnEnter", function()
+		-- 			SpellEB[num]:SetScript("OnUpdate", RefSpellTip)
+		-- 		end)
+		-- 		SpellEB[num]:SetScript("OnLeave", function()
+		-- 			SpellEB[num]:SetScript("OnUpdate", nil)
+		-- 			GameTooltip:Hide()
+		-- 		end)
 
-				-- Create checkbox for pet cooldown
-				LeaPlusLC:MakeCB(CooldownPanel, "Spell" .. num .."Pet", "", 462, y - 20, false, "")
-				LeaPlusCB["Spell" .. num .."Pet"]:SetHitRectInsets(0, 0, 0, 0)
+		-- 		-- Create checkbox for pet cooldown
+		-- 		LeaPlusLC:MakeCB(CooldownPanel, "Spell" .. num .."Pet", "", 462, y - 20, false, "")
+		-- 		LeaPlusCB["Spell" .. num .."Pet"]:SetHitRectInsets(0, 0, 0, 0)
 
-			end
+		-- 	end
 
-			-- Add titles
-			LeaPlusLC:MakeTx(CooldownPanel, "Spell ID", 384, -92)
-			LeaPlusLC:MakeTx(CooldownPanel, "Pet", 462, -92)
+		-- 	-- Add titles
+		-- 	LeaPlusLC:MakeTx(CooldownPanel, "Spell ID", 384, -92)
+		-- 	LeaPlusLC:MakeTx(CooldownPanel, "Pet", 462, -92)
 
-			-- Add editboxes and checkboxes
-			MakeSpellEB(1, 386, -92, "2", "5")
-			MakeSpellEB(2, 386, -122, "3", "1")
-			MakeSpellEB(3, 386, -152, "4", "2")
-			MakeSpellEB(4, 386, -182, "5", "3")
-			MakeSpellEB(5, 386, -212, "1", "4")
+		-- 	-- Add editboxes and checkboxes
+		-- 	MakeSpellEB(1, 386, -92, "2", "5")
+		-- 	MakeSpellEB(2, 386, -122, "3", "1")
+		-- 	MakeSpellEB(3, 386, -152, "4", "2")
+		-- 	MakeSpellEB(4, 386, -182, "5", "3")
+		-- 	MakeSpellEB(5, 386, -212, "1", "4")
 
-			-- Add checkboxes
-			LeaPlusLC:MakeTx(CooldownPanel, "Settings", 16, -72)
-			LeaPlusLC:MakeCB(CooldownPanel, "ShowCooldownID", "Show the spell ID in buff icon tooltips", 16, -92, false, "If checked, spell IDs will be shown in buff icon tooltips located in the buff frame and under the target frame.");
-			LeaPlusLC:MakeCB(CooldownPanel, "NoCooldownDuration", "Hide cooldown duration numbers (if enabled)", 16, -112, false, "If checked, cooldown duration numbers will not be shown over the cooldowns.|n|nIf unchecked, cooldown duration numbers will be shown over the cooldowns if they are enabled in the game options panel ('ActionBars' menu).")
-			LeaPlusLC:MakeCB(CooldownPanel, "CooldownsOnPlayer", "Show cooldowns above the player frame", 16, -132, false, "If checked, cooldown icons will be shown above the player frame instead of the target frame.|n|nIf unchecked, cooldown icons will be shown above the target frame.")
+		-- 	-- Add checkboxes
+		-- 	LeaPlusLC:MakeTx(CooldownPanel, "Settings", 16, -72)
+		-- 	LeaPlusLC:MakeCB(CooldownPanel, "ShowCooldownID", "Show the spell ID in buff icon tooltips", 16, -92, false, "If checked, spell IDs will be shown in buff icon tooltips located in the buff frame and under the target frame.");
+		-- 	LeaPlusLC:MakeCB(CooldownPanel, "NoCooldownDuration", "Hide cooldown duration numbers (if enabled)", 16, -112, false, "If checked, cooldown duration numbers will not be shown over the cooldowns.|n|nIf unchecked, cooldown duration numbers will be shown over the cooldowns if they are enabled in the game options panel ('ActionBars' menu).")
+		-- 	LeaPlusLC:MakeCB(CooldownPanel, "CooldownsOnPlayer", "Show cooldowns above the player frame", 16, -132, false, "If checked, cooldown icons will be shown above the player frame instead of the target frame.|n|nIf unchecked, cooldown icons will be shown above the target frame.")
 
-			-- Function to save the panel control settings and refresh the cooldown icons
-			local function SavePanelControls()
-				for i = 1, iCount do
+		-- 	-- Function to save the panel control settings and refresh the cooldown icons
+		-- 	local function SavePanelControls()
+		-- 		for i = 1, iCount do
 
-					-- Refresh the cooldown texture
-					icon[i].c:SetCooldown(0,0)
+		-- 			-- -- Refresh the cooldown texture
+		-- 			-- icon[i].c:SetCooldown(0,0)
 
-					-- Show icons above target or player frame
-					icon[i]:ClearAllPoints()
-					if LeaPlusLC["CooldownsOnPlayer"] == "On" then
-						icon[i]:SetPoint("TOPLEFT", PlayerFrame, "TOPLEFT", 116 + (22 * (i - 1)), 5)
-						icon[i]:SetScale(PlayerFrame:GetScale())
-					else
-						icon[i]:SetPoint("TOPLEFT", TargetFrame, "TOPLEFT", 6 + (22 * (i - 1)), 5)
-						icon[i]:SetScale(TargetFrame:GetScale())
-					end
+		-- 			-- Show icons above target or player frame
+		-- 			icon[i]:ClearAllPoints()
+		-- 			if LeaPlusLC["CooldownsOnPlayer"] == "On" then
+		-- 				icon[i]:SetPoint("TOPLEFT", PlayerFrame, "TOPLEFT", 116 + (22 * (i - 1)), 5)
+		-- 				icon[i]:SetScale(PlayerFrame:GetScale())
+		-- 			else
+		-- 				icon[i]:SetPoint("TOPLEFT", TargetFrame, "TOPLEFT", 6 + (22 * (i - 1)), 5)
+		-- 				icon[i]:SetScale(TargetFrame:GetScale())
+		-- 			end
 
-					-- Save control states to globals
-					LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Idn"] = SpellEB[i]:GetText()
-					LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"] = LeaPlusCB["Spell" .. i .."Pet"]:GetChecked()
+		-- 			-- Save control states to globals
+		-- 			LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Idn"] = SpellEB[i]:GetText()
+		-- 			LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"] = LeaPlusCB["Spell" .. i .."Pet"]:GetChecked()
 
-					-- Set cooldowns
-					if LeaPlusCB["Spell" .. i .."Pet"]:GetChecked() then
-						ShowIcon(i, tonumber(SpellEB[i]:GetText()), "pet")
-					else
-						ShowIcon(i, tonumber(SpellEB[i]:GetText()), "player")
-					end
+		-- 			-- Set cooldowns
+		-- 			if LeaPlusCB["Spell" .. i .."Pet"]:GetChecked() then
+		-- 				ShowIcon(i, tonumber(SpellEB[i]:GetText()), "pet")
+		-- 			else
+		-- 				ShowIcon(i, tonumber(SpellEB[i]:GetText()), "player")
+		-- 			end
 
-					-- Show or hide cooldown duration
-					if LeaPlusLC["NoCooldownDuration"] == "On" then
-						icon[i].c:SetHideCountdownNumbers(true)
-					else
-						icon[i].c:SetHideCountdownNumbers(false)
-					end
+		-- 			-- -- Show or hide cooldown duration
+		-- 			-- if LeaPlusLC["NoCooldownDuration"] == "On" then
+		-- 			-- 	icon[i].c:SetHideCountdownNumbers(true)
+		-- 			-- else
+		-- 			-- 	icon[i].c:SetHideCountdownNumbers(false)
+		-- 			-- end
 
-					-- Show or hide cooldown icons depending on current buffs
-					local newowner
-					local newspell = tonumber(SpellEB[i]:GetText())
+		-- 			-- Show or hide cooldown icons depending on current buffs
+		-- 			local newowner
+		-- 			local newspell = tonumber(SpellEB[i]:GetText())
+		-- 			print(newspell)
 
-					if newspell then
-						if LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"] then
-							newowner = "pet"
-						else
-							newowner = "player"
-						end
-						-- Hide cooldown icon
-						icon[i]:Hide()
+		-- 			if newspell then
+		-- 				if LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"] then
+		-- 					newowner = "pet"
+		-- 				else
+		-- 					newowner = "player"
+		-- 				end
+		-- 				-- Hide cooldown icon
+		-- 				icon[i]:Hide()
 
-						-- If buff matches spell we want, show cooldown icon
-						for q = 1, 40 do
-							local void, void, void, void, length, expire, void, void, void, spellID = UnitBuff(newowner, q)
-							if spellID and newspell == spellID then
-								icon[i]:Show()
-								-- Set the cooldown to the buff cooldown
-								CooldownFrame_Set(icon[i].c, expire - length, length, 1)
-							end
-						end
-					end
+		-- 				-- If buff matches spell we want, show cooldown icon
+		-- 				for q = 1, 40 do
+		-- 					local void, void, void, void, void, length, expire, void, void, void, spellID = UnitBuff(newowner, q)
+		-- 					if spellID and newspell == spellID then
+		-- 						icon[i]:Show()
+		-- 						-- Set the cooldown to the buff cooldown
+		-- 						CooldownFrame_SetTimer(icon[i].c, expire - length, length, 1)
+		-- 					end
+		-- 				end
+		-- 			end
 
-				end
+		-- 		end
 
-			end
+		-- 	end
 
-			-- Update cooldown icons when checkboxes are clicked
-			LeaPlusCB["NoCooldownDuration"]:HookScript("OnClick", SavePanelControls)
-			LeaPlusCB["CooldownsOnPlayer"]:HookScript("OnClick", SavePanelControls)
+		-- 	-- Update cooldown icons when checkboxes are clicked
+		-- 	LeaPlusCB["NoCooldownDuration"]:HookScript("OnClick", SavePanelControls)
+		-- 	LeaPlusCB["CooldownsOnPlayer"]:HookScript("OnClick", SavePanelControls)
 
-			-- Help button tooltip
-			CooldownPanel.h.tiptext = L["Enter the spell IDs for the cooldown icons that you want to see.|n|nIf a cooldown icon normally appears under the pet frame, check the pet checkbox.|n|nCooldown icons are saved to your class."]
+		-- 	-- Help button tooltip
+		-- 	CooldownPanel.h.tiptext = L["Enter the spell IDs for the cooldown icons that you want to see.|n|nIf a cooldown icon normally appears under the pet frame, check the pet checkbox.|n|nCooldown icons are saved to your class."]
 
-			-- Back button handler
-			CooldownPanel.b:SetScript("OnClick", function()
-				CooldownPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page5"]:Show()
-				return
-			end)
+		-- 	-- Back button handler
+		-- 	CooldownPanel.b:SetScript("OnClick", function()
+		-- 		CooldownPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page5"]:Show()
+		-- 		return
+		-- 	end)
 
-			-- Reset button handler
-			CooldownPanel.r:SetScript("OnClick", function()
-				-- Reset the checkboxes
-				LeaPlusLC["ShowCooldownID"] = "On"
-				LeaPlusLC["NoCooldownDuration"] = "On"
-				LeaPlusLC["CooldownsOnPlayer"] = "Off"
-				for i = 1, iCount do
-					-- Reset the panel controls
-					SpellEB[i]:SetText("");
-					LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"] = false
-					-- Hide cooldowns and clear scripts
-					icon[i]:Hide()
-					icon[i]:SetScript("OnEvent", nil)
-				end
-				CooldownPanel:Hide(); CooldownPanel:Show()
-			end)
+		-- 	-- Reset button handler
+		-- 	CooldownPanel.r:SetScript("OnClick", function()
+		-- 		-- Reset the checkboxes
+		-- 		LeaPlusLC["ShowCooldownID"] = "On"
+		-- 		LeaPlusLC["NoCooldownDuration"] = "On"
+		-- 		LeaPlusLC["CooldownsOnPlayer"] = "Off"
+		-- 		for i = 1, iCount do
+		-- 			-- Reset the panel controls
+		-- 			SpellEB[i]:SetText("");
+		-- 			LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"] = false
+		-- 			-- Hide cooldowns and clear scripts
+		-- 			icon[i]:Hide()
+		-- 			icon[i]:SetScript("OnEvent", nil)
+		-- 		end
+		-- 		CooldownPanel:Hide(); CooldownPanel:Show()
+		-- 	end)
 
-			-- Save settings when changed
-			for i = 1, iCount do
-				-- Set initial checkbox states
-				LeaPlusCB["Spell" .. i .."Pet"]:SetChecked(LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"])
-				-- Set checkbox states when shown
-				LeaPlusCB["Spell" .. i .."Pet"]:SetScript("OnShow", function()
-					LeaPlusCB["Spell" .. i .."Pet"]:SetChecked(LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"])
-				end)
-				-- Set states when changed
-				SpellEB[i]:SetScript("OnTextChanged", SavePanelControls)
-				LeaPlusCB["Spell" .. i .."Pet"]:SetScript("OnClick", SavePanelControls)
-			end
+		-- 	-- Save settings when changed
+		-- 	for i = 1, iCount do
+		-- 		-- Set initial checkbox states
+		-- 		LeaPlusCB["Spell" .. i .."Pet"]:SetChecked(LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"])
+		-- 		-- Set checkbox states when shown
+		-- 		LeaPlusCB["Spell" .. i .."Pet"]:SetScript("OnShow", function()
+		-- 			LeaPlusCB["Spell" .. i .."Pet"]:SetChecked(LeaPlusDB["Cooldowns"][PlayerClass]["S" .. activeSpec .. "R" .. i .. "Pet"])
+		-- 		end)
+		-- 		-- Set states when changed
+		-- 		SpellEB[i]:SetScript("OnTextChanged", SavePanelControls)
+		-- 		LeaPlusCB["Spell" .. i .."Pet"]:SetScript("OnClick", SavePanelControls)
+		-- 	end
 
-			-- Show cooldowns on startup
-			SavePanelControls()
+		-- 	-- Show cooldowns on startup
+		-- 	SavePanelControls()
 
-			-- Show panel when configuration button is clicked
-			LeaPlusCB["CooldownsButton"]:SetScript("OnClick", function()
-				if IsShiftKeyDown() and IsControlKeyDown() then
-					-- No preset profile
-				else
-					-- Show panel
-					CooldownPanel:Show()
-					LeaPlusLC:HideFrames()
-				end
-			end)
+		-- 	-- Show panel when configuration button is clicked
+		-- 	LeaPlusCB["CooldownsButton"]:SetScript("OnClick", function()
+		-- 		if IsShiftKeyDown() and IsControlKeyDown() then
+		-- 			-- No preset profile
+		-- 		else
+		-- 			-- Show panel
+		-- 			CooldownPanel:Show()
+		-- 			LeaPlusLC:HideFrames()
+		-- 		end
+		-- 	end)
 
-			-- Create class tag banner fontstring
-			local classTagBanner = CooldownPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-			local myClassName = UnitClass("player")
-			classTagBanner:SetPoint("TOPLEFT", 384, -72)
-			classTagBanner:SetText(myClassName)
+		-- 	-- Create class tag banner fontstring
+		-- 	local classTagBanner = CooldownPanel:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
+		-- 	local myClassName = UnitClass("player")
+		-- 	classTagBanner:SetPoint("TOPLEFT", 384, -72)
+		-- 	classTagBanner:SetText(myClassName)
 
-			-- Function to show spell ID in tooltips
-			local function CooldownIDFunc(unit, target, index, auratype)
-				if LeaPlusLC["ShowCooldownID"] == "On" and auratype ~= "HARMFUL" then
-					local spellid = select(10, UnitAura(target, index))
-					if spellid then
-						GameTooltip:AddLine(L["Spell ID"] .. ": " .. spellid)
-						GameTooltip:Show()
-					end
-				end
-			end
+		-- 	-- Function to show spell ID in tooltips
+		-- 	local function CooldownIDFunc(unit, target, index, auratype)
+		-- 		if LeaPlusLC["ShowCooldownID"] == "On" and auratype ~= "HARMFUL" then
+		-- 			local spellid = select(11, UnitAura(target, index))
+		-- 			if spellid then
+		-- 				GameTooltip:AddLine(L["Spell ID"] .. ": " .. spellid)
+		-- 				GameTooltip:Show()
+		-- 			end
+		-- 		end
+		-- 	end
 
-			-- Add spell ID to tooltip when buff frame buffs are hovered
-			hooksecurefunc(GameTooltip, 'SetUnitAura', CooldownIDFunc)
+		-- 	-- Add spell ID to tooltip when buff frame buffs are hovered
+		-- 	hooksecurefunc(GameTooltip, 'SetUnitAura', CooldownIDFunc)
 
-			-- Add spell ID to tooltip when target frame buffs are hovered
-			hooksecurefunc(GameTooltip, 'SetUnitBuff', CooldownIDFunc)
+		-- 	-- Add spell ID to tooltip when target frame buffs are hovered
+		-- 	hooksecurefunc(GameTooltip, 'SetUnitBuff', CooldownIDFunc)
 
-		end
+		-- end
 
 		----------------------------------------------------------------------
 		-- Combat plates
@@ -13331,10 +13335,10 @@ function LeaPlusLC:FriendCheck(name)
 				LeaPlusLC:LoadVarChk("AhGoldOnly", "Off")					-- Auction gold only
 				LeaPlusLC:LoadVarChk("AhTabConfirm", "Off")					-- Auction confirm on TAB pressed
 
-				LeaPlusLC:LoadVarChk("ShowCooldowns", "Off")				-- Show cooldowns
-				LeaPlusLC:LoadVarChk("ShowCooldownID", "On")				-- Show cooldown ID in tips
-				LeaPlusLC:LoadVarChk("NoCooldownDuration", "On")			-- Hide cooldown duration
-				LeaPlusLC:LoadVarChk("CooldownsOnPlayer", "Off")			-- Anchor to player
+				-- LeaPlusLC:LoadVarChk("ShowCooldowns", "Off")				-- Show cooldowns
+				-- LeaPlusLC:LoadVarChk("ShowCooldownID", "On")				-- Show cooldown ID in tips
+				-- LeaPlusLC:LoadVarChk("NoCooldownDuration", "On")			-- Hide cooldown duration
+				-- LeaPlusLC:LoadVarChk("CooldownsOnPlayer", "Off")			-- Anchor to player
 				LeaPlusLC:LoadVarChk("DurabilityStatus", "Off")				-- Show durability status
 				LeaPlusLC:LoadVarChk("ShowVanityControls", "Off")			-- Show vanity controls
 				LeaPlusLC:LoadVarChk("VanityAltLayout", "Off")				-- Vanity alternative layout
@@ -13743,10 +13747,10 @@ function LeaPlusLC:FriendCheck(name)
 			LeaPlusDB["AhGoldOnly"]				= LeaPlusLC["AhGoldOnly"]
 			LeaPlusDB["AhTabConfirm"]			= LeaPlusLC["AhTabConfirm"]		
 
-			LeaPlusDB["ShowCooldowns"]			= LeaPlusLC["ShowCooldowns"]
-			LeaPlusDB["ShowCooldownID"]			= LeaPlusLC["ShowCooldownID"]
-			LeaPlusDB["NoCooldownDuration"]		= LeaPlusLC["NoCooldownDuration"]
-			LeaPlusDB["CooldownsOnPlayer"]		= LeaPlusLC["CooldownsOnPlayer"]
+			-- LeaPlusDB["ShowCooldowns"]			= LeaPlusLC["ShowCooldowns"]
+			-- LeaPlusDB["ShowCooldownID"]			= LeaPlusLC["ShowCooldownID"]
+			-- LeaPlusDB["NoCooldownDuration"]		= LeaPlusLC["NoCooldownDuration"]
+			-- LeaPlusDB["CooldownsOnPlayer"]		= LeaPlusLC["CooldownsOnPlayer"]
 			LeaPlusDB["DurabilityStatus"]		= LeaPlusLC["DurabilityStatus"]
 			LeaPlusDB["ShowVanityControls"]		= LeaPlusLC["ShowVanityControls"]
 			LeaPlusDB["VanityAltLayout"]		= LeaPlusLC["VanityAltLayout"]
@@ -15880,7 +15884,7 @@ function LeaPlusLC:FriendCheck(name)
 
 				LeaPlusDB["ShowVolume"] = "On"					-- Show volume slider
 				LeaPlusDB["AhExtras"] = "On"					-- Show auction controls
-				LeaPlusDB["ShowCooldowns"] = "On"				-- Show cooldowns
+				-- LeaPlusDB["ShowCooldowns"] = "On"				-- Show cooldowns
 				LeaPlusDB["DurabilityStatus"] = "On"			-- Show durability status
 				LeaPlusDB["ShowVanityControls"] = "On"			-- Show vanity controls
 				LeaPlusDB["ShowBagSearchBox"] = "On"			-- Show bag search box
@@ -16304,7 +16308,7 @@ function LeaPlusLC:FriendCheck(name)
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "AhExtras"					, 	"Show auction controls"			, 	146, -272, 	true,	"If checked, additional functionality will be added to the auction house.|n|nBuyout only - create buyout auctions without filling in the starting price.|n|nGold only - set the copper and silver prices at 99 to speed up new auctions.|n|nFind item - search the auction house for the item you are selling.|n|nIn addition, the auction duration setting will be saved account-wide.")
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Extras"					, 	340, -72);
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowCooldowns"				, 	"Show cooldowns"				, 	340, -92, 	true,	"If checked, you will be able to place up to five beneficial cooldown icons above the target frame.")
+	-- LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowCooldowns"				, 	"Show cooldowns"				, 	340, -92, 	true,	"If checked, you will be able to place up to five beneficial cooldown icons above the target frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "DurabilityStatus"			, 	"Show durability status"		, 	340, -112, 	true,	"If checked, a button will be added to the character frame which will show your equipped item durability when you hover the pointer over it.|n|nIn addition, an overall percentage will be shown in the chat frame when you die.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowVanityControls"		, 	"Show vanity controls"			, 	340, -132, 	true,	"If checked, helm and cloak toggle checkboxes will be shown in the character frame.|n|nYou can hold shift and right-click the checkboxes to switch layouts.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowBagSearchBox"			, 	"Show bag search box"			, 	340, -152, 	true,	"If checked, a bag search box will be shown in the backpack frame and the bank frame.")
@@ -16319,7 +16323,7 @@ function LeaPlusLC:FriendCheck(name)
 	-- LeaPlusLC:CfgBtn("EnhanceDressupBtn", LeaPlusCB["EnhanceDressup"])
 	LeaPlusLC:CfgBtn("EnhanceQuestLogBtn", LeaPlusCB["EnhanceQuestLog"])
 	LeaPlusLC:CfgBtn("EnhanceTrainersBtn", LeaPlusCB["EnhanceTrainers"])
-	LeaPlusLC:CfgBtn("CooldownsButton", LeaPlusCB["ShowCooldowns"])
+	-- LeaPlusLC:CfgBtn("CooldownsButton", LeaPlusCB["ShowCooldowns"])
 	LeaPlusLC:CfgBtn("ModPlayerChain", LeaPlusCB["ShowPlayerChain"])
 	LeaPlusLC:CfgBtn("ShowWowheadLinksBtn", LeaPlusCB["ShowWowheadLinks"])
 	LeaPlusLC:CfgBtn("ShowFlightTimesBtn", LeaPlusCB["ShowFlightTimes"])
