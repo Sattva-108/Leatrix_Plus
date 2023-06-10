@@ -12388,6 +12388,7 @@ function LeaPlusLC:FriendCheck(name)
 			stopBtn:Hide(); stopBtn:Show()
 			LeaPlusLC:LockItem(stopBtn, true)
 			stopBtn:SetScript("OnClick", function()
+				Sound_GameSystem_RestartSoundSystem()
 				if musicHandle then
 					StopSound(musicHandle)
 					musicHandle = nil
@@ -12410,7 +12411,9 @@ function LeaPlusLC:FriendCheck(name)
 			-- Function to play a track and show the static highlight bar
 			local function PlayTrack()
 				-- Play tracks
-				if musicHandle then StopSound(musicHandle) end
+				-- if musicHandle then StopSound(musicHandle) end
+				Sound_GameSystem_RestartSoundSystem()
+				-- Sound_GameSystem_RestartSoundSystem()
 				local file, soundID, trackTime
 				if strfind(playlist[tracknumber], "#") then
 					if strfind(playlist[tracknumber], ".mp3") then
