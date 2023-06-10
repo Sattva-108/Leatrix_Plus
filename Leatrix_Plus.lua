@@ -12407,12 +12407,13 @@ function LeaPlusLC:FriendCheck(name)
 
 			-- Store currently playing track number
 			local tracknumber = 1
+			local isPlayingTrack = 0
 
 			-- Function to play a track and show the static highlight bar
 			local function PlayTrack()
 				-- Play tracks
 				-- if musicHandle then StopSound(musicHandle) end
-				Sound_GameSystem_RestartSoundSystem()
+				if isPlayingTrack == 1 then Sound_GameSystem_RestartSoundSystem() end
 				-- Sound_GameSystem_RestartSoundSystem()
 				local file, soundID, trackTime
 				if strfind(playlist[tracknumber], "#") then
@@ -12428,10 +12429,12 @@ function LeaPlusLC:FriendCheck(name)
 							cleanFile = "sound/music/" .. cleanFile
 						end
 						willPlay, musicHandle = PlaySoundFile(cleanFile, "Master", false, true)
+						isPlayingTrack = 1
 					else
 						-- Sound kit without track time
 						file, soundID = playlist[tracknumber]:match("([^,]+)%#([^,]+)")
 						willPlay, musicHandle = PlaySound(soundID, "Master", false, true)
+						isPlayingTrack = 1
 					end
 				end
 				-- Cancel existing music timer for a sound file
@@ -12446,6 +12449,7 @@ function LeaPlusLC:FriendCheck(name)
 								tracknumber = 1
 							end
 							PlayTrack()
+							isPlayingTrack = 1
 						end)
 					end
 				end
@@ -12832,6 +12836,7 @@ function LeaPlusLC:FriendCheck(name)
 			LeaPlusLC["Page9"]:SetScript("OnEvent", function(self, event)
 				if event == "PLAYER_LOGOUT" then
 					-- Stop playing at reload or logout
+					if isPlayingTrack == 1 then Sound_GameSystem_RestartSoundSystem() end
 					if musicHandle then
 						StopSound(musicHandle)
 					end
