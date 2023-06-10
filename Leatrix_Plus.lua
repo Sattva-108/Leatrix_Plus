@@ -14709,7 +14709,7 @@ function LeaPlusLC:FriendCheck(name)
 					-- Item
 					local void, itemLink = tooltip:GetItem()
 					if itemLink then
-						local itemID = GetItemInfoFromHyperlink(itemLink)
+						local itemID = itemLink:match("item:(%d+):")
 						if itemID then
 							LeaPlusLC:ShowSystemEditBox("https://" .. LeaPlusLC.WowheadLock .. "/item=" .. itemID, false)
 							LeaPlusLC.FactoryEditBox.f:SetText(L["Item"] .. ": " .. itemLink .. " (" .. itemID .. ")")
@@ -14717,7 +14717,7 @@ function LeaPlusLC:FriendCheck(name)
 						end
 					end
 					-- Spell
-					local name, spellID = tooltip:GetSpell()
+					local name, void, spellID = tooltip:GetSpell()
 					if name and spellID then
 						LeaPlusLC:ShowSystemEditBox("https://" .. LeaPlusLC.WowheadLock .. "/spell=" .. spellID, false)
 						LeaPlusLC.FactoryEditBox.f:SetText(L["Spell"] .. ": " .. name .. " (" .. spellID .. ")")
@@ -14737,7 +14737,7 @@ function LeaPlusLC:FriendCheck(name)
 					-- Buffs and debuffs
 					for i = 1, BUFF_MAX_DISPLAY do
 						if _G["BuffButton" .. i] and mouseFocus == _G["BuffButton" .. i] then
-							local spellName, void, void, void, void, void, void, void, void, spellID = UnitBuff("player", i)
+							local spellName, void, void, void, void, void, void, void, void, void, spellID = UnitBuff("player", i)
 							if spellName and spellID then
 								LeaPlusLC:ShowSystemEditBox("https://" .. LeaPlusLC.WowheadLock .. "/spell=" .. spellID, false)
 								LeaPlusLC.FactoryEditBox.f:SetText(L["Spell"] .. ": " .. spellName .. " (" .. spellID .. ")")
@@ -14747,7 +14747,7 @@ function LeaPlusLC:FriendCheck(name)
 					end
 					for i = 1, DEBUFF_MAX_DISPLAY do
 						if _G["DebuffButton" .. i] and mouseFocus == _G["DebuffButton" .. i] then
-							local spellName, void, void, void, void, void, void, void, void, spellID = UnitDebuff("player", i)
+							local spellName, void, void, void, void, void, void, void, void, void, spellID = UnitDebuff("player", i)
 							if spellName and spellID then
 								LeaPlusLC:ShowSystemEditBox("https://" .. LeaPlusLC.WowheadLock .. "/spell=" .. spellID, false)
 								LeaPlusLC.FactoryEditBox.f:SetText(L["Spell"] .. ": " .. spellName .. " (" .. spellID .. ")")
@@ -14755,6 +14755,41 @@ function LeaPlusLC:FriendCheck(name)
 							return
 						end
 					end
+
+					-- Target Buffs and debuffs
+					for i = 1, MAX_TARGET_BUFFS do
+						if _G["TargetFrameBuff" .. i] and mouseFocus == _G["TargetFrameBuff" .. i] then
+							local spellName, void, void, void, void, void, void, void, void, void, spellID = UnitBuff("target", i)
+							if spellName and spellID then
+								LeaPlusLC:ShowSystemEditBox("https://" .. LeaPlusLC.WowheadLock .. "/spell=" .. spellID, false)
+								LeaPlusLC.FactoryEditBox.f:SetText(L["Spell"] .. ": " .. spellName .. " (" .. spellID .. ")")
+							end
+							return
+						end
+					end
+					for i = 1, MAX_TARGET_DEBUFFS do
+						if _G["TargetFrameDebuff" .. i] and mouseFocus == _G["TargetFrameDebuff" .. i] then
+							local spellName, void, void, void, void, void, void, void, void, void, spellID = UnitDebuff("target", i)
+							if spellName and spellID then
+								LeaPlusLC:ShowSystemEditBox("https://" .. LeaPlusLC.WowheadLock .. "/spell=" .. spellID, false)
+								LeaPlusLC.FactoryEditBox.f:SetText(L["Spell"] .. ": " .. spellName .. " (" .. spellID .. ")")
+							end
+							return
+						end
+					end
+
+					-- --===== 3.3.5 FIXME Didn't work, MAX_FOCUS_DEBUFFS, seems to not give me a number. Focus Debuffs! There is no MAX_FOCUS_BUFFS, they are not shown. =====--
+					-- for i = 1, MAX_FOCUS_DEBUFFS do
+					-- 	if _G["FocusFrameDebuff" .. i] and mouseFocus == _G["FocusFrameDebuff" .. i] then
+					-- 		local spellName, void, void, void, void, void, void, void, void, void, spellID = UnitDebuff("focus", i)
+					-- 		if spellName and spellID then
+					-- 			LeaPlusLC:ShowSystemEditBox("https://" .. LeaPlusLC.WowheadLock .. "/spell=" .. spellID, false)
+					-- 			LeaPlusLC.FactoryEditBox.f:SetText(L["Spell"] .. ": " .. spellName .. " (" .. spellID .. ")")
+					-- 		end
+					-- 		return
+					-- 	end
+					-- end
+
 					-- Unknown tooltip (this must be last)
 					local tipTitle = GameTooltipTextLeft1:GetText()
 					if tipTitle then
