@@ -666,7 +666,7 @@ function LeaPlusLC:FriendCheck(name)
 		or	(LeaPlusLC["DurabilityStatus"]		~= LeaPlusDB["DurabilityStatus"])		-- Show durability status
 		or	(LeaPlusLC["ShowVanityControls"]	~= LeaPlusDB["ShowVanityControls"])		-- Show vanity controls
 		or	(LeaPlusLC["ShowBagSearchBox"]		~= LeaPlusDB["ShowBagSearchBox"])		-- Show bag search box
-		or	(LeaPlusLC["ShowRaidToggle"]		~= LeaPlusDB["ShowRaidToggle"])			-- Show raid button
+		-- or	(LeaPlusLC["ShowRaidToggle"]		~= LeaPlusDB["ShowRaidToggle"])			-- Show raid button
 		or	(LeaPlusLC["ShowPlayerChain"]		~= LeaPlusDB["ShowPlayerChain"])		-- Show player chain
 		or	(LeaPlusLC["ShowReadyTimer"]		~= LeaPlusDB["ShowReadyTimer"])			-- Show ready timer
 		or	(LeaPlusLC["ShowWowheadLinks"]		~= LeaPlusDB["ShowWowheadLinks"])		-- Show Wowhead links
@@ -2512,31 +2512,31 @@ function LeaPlusLC:FriendCheck(name)
 		-- Show raid frame toggle button
 		----------------------------------------------------------------------
 
-		if LeaPlusLC["ShowRaidToggle"] == "On" and not LeaLockList["ShowRaidToggle"] then
+		-- if LeaPlusLC["ShowRaidToggle"] == "On" and not LeaLockList["ShowRaidToggle"] then
 
-			-- Check to make sure raid toggle button exists
-			if CompactRaidFrameManagerDisplayFrameHiddenModeToggle then
+		-- 	-- Check to make sure raid toggle button exists
+		-- 	if CompactRaidFrameManagerDisplayFrameHiddenModeToggle then
 
-				-- Create a border for the button
-				local cBackdrop = CreateFrame("Frame", nil, CompactRaidFrameManagerDisplayFrameHiddenModeToggle)
-				cBackdrop:SetAllPoints()
-				cBackdrop.backdropInfo = {edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = {left = 0, right = 0, top = 0, bottom = 0}}
-				cBackdrop:ApplyBackdrop()
+		-- 		-- Create a border for the button
+		-- 		local cBackdrop = CreateFrame("Frame", nil, CompactRaidFrameManagerDisplayFrameHiddenModeToggle)
+		-- 		cBackdrop:SetAllPoints()
+		-- 		cBackdrop.backdropInfo = {edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = {left = 0, right = 0, top = 0, bottom = 0}}
+		-- 		cBackdrop:ApplyBackdrop()
 
-				-- Move the button (function runs after PLAYER_ENTERING_WORLD and PARTY_LEADER_CHANGED)
-				hooksecurefunc("CompactRaidFrameManager_UpdateOptionsFlowContainer", function()
-					if CompactRaidFrameManager and CompactRaidFrameManagerDisplayFrameHiddenModeToggle then
-						local void, void, void, void, y = CompactRaidFrameManager:GetPoint()
-						CompactRaidFrameManagerDisplayFrameHiddenModeToggle:SetWidth(40)
-						CompactRaidFrameManagerDisplayFrameHiddenModeToggle:ClearAllPoints()
-						CompactRaidFrameManagerDisplayFrameHiddenModeToggle:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, y + 22)
-						CompactRaidFrameManagerDisplayFrameHiddenModeToggle:SetParent(UIParent)
-					end
-				end)
+		-- 		-- Move the button (function runs after PLAYER_ENTERING_WORLD and PARTY_LEADER_CHANGED)
+		-- 		hooksecurefunc("CompactRaidFrameManager_UpdateOptionsFlowContainer", function()
+		-- 			if CompactRaidFrameManager and CompactRaidFrameManagerDisplayFrameHiddenModeToggle then
+		-- 				local void, void, void, void, y = CompactRaidFrameManager:GetPoint()
+		-- 				CompactRaidFrameManagerDisplayFrameHiddenModeToggle:SetWidth(40)
+		-- 				CompactRaidFrameManagerDisplayFrameHiddenModeToggle:ClearAllPoints()
+		-- 				CompactRaidFrameManagerDisplayFrameHiddenModeToggle:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, y + 22)
+		-- 				CompactRaidFrameManagerDisplayFrameHiddenModeToggle:SetParent(UIParent)
+		-- 			end
+		-- 		end)
 
-			end
+		-- 	end
 
-		end
+		-- end
 
 		----------------------------------------------------------------------
 		-- Hide hit indicators (portrait text)
@@ -13493,7 +13493,7 @@ function LeaPlusLC:FriendCheck(name)
 				LeaPlusLC:LoadVarChk("ShowVanityControls", "Off")			-- Show vanity controls
 				LeaPlusLC:LoadVarChk("VanityAltLayout", "Off")				-- Vanity alternative layout
 				LeaPlusLC:LoadVarChk("ShowBagSearchBox", "Off")				-- Show bag search box
-				LeaPlusLC:LoadVarChk("ShowRaidToggle", "Off")				-- Show raid button
+				-- LeaPlusLC:LoadVarChk("ShowRaidToggle", "Off")				-- Show raid button
 				LeaPlusLC:LoadVarChk("ShowPlayerChain", "Off")				-- Show player chain
 				LeaPlusLC:LoadVarNum("PlayerChainMenu", 2, 1, 3)			-- Player chain dropdown value
 				LeaPlusLC:LoadVarChk("ShowReadyTimer", "Off")				-- Show ready timer
@@ -13675,10 +13675,10 @@ function LeaPlusLC:FriendCheck(name)
 								Lock("MinimapModder", reason, "Minimap") -- Enhance minimap
 							end
 
-							-- UnitFrames
-							if E.private.unitframe.enable then
-								Lock("ShowRaidToggle", reason, "UnitFrames") -- Show raid button
-							end
+							-- -- UnitFrames
+							-- if E.private.unitframe.enable then
+							-- 	Lock("ShowRaidToggle", reason, "UnitFrames") -- Show raid button
+							-- end
 
 							-- ActionBars
 							if E.private.actionbar.enable then
@@ -13905,7 +13905,7 @@ function LeaPlusLC:FriendCheck(name)
 			LeaPlusDB["ShowVanityControls"]		= LeaPlusLC["ShowVanityControls"]
 			LeaPlusDB["VanityAltLayout"]		= LeaPlusLC["VanityAltLayout"]
 			LeaPlusDB["ShowBagSearchBox"]		= LeaPlusLC["ShowBagSearchBox"]
-			LeaPlusDB["ShowRaidToggle"]			= LeaPlusLC["ShowRaidToggle"]
+			-- LeaPlusDB["ShowRaidToggle"]			= LeaPlusLC["ShowRaidToggle"]
 			LeaPlusDB["ShowPlayerChain"]		= LeaPlusLC["ShowPlayerChain"]
 			LeaPlusDB["PlayerChainMenu"]		= LeaPlusLC["PlayerChainMenu"]
 			LeaPlusDB["ShowReadyTimer"]			= LeaPlusLC["ShowReadyTimer"]
@@ -16073,7 +16073,7 @@ function LeaPlusLC:FriendCheck(name)
 				LeaPlusDB["DurabilityStatus"] = "On"			-- Show durability status
 				LeaPlusDB["ShowVanityControls"] = "On"			-- Show vanity controls
 				LeaPlusDB["ShowBagSearchBox"] = "On"			-- Show bag search box
-				LeaPlusDB["ShowRaidToggle"] = "On"				-- Show raid button
+				-- LeaPlusDB["ShowRaidToggle"] = "On"				-- Show raid button
 				LeaPlusDB["ShowPlayerChain"] = "On"				-- Show player chain
 				LeaPlusDB["PlayerChainMenu"] = 3				-- Player chain style
 				LeaPlusDB["ShowReadyTimer"] = "On"				-- Show ready timer
@@ -16497,7 +16497,7 @@ function LeaPlusLC:FriendCheck(name)
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "DurabilityStatus"			, 	"Show durability status"		, 	340, -112, 	true,	"If checked, a button will be added to the character frame which will show your equipped item durability when you hover the pointer over it.|n|nIn addition, an overall percentage will be shown in the chat frame when you die.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowVanityControls"		, 	"Show vanity controls"			, 	340, -132, 	true,	"If checked, helm and cloak toggle checkboxes will be shown in the character frame.|n|nYou can hold shift and right-click the checkboxes to switch layouts.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowBagSearchBox"			, 	"Show bag search box"			, 	340, -152, 	true,	"If checked, a bag search box will be shown in the backpack frame and the bank frame.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowRaidToggle"			, 	"Show raid button"				,	340, -172, 	true,	"If checked, the button to toggle the raid container frame will be shown just above the raid management frame (left side of the screen) instead of in the raid management frame itself.|n|nThis allows you to toggle the raid container frame without needing to open the raid management frame.")
+	-- LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowRaidToggle"			, 	"Show raid button"				,	340, -172, 	true,	"If checked, the button to toggle the raid container frame will be shown just above the raid management frame (left side of the screen) instead of in the raid management frame itself.|n|nThis allows you to toggle the raid container frame without needing to open the raid management frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowPlayerChain"			, 	"Show player chain"				,	340, -192, 	true,	"If checked, you will be able to show a rare, elite or rare elite chain around the player frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowReadyTimer"			, 	"Show ready timer"				,	340, -212, 	true,	"If checked, a timer will be shown under the PvP encounter ready frame so that you know how long you have left to click the enter button.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowWowheadLinks"			, 	"Show Wowhead links"			, 	340, -232, 	true,	"If checked, Wowhead links will be shown in the world map frame and the achievements frame.")

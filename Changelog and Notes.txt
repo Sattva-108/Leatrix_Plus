@@ -109,13 +109,11 @@ HideChatButtons			 - Add Configuration to enable certain chat buttons.
 --------------------------------------------------------------------------------
 
 
-Links to wowhead-wotlk in Quest Log for every quest.
+AutomateQuests - Improve Quest Accept conditions (aka skip welcome window and block shared aka escort quests)
 
-Improve Quest Accept conditions (aka skip welcome window and block shared aka escort quests)
+Chat - Copy chat links
 
-Copy chat links
-
-Add a number of skill requirement to the tooltip to gather herb,mine node, when mouseovering it.
+Tooltip - Add a number of skill requirement to the tooltip to gather herb,mine node, when mouseovering it.
 
 Minimap - Zone Text Bar should toggle the minimap.
 
@@ -143,7 +141,7 @@ BagSearch - improve look of close button.
 
 BagSearch - add bank frame.
 
-BagSearch - add tooltip.
+BagSearch - position tooltip nicely.
 
 BagSearch - add button with menu to highlight certain item categories: herb, quest items, grey items etc...
 
