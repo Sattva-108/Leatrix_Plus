@@ -8465,51 +8465,193 @@ function LeaPlusLC:FriendCheck(name)
 
 		if LeaPlusLC["ShowBagSearchBox"] == "On" and not LeaLockList["ShowBagSearchBox"] then
 
-			-- Function to unregister search event for guild bank since it isn't used
-			local function SetGuildBankFunc()
-				for i = 1, 6 do
-					_G["GuildBankTab" .. i].Button:UnregisterEvent("INVENTORY_SEARCH_UPDATE")
+			-- -- Function to unregister search event for guild bank since it isn't used
+			-- local function SetGuildBankFunc()
+			-- 	for i = 1, 6 do
+			-- 		_G["GuildBankTab" .. i].Button:UnregisterEvent("INVENTORY_SEARCH_UPDATE")
+			-- 	end
+			-- end
+
+			-- -- Run search event function when Blizzard addon is loaded
+			-- if IsAddOnLoaded("Blizzard_GuildBankUI") then
+			-- 	-- SetGuildBankFunc()
+			-- else
+			-- 	local waitFrame = CreateFrame("FRAME")
+			-- 	waitFrame:RegisterEvent("ADDON_LOADED")
+			-- 	waitFrame:SetScript("OnEvent", function(self, event, arg1)
+			-- 		if arg1 == "Blizzard_GuildBankUI" then
+			-- 			-- SetGuildBankFunc()
+			-- 			waitFrame:UnregisterAllEvents()
+			-- 		end
+			-- 	end)
+			-- end
+
+
+
+			local function SearchEditBox_OnTextChanged(editBox)
+				local text = editBox:GetText()
+				if not text or text:trim() == "" then
+					editBox.clearButton:Hide()
+				else
+					editBox.clearButton:Show()
+					SearchEditBox_UpdateButton()
 				end
 			end
 
-			-- Run search event function when Blizzard addon is loaded
-			if IsAddOnLoaded("Blizzard_GuildBankUI") then
-				SetGuildBankFunc()
-			else
-				local waitFrame = CreateFrame("FRAME")
-				waitFrame:RegisterEvent("ADDON_LOADED")
-				waitFrame:SetScript("OnEvent", function(self, event, arg1)
-					if arg1 == "Blizzard_GuildBankUI" then
-						SetGuildBankFunc()
-						waitFrame:UnregisterAllEvents()
+			local function SearchEditBox_OnEnterPressed(editBox)
+				editBox:ClearFocus()
+				SearchEditBox_UpdateButton()
+				Leatrix_EnableAllBagLayers()
+				return SearchEditBox_OnTextChanged(editBox)
+			end
+
+			local function SearchEditBox_OnEscapePressed(editBox)
+				editBox:ClearFocus()
+				editBox:SetText('')
+				SearchEditBox_UpdateButton()
+				Leatrix_EnableAllBagLayers()
+				return SearchEditBox_OnTextChanged(editBox)
+			end
+
+			--===== Setup Edit Box for Searching =====--
+			local searchEditBox = CreateFrame("EditBox", "Leatrix_SearchFrame", ContainerFrame1MoneyFrame, "InputBoxTemplate")
+			searchEditBox:SetSize(120, 15)
+			searchEditBox:SetPoint("TOPRIGHT", ContainerFrame1MoneyFrame, "TOPRIGHT", -9, 185)
+
+			searchEditBox:SetAutoFocus(false)
+			searchEditBox:SetTextInsets(14, 20, 0, 0)
+			searchEditBox:SetScript("OnEnterPressed", SearchEditBox_OnEnterPressed)
+			searchEditBox:SetScript("OnEscapePressed", SearchEditBox_OnEscapePressed)
+			searchEditBox:SetScript("OnTextChanged", SearchEditBox_OnTextChanged)
+			LTP_searchEditBox = searchEditBox
+
+			--===== Search Icon =====--
+			local searchIcon = searchEditBox:CreateTexture(nil, "OVERLAY")
+			searchIcon:SetPoint("LEFT", 0, -2)
+			searchIcon:SetSize(14, 14)
+			searchIcon:SetTexture([[Interface\Common\UI-Searchbox-Icon]])
+			searchIcon:SetVertexColor(0.6, 0.6, 0.6)
+
+			--===== Setup Tooltip =====--
+			local function onEnterSearchBox()
+			    GameTooltip:SetOwner(searchEditBox, "ANCHOR_RIGHT")
+			    GameTooltip:SetText("Item Search")
+			    GameTooltip:AddLine("Enter your search query.")
+			    GameTooltip:Show()
+			end
+
+			local function onLeaveSearchBox()
+			    GameTooltip:Hide()
+			end
+
+			searchEditBox:SetScript("OnEnter", onEnterSearchBox)
+			searchEditBox:SetScript("OnLeave", onLeaveSearchBox)
+
+			--===== Close Button =====--
+			local searchClearButton = CreateFrame("Button", nil, searchEditBox, "UIPanelButtonTemplate")
+			searchClearButton:SetPoint("RIGHT")
+			searchClearButton:SetSize(20, 20)
+			searchClearButton:SetText("X")
+			searchClearButton:Hide()
+			searchClearButton:SetScript('OnClick', function() SearchEditBox_OnEscapePressed(searchEditBox) end)
+
+			searchEditBox.clearButton = searchClearButton
+
+
+			--===== Table That Contains Matching Items =====--
+			function LeatrixBagContains(table, val)
+				for _, v in pairs(table) do
+					if v == val then return true end
+				end
+				return false
+			end
+
+			--===== Function with loops to iterate through bag slots =====--
+			function SearchEditBox_UpdateButton(event, button)
+				local links, found = {}, false
+
+				for bag=0, NUM_BAG_SLOTS do
+					for i=1, _G["ContainerFrame"..(bag+1)].size do
+						local itemButton = _G["ContainerFrame"..(bag+1).."Item"..i]
+						if itemButton then
+							local link = GetContainerItemLink(bag, itemButton:GetID()) 
+							if link and link:lower():find(LTP_searchEditBox:GetText():lower(), 1, true) then
+								table.insert(links, link)
+								itemButton:EnableDrawLayer("BORDER")
+								itemButton:EnableDrawLayer("OVERLAY")
+								found = true
+							else
+								itemButton:DisableDrawLayer("BORDER")
+								itemButton:DisableDrawLayer("OVERLAY")
+							end
+						end
 					end
-				end)
+
+				end
+
+				if not found then
+					for bag=0, NUM_BAG_SLOTS do
+						for i=1, _G["ContainerFrame"..(bag+1)].size do
+							_G["ContainerFrame"..(bag+1).."Item"..i]:EnableDrawLayer("BORDER")
+							_G["ContainerFrame"..(bag+1).."Item"..i]:EnableDrawLayer("OVERLAY")
+						end
+					end
+
+				end
 			end
 
-			-- Create bag item search box
-			local BagItemSearchBox = CreateFrame("EditBox", "BagItemSearchBox", ContainerFrame1, "BagSearchBoxTemplate")
-			BagItemSearchBox:SetSize(110, 18)
-			BagItemSearchBox:SetMaxLetters(15)
 
-			-- Create bank item search box
-			local BankItemSearchBox = CreateFrame("EditBox", "BankItemSearchBox", BankFrame, "BagSearchBoxTemplate")
-			BankItemSearchBox:SetSize(120, 14)
-			BankItemSearchBox:SetMaxLetters(15)
-			BankItemSearchBox:SetPoint("TOPRIGHT", -60, -40)
-
-			-- Attach bag search box first bag only
-			hooksecurefunc("ContainerFrame_Update", function(self)
-				if self:GetID() == 0 then
-					BagItemSearchBox:SetParent(self)
-					BagItemSearchBox:SetPoint("TOPLEFT", self, "TOPLEFT", 54, -29)
-					BagItemSearchBox.anchorBag = self
-					BagItemSearchBox:Show()
-				elseif BagItemSearchBox.anchorBag == self then
-					BagItemSearchBox:ClearAllPoints()
-					BagItemSearchBox:Hide()
-					BagItemSearchBox.anchorBag = nil
+			--===== Function to re-enable button layers =====--
+			function Leatrix_EnableAllBagLayers()
+				for bag=0, NUM_BAG_SLOTS do
+					for i=1, _G["ContainerFrame"..(bag+1)].size do
+						local itemButton = _G["ContainerFrame"..(bag+1).."Item"..i]
+						if itemButton then
+							itemButton:EnableDrawLayer("BORDER")
+							itemButton:EnableDrawLayer("OVERLAY")
+						end
+					end 
 				end
-			end)
+			end
+
+			--===== Function to trigger re-enabling layers for buttons =====--
+			--===== 0.1 delay is made for initial bag opening LUA error avoiding =====--
+			local function Leatrix_ToggleBags()
+				LibCompat.After(0.1, Leatrix_EnableAllBagLayers)
+			end
+
+			--===== We are using Blizzard functions as triggers to trigger our layer-enabling function =====--
+			hooksecurefunc("ToggleBackpack", Leatrix_ToggleBags)
+			hooksecurefunc("ToggleBag", Leatrix_ToggleBags)
+
+
+
+
+
+			-- -- Create bag item search box
+			-- local BagItemSearchBox = CreateFrame("EditBox", "BagItemSearchBox", ContainerFrame1, "BagSearchBoxTemplate")
+			-- BagItemSearchBox:SetSize(110, 18)
+			-- BagItemSearchBox:SetMaxLetters(15)
+
+			-- -- Create bank item search box
+			-- local BankItemSearchBox = CreateFrame("EditBox", "BankItemSearchBox", BankFrame, "BagSearchBoxTemplate")
+			-- BankItemSearchBox:SetSize(120, 14)
+			-- BankItemSearchBox:SetMaxLetters(15)
+			-- BankItemSearchBox:SetPoint("TOPRIGHT", -60, -40)
+
+			-- -- Attach bag search box first bag only
+			-- hooksecurefunc("ContainerFrame_Update", function(self)
+			-- 	if self:GetID() == 0 then
+			-- 		BagItemSearchBox:SetParent(self)
+			-- 		BagItemSearchBox:SetPoint("TOPLEFT", self, "TOPLEFT", 54, -29)
+			-- 		BagItemSearchBox.anchorBag = self
+			-- 		BagItemSearchBox:Show()
+			-- 	elseif BagItemSearchBox.anchorBag == self then
+			-- 		BagItemSearchBox:ClearAllPoints()
+			-- 		BagItemSearchBox:Hide()
+			-- 		BagItemSearchBox.anchorBag = nil
+			-- 	end
+			-- end)
 
 		end
 

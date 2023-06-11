@@ -132,3 +132,20 @@ EnhanceDressup - Make clicks, wheel, to rotate, pan, zoom.
 Chat - Alt-Click in chat to invite.
 
 AutomateGossip - Give options to enable hearthstone/ trainer automation
+
+DurabilityStatus - change color of button based on total durability status.
+
+RecentChat - Clear Chat Button.
+
+BagSearch - add highlight item.
+
+BagSearch - improve look of close button.
+
+BagSearch - add bank frame.
+
+BagSearch - add tooltip.
+
+BagSearch - add button with menu to highlight certain item categories: herb, quest items, grey items etc...
+
+BagSearch - add slash commands.
+
