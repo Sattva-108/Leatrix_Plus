@@ -147,3 +147,9 @@ BagSearch - add button with menu to highlight certain item categories: herb, que
 
 BagSearch - add slash commands.
 
+QueueTimer - add LFG timer.
+
+QueueTimer - add user option to disable sound.
+
+
+

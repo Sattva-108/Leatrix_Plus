@@ -5782,25 +5782,34 @@ function LeaPlusLC:FriendCheck(name)
 			-- Player vs Player
 			do
 
+				--===== Status Bar creation =====--
 
-
-
-				-- Create status bar below dungeonready popup
 				local bar = CreateFrame("StatusBar")
 				local anchorFrame
 				local shouldShowBar = false
 				local started = false
-				-- bar:SetPoint("TOPLEFT", StaticPopup1, "BOTTOMLEFT", 0, -5)
-				-- bar:SetPoint("TOPRIGHT", StaticPopup1, "BOTTOMRIGHT", 0, -5)
-				-- bar:SetParent(StaticPopup1)
 				bar:SetHeight(5)
 				bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")  
-				bar:SetStatusBarColor(1.0, 0.85, 0.0)
+				bar:SetStatusBarColor(1.0, 1, 0.0)
+
+				--===== Spark creation =====--
+
+				local spark = bar:CreateTexture(nil, "OVERLAY")
+				spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+				spark:SetSize(18, 18) 
+				spark:SetVertexColor(1, 1, 1)
+				spark:SetBlendMode("ADD")
+				spark:Hide()				
+
+				--------------------------------------------------------------------------------
+				-- Function to setup status bar scripts and positions
+				--------------------------------------------------------------------------------
+
 
 				local function SetupBar()
 					LibCompat.After(1, function()
 						if not StaticPopup1:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
-							print("resetting")
+							-- print("resetting")
 							started = false
 						end
 					end)
@@ -5814,17 +5823,21 @@ function LeaPlusLC:FriendCheck(name)
 						end
 					end
 					if shouldShowBar then
-						bar:SetPoint("TOPLEFT", anchorFrame, "BOTTOMLEFT", 0, -5)
-						bar:SetPoint("TOPRIGHT", anchorFrame, "BOTTOMRIGHT", 0, -5)
+						bar:SetPoint("TOPLEFT", anchorFrame, "BOTTOMLEFT", 8, 0)
+						bar:SetPoint("TOPRIGHT", anchorFrame, "BOTTOMRIGHT", 0, 0)
 						bar:SetParent(anchorFrame)
 						bar:SetScript("OnEvent", OnEvent)
 						bar:SetScript("OnUpdate", Update)
+						bar:SetFrameStrata("FULLSCREEN")
 					else
 						bar:SetScript("OnEvent", nil)
 						bar:SetScript("OnUpdate", nil)
 						bar:Hide()
+						spark:Hide()
 					end
 				end
+
+				--===== Hook to the blizzard frames scripts, to avoid bar creation on frames that are not BG queue pop-up =====--
 
 				StaticPopup1:HookScript("OnShow", SetupBar)
 				StaticPopup2:HookScript("OnShow", SetupBar)
@@ -5837,59 +5850,57 @@ function LeaPlusLC:FriendCheck(name)
 				StaticPopup4:HookScript("OnHide", SetupBar)
 
 
-				-- Create status bar text
+				--===== Status Bar Text Creation =====--
+
 				local text = bar:CreateFontString(nil, "ARTWORK")
 				text:SetFontObject("GameFontNormalLarge")
-				text:SetTextColor(1.0, 0.85, 0.0)
-				text:SetPoint("TOP", 0, -10)
+				text:SetTextColor(0, 0.85, 0.0)
+				text:SetPoint("TOPLEFT", 0, -10)
 
+			
+				--------------------------------------------------------------------------------
+				-- Hooks to the Blizzard functions.
+				--------------------------------------------------------------------------------
 
-
-
+				--===== OnShow =====--
 
 				local BGQueue_OnShow = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnShow
 
 				function hookConfirmBattlefieldEntry()    
 				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnShow", function(self, data)
-				      -- Your custom OnShow code here...
 						bar:Show()
 						anchorFrame = self
 						SetupBar()
-				      
-				      -- Call the original function  
-				      BGQueue_OnShow(self, data)
+						BGQueue_OnShow(self, data)
 				   end)
 				end
 
 				hookConfirmBattlefieldEntry()
 
+				--===== BG Popup: Button Functions - OnAccept & OnCancel =====--
 
 				local BGQueue_OnAccept = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnAccept
 				local BGQueue_OnCancel = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnCancel
 
 				function hookConfirmBattlefieldEntry()    
 				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnAccept", function(self, data)
-				      -- Your custom OnAccept code here...
 				      -- print("accept")
 				      SetupBar()
 					LibCompat.After(1, function()
 						if not self:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
-							print("resetting")
+							-- print("resetting")
 							started = false
 						end
 					end)
-				      
-				      -- Call the original function
 				      return BGQueue_OnAccept(self, data) 
 				   end)
 
-				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnCancel", function(self, data)  
-				      -- Your custom OnCancel code here...  
+				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnCancel", function(self, data)   
 				      -- print("cancel")
 				      SetupBar()
 					LibCompat.After(1, function()
 						if not self:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
-							print("resetting")
+							-- print("resetting")
 							started = false
 						end
 					end)
@@ -5902,36 +5913,31 @@ function LeaPlusLC:FriendCheck(name)
 				hookConfirmBattlefieldEntry()
 
 
+				--------------------------------------------------------------------------------
+				-- My own Functions
+				--------------------------------------------------------------------------------
 
 
 				local function OnEvent(self, event)
-						for i = 1, MAX_BATTLEFIELD_QUEUES do
-						-- 			status = GetBattlefieldStatus(i);
-						-- if status == "confirm" then
-				  if not started then  
-				    bar.expiration = GetBattlefieldPortExpiration(i)     
-				    bar.startTime = GetTime()
-				    started = true
-				  end  
-				  bar:SetMinMaxValues(0, bar.expiration)
-				-- end
-				end
+					for i = 1, MAX_BATTLEFIELD_QUEUES do
+						if not started then  
+							bar.expiration = GetBattlefieldPortExpiration(i)     
+							bar.startTime = GetTime()
+							started = true
+						end  
+						bar:SetMinMaxValues(0, bar.expiration)
+					end
 				end
 
 				local function Update(self, elapsed)
-
-						for i=1, MAX_BATTLEFIELD_QUEUES do
-						-- status = GetBattlefieldStatus(i);
-						-- if status == "confirm" then
-				  -- Use the original start time   
-				  local progress = bar.expiration - (GetTime() - bar.startTime)       
-				  bar:SetValue(progress)           
-				  text:SetFormattedText(SecondsToTime(progress + 0.5))
-				end
-				-- end
+					for i=1, MAX_BATTLEFIELD_QUEUES do
+						local progress = bar.expiration - (GetTime() - bar.startTime)       
+						bar:SetValue(progress)           
+						text:SetFormattedText(SecondsToTime(progress + 0.5))
+					end
 				end
 
-
+				--===== Hook to Blizz Function OnUpdate =====--
 
 				hooksecurefunc("BattlefieldTimerFrame_OnUpdate", function()
 					for i = 1, MAX_BATTLEFIELD_QUEUES do
@@ -5944,11 +5950,71 @@ function LeaPlusLC:FriendCheck(name)
 					end  
 					bar:SetMinMaxValues(0, bar.expiration)
 					local progress = bar.expiration - (GetTime() - bar.startTime)       
-					bar:SetValue(progress)           
+					bar:SetValue(progress)          
 					text:SetFormattedText(SecondsToTime(progress + 0.5))
+
+					spark:Show()
+					local pos = bar:GetWidth() / bar.expiration * progress
+					spark:SetPoint("CENTER", bar, "LEFT", pos, 0)
+					if progress <= 15 then
+						text:SetTextColor(1, 1, 0)
+						bar:SetStatusBarColor(1, 0, 0)
+					else
+						text:SetTextColor(0, 1, 0)
+						bar:SetStatusBarColor(1, 1, 0.0)
+
+					end
 				end
 				-- end
 				end)
+
+				--------------------------------------------------------------------------------
+				-- Play Sound, code from ReadyCheckBgSound addon.
+				--------------------------------------------------------------------------------
+
+
+				local frame = CreateFrame("Frame")
+				lasttime = GetTime()
+
+				local function ReadyCheckBgSoundOnEvent(self, event, ...)
+					if (event == "LFG_PROPOSAL_SHOW" or event == "READY_CHECK") then
+						ReadyCheckPlaySound()
+
+					elseif (event == "UPDATE_BATTLEFIELD_STATUS") then
+						
+						for i = 1, MAX_BATTLEFIELD_QUEUES do
+							status, mapName, instanceID, lowestlevel, highestlevel, teamSize, registeredMatch = GetBattlefieldStatus(i);
+						
+							if (status == "confirm") then
+								ReadyCheckPlaySound()
+								break
+							end
+							i = i + 1
+						end
+					end
+				end
+
+				function ReadyCheckBgSoundOnLoad()
+
+				end
+
+				function ReadyCheckPlaySound()
+					if (GetTime() >= lasttime + 10) then
+						lasttime = GetTime()
+						PlaySoundFile("Sound\\Interface\\ReadyCheck.wav", "Master")
+					end
+				end
+
+				frame:RegisterEvent("LFG_PROPOSAL_SHOW");
+				frame:RegisterEvent("READY_CHECK");
+				frame:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
+				frame:SetScript("OnEvent", ReadyCheckBgSoundOnEvent)
+
+
+				--------------------------------------------------------------------------------
+				-- Test and Old codes
+				--------------------------------------------------------------------------------
+
 
 
 
