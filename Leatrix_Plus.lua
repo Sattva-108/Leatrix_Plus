@@ -5782,16 +5782,60 @@ function LeaPlusLC:FriendCheck(name)
 			-- Player vs Player
 			do
 
-				-- Declare variables
-				local t, barTime = -1, -1
 
-				-- Create status bar below dungeon ready popup
-				local bar = CreateFrame("StatusBar", nil, PVPReadyDialog)
-				bar:SetPoint("TOPLEFT", PVPReadyDialog, "BOTTOMLEFT", 0, -5)
-				bar:SetPoint("TOPRIGHT", PVPReadyDialog, "BOTTOMRIGHT", 0, -5)
+
+
+				-- Create status bar below dungeonready popup
+				local bar = CreateFrame("StatusBar")
+				local anchorFrame
+				local shouldShowBar = false
+				local started = false
+				-- bar:SetPoint("TOPLEFT", StaticPopup1, "BOTTOMLEFT", 0, -5)
+				-- bar:SetPoint("TOPRIGHT", StaticPopup1, "BOTTOMRIGHT", 0, -5)
+				-- bar:SetParent(StaticPopup1)
 				bar:SetHeight(5)
-				bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+				bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")  
 				bar:SetStatusBarColor(1.0, 0.85, 0.0)
+
+				local function SetupBar()
+					LibCompat.After(1, function()
+						if not StaticPopup1:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
+							print("resetting")
+							started = false
+						end
+					end)
+					for i = 1, MAX_BATTLEFIELD_QUEUES do  
+						status = GetBattlefieldStatus(i);   
+						if ( status == "confirm" ) then
+							shouldShowBar = true   
+							break 
+						else
+							shouldShowBar = false 
+						end
+					end
+					if shouldShowBar then
+						bar:SetPoint("TOPLEFT", anchorFrame, "BOTTOMLEFT", 0, -5)
+						bar:SetPoint("TOPRIGHT", anchorFrame, "BOTTOMRIGHT", 0, -5)
+						bar:SetParent(anchorFrame)
+						bar:SetScript("OnEvent", OnEvent)
+						bar:SetScript("OnUpdate", Update)
+					else
+						bar:SetScript("OnEvent", nil)
+						bar:SetScript("OnUpdate", nil)
+						bar:Hide()
+					end
+				end
+
+				StaticPopup1:HookScript("OnShow", SetupBar)
+				StaticPopup2:HookScript("OnShow", SetupBar)
+				StaticPopup3:HookScript("OnShow", SetupBar)
+				StaticPopup4:HookScript("OnShow", SetupBar)
+
+				StaticPopup1:HookScript("OnHide", SetupBar)
+				StaticPopup2:HookScript("OnHide", SetupBar)
+				StaticPopup3:HookScript("OnHide", SetupBar)
+				StaticPopup4:HookScript("OnHide", SetupBar)
+
 
 				-- Create status bar text
 				local text = bar:CreateFontString(nil, "ARTWORK")
@@ -5799,33 +5843,237 @@ function LeaPlusLC:FriendCheck(name)
 				text:SetTextColor(1.0, 0.85, 0.0)
 				text:SetPoint("TOP", 0, -10)
 
-				-- Update bar as timer counts down
-				bar:SetScript("OnUpdate", function(self, elapsed)
-					t = t - elapsed
-					if barTime >= 1 or barTime == -1 then
-						self:SetValue(t)
-						text:SetText(SecondsToTime(floor(t + 0.5)))
-						barTime = 0
-					end
-					barTime = barTime + elapsed
-				end)
 
-				-- Show frame when PvP ready frame shows
-				hooksecurefunc("PVPReadyDialog_Display", function(self, id)
-					t = GetBattlefieldPortExpiration(id) + 1
-					-- t = 89; -- debug
-					if t and t > 1 then
-						bar:SetMinMaxValues(0, t)
-						barTime = -1
+
+
+
+				local BGQueue_OnShow = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnShow
+
+				function hookConfirmBattlefieldEntry()    
+				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnShow", function(self, data)
+				      -- Your custom OnShow code here...
 						bar:Show()
-					else
-						bar:Hide()
-					end
+						anchorFrame = self
+						SetupBar()
+				      
+				      -- Call the original function  
+				      BGQueue_OnShow(self, data)
+				   end)
+				end
+
+				hookConfirmBattlefieldEntry()
+
+
+				local BGQueue_OnAccept = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnAccept
+				local BGQueue_OnCancel = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnCancel
+
+				function hookConfirmBattlefieldEntry()    
+				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnAccept", function(self, data)
+				      -- Your custom OnAccept code here...
+				      -- print("accept")
+				      SetupBar()
+					LibCompat.After(1, function()
+						if not self:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
+							print("resetting")
+							started = false
+						end
+					end)
+				      
+				      -- Call the original function
+				      return BGQueue_OnAccept(self, data) 
+				   end)
+
+				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnCancel", function(self, data)  
+				      -- Your custom OnCancel code here...  
+				      -- print("cancel")
+				      SetupBar()
+					LibCompat.After(1, function()
+						if not self:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
+							print("resetting")
+							started = false
+						end
+					end)
+				        
+				      -- Call the original function
+				      return BGQueue_OnCancel(self, data)
+				   end)
+				end
+
+				hookConfirmBattlefieldEntry()
+
+
+
+
+				local function OnEvent(self, event)
+						for i = 1, MAX_BATTLEFIELD_QUEUES do
+						-- 			status = GetBattlefieldStatus(i);
+						-- if status == "confirm" then
+				  if not started then  
+				    bar.expiration = GetBattlefieldPortExpiration(i)     
+				    bar.startTime = GetTime()
+				    started = true
+				  end  
+				  bar:SetMinMaxValues(0, bar.expiration)
+				-- end
+				end
+				end
+
+				local function Update(self, elapsed)
+
+						for i=1, MAX_BATTLEFIELD_QUEUES do
+						-- status = GetBattlefieldStatus(i);
+						-- if status == "confirm" then
+				  -- Use the original start time   
+				  local progress = bar.expiration - (GetTime() - bar.startTime)       
+				  bar:SetValue(progress)           
+				  text:SetFormattedText(SecondsToTime(progress + 0.5))
+				end
+				-- end
+				end
+
+
+
+				hooksecurefunc("BattlefieldTimerFrame_OnUpdate", function()
+					for i = 1, MAX_BATTLEFIELD_QUEUES do
+						-- 		status = GetBattlefieldStatus(i);
+						-- if status == "confirm" then
+					if not started then  
+						bar.expiration = GetBattlefieldPortExpiration(i)     
+						bar.startTime = GetTime()
+						started = true
+					end  
+					bar:SetMinMaxValues(0, bar.expiration)
+					local progress = bar.expiration - (GetTime() - bar.startTime)       
+					bar:SetValue(progress)           
+					text:SetFormattedText(SecondsToTime(progress + 0.5))
+				end
+				-- end
 				end)
 
-				PVPReadyDialog:HookScript("OnHide", function()
-					bar:Hide()
-				end)
+
+
+				-- local shouldShowBar1 = false
+				-- local shouldShowBar2 = false
+
+
+				-- StaticPopup1:HookScript("OnShow", function()
+				-- anchorFrame = StaticPopup1
+				-- SetupBar()
+
+				-- for i = 1, MAX_BATTLEFIELD_QUEUES do  
+				--   status = GetBattlefieldStatus(i);   
+				--   if ( status == "confirm" ) then
+				--     shouldShowBar1 = true   
+				--     break  
+				--   end
+				-- end
+
+				-- if shouldShowBar1 then
+				--   bar:Show()
+				-- else  
+				--   bar:Hide()  
+				-- end
+				-- end)
+
+				-- StaticPopup2:HookScript("OnShow", function()
+				-- anchorFrame = StaticPopup2
+				-- SetupBar()
+
+				-- for i = 1, MAX_BATTLEFIELD_QUEUES do  
+				--   status = GetBattlefieldStatus(i);   
+				--   if ( status == "confirm" ) then
+				--     shouldShowBar2 = true   
+				--     break  
+				--   end
+				-- end
+
+				-- if shouldShowBar2 then
+				--   bar:Show()
+				-- else  
+				--   bar:Hide()  
+				-- end
+				-- end)
+
+				-- StaticPopup1:HookScript("OnHide", function()
+				-- 	if shouldShowBar1 or shouldShowBar2 then return end
+				-- 	bar:Hide()
+				-- 	LibCompat.After(1, function()
+				-- 		if not StaticPopup1:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
+				-- 			print("resetting")
+				-- 			started = false
+				-- 		end
+				-- 	end)
+
+				-- end)
+
+				-- StaticPopup2:HookScript("OnHide", function()
+				-- 	if shouldShowBar1 or shouldShowBar2 then return end
+				-- 	bar:Hide()
+				-- 	LibCompat.After(1, function()
+				-- 		if not StaticPopup2:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
+				-- 			print("resetting")
+				-- 			started = false
+				-- 		end
+				-- 	end)
+
+				-- end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+				-- -- Declare variables
+				-- local t, barTime = -1, -1
+
+				-- -- Create status bar below dungeon ready popup
+				-- local bar = CreateFrame("StatusBar", nil, PVPReadyDialog)
+				-- bar:SetPoint("TOPLEFT", PVPReadyDialog, "BOTTOMLEFT", 0, -5)
+				-- bar:SetPoint("TOPRIGHT", PVPReadyDialog, "BOTTOMRIGHT", 0, -5)
+				-- bar:SetHeight(5)
+				-- bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+				-- bar:SetStatusBarColor(1.0, 0.85, 0.0)
+
+				-- -- Create status bar text
+				-- local text = bar:CreateFontString(nil, "ARTWORK")
+				-- text:SetFontObject("GameFontNormalLarge")
+				-- text:SetTextColor(1.0, 0.85, 0.0)
+				-- text:SetPoint("TOP", 0, -10)
+
+				-- -- Update bar as timer counts down
+				-- bar:SetScript("OnUpdate", function(self, elapsed)
+				-- 	t = t - elapsed
+				-- 	if barTime >= 1 or barTime == -1 then
+				-- 		self:SetValue(t)
+				-- 		text:SetText(SecondsToTime(floor(t + 0.5)))
+				-- 		barTime = 0
+				-- 	end
+				-- 	barTime = barTime + elapsed
+				-- end)
+
+				-- -- Show frame when PvP ready frame shows
+				-- hooksecurefunc("PVPReadyDialog_Display", function(self, id)
+				-- 	t = GetBattlefieldPortExpiration(id) + 1
+				-- 	-- t = 89; -- debug
+				-- 	if t and t > 1 then
+				-- 		bar:SetMinMaxValues(0, t)
+				-- 		barTime = -1
+				-- 		bar:Show()
+				-- 	else
+				-- 		bar:Hide()
+				-- 	end
+				-- end)
+
+				-- PVPReadyDialog:HookScript("OnHide", function()
+				-- 	bar:Hide()
+				-- end)
 
 				-- Debug
 				-- LibCompat.After(2, function() PVPReadyDialog_Display(self, 1, "Warsong Gulch", 0, "BATTLEGROUND", "", "DAMAGER"); bar:Show() end)
