@@ -1593,11 +1593,11 @@ function lib:New(texture, width, height)
 		bg:SetAllPoints()
 		bar.candyBarBackground = bg
 
-		local backdrop = CreateFrame("Frame", nil, bar, "BackdropTemplate") -- Used by bar stylers for backdrops
+		local backdrop = CreateFrame("Frame", nil, bar) -- Used by bar stylers for backdrops
 		backdrop:SetFrameLevel(0)
 		bar.candyBarBackdrop = backdrop
 
-		local iconBackdrop = CreateFrame("Frame", nil, bar, "BackdropTemplate") -- Used by bar stylers for backdrops
+		local iconBackdrop = CreateFrame("Frame", nil, bar) -- Used by bar stylers for backdrops
 		iconBackdrop:SetFrameLevel(0)
 		bar.candyBarIconFrameBackdrop = iconBackdrop
 

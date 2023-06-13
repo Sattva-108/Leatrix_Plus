@@ -6298,245 +6298,254 @@ function LeaPlusLC:FriendCheck(name)
 
 
 
-			-- -- Show progress bar when flight is taken
-			-- hooksecurefunc("TakeTaxiNode", function(node)
+			-- Show progress bar when flight is taken
+			hooksecurefunc("TakeTaxiNode", function(node)
 
-			-- 	if UnitAffectingCombat("player") then return end
-			-- 	if editFrame:IsShown() then editFrame:Hide() end
-			-- 	local index = button:GetID()
-			-- 	for i = 1, NumTaxiNodes() do
-			-- 		local nodeType = TaxiNodeGetType(i)
-			-- 		local nodeName = GetNodeName(i)
-			-- 		if nodeType == "CURRENT" then
-
-			-- 				-- Get current node
-			-- 			local continent = GetCurrentMapContinent()
-			-- 			local startX, startY = TaxiNodePosition(i)
-			-- 			local currentNode = string.format("%0.2f", startX) .. ":" .. string.format("%0.2f", startY)
-
-			-- 			-- Get destination
-			-- 			local endX, endY = TaxiNodePosition(index)
-			-- 			local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)
-			-- 			local barName = GetNodeName(index)
-
-			-- 			-- Build route string and debug string
-			-- 			local numEnterHops = GetNumRoutes(index)
-			-- 			local debugString = '["' .. currentNode
-			-- 			local routeString = currentNode
-			-- 			for i = 1, numEnterHops do
-			-- 				local nextHopX = TaxiGetDestX(index, i)
-			-- 				local nextHopY = TaxiGetDestY(index, i)
-			-- 				local hopPos = string.format("%0.2f", nextHopX) .. ":" .. string.format("%0.2f", nextHopY)
+				if UnitAffectingCombat("player") then return end
+				if editFrame:IsShown() then editFrame:Hide() end
+				  for i = 1, NumTaxiNodes() do
+    local nodeType = TaxiNodeGetType(i)
+    local nodeName = GetNodeName(i)
+    if nodeType == "CURRENT" then
 
 
-			-- 				local fpName = TaxiNodeName(i)
+      -- Get current node
+      local continent = GetCurrentMapContinent()
+      local startX, startY = TaxiNodePosition(i)
+      local currentNode = string.format("%0.2f", startX) .. ":" .. string.format("%0.2f", startY)
+      -- print(currentNode)
+
+      -- Get destination
+      local endX, endY = TaxiNodePosition(node)
+      local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)         
+          
+      -- Build route string     
+      local routeString = currentNode .. ":" .. destination
+      -- print("new" .. routeString)
+
+						-- Get destination
+						local endX, endY = TaxiNodePosition(node)
+						local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)
+						local barName = GetNodeName(node)
+
+						-- Build route string and debug string
+						local numEnterHops = GetNumRoutes(node)
+						local debugString = '["' .. currentNode
+						local routeString = currentNode
+						for i = 1, numEnterHops do
+							local nextHopX = TaxiGetDestX(node, i)
+							local nextHopY = TaxiGetDestY(node, i)
+							local hopPos = string.format("%0.2f", nextHopX) .. ":" .. string.format("%0.2f", nextHopY)
+
+
+							local fpName = TaxiNodeName(i)
     
-			-- 			    -- Find comma index    
-			-- 			    -- local commaIndex = fpName:find(", ")   
+						    -- Find comma index    
+						    -- local commaIndex = fpName:find(", ")   
 						        
-			-- 			    -- -- Get first word         
-			-- 			    -- local firstWord = fpName:sub(1, commaIndex - 1) 
-			-- 			    -- fpName = firstWord
+						    -- -- Get first word         
+						    -- local firstWord = fpName:sub(1, commaIndex - 1) 
+						    -- fpName = firstWord
 						    
-			-- 				-- print(fpName)
+							-- print(fpName)
 
 
-			-- 				debugString = debugString .. ":" .. hopPos
-			-- 				routeString = routeString .. ":" .. hopPos
-			-- 			end
-			-- 			-- print(routeString .. destination)
-			-- 			-- If route string does not contain destination, add it to the end (such as Altar of Sha'tar)
-			-- 			if not string.find(routeString, destination) then
-			-- 				-- print(routeString .. "and" .. destination)
-			-- 				debugString = debugString .. ":" .. destination
-			-- 				routeString = routeString .. ":" .. destination
-			-- 			end
-			-- 			debugString = debugString .. '"] = '
+							debugString = debugString .. ":" .. hopPos
+							routeString = routeString .. ":" .. hopPos
+						end
+						-- print(routeString .. destination)
+						-- If route string does not contain destination, add it to the end (such as Altar of Sha'tar)
+						if not string.find(routeString, destination) then
+							-- print(routeString .. "and" .. destination)
+							debugString = debugString .. ":" .. destination
+							routeString = routeString .. ":" .. destination
+						end
+						debugString = debugString .. '"] = '
 
 
-			-- 			-- Add node names to debug string
-			-- 			debugString = debugString .. " -- " .. nodeName
-			-- 			-- for i = 20, numEnterHops do
-			-- 			-- 	local fpName = TaxiNodeName(i)
+						-- Add node names to debug string
+						debugString = debugString .. " -- " .. nodeName
+						-- for i = 20, numEnterHops do
+						-- 	local fpName = TaxiNodeName(i)
     
-			-- 			--     -- Find comma index    
-			-- 			--     local commaIndex = fpName:find(", ")   
+						--     -- Find comma index    
+						--     local commaIndex = fpName:find(", ")   
 						        
-			-- 			--     -- Get first word         
-			-- 			--     local firstWord = fpName:sub(1, commaIndex - 1) 
-			-- 			--     fpName = firstWord
-			-- 			-- 	debugString = debugString .. ", " .. fpName
-			-- 			-- end
+						--     -- Get first word         
+						--     local firstWord = fpName:sub(1, commaIndex - 1) 
+						--     fpName = firstWord
+						-- 	debugString = debugString .. ", " .. fpName
+						-- end
 
-			-- 			-- If debug string does not contain destination, add it to the end
-			-- 			if not string.find(debugString, barName) then
-			-- 				debugString = debugString .. ", " .. barName
-			-- 			end
+						-- If debug string does not contain destination, add it to the end
+						if not string.find(debugString, barName) then
+							debugString = debugString .. ", " .. barName
+						end
 
-			-- 			-- Print debug string (used for showing full routes for nodes)
-			-- 			print(debugString)
+						-- Print debug string (used for showing full routes for nodes)
+						print(debugString)
 
-			-- 			-- Handle flight time not correct or flight does not exist in database
-			-- 			local timeStart = GetTime()
-			-- 			LibCompat.After(1, function()
-			-- 				if UnitOnTaxi("player") then
-			-- 					-- Player is on a taxi so register when taxi lands
-			-- 					flightFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
-			-- 				else
-			-- 					-- Player is not on a taxi so delete the flight progress bar
-			-- 					flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
-			-- 					if LeaPlusLC.FlightProgressBar then
-			-- 						LeaPlusLC.FlightProgressBar:Stop()
-			-- 						LeaPlusLC.FlightProgressBar = nil
-			-- 					end
-			-- 				end
-			-- 			end)
-			-- 			flightFrame:SetScript("OnEvent", function()
-			-- 				local timeEnd = GetTime()
-			-- 				local timeTaken = timeEnd - timeStart
-			-- 				debugString = gsub(debugString, "TimeTakenPlaceHolder", string.format("%0.0f", timeTaken))
-			-- 				local flightMsg = L["Flight details"] .. " (" .. L["WRATH"].. "): " .. nodeName .. " (" .. currentNode .. ") " .. L["to"] .. " " .. barName .. " (" .. destination .. ") (" .. faction .. ") " .. L["took"] .. " " .. string.format("%0.0f", timeTaken) .. " " .. L["seconds"] .. " (" .. numHops .. " " .. L["hop"] ..").|n|n" .. debugString .. "|n|n"
-			-- 				if destination and data[faction] and data[faction][continent] and data[faction][continent][routeString] then
-			-- 					local savedDuration = data[faction][continent][routeString]
-			-- 					if savedDuration then
-			-- 						if timeTaken > (savedDuration + timeBuffer) or timeTaken < (savedDuration - timeBuffer) then
-			-- 							local editMsg = introMsg .. flightMsg .. L["This flight's actual time of"] .. " " .. string.format("%0.0f", timeTaken) .. " " .. L["seconds does not match the saved flight time of"] .. " " .. savedDuration .. " " .. L["seconds"] .. "."
-			-- 							editBox:SetText(editMsg); if LeaPlusLC["FlightBarContribute"] == "On" then editFrame:Show() end
-			-- 						end
-			-- 					else
-			-- 						local editMsg = introMsg .. flightMsg .. L["This flight does not have a saved duration in the database."]
-			-- 						editBox:SetText(editMsg); if LeaPlusLC["FlightBarContribute"] == "On" then editFrame:Show() end
-			-- 					end
-			-- 				else
-			-- 					local editMsg = introMsg .. flightMsg .. L["This flight does not exist in the database."]
-			-- 					editBox:SetText(editMsg); if LeaPlusLC["FlightBarContribute"] == "On" then editFrame:Show() end
-			-- 				end
-			-- 				flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
+						-- Handle flight time not correct or flight does not exist in database
+						local timeStart = GetTime()
+						LibCompat.After(1, function()
+							if UnitOnTaxi("player") then
+								-- Player is on a taxi so register when taxi lands
+								flightFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
+							else
+								-- Player is not on a taxi so delete the flight progress bar
+								flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
+								if LeaPlusLC.FlightProgressBar then
+									LeaPlusLC.FlightProgressBar:Stop()
+									LeaPlusLC.FlightProgressBar = nil
+								end
+							end
+						end)
+						flightFrame:SetScript("OnEvent", function()
+							local timeEnd = GetTime()
+							local timeTaken = timeEnd - timeStart
+							debugString = gsub(debugString, "TimeTakenPlaceHolder", string.format("%0.0f", timeTaken))
+							local flightMsg = L["Flight details"] .. " (" .. L["WRATH"].. "): " .. nodeName .. " (" .. currentNode .. ") " .. L["to"] .. " " .. barName .. " (" .. destination .. ") (" .. faction .. ") " .. L["took"] .. " " .. string.format("%0.0f", timeTaken) .. " " .. L["seconds"] .. " (" .. numHops .. " " .. L["hop"] ..").|n|n" .. debugString .. "|n|n"
+							if destination and data[faction] and data[faction][continent] and data[faction][continent][routeString] then
+								local savedDuration = data[faction][continent][routeString]
+								if savedDuration then
+									if timeTaken > (savedDuration + timeBuffer) or timeTaken < (savedDuration - timeBuffer) then
+										local editMsg = introMsg .. flightMsg .. L["This flight's actual time of"] .. " " .. string.format("%0.0f", timeTaken) .. " " .. L["seconds does not match the saved flight time of"] .. " " .. savedDuration .. " " .. L["seconds"] .. "."
+										editBox:SetText(editMsg); if LeaPlusLC["FlightBarContribute"] == "On" then editFrame:Show() end
+									end
+								else
+									local editMsg = introMsg .. flightMsg .. L["This flight does not have a saved duration in the database."]
+									editBox:SetText(editMsg); if LeaPlusLC["FlightBarContribute"] == "On" then editFrame:Show() end
+								end
+							else
+								local editMsg = introMsg .. flightMsg .. L["This flight does not exist in the database."]
+								editBox:SetText(editMsg); if LeaPlusLC["FlightBarContribute"] == "On" then editFrame:Show() end
+							end
+							flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
 
-			-- 				-- Delete the progress bar since we have landed
-			-- 				if LeaPlusLC.FlightProgressBar then
-			-- 					LeaPlusLC.FlightProgressBar:Stop()
-			-- 					LeaPlusLC.FlightProgressBar = nil
-			-- 				end
-			-- 			end)
+							-- Delete the progress bar since we have landed
+							if LeaPlusLC.FlightProgressBar then
+								LeaPlusLC.FlightProgressBar:Stop()
+								LeaPlusLC.FlightProgressBar = nil
+							end
+						end)
 
-			-- 			-- Show flight progress bar if flight exists in database
-			-- 			if data[faction] and data[faction][continent] and data[faction][continent][routeString] then
+						-- Show flight progress bar if flight exists in database
+						if data[faction] and data[faction][continent] and data[faction][continent][routeString] then
 
-			-- 				local duration = data[faction][continent][routeString]
-			-- 				if duration then
+							local duration = data[faction][continent][routeString]
+							if duration then
 
-			-- 					-- Delete an existing progress bar if one exists
-			-- 					if LeaPlusLC.FlightProgressBar then
-			-- 						LeaPlusLC.FlightProgressBar:Stop()
-			-- 						LeaPlusLC.FlightProgressBar = nil
-			-- 					end
+								-- Delete an existing progress bar if one exists
+								if LeaPlusLC.FlightProgressBar then
+									LeaPlusLC.FlightProgressBar:Stop()
+									LeaPlusLC.FlightProgressBar = nil
+								end
 
-			-- 					-- Create progress bar
-			-- 					local mybar = candy:New(texture, 230, 16)
-			-- 					mybar:SetPoint(LeaPlusLC["FlightBarA"], UIParent, LeaPlusLC["FlightBarR"], LeaPlusLC["FlightBarX"], LeaPlusLC["FlightBarY"])
-			-- 					mybar:SetScale(LeaPlusLC["FlightBarScale"])
-			-- 					mybar:SetWidth(LeaPlusLC["FlightBarWidth"])
+								-- Create progress bar
+								local mybar = candy:New(texture, 230, 16)
+								mybar:SetPoint(LeaPlusLC["FlightBarA"], UIParent, LeaPlusLC["FlightBarR"], LeaPlusLC["FlightBarX"], LeaPlusLC["FlightBarY"])
+								mybar:SetScale(LeaPlusLC["FlightBarScale"])
+								mybar:SetWidth(LeaPlusLC["FlightBarWidth"])
 
-			-- 					-- Setup sound files
-			-- 					local mt
-			-- 					local Seconds600, Seconds540, Seconds480, Seconds420, Seconds360
-			-- 					local Seconds300, Seconds240, Seconds180, Seconds120, Seconds060
-			-- 					local Seconds030, Seconds020, Seconds010
+								-- -- Setup sound files
+								-- local mt
+								-- local Seconds600, Seconds540, Seconds480, Seconds420, Seconds360
+								-- local Seconds300, Seconds240, Seconds180, Seconds120, Seconds060
+								-- local Seconds030, Seconds020, Seconds010
 
-			-- 					local destination = Enum.VoiceTtsDestination.LocalPlayback
-			-- 					local speed = -2
+								-- local destination = Enum.VoiceTtsDestination.LocalPlayback
+								-- local speed = -2
 
-			-- 					if LeaPlusLC["FlightBarSpeech"] == "On" then
-			-- 						LibCompat.After(1, function()
-			-- 							C_VoiceChat.SpeakText(0, L["Flight commenced."], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 						end)
-			-- 						mybar:AddUpdateFunction(function(bar)
-			-- 							mt = bar.remaining
-			-- 								if mt > 600 and mt < 601 and not Seconds600 then Seconds600 = true; C_VoiceChat.SpeakText(0, L["Ten minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 540 and mt < 541 and not Seconds540 then Seconds540 = true; C_VoiceChat.SpeakText(0, L["Nine minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 480 and mt < 481 and not Seconds480 then Seconds480 = true; C_VoiceChat.SpeakText(0, L["Eight minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 420 and mt < 421 and not Seconds420 then Seconds420 = true; C_VoiceChat.SpeakText(0, L["Seven minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 360 and mt < 361 and not Seconds360 then Seconds360 = true; C_VoiceChat.SpeakText(0, L["Six minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 300 and mt < 301 and not Seconds300 then Seconds300 = true; C_VoiceChat.SpeakText(0, L["Five minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 240 and mt < 241 and not Seconds240 then Seconds240 = true; C_VoiceChat.SpeakText(0, L["Four minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 180 and mt < 181 and not Seconds180 then Seconds180 = true; C_VoiceChat.SpeakText(0, L["Three minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 120 and mt < 121 and not Seconds120 then Seconds120 = true; C_VoiceChat.SpeakText(0, L["Two minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 060 and mt < 061 and not Seconds060 then Seconds060 = true; C_VoiceChat.SpeakText(0, L["One minute"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 030 and mt < 031 and not Seconds030 then Seconds030 = true; C_VoiceChat.SpeakText(0, L["Thirty seconds"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 020 and mt < 021 and not Seconds020 then Seconds020 = true; C_VoiceChat.SpeakText(0, L["Twenty seconds"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							elseif mt > 010 and mt < 011 and not Seconds010 then Seconds010 = true; C_VoiceChat.SpeakText(0, L["Ten seconds"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-			-- 							end
-			-- 						end)
-			-- 					end
+								-- if LeaPlusLC["FlightBarSpeech"] == "On" then
+								-- 	LibCompat.After(1, function()
+								-- 		C_VoiceChat.SpeakText(0, L["Flight commenced."], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 	end)
+								-- 	mybar:AddUpdateFunction(function(bar)
+								-- 		mt = bar.remaining
+								-- 			if mt > 600 and mt < 601 and not Seconds600 then Seconds600 = true; C_VoiceChat.SpeakText(0, L["Ten minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 540 and mt < 541 and not Seconds540 then Seconds540 = true; C_VoiceChat.SpeakText(0, L["Nine minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 480 and mt < 481 and not Seconds480 then Seconds480 = true; C_VoiceChat.SpeakText(0, L["Eight minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 420 and mt < 421 and not Seconds420 then Seconds420 = true; C_VoiceChat.SpeakText(0, L["Seven minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 360 and mt < 361 and not Seconds360 then Seconds360 = true; C_VoiceChat.SpeakText(0, L["Six minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 300 and mt < 301 and not Seconds300 then Seconds300 = true; C_VoiceChat.SpeakText(0, L["Five minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 240 and mt < 241 and not Seconds240 then Seconds240 = true; C_VoiceChat.SpeakText(0, L["Four minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 180 and mt < 181 and not Seconds180 then Seconds180 = true; C_VoiceChat.SpeakText(0, L["Three minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 120 and mt < 121 and not Seconds120 then Seconds120 = true; C_VoiceChat.SpeakText(0, L["Two minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 060 and mt < 061 and not Seconds060 then Seconds060 = true; C_VoiceChat.SpeakText(0, L["One minute"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 030 and mt < 031 and not Seconds030 then Seconds030 = true; C_VoiceChat.SpeakText(0, L["Thirty seconds"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 020 and mt < 021 and not Seconds020 then Seconds020 = true; C_VoiceChat.SpeakText(0, L["Twenty seconds"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		elseif mt > 010 and mt < 011 and not Seconds010 then Seconds010 = true; C_VoiceChat.SpeakText(0, L["Ten seconds"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
+								-- 		end
+								-- 	end)
+								-- end
 
-			-- 					if faction == "Alliance" then
-			-- 						mybar:SetColor(0, 0.5, 1, 0.5)
-			-- 					else
-			-- 						mybar:SetColor(1, 0.0, 0, 0.5)
-			-- 					end
-			-- 					mybar:SetShadowColor(0, 0, 0, 0.5)
+								if faction == "Alliance" then
+									mybar:SetColor(0, 0.5, 1, 0.5)
+								else
+									mybar:SetColor(1, 0.0, 0, 0.5)
+								end
+								mybar:SetShadowColor(0, 0, 0, 0.5)
 
-			-- 					mybar:SetScript("OnMouseDown", function(self, btn)
-			-- 						if btn == "RightButton" then
-			-- 							mybar:Stop()
-			-- 							LeaPlusLC.FlightProgressBar = nil
-			-- 						end
-			-- 					end)
+								mybar:SetScript("OnMouseDown", function(self, btn)
+									if btn == "RightButton" then
+										mybar:Stop()
+										LeaPlusLC.FlightProgressBar = nil
+									end
+								end)
 
-			-- 					-- Set bar label width
-			-- 					-- barName = "SupercalifragilisticexpialidociousDociousaliexpisticfragicalirupus" -- Debug
-			-- 					mybar.candyBarLabel:ClearAllPoints()
-			-- 					mybar.candyBarLabel:SetPoint("TOPLEFT", mybar.candyBarBackground, "TOPLEFT", 2, 0)
-			-- 					mybar.candyBarLabel:SetPoint("BOTTOMRIGHT", mybar.candyBarBackground, "BOTTOMRIGHT", -40, 0)
+								-- Set bar label width
+								-- barName = "SupercalifragilisticexpialidociousDociousaliexpisticfragicalirupus" -- Debug
+								mybar.candyBarLabel:ClearAllPoints()
+								mybar.candyBarLabel:SetPoint("TOPLEFT", mybar.candyBarBackground, "TOPLEFT", 2, 0)
+								mybar.candyBarLabel:SetPoint("BOTTOMRIGHT", mybar.candyBarBackground, "BOTTOMRIGHT", -40, 0)
 
-			-- 					-- Set flight bar background
-			-- 					if LeaPlusLC["FlightBarBackground"] == "On" then
-			-- 						if LeaPlusLC.ElvUI then
-			-- 							_G.LeaPlusGlobalFlightBar = mybar.candyBarBar
-			-- 							if faction == "Alliance" then
-			-- 								LeaPlusLC.ElvUI:GetModule("Skins"):HandleStatusBar(_G.LeaPlusGlobalFlightBar, {0, 0.5, 1, 0.5})
-			-- 							else
-			-- 								LeaPlusLC.ElvUI:GetModule("Skins"):HandleStatusBar(_G.LeaPlusGlobalFlightBar, {1, 0.0, 0, 0.5})
-			-- 							end
-			-- 						else
-			-- 							mybar:SetTexture(texture)
-			-- 						end
-			-- 					else
-			-- 						mybar:SetTexture("")
-			-- 					end
+								-- Set flight bar background
+								if LeaPlusLC["FlightBarBackground"] == "On" then
+									if LeaPlusLC.ElvUI then
+										_G.LeaPlusGlobalFlightBar = mybar.candyBarBar
+										if faction == "Alliance" then
+											LeaPlusLC.ElvUI:GetModule("Skins"):HandleStatusBar(_G.LeaPlusGlobalFlightBar, {0, 0.5, 1, 0.5})
+										else
+											LeaPlusLC.ElvUI:GetModule("Skins"):HandleStatusBar(_G.LeaPlusGlobalFlightBar, {1, 0.0, 0, 0.5})
+										end
+									else
+										mybar:SetTexture(texture)
+									end
+								else
+									mybar:SetTexture("")
+								end
 
-			-- 					-- Set flight bar destination
-			-- 					if LeaPlusLC["FlightBarDestination"] == "On" then
-			-- 						mybar:SetLabel(barName)
-			-- 					end
+								-- Set flight bar destination
+								if LeaPlusLC["FlightBarDestination"] == "On" then
+									mybar:SetLabel(barName)
+								end
 
-			-- 					-- Set flight bar fill mode
-			-- 					if LeaPlusLC["FlightBarFillBar"] == "On" then
-			-- 						mybar:SetFill(true)
-			-- 					else
-			-- 						mybar:SetFill(false)
-			-- 					end
+								-- Set flight bar fill mode
+								if LeaPlusLC["FlightBarFillBar"] == "On" then
+									mybar:SetFill(true)
+								else
+									mybar:SetFill(false)
+								end
 
-			-- 					mybar:EnableMouse(false)
-			-- 					mybar:SetDuration(duration)
-			-- 					mybar:Start()
+								mybar:EnableMouse(false)
+								mybar:SetDuration(duration)
+								mybar:Start()
 
-			-- 					-- Unlock close bar button
-			-- 					if LeaPlusCB["CloseFlightBarButton"] then
-			-- 						LeaPlusLC:LockItem(LeaPlusCB["CloseFlightBarButton"], false)
-			-- 					end
+								-- Unlock close bar button
+								if LeaPlusCB["CloseFlightBarButton"] then
+									LeaPlusLC:LockItem(LeaPlusCB["CloseFlightBarButton"], false)
+								end
 
-			-- 					-- Assign file level scope to the bar so it can be cancelled later
-			-- 					LeaPlusLC.FlightProgressBar = mybar
+								-- Assign file level scope to the bar so it can be cancelled later
+								LeaPlusLC.FlightProgressBar = mybar
 
-			-- 				end
+							end
 
-			-- 			end
+						end
 
-			-- 		end
-			-- 	end
-			-- end)
+					end
+				end
+			end)
 
 			-- Function to stop the progress bar
 			local function CeaseProgress()
