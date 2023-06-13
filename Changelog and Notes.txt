@@ -29,6 +29,8 @@ MinimapEnhance			- Replace non-standard buttons option! Aka those that don't use
 
 AhExtras				- Need to make new description for alt click, tab confirm. And do locales.
 
+SlashCommand			- /ltp neeeds to be fixed, not working at all.
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:

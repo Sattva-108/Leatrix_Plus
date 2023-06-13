@@ -713,7 +713,7 @@
 				["0.56:0.53:0.41:0.47"] = 150, -- Crossroads, Sun Rock Retreat
 				["0.56:0.53:0.55:0.42"] = 162, -- Crossroads, Splintertree Post
 				["0.56:0.53:0.63:0.44"] = 117, -- Crossroads, Orgrimmar
-				["0.56:0.53:0.61:0.55"] = 52, -- Crossroads, Ratchet
+				["0.56:0.47:0.61:0.45"] = 52, -- Crossroads, Ratchet
 				["0.56:0.53:0.63:0.36"] = 164, -- Crossroads, Valormok
 				["0.56:0.53:0.55:0.42:0.50:0.35"] = 241, -- Crossroads, Splintertree Post, Emerald Sanctuary
 				["0.56:0.53:0.41:0.37"] = 230, -- Crossroads, Zoram'gar Outpost
@@ -998,7 +998,7 @@
 				["0.61:0.55:0.56:0.53:0.53:0.61"] = 141, -- Ratchet, Crossroads, Camp Taurajo
 				["0.61:0.55:0.56:0.53:0.45:0.56:0.32:0.58"] = 334, -- Ratchet, Crossroads, Thunder Bluff, Shadowprey Village
 				["0.61:0.55:0.56:0.53:0.45:0.56"] = 175, -- Ratchet, Crossroads, Thunder Bluff (Elena Liakhovskaia reported 70)
-				["0.61:0.55:0.56:0.53"] = 69, -- Ratchet, Crossroads
+				["0.61:0.45:0.56:0.47"] = 69, -- Ratchet, Crossroads
 				["0.61:0.55:0.56:0.53:0.41:0.47"] = 218, -- Ratchet, Crossroads, Sun Rock Retreat
 				["0.61:0.55:0.63:0.44:0.55:0.42"] = 190, -- Ratchet, Orgrimmar, Splintertree Post -- CHANGE from 101 to 191 (Basse, Nate Sander, Lori Payne, Video Games, Josh Romey, Nelson Egger II)
 				["0.61:0.55:0.63:0.44"] = 101, -- Ratchet, Orgrimmar
