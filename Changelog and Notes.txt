@@ -39,6 +39,8 @@ Auto-Ress in BG 		 - With option "Exclude Alterac" will it not auto-res in Alter
 
 Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ? 
 
+QueueTimer				 - Need to test if timer .After 0.1 is fine in SetupBar func (was 1 second before)
+
 
 --------------------------------------------------------------------------------
 -- Stuff to-do:

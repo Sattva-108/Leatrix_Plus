@@ -15,7 +15,7 @@
 			----------------------------------------------------------------------
 
 			-- Horde: Eastern Kingdoms
-			[1415] = {
+			[2] = {
 
 				-- Horde: Acherus (Eastern Plaguelands)
 				["0.62:0.34:0.61:0.35:0.61:0.28:0.58:0.06"] = 392, -- Acherus: The Ebon Hold, Light's Hope Chapel, Zul'Aman, Shattered Sun Staging Area
@@ -560,7 +560,7 @@
 			},
 
 			-- Horde: Kalimdor
-			[1414] = {
+			[1] = {
 
 				-- Horde: Bloodvenom Post (Felwood)
 				["0.46:0.30:0.56:0.53:0.55:0.73:0.61:0.80"] = 518, -- Bloodvenom Post, Crossroads, Freewind Post, Gadgetzan
@@ -961,14 +961,14 @@
 				["0.63:0.44:0.45:0.56"] = 224, -- Orgrimmar, Thunder Bluff (David Galindo suggested 233)
 				["0.63:0.44:0.56:0.53"] = 110, -- Orgrimmar, Crossroads
 				["0.63:0.44:0.61:0.55"] = 108, -- Orgrimmar, Ratchet
-				["0.63:0.44:0.63:0.36"] = 95, -- Orgrimmar, Valormok
-				["0.63:0.44:0.55:0.42"] = 90, -- Orgrimmar, Splintertree Post
+				["0.63:0.56:0.00:0.00:0.63:0.64"] = 95, -- Orgrimmar, Valormok
+				["0.63:0.56:0.00:0.000.63:0.64"] = 90, -- Orgrimmar, Splintertree Post
 				["0.63:0.44:0.56:0.53:0.41:0.47"] = 258, -- Orgrimmar, Crossroads, Sun Rock Retreat
 				["0.63:0.44:0.55:0.42:0.41:0.37"] = 249, -- Orgrimmar, Splintertree Post, Zoram'gar Outpost
 				["0.63:0.44:0.55:0.42:0.50:0.35"] = 168, -- Orgrimmar, Splintertree Post, Emerald Sanctuary
 				["0.63:0.44:0.46:0.30"] = 252, -- Orgrimmar, Bloodvenom Post
-				["0.63:0.44:0.63:0.36:0.64:0.23:0.54:0.21"] = 358, -- Orgrimmar, Valormok, Everlook, Moonglade
-				["0.63:0.44:0.64:0.23"] = 240, -- Orgrimmar, Everlook
+				["0.63:0.56:0.64:0.77:0.54:0.79:0.00:0.00"] = 358, -- Orgrimmar, Valormok, Everlook, Moonglade
+				["0.63:0.56:0.00:0.00:0.64:0.77"] = 240, -- Orgrimmar, Everlook
 				["0.63:0.44:0.55:0.42:0.50:0.35:0.46:0.30:0.54:0.21"] = 371, -- Orgrimmar, Splintertree Post, Emerald Sanctuary, Bloodvenom Post, Moonglade
 				["0.63:0.44:0.56:0.53:0.41:0.37"] = 339, -- Orgrimmar, Crossroads, Zoram'gar Outpost
 				["0.63:0.44:0.64:0.23:0.54:0.21"] = 374, -- Orgrimmar, Everlook, Moonglade
@@ -1201,7 +1201,7 @@
 			},
 
 			-- Horde: Outland
-			[1945] = {
+			[3] = {
 
 				-- Horde: Altar of Sha'tar (Shadowmoon Valley)
 				["0.81:0.77:0.66:0.77"] = 67, -- Altar of Sha'tar, Shadowmoon Village
@@ -1694,7 +1694,7 @@
 			},
 
 			-- Horde: Northrend
-			[113] = {
+			[4] = {
 
 				----------------------------------------------------------------------
 				-- Horde: Borean Tundra

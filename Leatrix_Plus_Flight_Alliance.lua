@@ -15,7 +15,7 @@
 			----------------------------------------------------------------------
 
 			-- Alliance: Eastern Kingdoms
-			[1415] = {
+			[2] = {
 
 				-- Alliance: Acherus (Eastern Plaguelands)
 				["0.62:0.34:0.61:0.35:0.58:0.06"] = 385, -- Acherus: The Ebon Hold, Light's Hope Chapel, Shattered Sun Staging Area
@@ -714,7 +714,7 @@
 			},
 
 			-- Alliance: Kalimdor
-			[1414] = {
+			[1] = {
 
 				-- Alliance: Blood Watch (Bloodmyst Isle)
 				["0.22:0.18:0.21:0.26"] = 77, -- Blood Watch, The Exodar (Nick Bijl reported 110)
@@ -1411,7 +1411,7 @@
 			},
 
 			-- Alliance: Outland
-			[1945] = {
+			[3] = {
 
 				-- Alliance: Allerian Stronghold (Terokkar Forest)
 				["0.55:0.77:0.27:0.74"] = 149, -- Allerian Stronghold, Telaar
@@ -1870,7 +1870,7 @@
 			},
 
 			-- Alliance: Northrend
-			[113] = {
+			[4] = {
 
 				----------------------------------------------------------------------
 				-- Alliance: Borean Tundra

@@ -5807,7 +5807,7 @@ function LeaPlusLC:FriendCheck(name)
 
 
 				local function SetupBar()
-					LibCompat.After(1, function()
+					LibCompat.After(0.1, function()
 						if not StaticPopup1:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
 							-- print("resetting")
 							started = false
@@ -6163,7 +6163,7 @@ function LeaPlusLC:FriendCheck(name)
 			local timeBuffer = 15
 
 			-- Create editbox
-			local editFrame = CreateFrame("ScrollFrame", nil, UIParent, "InputScrollFrameTemplate")
+			local editFrame = CreateFrame("ScrollFrame", nil, UIParent, "Leatrix_InputScrollFrameTemplate")
 
 			-- Set frame parameters
 			editFrame:ClearAllPoints()
@@ -6172,7 +6172,7 @@ function LeaPlusLC:FriendCheck(name)
 			editFrame:SetFrameStrata("MEDIUM")
 			editFrame:SetToplevel(true)
 			editFrame:Hide()
-			editFrame.CharCount:Hide()
+			-- editFrame.CharCount:Hide()
 
 			-- Add background color
 			editFrame.t = editFrame:CreateTexture(nil, "BACKGROUND")
@@ -6180,29 +6180,29 @@ function LeaPlusLC:FriendCheck(name)
 			editFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
 
 			-- Set textures
-			editFrame.LeftTex:SetTexture(editFrame.RightTex:GetTexture()); editFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
-			editFrame.BottomTex:SetTexture(editFrame.TopTex:GetTexture()); editFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
-			editFrame.BottomRightTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
-			editFrame.BottomLeftTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.BottomLeftTex:SetTexCoord(1, 0, 1, 0)
-			editFrame.TopLeftTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.TopLeftTex:SetTexCoord(1, 0, 0, 1)
+			-- editFrame.LeftTex:SetTexture(editFrame.RightTex:GetTexture()); editFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
+			-- editFrame.BottomTex:SetTexture(editFrame.TopTex:GetTexture()); editFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
+			-- editFrame.BottomRightTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
+			-- editFrame.BottomLeftTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.BottomLeftTex:SetTexCoord(1, 0, 1, 0)
+			-- editFrame.TopLeftTex:SetTexture(editFrame.TopRightTex:GetTexture()); editFrame.TopLeftTex:SetTexCoord(1, 0, 0, 1)
 
 			-- Create title bar
-			local titleFrame = CreateFrame("ScrollFrame", nil, editFrame, "InputScrollFrameTemplate")
+			local titleFrame = CreateFrame("ScrollFrame", nil, editFrame, "Leatrix_InputScrollFrameTemplate")
 			titleFrame:ClearAllPoints()
 			titleFrame:SetPoint("TOP", 0, 32)
 			titleFrame:SetSize(600, 24)
 			titleFrame:SetFrameStrata("MEDIUM")
 			titleFrame:SetToplevel(true)
 			titleFrame:SetHitRectInsets(-6, -6, -6, -6)
-			titleFrame.CharCount:Hide()
+			-- titleFrame.CharCount:Hide()
 			titleFrame.t = titleFrame:CreateTexture(nil, "BACKGROUND")
 			titleFrame.t:SetAllPoints()
 			titleFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
-			titleFrame.LeftTex:SetTexture(titleFrame.RightTex:GetTexture()); titleFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
-			titleFrame.BottomTex:SetTexture(titleFrame.TopTex:GetTexture()); titleFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
-			titleFrame.BottomRightTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
-			titleFrame.BottomLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomLeftTex:SetTexCoord(1, 0, 1, 0)
-			titleFrame.TopLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.TopLeftTex:SetTexCoord(1, 0, 0, 1)
+			-- titleFrame.LeftTex:SetTexture(titleFrame.RightTex:GetTexture()); titleFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
+			-- titleFrame.BottomTex:SetTexture(titleFrame.TopTex:GetTexture()); titleFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
+			-- titleFrame.BottomRightTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
+			-- titleFrame.BottomLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomLeftTex:SetTexCoord(1, 0, 1, 0)
+			-- titleFrame.TopLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.TopLeftTex:SetTexCoord(1, 0, 0, 1)
 
 			-- Add title
 			titleFrame.m = titleFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
@@ -6219,17 +6219,17 @@ function LeaPlusLC:FriendCheck(name)
 			titleFrame.x:SetWordWrap(false)
 			titleFrame.x:SetJustifyH("RIGHT")
 
-			local titleBox = titleFrame.EditBox
-			titleBox:Hide()
-			titleBox:SetEnabled(false)
-			titleBox:SetMaxLetters(0)
+			-- local titleBox = titleFrame.EditBox
+			-- titleBox:Hide()
+			-- titleBox:SetEnabled(false)
+			-- titleBox:SetMaxLetters(0)
 
 			-- Create editbox
 			local editBox = editFrame.EditBox
 			editBox:SetAltArrowKeyMode(false)
 			editBox:SetTextInsets(4, 4, 4, 4)
 			editBox:SetWidth(editFrame:GetWidth() - 30)
-			editBox:SetSecurityDisablePaste()
+			-- editBox:SetSecurityDisablePaste()
 			editBox:SetFont(_G["ChatFrame1"]:GetFont())
 			editBox:SetMaxLetters(0)
 
@@ -6306,7 +6306,7 @@ function LeaPlusLC:FriendCheck(name)
 					if nodeType == "CURRENT" then
 
 						-- Get current node
-						local continent = getContinent()
+						local continent = true
 						local startX, startY = TaxiNodePosition(i)
 						local currentNode = string.format("%0.2f", startX) .. ":" .. string.format("%0.2f", startY)
 
@@ -6323,9 +6323,9 @@ function LeaPlusLC:FriendCheck(name)
 						local debugString = '["' .. currentNode
 						local routeString = currentNode
 						for i = 2, numHops + 1 do
-							local hopPosX, hopPosY = TaxiNodePosition(TaxiGetNodeSlot(node, i, true))
-							local hopPos = string.format("%0.2f", hopPosX) .. ":" .. string.format("%0.2f", hopPosY)
-							local fpName = string.split(", ", TaxiNodeName(TaxiGetNodeSlot(node, i, true)))
+							local hopPosX, hopPosY = "TaxiNodePosition(TaxiGetNodeSlot(node, i, true))"
+							local hopPos = string.format("%0.2f", "hopPosX") .. ":" .. string.format("%0.2f", "hopPosY")
+							local fpName = string.split(", ", "TaxiNodeName(TaxiGetNodeSlot(node, i, true))")
 							debugString = debugString .. ":" .. hopPos
 							routeString = routeString .. ":" .. hopPos
 						end
@@ -6339,7 +6339,7 @@ function LeaPlusLC:FriendCheck(name)
 						debugString = debugString .. '"] = TimeTakenPlaceHolder,'
 						debugString = debugString .. " -- " .. nodeName
 						for i = 2, numHops + 1 do
-							local fpName = string.split(",", TaxiNodeName(TaxiGetNodeSlot(node, i, true)))
+							local fpName = string.split(",", "TaxiNodeName(TaxiGetNodeSlot(node, i, true))")
 							debugString = debugString .. ", " .. fpName
 						end
 
@@ -6519,7 +6519,7 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			-- Stop the progress bar under various circumstances
-			hooksecurefunc("TaxiRequestEarlyLanding", CeaseProgress)
+			-- hooksecurefunc("TaxiRequestEarlyLanding", CeaseProgress)
 			hooksecurefunc("AcceptBattlefieldPort", CeaseProgress)
 			hooksecurefunc("ConfirmSummon", CeaseProgress)
 
@@ -6532,7 +6532,7 @@ function LeaPlusLC:FriendCheck(name)
 					if nodeType == "CURRENT" then
 
 						-- Get current node
-						local continent = getContinent()
+						local continent = GetCurrentMapContinent()
 						local startX, startY = TaxiNodePosition(i)
 						local currentNode = string.format("%0.2f", startX) .. ":" .. string.format("%0.2f", startY)
 
@@ -6546,15 +6546,30 @@ function LeaPlusLC:FriendCheck(name)
 						local debugString = '["' .. currentNode
 						local routeString = currentNode
 						for i = 2, numEnterHops + 1 do
-							local hopPosX, hopPosY = TaxiNodePosition(TaxiGetNodeSlot(index, i, true)) -- TaxiNodeName
-							local hopPos = string.format("%0.2f", hopPosX) .. ":" .. string.format("%0.2f", hopPosY)
-							local fpName = string.split(", ", TaxiNodeName(TaxiGetNodeSlot(index, i, true)))
+							local nextHopX = string.format("%0.2f", TaxiGetDestX(index, i))
+							local nextHopY = string.format("%0.2f", TaxiGetDestY(index, i))
+							local hopPos = nextHopX .. ":" .. nextHopY
+
+
+							local fpName = TaxiNodeName(i)
+    
+						    -- Find comma index    
+						    local commaIndex = fpName:find(", ")   
+						        
+						    -- Get first word         
+						    local firstWord = fpName:sub(1, commaIndex - 1) 
+						    fpName = firstWord
+						    
+							-- print(fpName)
+
+
 							debugString = debugString .. ":" .. hopPos
 							routeString = routeString .. ":" .. hopPos
 						end
-
+						-- print(routeString .. destination)
 						-- If route string does not contain destination, add it to the end (such as Altar of Sha'tar)
 						if not string.find(routeString, destination) then
+							-- print(routeString .. "and" .. destination)
 							debugString = debugString .. ":" .. destination
 							routeString = routeString .. ":" .. destination
 						end
@@ -6576,7 +6591,14 @@ function LeaPlusLC:FriendCheck(name)
 						-- Add node names to debug string
 						debugString = debugString .. " -- " .. nodeName
 						for i = 2, numEnterHops + 1 do
-							local fpName = string.split(",", TaxiNodeName(TaxiGetNodeSlot(index, i, true)))
+							local fpName = TaxiNodeName(i)
+    
+						    -- Find comma index    
+						    local commaIndex = fpName:find(", ")   
+						        
+						    -- Get first word         
+						    local firstWord = fpName:sub(1, commaIndex - 1) 
+						    fpName = firstWord
 							debugString = debugString .. ", " .. fpName
 						end
 
@@ -6586,7 +6608,7 @@ function LeaPlusLC:FriendCheck(name)
 						end
 
 						-- Print debug string (used for showing full routes for nodes)
-						-- print(debugString)
+						print(debugString)
 
 					end
 				end
@@ -6598,7 +6620,7 @@ function LeaPlusLC:FriendCheck(name)
 			end
 
 			hooksecurefunc("TaxiNodeOnButtonEnter", StopLandingEvent)
-			hooksecurefunc("TaxiRequestEarlyLanding", StopLandingEvent)
+			-- hooksecurefunc("TaxiRequestEarlyLanding", StopLandingEvent)
 			hooksecurefunc("AcceptBattlefieldPort", StopLandingEvent)
 			hooksecurefunc("ConfirmSummon", StopLandingEvent)
 
