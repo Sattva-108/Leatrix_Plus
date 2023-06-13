@@ -6545,10 +6545,10 @@ function LeaPlusLC:FriendCheck(name)
 						local numEnterHops = GetNumRoutes(index)
 						local debugString = '["' .. currentNode
 						local routeString = currentNode
-						for i = 2, numEnterHops + 1 do
-							local nextHopX = string.format("%0.2f", TaxiGetDestX(index, i))
-							local nextHopY = string.format("%0.2f", TaxiGetDestY(index, i))
-							local hopPos = nextHopX .. ":" .. nextHopY
+						for i = 1, numEnterHops do
+							local nextHopX = TaxiGetDestX(index, i)
+							local nextHopY = TaxiGetDestY(index, i)
+							local hopPos = string.format("%0.2f", nextHopX) .. ":" .. string.format("%0.2f", nextHopY)
 
 
 							local fpName = TaxiNodeName(i)
@@ -6590,7 +6590,7 @@ function LeaPlusLC:FriendCheck(name)
 
 						-- Add node names to debug string
 						debugString = debugString .. " -- " .. nodeName
-						for i = 2, numEnterHops + 1 do
+						for i = 1, numEnterHops do
 							local fpName = TaxiNodeName(i)
     
 						    -- Find comma index    

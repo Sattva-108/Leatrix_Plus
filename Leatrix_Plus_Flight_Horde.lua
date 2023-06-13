@@ -961,7 +961,7 @@
 				["0.63:0.44:0.45:0.56"] = 224, -- Orgrimmar, Thunder Bluff (David Galindo suggested 233)
 				["0.63:0.44:0.56:0.53"] = 110, -- Orgrimmar, Crossroads
 				["0.63:0.44:0.61:0.55"] = 108, -- Orgrimmar, Ratchet
-				["0.63:0.56:0.00:0.00:0.63:0.64"] = 95, -- Orgrimmar, Valormok
+				["0.63:0.56:0.63:0.64"] = 95, -- Orgrimmar, Valormok
 				["0.63:0.56:0.00:0.000.63:0.64"] = 90, -- Orgrimmar, Splintertree Post
 				["0.63:0.44:0.56:0.53:0.41:0.47"] = 258, -- Orgrimmar, Crossroads, Sun Rock Retreat
 				["0.63:0.44:0.55:0.42:0.41:0.37"] = 249, -- Orgrimmar, Splintertree Post, Zoram'gar Outpost

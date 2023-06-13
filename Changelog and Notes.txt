@@ -41,6 +41,8 @@ Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ?
 
 QueueTimer				 - Need to test if timer .After 0.1 is fine in SetupBar func (was 1 second before)
 
+LibCandyBar				 - Will it be conflicting with other addons that use 3.3.5 version of CandyBar lib? 
+
 
 --------------------------------------------------------------------------------
 -- Stuff to-do:
