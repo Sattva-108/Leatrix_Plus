@@ -6275,53 +6275,69 @@ function LeaPlusLC:FriendCheck(name)
 			local flightFrame = CreateFrame("FRAME")
 			LeaPlusLC.flightFrame = flightFrame
 
-			-- Function to get continent
-			local function getContinent()
-				local mapID = C_Map.GetBestMapForUnit("player")
-				if(mapID) then
-					local info = C_Map.GetMapInfo(mapID)
-					if(info) then
-						while(info['mapType'] and info['mapType'] > 2) do
-							info = C_Map.GetMapInfo(info['parentMapID'])
-						end
-						if(info['mapType'] == 2) then
-							return info['mapID']
-						end
-					end
-				end
-			end
 
 			-- Function to get node name
 			local function GetNodeName(i)
 				return strmatch(TaxiNodeName(i), "[^,]+")
 			end
 
+			--------------------------------------------------------------------------------
+			-- Hook to the Flight Map Node OnClick function
+			--------------------------------------------------------------------------------
 
 
 			-- Show progress bar when flight is taken
 			hooksecurefunc("TakeTaxiNode", function(node)
 
-				if UnitAffectingCombat("player") then return end
-				if editFrame:IsShown() then editFrame:Hide() end
-				  for i = 1, NumTaxiNodes() do
-    local nodeType = TaxiNodeGetType(i)
-    local nodeName = GetNodeName(i)
-    if nodeType == "CURRENT" then
+					if UnitAffectingCombat("player") then return end
+					if editFrame:IsShown() then editFrame:Hide() end
+
+					--local PLAYER_ON_TAXI = false
+					LibCompat.After(0.1, function()
+						local ticker
+						ticker = LibCompat.NewTicker(0.1, function()
+							
+							if UnitOnTaxi("player") then
+								-- print("ticking")
+								--PLAYER_ON_TAXI = true
+								--if PLAYER_ON_TAXI == true then print("register event") end
+							elseif not UnitOnTaxi("player") then 
+							    LibCompat.CancelTimer(ticker) -- stop the timer
+							    --PLAYER_ON_TAXI = false
+							    Leatrix_HandleFlightLanding()
+							    print("unregister event")
+							    --if PLAYER_ON_TAXI == false then print("unregister event") else print("event still registered") end
+							    if LeaPlusLC.FlightProgressBar then
+							    	LeaPlusLC.FlightProgressBar:Stop()
+							    	LeaPlusLC.FlightProgressBar = nil
+							    	
+							    end
+							end
+						end)
+					end)
 
 
-      -- Get current node
-      local continent = GetCurrentMapContinent()
-      local startX, startY = TaxiNodePosition(i)
-      local currentNode = string.format("%0.2f", startX) .. ":" .. string.format("%0.2f", startY)
-      -- print(currentNode)
+				-- if UnitAffectingCombat("player") then return end
+				-- if editFrame:IsShown() then editFrame:Hide() end
+					for i = 1, NumTaxiNodes() do
+						local nodeType = TaxiNodeGetType(i)
+						local nodeName = GetNodeName(i)
+						if nodeType == "CURRENT" then
 
-      -- Get destination
-      local endX, endY = TaxiNodePosition(node)
-      local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)         
-          
-      -- Build route string     
-      local routeString = currentNode .. ":" .. destination
-      -- print("new" .. routeString)
+
+						-- Get current node
+						local continent = GetCurrentMapContinent()
+						local startX, startY = TaxiNodePosition(i)
+						local currentNode = string.format("%0.2f", startX) .. ":" .. string.format("%0.2f", startY)
+						-- print(currentNode)
+
+						-- Get destination
+						local endX, endY = TaxiNodePosition(node)
+						local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)         
+
+						-- Build route string     
+						local routeString = currentNode .. ":" .. destination
+						-- print("new" .. routeString)
 
 						-- Get destination
 						local endX, endY = TaxiNodePosition(node)
@@ -6332,6 +6348,7 @@ function LeaPlusLC:FriendCheck(name)
 						local numEnterHops = GetNumRoutes(node)
 						local debugString = '["' .. currentNode
 						local routeString = currentNode
+
 						for i = 1, numEnterHops do
 							local nextHopX = TaxiGetDestX(node, i)
 							local nextHopY = TaxiGetDestY(node, i)
@@ -6340,15 +6357,6 @@ function LeaPlusLC:FriendCheck(name)
 
 							local fpName = TaxiNodeName(i)
     
-						    -- Find comma index    
-						    -- local commaIndex = fpName:find(", ")   
-						        
-						    -- -- Get first word         
-						    -- local firstWord = fpName:sub(1, commaIndex - 1) 
-						    -- fpName = firstWord
-						    
-							-- print(fpName)
-
 
 							debugString = debugString .. ":" .. hopPos
 							routeString = routeString .. ":" .. hopPos
@@ -6365,17 +6373,6 @@ function LeaPlusLC:FriendCheck(name)
 
 						-- Add node names to debug string
 						debugString = debugString .. " -- " .. nodeName
-						-- for i = 20, numEnterHops do
-						-- 	local fpName = TaxiNodeName(i)
-    
-						--     -- Find comma index    
-						--     local commaIndex = fpName:find(", ")   
-						        
-						--     -- Get first word         
-						--     local firstWord = fpName:sub(1, commaIndex - 1) 
-						--     fpName = firstWord
-						-- 	debugString = debugString .. ", " .. fpName
-						-- end
 
 						-- If debug string does not contain destination, add it to the end
 						if not string.find(debugString, barName) then
@@ -6385,26 +6382,33 @@ function LeaPlusLC:FriendCheck(name)
 						-- Print debug string (used for showing full routes for nodes)
 						print(debugString)
 
+
 						-- Handle flight time not correct or flight does not exist in database
 						local timeStart = GetTime()
-						LibCompat.After(1, function()
+						LibCompat.After(0.2, function()
 							if UnitOnTaxi("player") then
 								-- Player is on a taxi so register when taxi lands
-								flightFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
+								-- flightFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
+								--if PLAYER_ON_TAXI == true then print("unit is on taxi") else PLAYER_ON_TAXI = false end
+
 							else
 								-- Player is not on a taxi so delete the flight progress bar
-								flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
+								-- flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
 								if LeaPlusLC.FlightProgressBar then
 									LeaPlusLC.FlightProgressBar:Stop()
 									LeaPlusLC.FlightProgressBar = nil
+									--PLAYER_ON_TAXI = false
 								end
+								
 							end
 						end)
-						flightFrame:SetScript("OnEvent", function()
+
+						function Leatrix_HandleFlightLanding()
+							print("ff script")
 							local timeEnd = GetTime()
 							local timeTaken = timeEnd - timeStart
 							debugString = gsub(debugString, "TimeTakenPlaceHolder", string.format("%0.0f", timeTaken))
-							local flightMsg = L["Flight details"] .. " (" .. L["WRATH"].. "): " .. nodeName .. " (" .. currentNode .. ") " .. L["to"] .. " " .. barName .. " (" .. destination .. ") (" .. faction .. ") " .. L["took"] .. " " .. string.format("%0.0f", timeTaken) .. " " .. L["seconds"] .. " (" .. numHops .. " " .. L["hop"] ..").|n|n" .. debugString .. "|n|n"
+							local flightMsg = L["Flight details"] .. " (" .. L["WRATH"].. "): " .. nodeName .. " (" .. currentNode .. ") " .. L["to"] .. " " .. barName .. " (" .. destination .. ") (" .. faction .. ") " .. L["took"] .. " " .. string.format("%0.0f", timeTaken) .. " " .. L["seconds"] .. " (" .. numEnterHops .. " " .. L["hop"] ..").|n|n" .. debugString .. "|n|n"
 							if destination and data[faction] and data[faction][continent] and data[faction][continent][routeString] then
 								local savedDuration = data[faction][continent][routeString]
 								if savedDuration then
@@ -6420,14 +6424,14 @@ function LeaPlusLC:FriendCheck(name)
 								local editMsg = introMsg .. flightMsg .. L["This flight does not exist in the database."]
 								editBox:SetText(editMsg); if LeaPlusLC["FlightBarContribute"] == "On" then editFrame:Show() end
 							end
-							flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
+							-- flightFrame:UnregisterEvent("PLAYER_MONEY")
 
 							-- Delete the progress bar since we have landed
 							if LeaPlusLC.FlightProgressBar then
 								LeaPlusLC.FlightProgressBar:Stop()
 								LeaPlusLC.FlightProgressBar = nil
 							end
-						end)
+						end
 
 						-- Show flight progress bar if flight exists in database
 						if data[faction] and data[faction][continent] and data[faction][continent][routeString] then
@@ -6446,38 +6450,6 @@ function LeaPlusLC:FriendCheck(name)
 								mybar:SetPoint(LeaPlusLC["FlightBarA"], UIParent, LeaPlusLC["FlightBarR"], LeaPlusLC["FlightBarX"], LeaPlusLC["FlightBarY"])
 								mybar:SetScale(LeaPlusLC["FlightBarScale"])
 								mybar:SetWidth(LeaPlusLC["FlightBarWidth"])
-
-								-- -- Setup sound files
-								-- local mt
-								-- local Seconds600, Seconds540, Seconds480, Seconds420, Seconds360
-								-- local Seconds300, Seconds240, Seconds180, Seconds120, Seconds060
-								-- local Seconds030, Seconds020, Seconds010
-
-								-- local destination = Enum.VoiceTtsDestination.LocalPlayback
-								-- local speed = -2
-
-								-- if LeaPlusLC["FlightBarSpeech"] == "On" then
-								-- 	LibCompat.After(1, function()
-								-- 		C_VoiceChat.SpeakText(0, L["Flight commenced."], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 	end)
-								-- 	mybar:AddUpdateFunction(function(bar)
-								-- 		mt = bar.remaining
-								-- 			if mt > 600 and mt < 601 and not Seconds600 then Seconds600 = true; C_VoiceChat.SpeakText(0, L["Ten minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 540 and mt < 541 and not Seconds540 then Seconds540 = true; C_VoiceChat.SpeakText(0, L["Nine minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 480 and mt < 481 and not Seconds480 then Seconds480 = true; C_VoiceChat.SpeakText(0, L["Eight minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 420 and mt < 421 and not Seconds420 then Seconds420 = true; C_VoiceChat.SpeakText(0, L["Seven minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 360 and mt < 361 and not Seconds360 then Seconds360 = true; C_VoiceChat.SpeakText(0, L["Six minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 300 and mt < 301 and not Seconds300 then Seconds300 = true; C_VoiceChat.SpeakText(0, L["Five minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 240 and mt < 241 and not Seconds240 then Seconds240 = true; C_VoiceChat.SpeakText(0, L["Four minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 180 and mt < 181 and not Seconds180 then Seconds180 = true; C_VoiceChat.SpeakText(0, L["Three minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 120 and mt < 121 and not Seconds120 then Seconds120 = true; C_VoiceChat.SpeakText(0, L["Two minutes"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 060 and mt < 061 and not Seconds060 then Seconds060 = true; C_VoiceChat.SpeakText(0, L["One minute"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 030 and mt < 031 and not Seconds030 then Seconds030 = true; C_VoiceChat.SpeakText(0, L["Thirty seconds"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 020 and mt < 021 and not Seconds020 then Seconds020 = true; C_VoiceChat.SpeakText(0, L["Twenty seconds"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		elseif mt > 010 and mt < 011 and not Seconds010 then Seconds010 = true; C_VoiceChat.SpeakText(0, L["Ten seconds"], destination, speed, GetCVar("Sound_MasterVolume") * 100)
-								-- 		end
-								-- 	end)
-								-- end
 
 								if faction == "Alliance" then
 									mybar:SetColor(0, 0.5, 1, 0.5)
@@ -6565,42 +6537,42 @@ function LeaPlusLC:FriendCheck(name)
 				return strmatch(TaxiNodeName(i), "[^,]+")
 			end
 
-hooksecurefunc("TakeTaxiNode", function(node)
-  for i = 1, NumTaxiNodes() do
-    local nodeType = TaxiNodeGetType(i)
-    local nodeName = GetNodeName(i)
-    if nodeType == "CURRENT" then
+-- hooksecurefunc("TakeTaxiNode", function(node)
+--   for i = 1, NumTaxiNodes() do
+--     local nodeType = TaxiNodeGetType(i)
+--     local nodeName = GetNodeName(i)
+--     if nodeType == "CURRENT" then
 
 
-      -- Get current node
-      local continent = GetCurrentMapContinent()
-      local startX, startY = TaxiNodePosition(i)
-      local currentNode = string.format("%0.2f", startX) .. ":" .. string.format("%0.2f", startY)
-      -- print(currentNode)
+--       -- Get current node
+--       local continent = GetCurrentMapContinent()
+--       local startX, startY = TaxiNodePosition(i)
+--       local currentNode = string.format("%0.2f", startX) .. ":" .. string.format("%0.2f", startY)
+--       -- print(currentNode)
 
-      -- Get destination
-      local endX, endY = TaxiNodePosition(node)
-      local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)         
+--       -- Get destination
+--       local endX, endY = TaxiNodePosition(node)
+--       local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)         
           
-      -- Build route string     
-      local routeString = currentNode .. ":" .. destination
-      -- print("new" .. routeString)
+--       -- Build route string     
+--       local routeString = currentNode .. ":" .. destination
+--       -- print("new" .. routeString)
 
 
-		-- Show flight time in tooltip if it exists
-		if data[faction] and data[faction][continent] and data[faction][continent][routeString] then
-			local duration = data[faction][continent][routeString]
-			if duration and type(duration) == "number" then
-				duration = date("%M:%S", duration):gsub("^0","")
-				print(duration)
-			end
-		elseif currentNode ~= destination then
-			print("no destination")
-		end
-      end
-    end
+-- 		-- Show flight time in tooltip if it exists
+-- 		if data[faction] and data[faction][continent] and data[faction][continent][routeString] then
+-- 			local duration = data[faction][continent][routeString]
+-- 			if duration and type(duration) == "number" then
+-- 				duration = date("%M:%S", duration):gsub("^0","")
+-- 				print(duration)
+-- 			end
+-- 		elseif currentNode ~= destination then
+-- 			print("no destination")
+-- 		end
+--       end
+--     end
  
-end)
+-- end)
 
 			-- Show flight time in node tooltips
 			hooksecurefunc("TaxiNodeOnButtonEnter", function(button)
