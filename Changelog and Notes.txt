@@ -45,6 +45,8 @@ QueueTimer				 - Need to test if timer .After 0.1 is fine in SetupBar func (was 
 
 LibCandyBar				 - Will it be conflicting with other addons that use 3.3.5 version of CandyBar lib? 
 
+ShowFlightPaths			 - Will StopLandingEvent work correctly on summon, BG/arena accept
+
 
 --------------------------------------------------------------------------------
 -- Stuff to-do:

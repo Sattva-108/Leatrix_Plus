@@ -6309,8 +6309,7 @@ function LeaPlusLC:FriendCheck(name)
 							    --if PLAYER_ON_TAXI == false then print("unregister event") else print("event still registered") end
 							    if LeaPlusLC.FlightProgressBar then
 							    	LeaPlusLC.FlightProgressBar:Stop()
-							    	LeaPlusLC.FlightProgressBar = nil
-							    	
+							    	LeaPlusLC.FlightProgressBar = nil				    	
 							    end
 							end
 						end)
@@ -6370,13 +6369,14 @@ function LeaPlusLC:FriendCheck(name)
 						end
 						debugString = debugString .. '"] = '
 
+local debugOnenumEnterHops = (GetNumRoutes(node) - 1)
 
 						-- Add node names to debug string
 						debugString = debugString .. " -- " .. nodeName
 
 						-- If debug string does not contain destination, add it to the end
 						if not string.find(debugString, barName) then
-							debugString = debugString .. ", " .. barName
+							debugString = debugString .. ", " .. barName .. " with " .. debugOnenumEnterHops .. " hops"
 						end
 
 						-- Print debug string (used for showing full routes for nodes)
@@ -6404,11 +6404,11 @@ function LeaPlusLC:FriendCheck(name)
 						end)
 
 						function Leatrix_HandleFlightLanding()
-							print("ff script")
+							print("debug report script fire")
 							local timeEnd = GetTime()
 							local timeTaken = timeEnd - timeStart
 							debugString = gsub(debugString, "TimeTakenPlaceHolder", string.format("%0.0f", timeTaken))
-							local flightMsg = L["Flight details"] .. " (" .. L["WRATH"].. "): " .. nodeName .. " (" .. currentNode .. ") " .. L["to"] .. " " .. barName .. " (" .. destination .. ") (" .. faction .. ") " .. L["took"] .. " " .. string.format("%0.0f", timeTaken) .. " " .. L["seconds"] .. " (" .. numEnterHops .. " " .. L["hop"] ..").|n|n" .. debugString .. "|n|n"
+							local flightMsg = L["Flight details"] .. " (" .. L["WRATH"].. "): " .. nodeName .. " (" .. currentNode .. ") " .. L["to"] .. " " .. barName .. " (" .. destination .. ") (" .. faction .. ") " .. L["took"] .. " " .. string.format("%0.0f", timeTaken) .. " " .. L["seconds"] .. " (" .. debugOnenumEnterHops .. " " .. L["hop"] ..").|n|n" .. debugString .. "|n|n"
 							if destination and data[faction] and data[faction][continent] and data[faction][continent][routeString] then
 								local savedDuration = data[faction][continent][routeString]
 								if savedDuration then
@@ -6573,6 +6573,12 @@ function LeaPlusLC:FriendCheck(name)
 --     end
  
 -- end)
+			
+			--------------------------------------------------------------------------------
+			-- Hook to the Node OnEnter blizzard func.
+			--------------------------------------------------------------------------------
+
+
 
 			-- Show flight time in node tooltips
 			hooksecurefunc("TaxiNodeOnButtonEnter", function(button)
@@ -6639,6 +6645,8 @@ function LeaPlusLC:FriendCheck(name)
 							GameTooltip:Show()
 						end
 
+						local debugTwonumEnterHops = (GetNumRoutes(index) - 1)
+
 						-- Add node names to debug string
 						debugString = debugString .. " -- " .. nodeName
 						-- for i = 20, numEnterHops do
@@ -6655,7 +6663,7 @@ function LeaPlusLC:FriendCheck(name)
 
 						-- If debug string does not contain destination, add it to the end
 						if not string.find(debugString, barName) then
-							debugString = debugString .. ", " .. barName
+							debugString = debugString .. ", " .. barName .. " with " .. debugTwonumEnterHops .. " hops"
 						end
 
 						-- Print debug string (used for showing full routes for nodes)
@@ -6665,9 +6673,14 @@ function LeaPlusLC:FriendCheck(name)
 				end
 			end)
 
+			-- FIXME 3.3.5
 			-- Unregister landing event for various reasons that stop taxi early
 			local function StopLandingEvent()
-				LeaPlusLC.flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
+				if editFrame:IsShown() then editFrame:Hide() end
+			    if LeaPlusLC.FlightProgressBar then
+			    	LeaPlusLC.FlightProgressBar:Stop()
+			    	LeaPlusLC.FlightProgressBar = nil				    	
+			    end
 			end
 
 			hooksecurefunc("TaxiNodeOnButtonEnter", StopLandingEvent)
