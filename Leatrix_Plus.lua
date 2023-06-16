@@ -25,7 +25,7 @@
 	local isWOTLK = select(4, GetBuildInfo()) == 30300 -- true if WOTLK 3.3.5
 
 	-- Version
-	LeaPlusLC["AddonVer"] = "3.0.131"
+	LeaPlusLC["AddonVer"] = "3.3.5"
 
 	-- Get locale table
 	local void, Leatrix_Plus = ...
@@ -497,8 +497,8 @@
 		end
 	end
 
--- Check if a name is in your friends list or guild (does not check realm as realm is unknown for some checks)
-function LeaPlusLC:FriendCheck(name)
+	-- Check if a name is in your friends list or guild (does not check realm as realm is unknown for some checks)
+	function LeaPlusLC:FriendCheck(name)
 
 		-- Do nothing if name is empty (such as whispering from the Battle.net app)
 		if not name then return end
@@ -6369,7 +6369,7 @@ function LeaPlusLC:FriendCheck(name)
 						end
 						debugString = debugString .. '"] = '
 
-local debugOnenumEnterHops = (GetNumRoutes(node) - 1)
+						local debugOnenumEnterHops = (GetNumRoutes(node) - 1)
 
 						-- Add node names to debug string
 						debugString = debugString .. " -- " .. nodeName
@@ -15080,7 +15080,7 @@ local debugOnenumEnterHops = (GetNumRoutes(node) - 1)
 		PageF.v:SetPoint('TOPLEFT', PageF.mt, 'BOTTOMLEFT', 0, -8);
 		PageF.v:SetPoint('RIGHT', PageF, -32, 0)
 		PageF.v:SetJustifyH('LEFT'); PageF.v:SetJustifyV('TOP');
-		PageF.v:SetNonSpaceWrap(true); PageF.v:SetText(L["WC"] .. " " .. LeaPlusLC["AddonVer"])
+		PageF.v:SetNonSpaceWrap(true); PageF.v:SetText(L["Version"] .. " " .. LeaPlusLC["AddonVer"])
 
 		-- Add reload UI Button
 		local reloadb = LeaPlusLC:CreateButton("ReloadUIButton", PageF, "Reload", "BOTTOMRIGHT", -16, 10, 0, 25, true, "Your UI needs to be reloaded for some of the changes to take effect.|n|nYou don't have to click the reload button immediately but you do need to click it when you are done making changes and you want the changes to take effect.")
@@ -15800,12 +15800,12 @@ local debugOnenumEnterHops = (GetNumRoutes(node) - 1)
 					frame:SetScript("OnDragStart", frame.StartMoving)
 					frame:SetScript("OnDragStop", function() frame:StopMovingOrSizing() frame:SetUserPlaced(false) end)
 					frame:Hide()
-					LeaPlusLC:CreateBar("HelpPanelMainTexture", frame, 570, 340, "TOPRIGHT", 0.7, 0.7, 0.7, 0.7,  "Interface\\DressUpFrame\\DressUpBackground-NightElf1")
+					LeaPlusLC:CreateBar("HelpPanelMainTexture", frame, 570, 340, "TOPRIGHT", 0.7, 0.7, 0.7, 0.7,  "Interface\\addons\\Leatrix_Plus\\assets\\ui-guildachievement-parchment-horizontal-desaturated.blp")
 					-- Panel contents
 					local col1, col2, color1 = 10, 120, "|cffffffaa"
 					LeaPlusLC:MakeTx(frame, "Leatrix Plus Help", col1, -10)
 					LeaPlusLC:MakeWD(frame, color1 .. "/ltp", col1, -30)
-					LeaPlusLC:MakeWD(frame, "Toggle opttions panel.", col2, -30)
+					LeaPlusLC:MakeWD(frame, "Toggle options panel.", col2, -30)
 					LeaPlusLC:MakeWD(frame, color1 .. "/ltp reset", col1, -50)
 					LeaPlusLC:MakeWD(frame, "Reset addon panel position and scale.", col2, -50)
 					LeaPlusLC:MakeWD(frame, color1 .. "/ltp wipe", col1, -70)
@@ -16774,7 +16774,7 @@ local debugOnenumEnterHops = (GetNumRoutes(node) - 1)
 	LeaPlusLC:MakeWD(LeaPlusLC[pg], "To begin, choose an options page.", 146, -92);
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Support", 146, -132);
-	LeaPlusLC:MakeWD(LeaPlusLC[pg], "www.leatrix.com", 146, -152);
+	LeaPlusLC:MakeWD(LeaPlusLC[pg], "|cff00ff00Feedback Discord:|r |cffadd8e6Sattva#7238|r", 146, -152);
 
 ----------------------------------------------------------------------
 -- 	LC1: Automation

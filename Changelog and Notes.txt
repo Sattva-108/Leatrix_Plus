@@ -31,6 +31,8 @@ AhExtras				- Need to make new description for alt click, tab confirm. And do lo
 
 SlashCommand			- /ltp neeeds to be fixed, not working at all.
 
+GUI 					- FIX the width for long strings https://cdn.discordapp.com/attachments/766767499987386402/1119067878885437531/wow_otLn4jPKyo.jpg
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -108,6 +110,8 @@ AutoSellJunk			 - Make user able to shift click the item to add to "keep list"
 
 AutoSellJunk			 - Make user be able to alt-ctrl (or other bind) click on an item in bag to sell the item on next vendor visit.
 
+AutoSellJunk			 - The editbox must be scrollable.
+
 HideChatButtons			 - Add Configuration to enable certain chat buttons.
 
 
@@ -159,5 +163,4 @@ QueueTimer - add LFG timer.
 
 QueueTimer - add user option to disable sound.
 
-
-
+Core - Fix ToggleZygor function 
