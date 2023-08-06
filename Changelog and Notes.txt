@@ -33,6 +33,12 @@ SlashCommand			- /ltp neeeds to be fixed, not working at all.
 
 GUI 					- FIX the width for long strings https://cdn.discordapp.com/attachments/766767499987386402/1119067878885437531/wow_otLn4jPKyo.jpg
 
+Tooltip					- FIX center popup when closed the leatrix window, its still staying...
+
+WebLink					- Fix ruRU encoding!!!
+
+Minimap 				- Move the zone text overlapping the mail icon
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -164,3 +170,16 @@ QueueTimer - add LFG timer.
 QueueTimer - add user option to disable sound.
 
 Core - Fix ToggleZygor function 
+
+BagSearch - if item is clicked then remove focus from search
+
+FasterLoot - add "lightweight" version of faster loot, in case someone doesn't want fastest version or it doesnt work properly on his server.
+
+NPCLink - need to retrieve mob id by mouseover tooltip
+
+A feature that would automatically show you the location of the nearest flight master.
+A feature that would automatically show you the location of the nearest mailbox.
+
+Right Click totems to destroy them
+
+Show best gold value for quest reward.

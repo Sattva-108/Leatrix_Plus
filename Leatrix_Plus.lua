@@ -158,7 +158,7 @@
 			-- Add feedback label
 			eFrame.x = eFrame:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 			eFrame.x:SetPoint("TOPRIGHT", x, y)
-			eFrame.x:SetText("|cff00ff00Feedback Discord:|r |cffadd8e6Sattva#7238|r")
+			eFrame.x:SetText("|cff00ff00Feedback Discord:|r |cffadd8e6sattva108|r")
 
 			eFrame.x:SetPoint("TOPRIGHT", eFrame, "TOPRIGHT", -12, -52)
 			hooksecurefunc(eFrame.f, "SetText", function()
@@ -649,7 +649,7 @@
 
 		-- Interface
 		or	(LeaPlusLC["MinimapModder"]			~= LeaPlusDB["MinimapModder"])			-- Enhance minimap
-		or	(LeaPlusLC["HideMiniAddonButtons"]	~= LeaPlusDB["HideMiniAddonButtons"])	-- Enhance minimap	
+		or	(LeaPlusLC["HideMiniAddonButtons"]	~= LeaPlusDB["HideMiniAddonButtons"])	-- Enhance minimap
 		or	(LeaPlusLC["SquareMinimap"]			~= LeaPlusDB["SquareMinimap"])			-- Square minimap
 		or	(LeaPlusLC["CombineAddonButtons"]	~= LeaPlusDB["CombineAddonButtons"])	-- Combine addon buttons
 		or	(LeaPlusLC["HideMiniTracking"]		~= LeaPlusDB["HideMiniTracking"])		-- Hide tracking button
@@ -1631,7 +1631,7 @@
 				-- Battlemaster and Arenamaster
 				12197, 29318, 15006, 26007, 857, 907, 35007, 19859, 3890, 7029, 35023, 15008, 34999, 15972, 34955, 7885, 34991, 19905, 14981, 14982, 19907, 347, 7427, 7410, 20271, 19855, 29568, 19858, 2302, 14942, 17506, 15007, 34983, 5238, 29234, 32332, 1037, 10360, 2804, 30578, 20388, 30171, 5118, 18439, 32333, 20120, 19908, 30581, 20118, 14879, 16711, 20381, 35024, 22516, 25991, 20200, 7314, 20269, 34895, 35027, 30583, 18895, 20272, 30584, 35017, 19811, 20386, 34971, 20273, 34972, 19915, 20274, 30587, 20390, 19923, 20497, 34976, 12198, 19925, 16695, 20362, 35022, 20499, 14623, 16696, 20374, 21235, 19909, 40413, 20382, 32330, 20119, 30579, 35000, 34985, 30580, 35001, 35025, 35002, 17507, 20383, 34437, 35026, 20384, 19910, 35008, 20385, 19912, 29533, 30586, 35019, 34993, 35020, 16694, 30231, 19906, 34986, 34987, 19911, 34989, 30590, 35021, 30610, 30582, 34988, 20276, 34978, 34973, 34997, 34998,
 
-				-- Quests 
+				-- Quests
 				10668
 
 			}
@@ -1653,7 +1653,7 @@
 
 					local void, gossipType = GetGossipOptions()
 					if gossipType == "binder"
-					or gossipType == "trainer"						
+					or gossipType == "trainer"
 					then return end
 
 					if npcGuid and not IsShiftKeyDown() then
@@ -1681,7 +1681,7 @@
 					end
 					-- Process gossip
 					SkipGossip()
-					
+
 				elseif event == "GOSSIP_CLOSED" then
 					-- Reset Message flag when gossip window is closed
 					ResetMessageFlag()
@@ -3953,7 +3953,7 @@
 
 					-- Do nothing if unit has not changed
 					if UnitIsUnit(unit, "player") or UnitIsUnit(unit, lastUnit) and x == lastX and y == lastY then return end
-					-- if UnitIsUnit(unit, lastUnit) and x == lastX and y == lastY then print("end") return end					
+					-- if UnitIsUnit(unit, lastUnit) and x == lastX and y == lastY then print("end") return end
 					lastUnit, lastX, lastY = unit, x, y
 
 					-- Show name in class color
@@ -4062,7 +4062,7 @@
 				-- First, we create a new frame to hold all the minimap buttons.
 				local minimapFrame = CreateFrame("Frame", "Leatrix_ButtonGrabber", UIParent)
 				minimapFrame:SetSize(1, 1)
-				minimapFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -2, -1)
+				minimapFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -2, -1.2)
 				minimapFrame:SetBackdrop({
 				bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 				edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
@@ -4209,7 +4209,7 @@
 				    local maxButtonsPerColumn = 5 -- maximum number of buttons per column
 				    local maxColumns = 3 -- maximum number of columns
 
-				    if InCombatLockdown() then 
+				    if InCombatLockdown() then
 				        return -- Stop execution if player is in combat.
 				    end
 
@@ -4228,7 +4228,7 @@
 				            for _, name in ipairs(WHITE_LIST) do
 				                if string.find(child:GetName(), name) then
 				                    isWhitelisted = true
-				                    -- print(child:GetName() .. " is whitelisted") 
+				                    -- print(child:GetName() .. " is whitelisted")
 				                    break
 				                end
 				            end
@@ -4237,7 +4237,7 @@
 				                for _, pattern in ipairs(excludedPatterns) do
 				                    if string.find(child:GetName(), pattern) then
 				                        isExcluded = true
-				                        -- print(child:GetName() .. " is excluded") 
+				                        -- print(child:GetName() .. " is excluded")
 				                        break
 				                    end
 				                end
@@ -4323,7 +4323,7 @@
 				end)
 
 
-					
+
 
 				local ticks = 0 -- keep track of how many times the function has been called
 				local ticker = nil -- keep track of the timer object
@@ -4348,6 +4348,98 @@
 				eventFrame:SetScript("OnEvent", OnLoginHideCombine)
 
 
+
+				--------------------------------------------------------------------------------
+				-- Some code for testing - adds buttons to minimap
+				--------------------------------------------------------------------------------
+
+				-- -- Load the libraries required for button creation.
+				-- local LibDataBroker = LibStub:GetLibrary("LibDataBroker-1.1")
+				-- local LibDBIcon = LibStub:GetLibrary("LibDBIcon-1.0")
+
+				-- --===== Button 1 =====--
+
+				-- -- Create the data broker objects for the custom buttons.
+				-- local button1 = LibDataBroker:NewDataObject("Button1", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\inv_enchant_dustillusion",
+				-- })
+
+				-- -- Register the data broker objects with LibDBIcon to create minimap buttons.
+				-- LibDBIcon:Register("Button1", button1, {
+				--     icon = "Interface\\Icons\\inv_enchant_dustillusion",
+				-- })
+
+
+				-- --===== Button 2 =====--
+
+				-- local button2 = LibDataBroker:NewDataObject("Button2", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\spell_holy_prayerofhealing02",
+				-- })
+
+				-- LibDBIcon:Register("Button2", button2, {
+				--     icon = "Interface\\Icons\\spell_holy_prayerofhealing02",
+				-- })
+
+
+				-- --===== Button 3 =====--
+
+				-- local button3 = LibDataBroker:NewDataObject("Button3", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\spell_nature_earthquake",
+				-- })
+
+
+				-- LibDBIcon:Register("Button3", button3, {
+				--     icon = "Interface\\Icons\\spell_nature_earthquake",
+				-- })
+
+
+
+				-- --===== Button 4 =====--
+
+				-- local button4 = LibDataBroker:NewDataObject("Button4", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\inv_misc_summerfest_braziergreen",
+				-- })
+
+
+				-- LibDBIcon:Register("Button4", button4, {
+				--     icon = "Interface\\Icons\\inv_misc_summerfest_braziergreen",
+				-- })
+
+
+
+				-- --===== Button 5 =====--
+
+				-- local button5 = LibDataBroker:NewDataObject("Button5", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\inv_misc_toy_02",
+				-- })
+
+
+				-- LibDBIcon:Register("Button5", button5, {
+				--     icon = "Interface\\Icons\\inv_misc_toy_02",
+				-- })
+
+
+
+				-- --===== Button 6 =====--
+
+				-- local button6 = LibDataBroker:NewDataObject("Button6", {
+				--     type = "launcher",
+				--     icon = "Interface\\Icons\\inv_misc_toy_02",
+				-- })
+
+
+				-- LibDBIcon:Register("Button6", button6, {
+				--     icon = "Interface\\Icons\\inv_misc_toy_02",
+				-- })
+
+				--------------------------------------------------------------------------------
+				-- End of Testing Buttons
+				--------------------------------------------------------------------------------
 
 
 
@@ -4593,7 +4685,7 @@
 	            mailIcon:SetTexture("Interface\\Minimap\\TRACKING\\Mailbox")
 	            -- Set the scale of the icon
 	            MiniMapMailFrame:SetScale(1.2)
-	            -- MiniMapMailFrame:SetFrameLevel(2) 
+	            -- MiniMapMailFrame:SetFrameLevel(2)
 	            -- Move the icon to the top right of the minimap
 	            MiniMapMailFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", 19, 14)
 	            	            MiniMapMailFrame:SetHitRectInsets(10, 10, 5, 8)
@@ -4923,7 +5015,7 @@
 						                if x and y then -- Check if x and y are not nil
 						                    x, y = x * child:GetEffectiveScale(), y * child:GetEffectiveScale()
 						                    local cx, cy = GetCursorPosition()
-						                    local dist = sqrt((x - cx) ^ 2 + (y - cy) ^ 2) / 3 -- Triple the distance of buttons OnEnter alpha trigger 
+						                    local dist = sqrt((x - cx) ^ 2 + (y - cy) ^ 2) / 3 -- Triple the distance of buttons OnEnter alpha trigger
 
 						                    if dist < child:GetWidth() / 2 then
 						                        mouseOverChild = true
@@ -4956,7 +5048,7 @@
 						-- We set up the minimap to respond to mouse events.
 						Minimap:SetScript("OnEnter", Minimap_OnEnter)
 						Minimap:SetScript("OnLeave", Minimap_OnLeave)
-					
+
 
 						local ticks = 0 -- keep track of how many times the function has been called
 						local ticker = nil -- keep track of the timer object
@@ -5151,7 +5243,7 @@
 						TimeManagerFrame:SetPoint("TOP", Minimap, "BOTTOM", 0, 0)
 					else
 						TimeManagerFrame:ClearAllPoints()
-						TimeManagerFrame:SetPoint("TOP", Minimap, "BOTTOM", 0, 0)	
+						TimeManagerFrame:SetPoint("TOP", Minimap, "BOTTOM", 0, 0)
 					end
 				end
 			end
@@ -5302,7 +5394,7 @@
 						if not WorldMapFrame:IsShown() then
 							ShowUIPanel(WorldMapFrame);
 						else
-							HideUIPanel(WorldMapFrame);    
+							HideUIPanel(WorldMapFrame);
 						end
 					elseif button == "LeftButton" then
 						Minimap_OnClick(self)
@@ -5789,17 +5881,17 @@
 				local shouldShowBar = false
 				local started = false
 				bar:SetHeight(5)
-				bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")  
+				bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
 				bar:SetStatusBarColor(1.0, 1, 0.0)
 
 				--===== Spark creation =====--
 
 				local spark = bar:CreateTexture(nil, "OVERLAY")
 				spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-				spark:SetSize(18, 18) 
+				spark:SetSize(18, 18)
 				spark:SetVertexColor(1, 1, 1)
 				spark:SetBlendMode("ADD")
-				spark:Hide()				
+				spark:Hide()
 
 				--------------------------------------------------------------------------------
 				-- Function to setup status bar scripts and positions
@@ -5813,13 +5905,13 @@
 							started = false
 						end
 					end)
-					for i = 1, MAX_BATTLEFIELD_QUEUES do  
-						status = GetBattlefieldStatus(i);   
+					for i = 1, MAX_BATTLEFIELD_QUEUES do
+						status = GetBattlefieldStatus(i);
 						if ( status == "confirm" ) then
-							shouldShowBar = true   
-							break 
+							shouldShowBar = true
+							break
 						else
-							shouldShowBar = false 
+							shouldShowBar = false
 						end
 					end
 					if shouldShowBar then
@@ -5857,7 +5949,7 @@
 				text:SetTextColor(0, 0.85, 0.0)
 				text:SetPoint("TOPLEFT", 0, -10)
 
-			
+
 				--------------------------------------------------------------------------------
 				-- Hooks to the Blizzard functions.
 				--------------------------------------------------------------------------------
@@ -5866,7 +5958,7 @@
 
 				local BGQueue_OnShow = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnShow
 
-				function hookConfirmBattlefieldEntry()    
+				function hookConfirmBattlefieldEntry()
 				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnShow", function(self, data)
 						bar:Show()
 						anchorFrame = self
@@ -5882,7 +5974,7 @@
 				local BGQueue_OnAccept = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnAccept
 				local BGQueue_OnCancel = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnCancel
 
-				function hookConfirmBattlefieldEntry()    
+				function hookConfirmBattlefieldEntry()
 				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnAccept", function(self, data)
 				      -- print("accept")
 				      SetupBar()
@@ -5892,10 +5984,10 @@
 							started = false
 						end
 					end)
-				      return BGQueue_OnAccept(self, data) 
+				      return BGQueue_OnAccept(self, data)
 				   end)
 
-				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnCancel", function(self, data)   
+				   hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnCancel", function(self, data)
 				      -- print("cancel")
 				      SetupBar()
 					LibCompat.After(1, function()
@@ -5904,7 +5996,7 @@
 							started = false
 						end
 					end)
-				        
+
 				      -- Call the original function
 				      return BGQueue_OnCancel(self, data)
 				   end)
@@ -5920,19 +6012,19 @@
 
 				local function OnEvent(self, event)
 					for i = 1, MAX_BATTLEFIELD_QUEUES do
-						if not started then  
-							bar.expiration = GetBattlefieldPortExpiration(i)     
+						if not started then
+							bar.expiration = GetBattlefieldPortExpiration(i)
 							bar.startTime = GetTime()
 							started = true
-						end  
+						end
 						bar:SetMinMaxValues(0, bar.expiration)
 					end
 				end
 
 				local function Update(self, elapsed)
 					for i=1, MAX_BATTLEFIELD_QUEUES do
-						local progress = bar.expiration - (GetTime() - bar.startTime)       
-						bar:SetValue(progress)           
+						local progress = bar.expiration - (GetTime() - bar.startTime)
+						bar:SetValue(progress)
 						text:SetFormattedText(SecondsToTime(progress + 0.5))
 					end
 				end
@@ -5943,14 +6035,14 @@
 					for i = 1, MAX_BATTLEFIELD_QUEUES do
 						-- 		status = GetBattlefieldStatus(i);
 						-- if status == "confirm" then
-					if not started then  
-						bar.expiration = GetBattlefieldPortExpiration(i)     
+					if not started then
+						bar.expiration = GetBattlefieldPortExpiration(i)
 						bar.startTime = GetTime()
 						started = true
-					end  
+					end
 					bar:SetMinMaxValues(0, bar.expiration)
-					local progress = bar.expiration - (GetTime() - bar.startTime)       
-					bar:SetValue(progress)          
+					local progress = bar.expiration - (GetTime() - bar.startTime)
+					bar:SetValue(progress)
 					text:SetFormattedText(SecondsToTime(progress + 0.5))
 
 					spark:Show()
@@ -5981,10 +6073,10 @@
 						ReadyCheckPlaySound()
 
 					elseif (event == "UPDATE_BATTLEFIELD_STATUS") then
-						
+
 						for i = 1, MAX_BATTLEFIELD_QUEUES do
 							status, mapName, instanceID, lowestlevel, highestlevel, teamSize, registeredMatch = GetBattlefieldStatus(i);
-						
+
 							if (status == "confirm") then
 								ReadyCheckPlaySound()
 								break
@@ -6026,18 +6118,18 @@
 				-- anchorFrame = StaticPopup1
 				-- SetupBar()
 
-				-- for i = 1, MAX_BATTLEFIELD_QUEUES do  
-				--   status = GetBattlefieldStatus(i);   
+				-- for i = 1, MAX_BATTLEFIELD_QUEUES do
+				--   status = GetBattlefieldStatus(i);
 				--   if ( status == "confirm" ) then
-				--     shouldShowBar1 = true   
-				--     break  
+				--     shouldShowBar1 = true
+				--     break
 				--   end
 				-- end
 
 				-- if shouldShowBar1 then
 				--   bar:Show()
-				-- else  
-				--   bar:Hide()  
+				-- else
+				--   bar:Hide()
 				-- end
 				-- end)
 
@@ -6045,18 +6137,18 @@
 				-- anchorFrame = StaticPopup2
 				-- SetupBar()
 
-				-- for i = 1, MAX_BATTLEFIELD_QUEUES do  
-				--   status = GetBattlefieldStatus(i);   
+				-- for i = 1, MAX_BATTLEFIELD_QUEUES do
+				--   status = GetBattlefieldStatus(i);
 				--   if ( status == "confirm" ) then
-				--     shouldShowBar2 = true   
-				--     break  
+				--     shouldShowBar2 = true
+				--     break
 				--   end
 				-- end
 
 				-- if shouldShowBar2 then
 				--   bar:Show()
-				-- else  
-				--   bar:Hide()  
+				-- else
+				--   bar:Hide()
 				-- end
 				-- end)
 
@@ -6296,12 +6388,12 @@
 					LibCompat.After(0.1, function()
 						local ticker
 						ticker = LibCompat.NewTicker(0.1, function()
-							
+
 							if UnitOnTaxi("player") then
 								-- print("ticking")
 								--PLAYER_ON_TAXI = true
 								--if PLAYER_ON_TAXI == true then print("register event") end
-							elseif not UnitOnTaxi("player") then 
+							elseif not UnitOnTaxi("player") then
 							    LibCompat.CancelTimer(ticker) -- stop the timer
 							    --PLAYER_ON_TAXI = false
 							    Leatrix_HandleFlightLanding()
@@ -6309,7 +6401,7 @@
 							    --if PLAYER_ON_TAXI == false then print("unregister event") else print("event still registered") end
 							    if LeaPlusLC.FlightProgressBar then
 							    	LeaPlusLC.FlightProgressBar:Stop()
-							    	LeaPlusLC.FlightProgressBar = nil				    	
+							    	LeaPlusLC.FlightProgressBar = nil
 							    end
 							end
 						end)
@@ -6332,9 +6424,9 @@
 
 						-- Get destination
 						local endX, endY = TaxiNodePosition(node)
-						local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)         
+						local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)
 
-						-- Build route string     
+						-- Build route string
 						local routeString = currentNode .. ":" .. destination
 						-- print("new" .. routeString)
 
@@ -6355,7 +6447,7 @@
 
 
 							local fpName = TaxiNodeName(i)
-    
+
 
 							debugString = debugString .. ":" .. hopPos
 							routeString = routeString .. ":" .. hopPos
@@ -6399,7 +6491,7 @@
 									LeaPlusLC.FlightProgressBar = nil
 									--PLAYER_ON_TAXI = false
 								end
-								
+
 							end
 						end)
 
@@ -6552,9 +6644,9 @@
 
 --       -- Get destination
 --       local endX, endY = TaxiNodePosition(node)
---       local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)         
-          
---       -- Build route string     
+--       local destination = string.format("%0.2f", endX) .. ":" .. string.format("%0.2f", endY)
+
+--       -- Build route string
 --       local routeString = currentNode .. ":" .. destination
 --       -- print("new" .. routeString)
 
@@ -6571,9 +6663,9 @@
 -- 		end
 --       end
 --     end
- 
+
 -- end)
-			
+
 			--------------------------------------------------------------------------------
 			-- Hook to the Node OnEnter blizzard func.
 			--------------------------------------------------------------------------------
@@ -6609,14 +6701,14 @@
 
 
 							local fpName = TaxiNodeName(i)
-    
-						    -- Find comma index    
-						    -- local commaIndex = fpName:find(", ")   
-						        
-						    -- -- Get first word         
-						    -- local firstWord = fpName:sub(1, commaIndex - 1) 
+
+						    -- Find comma index
+						    -- local commaIndex = fpName:find(", ")
+
+						    -- -- Get first word
+						    -- local firstWord = fpName:sub(1, commaIndex - 1)
 						    -- fpName = firstWord
-						    
+
 							-- print(fpName)
 
 
@@ -6651,12 +6743,12 @@
 						debugString = debugString .. " -- " .. nodeName
 						-- for i = 20, numEnterHops do
 						-- 	local fpName = TaxiNodeName(i)
-    
-						--     -- Find comma index    
-						--     local commaIndex = fpName:find(", ")   
-						        
-						--     -- Get first word         
-						--     local firstWord = fpName:sub(1, commaIndex - 1) 
+
+						--     -- Find comma index
+						--     local commaIndex = fpName:find(", ")
+
+						--     -- Get first word
+						--     local firstWord = fpName:sub(1, commaIndex - 1)
 						--     fpName = firstWord
 						-- 	debugString = debugString .. ", " .. fpName
 						-- end
@@ -6679,7 +6771,7 @@
 				if editFrame:IsShown() then editFrame:Hide() end
 			    if LeaPlusLC.FlightProgressBar then
 			    	LeaPlusLC.FlightProgressBar:Stop()
-			    	LeaPlusLC.FlightProgressBar = nil				    	
+			    	LeaPlusLC.FlightProgressBar = nil
 			    end
 			end
 
@@ -7120,18 +7212,18 @@
 			    SetResEvent()
 			end)
 
-			if LeaPlusLC["AutoAcceptRes"] == "On" then 
-			    SetResEvent() 
+			if LeaPlusLC["AutoAcceptRes"] == "On" then
+			    SetResEvent()
 			end
 
 			-- -- Function to not accept resurrection based on certain conditions
 			-- local function DoNotAcceptResurrect()
 			--     print("Checking conditions to accept resurrect")
 			--     local mapID = C_Map.GetBestMapForUnit("player") or nil
-			    
+
 			--     if mapID and mapID == 162 then -- Naxxramas Construct Quarter
 			--         print("In Naxxramas Construct Quarter")
-			        
+
 			--         -- Check party or raid for debuffs
 			--         local group = IsInRaid() and "raid" or "party"
 			--         for i = 1, GetNumGroupMembers() do
@@ -7156,7 +7248,7 @@
 			AcceptResPanel:SetScript("OnEvent", function(self, event, ...)
 			    if event == "RESURRECT_REQUEST" then
 			        -- print("Received resurrect request")
-			        
+
 			        -- -- Exclude Chained Spirit (Zul'Gurub)
 			        -- local chainLoc
 
@@ -8974,7 +9066,7 @@
 					for i=1, _G["ContainerFrame"..(bag+1)].size do
 						local itemButton = _G["ContainerFrame"..(bag+1).."Item"..i]
 						if itemButton then
-							local link = GetContainerItemLink(bag, itemButton:GetID()) 
+							local link = GetContainerItemLink(bag, itemButton:GetID())
 							if link and link:lower():find(LTP_searchEditBox:GetText():lower(), 1, true) then
 								table.insert(links, link)
 								itemButton:EnableDrawLayer("BORDER")
@@ -9004,13 +9096,14 @@
 			--===== Function to re-enable button layers =====--
 			function Leatrix_EnableAllBagLayers()
 				for bag=0, NUM_BAG_SLOTS do
-					for i=1, _G["ContainerFrame"..(bag+1)].size do
+					-- made it "or 0" because seems that if interact with vendor without first opening bag "_G["ContainerFrame"..(bag+1)].size" is nil.
+					for i=1, (_G["ContainerFrame"..(bag+1)].size or 0) do
 						local itemButton = _G["ContainerFrame"..(bag+1).."Item"..i]
 						if itemButton then
 							itemButton:EnableDrawLayer("BORDER")
 							itemButton:EnableDrawLayer("OVERLAY")
 						end
-					end 
+					end
 				end
 			end
 
@@ -9393,7 +9486,7 @@
 				end,
 				OnTooltipShow = function(tooltip)
 					if not tooltip or not tooltip.AddLine then return end
-					tooltip:AddLine("Leatrix Plus")	
+					tooltip:AddLine("Leatrix Plus")
 					tooltip:AddLine("|cffeda55fClick|r |cff99ff00to open Leatrix Plus options.|r")
                     tooltip:AddLine("|cffeda55fRight-Click|r |cff99ff00to reload the user interface.|r")
 				end,
@@ -9424,7 +9517,7 @@
 
 		if LeaPlusLC["AhExtras"] == "On" then
 
-			local function AuctionFunc()				
+			local function AuctionFunc()
 
 				-- Update duration radio button
 
@@ -9438,7 +9531,7 @@
 
 				--===== 3.3.5 Took And Modified code from Panda Leatrix :) =====--
 				hooksecurefunc("DurationDropDown_Initialize", function(self)
-					if not LeaPlusDB["AHDuration"] or type(LeaPlusDB["AHDuration"]) ~= "number" or LeaPlusDB["AHDuration"] < 1 or LeaPlusDB["AHDuration"] > 3 then 
+					if not LeaPlusDB["AHDuration"] or type(LeaPlusDB["AHDuration"]) ~= "number" or LeaPlusDB["AHDuration"] < 1 or LeaPlusDB["AHDuration"] > 3 then
 						LeaPlusDB["AHDuration"] = AuctionFrameAuctions.duration;
 					else
 						AuctionFrameAuctions.duration = LeaPlusDB["AHDuration"];
@@ -10788,7 +10881,7 @@
 			end
 
 			-- Function to hide chat buttons
-			local function HideButtons(chtfrm)			
+			local function HideButtons(chtfrm)
 				_G[chtfrm .. "ButtonFrameUpButton"]:SetParent(tframe)
 				_G[chtfrm .. "ButtonFrameDownButton"]:SetParent(tframe)
 				_G[chtfrm .. "ButtonFrameMinimizeButton"]:SetParent(tframe)
@@ -10875,7 +10968,7 @@
 			ChatFrameMenuButton:SetParent(tframe)
 			-- ChatFrameChannelButton:SetParent(tframe)
 			FriendsMicroButton:SetParent(tframe)
-			
+
 
 			-- Set options for normal and existing chat frames
 			for i = 1, 50 do
@@ -11169,7 +11262,7 @@
 			            if IsControlKeyDown() then
 			                editBox:SetFont(_G["ChatFrame" .. i]:GetFont())
 			                ShowChatbox(_G["ChatFrame" .. i])
-			                
+
 			                -- toggle editFrame visibility based on the current state
 			                if isNormWindowShown then
 			                    editFrame:Hide()
@@ -12032,7 +12125,7 @@
 					end
 				end
 
-				if TipUnitClass then					
+				if TipUnitClass then
 				  -- print("LT['UnitClass']:", LT['UnitClass'])
 
 				  LT["Sex"] = UnitSex(LT["Unit"])
@@ -12395,17 +12488,17 @@
 		if LeaPlusLC["ViewPortEnable"] == "On" then
 
 			-- Create border textures
-			local BordTop = WorldFrame:CreateTexture(nil, "ARTWORK"); 
-			BordTop:SetVertexColor(0, 0, 0, 1); 
+			local BordTop = WorldFrame:CreateTexture(nil, "ARTWORK");
+			BordTop:SetVertexColor(0, 0, 0, 1);
 			BordTop:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0); BordTop:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
-			local BordBot = WorldFrame:CreateTexture(nil, "ARTWORK"); 
-			BordBot:SetVertexColor(0, 0, 0, 1); 
+			local BordBot = WorldFrame:CreateTexture(nil, "ARTWORK");
+			BordBot:SetVertexColor(0, 0, 0, 1);
 			BordBot:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0); BordBot:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
-			local BordLeft = WorldFrame:CreateTexture(nil, "ARTWORK"); 
-			BordLeft:SetVertexColor(0, 0, 0, 1); 
+			local BordLeft = WorldFrame:CreateTexture(nil, "ARTWORK");
+			BordLeft:SetVertexColor(0, 0, 0, 1);
 			BordLeft:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0); BordLeft:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
-			local BordRight = WorldFrame:CreateTexture(nil, "ARTWORK"); 
-			BordRight:SetVertexColor(0, 0, 0, 1); 
+			local BordRight = WorldFrame:CreateTexture(nil, "ARTWORK");
+			BordRight:SetVertexColor(0, 0, 0, 1);
 			BordRight:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0); BordRight:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
 
 			-- Create viewport configuration panel
@@ -12614,17 +12707,17 @@
 			maintitle:ClearAllPoints()
 			maintitle:SetPoint("TOP", 0, -72)
 
-			local expTitle = LeaPlusLC:MakeTx(interPanel, "Wrath of the Lich King Classic", 0, 0)
+			local expTitle = LeaPlusLC:MakeTx(interPanel, "Wrath of the Lich King 3.3.5", 0, 0)
 			expTitle:SetFont(expTitle:GetFont(), 32)
 			expTitle:ClearAllPoints()
 			expTitle:SetPoint("TOP", 0, -152)
 
-			local subTitle = LeaPlusLC:MakeTx(interPanel, "www.leatrix.com", 0, 0)
+			local subTitle = LeaPlusLC:MakeTx(interPanel, "Feedback Discord: sattva108", 0, 0)
 			subTitle:SetFont(subTitle:GetFont(), 20)
 			subTitle:ClearAllPoints()
 			subTitle:SetPoint("BOTTOM", 0, 72)
 
-			local slashTitle = LeaPlusLC:MakeTx(interPanel, "/run leaplus()", 0, 0)
+			local slashTitle = LeaPlusLC:MakeTx(interPanel, "/ltp help", 0, 0)
 			slashTitle:SetFont(slashTitle:GetFont(), 72)
 			slashTitle:ClearAllPoints()
 			slashTitle:SetPoint("BOTTOM", subTitle, "TOP", 0, 40)
@@ -14295,7 +14388,7 @@
 			LeaPlusDB["AhExtras"]				= LeaPlusLC["AhExtras"]
 			LeaPlusDB["AhBuyoutOnly"]			= LeaPlusLC["AhBuyoutOnly"]
 			LeaPlusDB["AhGoldOnly"]				= LeaPlusLC["AhGoldOnly"]
-			LeaPlusDB["AhTabConfirm"]			= LeaPlusLC["AhTabConfirm"]		
+			LeaPlusDB["AhTabConfirm"]			= LeaPlusLC["AhTabConfirm"]
 
 			-- LeaPlusDB["ShowCooldowns"]			= LeaPlusLC["ShowCooldowns"]
 			-- LeaPlusDB["ShowCooldownID"]			= LeaPlusLC["ShowCooldownID"]
@@ -14886,10 +14979,10 @@
 
 			-- Set skinned button textures
 			if not naked then
-				mbtn:SetNormalTexture("Interface\\AddOns\\Leatrix_Plus\\Leatrix_Plus.blp")
+				mbtn:SetNormalTexture("Interface\\AddOns\\Leatrix_Plus\\LeatrixPlus.blp")
 				mbtn:GetNormalTexture():SetTexCoord(0.125, 0.25, 0.4375, 0.5)
 			end
-			mbtn:SetHighlightTexture("Interface\\AddOns\\Leatrix_Plus\\Leatrix_Plus.blp")
+			mbtn:SetHighlightTexture("Interface\\AddOns\\Leatrix_Plus\\LeatrixPlus.blp")
 			mbtn:GetHighlightTexture():SetTexCoord(0, 0.125, 0.4375, 0.5)
 
 			-- Hide the default textures
@@ -15788,7 +15881,7 @@
 				if not LeaPlusLC.HelpFrame then
 					local frame = CreateFrame("FRAME", nil, UIParent)
 					frame:SetSize(570, 340); frame:SetFrameStrata("FULLSCREEN_DIALOG"); frame:SetFrameLevel(100)
-					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints(); 
+					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints();
 					frame.tex:SetVertexColor(0.05, 0.05, 0.05, 0.9)
 					frame.close = CreateFrame("Button", nil, frame, "UIPanelCloseButton"); frame.close:SetSize(30, 30); frame.close:SetPoint("TOPRIGHT", 0, 0); frame.close:SetScript("OnClick", function() frame:Hide() end)
 					frame:ClearAllPoints(); frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -16133,7 +16226,7 @@
 					-- Panel frame
 					local frame = CreateFrame("FRAME", nil, UIParent)
 					frame:SetSize(294, 86); frame:SetFrameStrata("FULLSCREEN_DIALOG"); frame:SetFrameLevel(100); frame:SetScale(2)
-					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints(); 
+					frame.tex = frame:CreateTexture(nil, "BACKGROUND"); frame.tex:SetAllPoints();
 					frame.tex:SetVertexColor(0.05, 0.05, 0.05, 0.9)
 					frame.close = CreateFrame("Button", nil, frame, "UIPanelCloseButton"); frame.close:SetSize(30, 30); frame.close:SetPoint("TOPRIGHT", 0, 0); frame.close:SetScript("OnClick", function() frame:Hide() end)
 					frame:ClearAllPoints(); frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -16774,7 +16867,7 @@
 	LeaPlusLC:MakeWD(LeaPlusLC[pg], "To begin, choose an options page.", 146, -92);
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Support", 146, -132);
-	LeaPlusLC:MakeWD(LeaPlusLC[pg], "|cff00ff00Feedback Discord:|r |cffadd8e6Sattva#7238|r", 146, -152);
+	LeaPlusLC:MakeWD(LeaPlusLC[pg], "|cff00ff00Feedback Discord:|r |cffadd8e6sattva108|r", 146, -152);
 
 ----------------------------------------------------------------------
 -- 	LC1: Automation
