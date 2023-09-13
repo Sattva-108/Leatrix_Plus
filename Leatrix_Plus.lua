@@ -10165,7 +10165,7 @@
 				if not currentframe then
 					-- No frame selected so select the player frame
 					currentframe = PlayerFrame:GetName()
-					LeaPlusLC["DragPlayerFrame"].t:SetVertexColor(0.0, 1.0, 0.0,0.5)
+					LeaPlusLC["DragPlayerFrame"].t:SetTexture(0.0, 1.0, 0.0,0.5)
 				end
 				-- Set the scale slider value to the selected frame
 				LeaPlusCB["FrameScale"]:SetValue(LeaPlusDB["Frames"][currentframe]["Scale"])
@@ -10314,9 +10314,9 @@
 
 					-- Set all drag frames to blue then tint the selected frame to green
 					for k,v in pairs(FrameTable) do
-						LeaPlusLC[k].t:SetVertexColor(0.0, 0.5, 1.0, 0.5)
+						LeaPlusLC[k].t:SetTexture(0.0, 0.5, 1.0, 0.5)
 					end
-					dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
+					dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
 
 					-- Set currentframe variable to selected frame and set the scale slider value
 					currentframe = realframe:GetName()
@@ -10403,8 +10403,8 @@
 				else
 					if IsShiftKeyDown() and IsControlKeyDown() then
 						-- Preset profile
-						LeaFramesSetPos(PlayerFrame						, "TOPLEFT"	, UIParent, "TOPLEFT"	,	"-35"	, "-14")
-						LeaFramesSetPos(TargetFrame						, "TOPLEFT"	, UIParent, "TOPLEFT"	,	"190"	, "-14")
+						LeaFramesSetPos(PlayerFrame						, "TOPLEFT"	, UIParent, "TOPLEFT"	,	"0"	, "-14")
+						LeaFramesSetPos(TargetFrame						, "TOPLEFT"	, UIParent, "TOPLEFT"	,	"225"	, "-14")
 						-- Player
 						LeaPlusDB["Frames"]["PlayerFrame"]["Scale"] = 1.20
 						PlayerFrame:SetScale(LeaPlusDB["Frames"]["PlayerFrame"]["Scale"])
