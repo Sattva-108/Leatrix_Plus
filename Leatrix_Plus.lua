@@ -10283,11 +10283,14 @@
 				LeaPlusLC[dragframe] = dragframe
 				dragframe:SetSize(realframe:GetSize())
 				dragframe:SetPoint("TOP", realframe, "TOP", 0, 2.5)
-				dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 				dragframe:SetBackdrop({
+					bgFile = "Interface/Buttons/WHITE8X8",
 					edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
 					tile = false, tileSize = 0, edgeSize = 16,
 					insets = { left = 0, right = 0, top = 0, bottom = 0 }})
+
+				dragframe:SetBackdropColor(0.0, 0.5, 1.0, 0.5) -- Set the texture color and transparency of the background
+
 				dragframe:SetToplevel(true)
 				dragframe:SetFrameStrata("HIGH")
 
@@ -10297,6 +10300,8 @@
 				-- Hide the drag frame and make real frame movable
 				dragframe:Hide()
 				realframe:SetMovable(true)
+
+				dragframe:EnableMouse(true)
 
 				-- Click handler
 				dragframe:SetScript("OnMouseDown", function(self, btn)
