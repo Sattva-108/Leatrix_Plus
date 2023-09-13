@@ -5194,6 +5194,8 @@
 						MinimapZoneTextButton:SetPoint("TOP", Minimap, "TOP", 0, 0)
 						MinimapZoneTextButton:SetFrameLevel(100)
 					end
+					-- Reduce the click area by 30 pixels from left and right side
+					MinimapZoneTextButton:SetHitRectInsets(30, 30, 0, 0)
 				end
 			end
 
@@ -8858,7 +8860,9 @@
 					end
 
 					questNormalText:SetWidth(0)
-					questNormalText:SetText("  [" .. level .. "] " .. title)
+					if title then
+						questNormalText:SetText("  [" .. level .. "] " .. title)
+					end
 
 					-- Debug
 					-- questLogTitle.normalText:SetText("  [80] Learning to Leave and Return The")
