@@ -10331,7 +10331,8 @@
 
 				dragframe.t = dragframe:CreateTexture()
 				dragframe.t:SetAllPoints()
-				dragframe.t:SetVertexColor(0.0, 0.5, 1.0, 0.5)
+				-- fix for 3.3.5 texture color
+				dragframe.t:SetTexture(0.0, 0.5, 1.0, 0.5)
 				dragframe.t:SetAlpha(0.5)
 
 				dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -12815,14 +12816,14 @@
 			-- Plot vertical lines
 			for i = 0, wline do
 				local t = LeaPlusLC.grid:CreateTexture(nil, 'BACKGROUND')
-				if i == wline / 2 then t:SetVertexColor(1, 0, 0, 0.5) else t:SetVertexColor(0, 0, 0, 0.5) end
+				if i == wline / 2 then t:SetTexture(1, 0, 0, 0.5) else t:SetTexture(0, 0, 0, 0.5) end
 				t:SetPoint('TOPLEFT', grid, 'TOPLEFT', i * w / wline - 1, 0)
 				t:SetPoint('BOTTOMRIGHT', grid, 'BOTTOMLEFT', i * w / wline + 1, 0)
 			end
 			-- Plot horizontal lines
 			for i = 0, hline do
 				local t = LeaPlusLC.grid:CreateTexture(nil, 'BACKGROUND')
-				if i == hline / 2 then	t:SetVertexColor(1, 0, 0, 0.5) else t:SetVertexColor(0, 0, 0, 0.5) end
+				if i == hline / 2 then	t:SetTexture(1, 0, 0, 0.5) else t:SetTexture(0, 0, 0, 0.5) end
 				t:SetPoint('TOPLEFT', grid, 'TOPLEFT', 0, -i * h / hline + 1)
 				t:SetPoint('BOTTOMRIGHT', grid, 'TOPRIGHT', 0, -i * h / hline - 1)
 			end
