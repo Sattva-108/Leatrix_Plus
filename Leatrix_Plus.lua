@@ -3326,7 +3326,7 @@
 			local vehicleContainer = _G.VehicleSeatIndicator
 			vehicleContainer:ClearAllPoints()
 			vehicleContainer:SetPoint('CENTER', vehicleHolder)
-			vehicleContainer:SetIgnoreParentScale(true) -- Needed to keep drag frame position when scaled
+			--vehicleContainer:SetIgnoreParentScale(true) -- Needed to keep drag frame position when scaled
 
 			hooksecurefunc(vehicleContainer, 'SetPoint', function(self, void, b)
 				if b and (b ~= vehicleHolder) then
@@ -3355,12 +3355,13 @@
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
 			dragframe:SetToplevel(true)
+			dragframe:EnableMouse(true)
 			dragframe:Hide()
 			dragframe:SetScale(LeaPlusLC["VehicleScale"])
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -5302,7 +5303,7 @@
 				LeaPlusCB["MinimapScale"].f:SetFormattedText("%.0f%%", LeaPlusLC["MinimapScale"] * 100)
 				-- Set Not minimap
 				if LeaPlusLC["MinimapNoScale"] == "On" then
-					Minimap:SetIgnoreParentScale(true)
+					--Minimap:SetIgnoreParentScale(true)
 				else
 					-- Minimap:SetIgnoreParentScale(false)
 				end
