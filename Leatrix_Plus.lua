@@ -10455,12 +10455,12 @@
 
 		if LeaPlusLC["ManageWidget"] == "On" and not LeaLockList["ManageWidget"] then
 
-			-- Create and manage container for UIWidgetTopCenterContainerFrame
+			-- Create and manage container for WorldStateAlwaysUpFrame
 			local topCenterHolder = CreateFrame("Frame", nil, UIParent)
 			topCenterHolder:SetPoint("TOP", UIParent, "TOP", 0, -15)
 			topCenterHolder:SetSize(10, 58)
 
-			local topCenterContainer = _G.UIWidgetTopCenterContainerFrame
+			local topCenterContainer = _G.WorldStateAlwaysUpFrame
 			topCenterContainer:ClearAllPoints()
 			topCenterContainer:SetPoint('CENTER', topCenterHolder)
 
@@ -10483,7 +10483,7 @@
 			topCenterHolder:ClearAllPoints()
 			topCenterHolder:SetPoint(LeaPlusLC["WidgetA"], UIParent, LeaPlusLC["WidgetR"], LeaPlusLC["WidgetX"], LeaPlusLC["WidgetY"])
 			topCenterHolder:SetScale(LeaPlusLC["WidgetScale"])
-			UIWidgetTopCenterContainerFrame:SetScale(LeaPlusLC["WidgetScale"])
+			WorldStateAlwaysUpFrame:SetScale(LeaPlusLC["WidgetScale"])
 
 			-- Create drag frame
 			local dragframe = CreateFrame("FRAME", nil, nil)
@@ -10491,12 +10491,13 @@
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
 			dragframe:SetToplevel(true)
+			dragframe:EnableMouse(true)
 			dragframe:Hide()
 			dragframe:SetScale(LeaPlusLC["WidgetScale"])
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -10565,7 +10566,7 @@
 			-- Set scale when slider is changed
 			LeaPlusCB["WidgetScale"]:HookScript("OnValueChanged", function()
 				topCenterHolder:SetScale(LeaPlusLC["WidgetScale"])
-				UIWidgetTopCenterContainerFrame:SetScale(LeaPlusLC["WidgetScale"])
+				WorldStateAlwaysUpFrame:SetScale(LeaPlusLC["WidgetScale"])
 				dragframe:SetScale(LeaPlusLC["WidgetScale"])
 				-- Show formatted slider value
 				LeaPlusCB["WidgetScale"].f:SetFormattedText("%.0f%%", LeaPlusLC["WidgetScale"] * 100)
@@ -10629,7 +10630,7 @@
 					topCenterHolder:ClearAllPoints()
 					topCenterHolder:SetPoint(LeaPlusLC["WidgetA"], UIParent, LeaPlusLC["WidgetR"], LeaPlusLC["WidgetX"], LeaPlusLC["WidgetY"])
 					topCenterHolder:SetScale(LeaPlusLC["WidgetScale"])
-					UIWidgetTopCenterContainerFrame:SetScale(LeaPlusLC["WidgetScale"])
+					WorldStateAlwaysUpFrame:SetScale(LeaPlusLC["WidgetScale"])
 				else
 					-- Show Titan Panel screen adjust warning if Titan Panel is installed with screen adjust enabled
 					if select(2, GetAddOnInfo("TitanClassic")) then
