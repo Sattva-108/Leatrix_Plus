@@ -9907,13 +9907,6 @@
 			TemporaryEnchantFrame:SetScale(LeaPlusLC["BuffFrameScale"])
 			ConsolidatedBuffs:SetScale(LeaPlusLC["BuffFrameScale"])
 
-			-- Set buff frame position when the game resets it
-			hooksecurefunc("UIParent_UpdateTopFramePositions", function()
-				BuffFrame:SetMovable(true)
-				BuffFrame:ClearAllPoints()
-				BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
-			end)
-
 			-- Create drag frame
 			local dragframe = CreateFrame("FRAME", nil, nil)
 			dragframe:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, 2.5)
@@ -9921,21 +9914,30 @@
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
 			dragframe:SetToplevel(true)
 			dragframe:Hide()
+			dragframe:EnableMouse(true)
 			dragframe:SetScale(LeaPlusLC["BuffFrameScale"])
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 			dragframe.f:SetPoint('CENTER', 0, 0)
 			dragframe.f:SetText(L["Buffs"])
 
-			-- Click handler
+			local isBuffFrameMoving = false
+			local buffFrameSetPoint = BuffFrame.SetPoint
+
+			BuffFrame.SetPoint = function(self, ...)
+				if not InCombatLockdown() and not isBuffFrameMoving then
+					buffFrameSetPoint(self, LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+				end
+			end
 			dragframe:SetScript("OnMouseDown", function(self, btn)
 				-- Start dragging if left clicked
 				if btn == "LeftButton" then
+					isBuffFrameMoving = true
 					BuffFrame:StartMoving()
 				end
 			end)
@@ -9943,6 +9945,7 @@
 			dragframe:SetScript("OnMouseUp", function()
 				-- Save frame positions
 				BuffFrame:StopMovingOrSizing()
+				isBuffFrameMoving = false
 				LeaPlusLC["BuffFrameA"], void, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"] = BuffFrame:GetPoint()
 				BuffFrame:SetMovable(true)
 				BuffFrame:ClearAllPoints()
