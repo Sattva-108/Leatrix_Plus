@@ -10695,12 +10695,13 @@
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
 			dragframe:SetToplevel(true)
+			dragframe:EnableMouse(true)
 			dragframe:Hide()
 			dragframe:SetScale(LeaPlusLC["FocusScale"])
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
