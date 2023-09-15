@@ -9952,27 +9952,27 @@
 				BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 			end)
 
-			-- Snap-to-grid
-			do
-				local frame, grid = dragframe, 10
-				local w, h = -190, 225
-				local xpos, ypos, scale, uiscale
-				frame:RegisterForDrag("RightButton")
-				frame:HookScript("OnDragStart", function()
-					frame:SetScript("OnUpdate", function()
-						scale, uiscale = frame:GetScale(), UIParent:GetScale()
-						xpos, ypos = GetCursorPosition()
-						xpos = floor((xpos / scale / uiscale) / grid) * grid - w / 2
-						ypos = ceil((ypos / scale / uiscale) / grid) * grid + h / 2
-						BuffFrame:ClearAllPoints()
-						BuffFrame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", xpos, ypos)
-					end)
-				end)
-				frame:HookScript("OnDragStop", function()
-					frame:SetScript("OnUpdate", nil)
-					frame:GetScript("OnMouseUp")()
-				end)
-			end
+			---- Snap-to-grid
+			--do
+			--	local frame, grid = dragframe, 10
+			--	local w, h = -190, 225
+			--	local xpos, ypos, scale, uiscale
+			--	frame:RegisterForDrag("RightButton")
+			--	frame:HookScript("OnDragStart", function()
+			--		frame:SetScript("OnUpdate", function()
+			--			scale, uiscale = frame:GetScale(), UIParent:GetScale()
+			--			xpos, ypos = GetCursorPosition()
+			--			xpos = floor((xpos / scale / uiscale) / grid) * grid - w / 2
+			--			ypos = ceil((ypos / scale / uiscale) / grid) * grid + h / 2
+			--			BuffFrame:ClearAllPoints()
+			--			BuffFrame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", xpos, ypos)
+			--		end)
+			--	end)
+			--	frame:HookScript("OnDragStop", function()
+			--		frame:SetScript("OnUpdate", nil)
+			--		frame:GetScript("OnMouseUp")()
+			--	end)
+			--end
 
 			-- Create configuration panel
 			local BuffPanel = LeaPlusLC:CreatePanel("Manage buffs", "BuffPanel")
