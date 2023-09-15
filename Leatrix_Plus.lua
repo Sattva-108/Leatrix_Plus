@@ -5485,16 +5485,17 @@
 			local durabilityContainer = _G.DurabilityFrame
 			durabilityContainer:ClearAllPoints()
 			durabilityContainer:SetPoint('CENTER', durabilityHolder)
-			durabilityContainer:SetIgnoreParentScale(true) -- Needed to keep drag frame position when scaled
+			--durabilityContainer:SetIgnoreParentScale(true) -- Needed to keep drag frame position when scaled
 
-			hooksecurefunc(durabilityContainer, 'SetPoint', function(self, void, b)
-				if b and (b ~= durabilityHolder) then
-					-- Reset parent if it changes from durabilityHolder
-					self:ClearAllPoints()
-					self:SetPoint('TOPRIGHT', durabilityHolder) -- Has to be TOPRIGHT (drag frame while moving between subzones)
-					self:SetParent(durabilityHolder)
+			local isDurabilityFrameMoving = false
+			local durabilityFrameSetPoint = durabilityContainer.SetPoint
+
+			durabilityContainer.SetPoint = function(self, _, relativeTo)
+				if not InCombatLockdown() and not isDurabilityFrameMoving and relativeTo ~= durabilityHolder then
+					--durabilityFrameSetPoint(self, 'TOPRIGHT', durabilityHolder) -- Has to be TOPRIGHT (drag frame while moving between subzones)
+					--self:SetParent(durabilityHolder)
 				end
-			end)
+			end
 
 			-- Allow durability frame to be moved
 			durabilityHolder:SetMovable(true)
@@ -5514,12 +5515,13 @@
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
 			dragframe:SetToplevel(true)
+			dragframe:EnableMouse(true)
 			dragframe:Hide()
 			dragframe:SetScale(LeaPlusLC["DurabilityScale"])
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -5612,7 +5614,7 @@
 				LeaPlusLC["DurabilityA"] = "TOPRIGHT"
 				LeaPlusLC["DurabilityR"] = "TOPRIGHT"
 				LeaPlusLC["DurabilityX"] = 0
-				LeaPlusLC["DurabilityY"] = -192
+				LeaPlusLC["DurabilityY"] = -170
 				LeaPlusLC["DurabilityScale"] = 1
 				durabilityHolder:ClearAllPoints()
 				durabilityHolder:SetPoint(LeaPlusLC["DurabilityA"], UIParent, LeaPlusLC["DurabilityR"], LeaPlusLC["DurabilityX"], LeaPlusLC["DurabilityY"])
@@ -5633,7 +5635,7 @@
 					LeaPlusLC["DurabilityA"] = "TOPRIGHT"
 					LeaPlusLC["DurabilityR"] = "TOPRIGHT"
 					LeaPlusLC["DurabilityX"] = 0
-					LeaPlusLC["DurabilityY"] = -192
+					LeaPlusLC["DurabilityY"] = -170
 					LeaPlusLC["DurabilityScale"] = 1
 					durabilityHolder:ClearAllPoints()
 					durabilityHolder:SetPoint(LeaPlusLC["DurabilityA"], UIParent, LeaPlusLC["DurabilityR"], LeaPlusLC["DurabilityX"], LeaPlusLC["DurabilityY"])
@@ -5689,12 +5691,13 @@
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
 			dragframe:SetToplevel(true)
+			dragframe:EnableMouse(true)
 			dragframe:Hide()
 			dragframe:SetScale(LeaPlusLC["TimerScale"])
 
 			dragframe.t = dragframe:CreateTexture()
 			dragframe.t:SetAllPoints()
-			dragframe.t:SetVertexColor(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
 			dragframe.t:SetAlpha(0.5)
 
 			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
@@ -14057,7 +14060,7 @@
 				LeaPlusLC:LoadVarAnc("DurabilityA", "TOPRIGHT")				-- Manage durability anchor
 				LeaPlusLC:LoadVarAnc("DurabilityR", "TOPRIGHT")				-- Manage durability relative
 				LeaPlusLC:LoadVarNum("DurabilityX", 0, -5000, 5000)			-- Manage durability position X
-				LeaPlusLC:LoadVarNum("DurabilityY", -192, -5000, 5000)		-- Manage durability position Y
+				LeaPlusLC:LoadVarNum("DurabilityY", -170, -5000, 5000)		-- Manage durability position Y
 				LeaPlusLC:LoadVarNum("DurabilityScale", 1, 0.5, 2)			-- Manage durability scale
 
 				LeaPlusLC:LoadVarChk("ManageVehicle", "Off")				-- Manage vehicle
@@ -16644,7 +16647,7 @@
 				LeaPlusDB["DurabilityA"] = "TOPRIGHT"			-- Manage durability anchor
 				LeaPlusDB["DurabilityR"] = "TOPRIGHT"			-- Manage durability relative
 				LeaPlusDB["DurabilityX"] = 0					-- Manage durability position X
-				LeaPlusDB["DurabilityY"] = -192					-- Manage durability position Y
+				LeaPlusDB["DurabilityY"] = -170					-- Manage durability position Y
 				LeaPlusDB["DurabilityScale"] = 1.00				-- Manage durability scale
 
 				LeaPlusDB["ManageVehicle"] = "On"				-- Manage vehicle
