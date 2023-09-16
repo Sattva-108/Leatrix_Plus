@@ -2586,7 +2586,7 @@
 			ColTar:SetScript("OnEvent", TargetFrameCol) -- Events are registered if target option is enabled
 
 			-- Refresh color if focus frame size changes
-			hooksecurefunc(FocusFrame, "SetSmallSize", function()
+			hooksecurefunc("FocusFrame_SetSmallSize", function()
 				if LeaPlusLC["ClassColTarget"] == "On" then
 					TargetFrameCol()
 				end
@@ -2997,8 +2997,8 @@
 		if LeaPlusLC["NoClassBar"] == "On" and not LeaLockList["NoClassBar"] then
 			local stancebar = CreateFrame("FRAME", nil, UIParent)
 			stancebar:Hide()
-			StanceBarFrame:UnregisterAllEvents()
-			StanceBarFrame:SetParent(stancebar)
+			ShapeshiftBarFrame:UnregisterAllEvents()
+			ShapeshiftBarFrame:SetParent(stancebar)
 		end
 
 		----------------------------------------------------------------------
@@ -5851,7 +5851,7 @@
 		if LeaPlusLC["NoAlerts"] == "On" then
 
 			-- Unregister alert events
-			hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
+			hooksecurefunc(AlertFrame, "RegisterEvent", function(_, event)
 				AlertFrame:UnregisterEvent(event)
 			end)
 			AlertFrame:UnregisterAllEvents()
@@ -5864,7 +5864,7 @@
 					local alink = GetAchievementLink(arg1)
 					if alink then
 						LeaPlusLC:Print(string.format(NEW_ACHIEVEMENT_EARNED:gsub("'", ""), alink))
-						PlaySoundFile(569143)
+						PlaySound(12891)
 					end
 				end
 			end)
