@@ -16887,6 +16887,7 @@
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Support", 146, -132);
 	LeaPlusLC:MakeWD(LeaPlusLC[pg], "|cff00ff00Feedback Discord:|r |cffadd8e6sattva108|r", 146, -152);
+	LeaPlusLC:MakeWD(LeaPlusLC[pg], "|cff00ff00Original Author:|r |cffadd8e6www.leatrix.com|r", 146, -172);
 
 ----------------------------------------------------------------------
 -- 	LC1: Automation
