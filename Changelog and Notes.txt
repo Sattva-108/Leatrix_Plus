@@ -39,6 +39,8 @@ WebLink					- Fix ruRU encoding!!!
 
 Minimap 				- Move the zone text overlapping the mail icon
 
+ViewPort                - fixes, left,right, transperency or disable
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
