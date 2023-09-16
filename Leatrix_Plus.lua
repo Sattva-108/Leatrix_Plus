@@ -1753,7 +1753,46 @@
 		----------------------------------------------------------------------
 
 		if LeaPlusLC["NoBagAutomation"] == "On" and not LeaLockList["NoBagAutomation"] then
-			RunScript("hooksecurefunc('OpenAllBags', CloseAllBags)")
+			local function ManageBackpack(event)
+				if event == "MERCHANT_SHOW" then
+					BACKPACK_WAS_OPEN = IsBagOpen(0)
+					if OpenBackpack ~= nil then
+						CloseBackpack()
+					end
+				elseif event == "MERCHANT_CLOSED" and not BACKPACK_WAS_OPEN then
+					CloseBackpack()
+				end
+			end
+
+			local frame = CreateFrame("Frame")
+			frame:RegisterEvent("MERCHANT_SHOW")
+			frame:RegisterEvent("MERCHANT_CLOSED")
+			frame:SetScript("OnEvent", function(self, event)
+				ManageBackpack(event)
+			end)
+
+			local function CustomCloseBackpack(closeFunction)
+				return function()
+					if not MERCHANT_FRAME_ACTIVE then
+						closeFunction()
+					end
+				end
+			end
+
+			hooksecurefunc("CloseBackpack", CustomCloseBackpack(CloseBackpack))
+
+			local function MerchantFrame_Active_OnShow()
+				MERCHANT_FRAME_ACTIVE = true
+			end
+
+			local function MerchantFrame_Active_OnHide()
+				MERCHANT_FRAME_ACTIVE = false
+			end
+
+			hooksecurefunc("MerchantFrame_OnShow", MerchantFrame_Active_OnShow)
+			hooksecurefunc("MerchantFrame_OnHide", MerchantFrame_Active_OnHide)
+
+
 		end
 
 		----------------------------------------------------------------------

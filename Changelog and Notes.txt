@@ -185,3 +185,5 @@ A feature that would automatically show you the location of the nearest mailbox.
 Right Click totems to destroy them
 
 Show best gold value for quest reward.
+
+Open all bag user config option at merchant.
