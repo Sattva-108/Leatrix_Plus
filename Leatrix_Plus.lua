@@ -689,7 +689,7 @@
 		or	(LeaPlusLC["ViewPortEnable"]		~= LeaPlusDB["ViewPortEnable"])			-- Enable viewport
 		or	(LeaPlusLC["NoRestedEmotes"]		~= LeaPlusDB["NoRestedEmotes"])			-- Silence rested emotes
 		or	(LeaPlusLC["NoBagAutomation"]		~= LeaPlusDB["NoBagAutomation"])		-- Disable bag automation
-		or	(LeaPlusLC["CharAddonList"]			~= LeaPlusDB["CharAddonList"])			-- Show character addons
+		--or	(LeaPlusLC["CharAddonList"]			~= LeaPlusDB["CharAddonList"])			-- Show character addons
 		or	(LeaPlusLC["FasterLooting"]			~= LeaPlusDB["FasterLooting"])			-- Faster auto loot
 		or	(LeaPlusLC["FasterMovieSkip"]		~= LeaPlusDB["FasterMovieSkip"])		-- Faster movie skip
 		or	(LeaPlusLC["StandAndDismount"]		~= LeaPlusDB["StandAndDismount"])		-- Dismount me
@@ -1943,13 +1943,13 @@
 		--	Sort game options addon list
 		----------------------------------------------------------------------
 
-		if LeaPlusLC["CharAddonList"] == "On" then
-			-- Set the addon list to character by default
-			if AddonCharacterDropDown and AddonCharacterDropDown.selectedValue then
-				AddonCharacterDropDown.selectedValue = UnitName("player");
-				AddonCharacterDropDownText:SetText(UnitName("player"))
-			end
-		end
+		--if LeaPlusLC["CharAddonList"] == "On" then
+		--	-- Set the addon list to character by default
+		--	if AddonCharacterDropDown and AddonCharacterDropDown.selectedValue then
+		--		AddonCharacterDropDown.selectedValue = UnitName("player");
+		--		AddonCharacterDropDownText:SetText(UnitName("player"))
+		--	end
+		--end
 
 		----------------------------------------------------------------------
 		--	Sell junk automatically (no reload required)
@@ -13875,13 +13875,45 @@
 			return
 		end
 
+
+		function Leatrix_CustomSellCursorItem()
+			-- Fetch the mouseovered item
+			local bag, slot = GetMouseFocus():GetParent():GetID(), GetMouseFocus():GetID()
+
+			-- Check if the bag and slot are valid (i.e., an actual item)
+			if bag and slot and bag > 0 and slot > 0 then
+				local cursorType, itemId = GetCursorInfo()
+
+				-- Pick up the mouseovered item
+				PickupContainerItem(bag, slot)
+
+				-- Get the updated cursor info
+				cursorType, itemId = GetCursorInfo()
+
+				-- Check if the item is on the cursor
+				if cursorType == "item" and itemId then
+					-- Check if the player is at the vendor
+					if MerchantFrame:IsVisible() then
+						PickupMerchantItem() -- Put the item in the buyback slot, effectively selling it
+					else
+						ClearCursor() -- Remove the item from the cursor if not at a vendor
+					end
+				end
+			end
+		end
+
+
+
 		-- Disable warning for attempting to vendor an item within its refund window
+		-- FIXME 3.3.5 what event is this used for in retail? Is it safe to fix this? Does anybody want that?
 		if event == "MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL" then
-			SellCursorItem()
+			-- TODO: Rename me from global. MUST DO
+			Leatrix_CustomSellCursorItem()
 			return
 		end
 
 		-- Disable warning for attempting to mail an item within its refund window
+		-- FIXME 3.3.5 what event is this used for in retail? Is it safe to fix this? Does anybody want that?
 		if event == "MAIL_LOCK_SEND_ITEMS" then
 			RespondMailLockSendItem(arg1, true)
 			return
@@ -14139,7 +14171,7 @@
 				--LeaPlusLC:LoadVarStr("MuteCustomList", "")					-- Mute custom sounds list
 
 				LeaPlusLC:LoadVarChk("NoBagAutomation", "Off")				-- Disable bag automation
-				LeaPlusLC:LoadVarChk("CharAddonList", "Off")				-- Show character addons
+				--LeaPlusLC:LoadVarChk("CharAddonList", "Off")				-- Show character addons
 				LeaPlusLC:LoadVarChk("NoConfirmLoot", "Off")				-- Disable loot warnings
 				LeaPlusLC:LoadVarChk("FasterLooting", "Off")				-- Faster auto loot
 				LeaPlusLC:LoadVarChk("FasterMovieSkip", "Off")				-- Faster movie skip
@@ -14551,7 +14583,7 @@
 			--LeaPlusDB["MuteCustomList"]			= LeaPlusLC["MuteCustomList"]
 
 			LeaPlusDB["NoBagAutomation"]		= LeaPlusLC["NoBagAutomation"]
-			LeaPlusDB["CharAddonList"]			= LeaPlusLC["CharAddonList"]
+			--LeaPlusDB["CharAddonList"]			= LeaPlusLC["CharAddonList"]
 			LeaPlusDB["NoConfirmLoot"] 			= LeaPlusLC["NoConfirmLoot"]
 			LeaPlusDB["FasterLooting"] 			= LeaPlusLC["FasterLooting"]
 			LeaPlusDB["FasterMovieSkip"] 		= LeaPlusLC["FasterMovieSkip"]
@@ -16716,7 +16748,7 @@
 				--LeaPlusDB["MuteCustomList"] = ""				-- Mute custom sounds list
 
 				LeaPlusDB["NoBagAutomation"] = "On"				-- Disable bag automation
-				LeaPlusDB["CharAddonList"] = "On"				-- Show character addons
+				--LeaPlusDB["CharAddonList"] = "On"				-- Show character addons
 				LeaPlusDB["NoConfirmLoot"] = "On"				-- Disable loot warnings
 				LeaPlusDB["FasterLooting"] = "On"				-- Faster auto loot
 				LeaPlusDB["FasterMovieSkip"] = "On"				-- Faster movie skip
@@ -17113,7 +17145,7 @@
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Game Options"				, 	340, -72);
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoBagAutomation"			, 	"Disable bag automation"		, 	340, -92, 	true,	"If checked, your bags will not be opened or closed automatically when you interact with a merchant, bank or mailbox.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "CharAddonList"				, 	"Show character addons"			, 	340, -112, 	true,	"If checked, the addon list (accessible from the game menu) will show character based addons by default.")
+	--LeaPlusLC:MakeCB(LeaPlusLC[pg], "CharAddonList"				, 	"Show character addons"			, 	340, -112, 	true,	"If checked, the addon list (accessible from the game menu) will show character based addons by default.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoConfirmLoot"				, 	"Disable loot warnings"			,	340, -132, 	false,	"If checked, confirmations will no longer appear when you choose a loot roll option or attempt to sell or mail a tradable item.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "FasterLooting"				, 	"Faster auto loot"				,	340, -152, 	true,	"If checked, the amount of time it takes to auto loot creatures will be significantly reduced.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "FasterMovieSkip"			, 	"Faster movie skip"				,	340, -172, 	true,	"If checked, you will be able to cancel cinematics without being prompted for confirmation.")
