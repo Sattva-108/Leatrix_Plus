@@ -1710,7 +1710,7 @@
 							-- Master loot is enabled so fast loot if item should be auto looted
 							local lootThreshold = GetLootThreshold()
 							for i = GetNumLootItems(), 1, -1 do
-								local lootIcon, lootName, lootQuantity, currencyID, lootQuality = GetLootSlotInfo(i)
+								local lootIcon, lootName, lootQuantity, lootQuality = GetLootSlotInfo(i)
 								if lootQuality and lootThreshold and lootQuality < lootThreshold then
 									LootSlot(i)
 								end
@@ -1719,19 +1719,19 @@
 							-- Master loot is disabled so fast loot regardless
 							local grouped = IsInGroup()
 							for i = GetNumLootItems(), 1, -1 do
-								local lootIcon, lootName, lootQuantity, currencyID, lootQuality, locked = GetLootSlotInfo(i)
-								local slotType = GetLootSlotType(i)
+								local lootIcon, lootName, lootQuantity, lootQuality, locked = GetLootSlotInfo(i)
+								--local slotType = GetLootSlotType(i)
 								if lootName and not locked then
 									if not grouped then
 										LootSlot(i)
 									else
-										if lootMethod == "freeforall" then
-											if slotType == LOOT_SLOT_ITEM then
-												LootSlot(i)
-											end
-										else
+										--if lootMethod == "freeforall" then
+										--	if slotType == LOOT_SLOT_ITEM then
+										--		LootSlot(i)
+										--	end
+										--else
 											LootSlot(i)
-										end
+										--end
 									end
 								end
 							end
@@ -1743,7 +1743,7 @@
 
 			-- Event frame
 			local faster = CreateFrame("Frame")
-			faster:RegisterEvent("LOOT_READY")
+			faster:RegisterEvent("LOOT_OPENED")
 			faster:SetScript("OnEvent", FastLoot)
 
 		end
