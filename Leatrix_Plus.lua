@@ -6726,7 +6726,8 @@
 
 						-- Build route string and debug string
 						local numEnterHops = GetNumRoutes(index)
-						local debugString = '["' .. currentNode
+						--local debugString = '["' .. currentNode
+						local debugString = '"' .. currentNode
 						local debugChatString = '["' .. currentNode
 						local routeString = currentNode
 						for i = 1, numEnterHops do
@@ -6760,7 +6761,9 @@
 							routeString = routeString .. ":" .. destination
 						end
 						--debugString = debugString .. '"] = '
-						debugString = debugString .. '"]'
+						--debugString = debugString .. '"]'
+						debugString = debugString .. '"'
+
 						debugChatString = debugChatString .. '"] = '
 
 
