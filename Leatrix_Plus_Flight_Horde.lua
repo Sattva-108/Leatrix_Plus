@@ -129,26 +129,26 @@
 				["0.42:0.86:0.50:0.66:0.55:0.46:0.59:0.45:0.61:0.35:0.61:0.28:0.58:0.06:0.59:0.19"] = 1246, -- Grom'gol, Kargath, Hammerfall, Revantusk Village, Light's Hope Chapel, Zul'Aman, Shattered Sun Staging Area, Silvermoon City
 
 				-- Horde: Hammerfall (Arathi Highlands)
-				["0.55:0.46:0.50:0.66:0.41:0.93"] = 556, -- Hammerfall, Kargath, Booty Bay
-				["0.55:0.46:0.50:0.66:0.42:0.86"] = 497, -- Hammerfall, Kargath, Grom'gol
-				["0.55:0.46:0.50:0.66:0.54:0.79"] = 482, -- Hammerfall, Kargath, Stonard
-				["0.55:0.46:0.50:0.66:0.50:0.69"] = 326, -- Hammerfall, Kargath, Flame Crest
-				["0.55:0.46:0.50:0.66"] = 259, -- Hammerfall, Kargath
-				["0.55:0.46:0.50:0.66:0.46:0.65"] = 315, -- Hammerfall, Kargath, Thorium Point
-				["0.55:0.46:0.59:0.45"] = 91, -- Hammerfall, Revantusk Village
-				["0.55:0.46:0.59:0.45:0.61:0.35"] = 229, -- Hammerfall, Revantusk Village, Light's Hope Chapel
-				["0.55:0.46:0.59:0.45:0.61:0.35:0.58:0.25"] = 345, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Tranquillien
-				["0.55:0.46:0.59:0.45:0.61:0.35:0.58:0.25:0.59:0.19"] = 411, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Tranquillien, Silvermoon City
-				["0.55:0.46:0.42:0.37"] = 259, -- Hammerfall, Undercity
-				["0.55:0.46:0.46:0.43"] = 117, -- Hammerfall, Tarren Mill
-				["0.55:0.46:0.46:0.43:0.37:0.41"] = 215, -- Hammerfall, Tarren Mill, The Sepulcher
-				["0.55:0.46:0.59:0.45:0.61:0.35:0.61:0.28"] = 322, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Zul'Aman
+				["0.55:0.54:0.50:0.34:0.41:0.07"] = 556, -- Hammerfall, Kargath, Booty Bay
+				["0.55:0.54:0.50:0.34:0.42:0.14"] = 497, -- Hammerfall, Kargath, Grom'gol
+				["0.55:0.54:0.50:0.34:0.54:0.21"] = 482, -- Hammerfall, Kargath, Stonard
+				["0.55:0.54:0.50:0.34:0.50:0.31"] = 326, -- Hammerfall, Kargath, Flame Crest
+				["0.55:0.54:0.50:0.34"] = 259, -- Hammerfall, Kargath
+				["0.55:0.54:0.50:0.34:0.46:0.35"] = 315, -- Hammerfall, Kargath, Thorium Point
+				["0.55:0.54:0.59:0.55"] = 91, -- Hammerfall, Revantusk Village
+				["0.55:0.54:0.59:0.55:0.61:0.65"] = 229, -- Hammerfall, Revantusk Village, Light's Hope Chapel
+				["0.55:0.54:0.59:0.55:0.61:0.65:0.58:0.75"] = 345, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Tranquillien
+				["0.55:0.54:0.59:0.55:0.61:0.65:0.58:0.75:0.59:0.82"] = 411, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Tranquillien, Silvermoon City
+				["0.55:0.54:0.42:0.63"] = 259, -- Hammerfall, Undercity
+				["0.55:0.54:0.46:0.57"] = 117, -- Hammerfall, Tarren Mill
+				["0.55:0.54:0.46:0.57:0.37:0.59"] = 215, -- Hammerfall, Tarren Mill, The Sepulcher
+				["0.55:0.54:0.59:0.55:0.61:0.65:0.61:0.73"] = 322, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Zul'Aman
 				["0.55:0.46:0.46:0.43:0.42:0.37:0.61:0.35:0.61:0.28"] = 532, -- Hammerfall, Tarren Mill, Undercity, Light's Hope Chapel, Zul'Aman
-				["0.55:0.46:0.59:0.45:0.61:0.35:0.61:0.28:0.58:0.06"] = 571, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Zul'Aman, Shattered Sun Staging Area
+				["0.55:0.54:0.59:0.55:0.61:0.65:0.61:0.73:0.58:0.94"] = 571, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Zul'Aman, Shattered Sun Staging Area
 				["0.55:0.46:0.46:0.43:0.42:0.37:0.61:0.35"] = 441, -- Hammerfall, Tarren Mill, Undercity, Light's Hope Chapel
-				["0.55:0.46:0.46:0.43:0.45:0.37"] = 185, -- Hammerfall, Tarren Mill, The Bulwark
-				["0.55:0.46:0.46:0.43:0.51:0.36"] = 217, -- Hammerfall, Tarren Mill, Thondroril River
-				["0.55:0.46:0.59:0.45:0.61:0.35:0.62:0.34"] = 290, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Acherus: The Ebon Hold
+				["0.55:0.54:0.46:0.57:0.45:0.63"] = 185, -- Hammerfall, Tarren Mill, The Bulwark
+				["0.55:0.54:0.46:0.57:0.51:0.64"] = 217, -- Hammerfall, Tarren Mill, Thondroril River
+				["0.55:0.54:0.59:0.55:0.61:0.65:0.62:0.66"] = 290, -- Hammerfall, Revantusk Village, Light's Hope Chapel, Acherus: The Ebon Hold
 				["0.55:0.46:0.46:0.43:0.51:0.36:0.61:0.35:0.58:0.25:0.59:0.19"] = 497, -- Hammerfall, Tarren Mill, Thondoril River, Light's Hope Chapel, Tranquillien, Silvermoon City
 				["0.55:0.46:0.46:0.43:0.51:0.36:0.61:0.35:0.58:0.25"] = 428, -- Hammerfall, Tarren Mill, Thondoril River, Light's Hope Chapel, Tranquillien
 
