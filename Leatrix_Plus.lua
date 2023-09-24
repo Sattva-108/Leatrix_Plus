@@ -611,7 +611,7 @@
 		LeaPlusLC:LockOption("ViewPortEnable", "ModViewportBtn", true)				-- Enable viewport
 		--LeaPlusLC:LockOption("MuteGameSounds", "MuteGameSoundsBtn", false)			-- Mute game sounds
 		--LeaPlusLC:LockOption("MuteCustomSounds", "MuteCustomSoundsBtn", false)		-- Mute custom sounds
-		LeaPlusLC:LockOption("StandAndDismount", "DismountBtn", true)				-- Dismount me
+		--LeaPlusLC:LockOption("StandAndDismount", "DismountBtn", true)				-- Dismount me
 	end
 
 ----------------------------------------------------------------------
@@ -693,8 +693,8 @@
 		--or	(LeaPlusLC["CharAddonList"]			~= LeaPlusDB["CharAddonList"])			-- Show character addons
 		or	(LeaPlusLC["FasterLooting"]			~= LeaPlusDB["FasterLooting"])			-- Faster auto loot
 		or	(LeaPlusLC["FasterMovieSkip"]		~= LeaPlusDB["FasterMovieSkip"])		-- Faster movie skip
-		or	(LeaPlusLC["StandAndDismount"]		~= LeaPlusDB["StandAndDismount"])		-- Dismount me
-		or	(LeaPlusLC["ShowVendorPrice"]		~= LeaPlusDB["ShowVendorPrice"])		-- Show vendor price
+		--or	(LeaPlusLC["StandAndDismount"]		~= LeaPlusDB["StandAndDismount"])		-- Dismount me
+		--or	(LeaPlusLC["ShowVendorPrice"]		~= LeaPlusDB["ShowVendorPrice"])		-- Show vendor price
 		or	(LeaPlusLC["CombatPlates"]			~= LeaPlusDB["CombatPlates"])			-- Combat plates
 		or	(LeaPlusLC["EasyItemDestroy"]		~= LeaPlusDB["EasyItemDestroy"])		-- Easy item destroy
 
@@ -9185,192 +9185,192 @@
 		--	Show vendor price
 		----------------------------------------------------------------------
 
-		if LeaPlusLC["ShowVendorPrice"] == "On" then
-
-			-- Function to show vendor price
-			local function ShowSellPrice(tooltip, tooltipObject)
-				if tooltip.shownMoneyFrames then return end
-				tooltipObject = tooltipObject or GameTooltip
-				-- Get container
-				local container = GetMouseFocus()
-				if not container then return end
-				-- Get item
-				local itemName, itemlink = tooltipObject:GetItem()
-				if not itemlink then return end
-				local void, void, void, void, void, void, void, void, void, void, sellPrice, classID = GetItemInfo(itemlink)
-				if sellPrice and sellPrice > 0 then
-					local count = container and type(container.count) == "number" and container.count or 1
-					if sellPrice and count > 0 then
-						if classID and classID == 11 then count = 1 end -- Fix for quiver/ammo pouch so ammo is not included
-						SetTooltipMoney(tooltip, sellPrice * count, "STATIC", SELL_PRICE .. ":")
-					end
-				end
-				-- Refresh chat tooltips
-				if tooltipObject == ItemRefTooltip then ItemRefTooltip:Show() end
-			end
-
-			-- Show vendor price when tooltips are shown
-			GameTooltip:HookScript("OnTooltipSetItem", ShowSellPrice)
-			hooksecurefunc(GameTooltip, "SetHyperlink", function(tip) ShowSellPrice(tip, GameTooltip) end)
-			hooksecurefunc(ItemRefTooltip, "SetHyperlink", function(tip) ShowSellPrice(tip, ItemRefTooltip) end)
-
-		end
+		--if LeaPlusLC["ShowVendorPrice"] == "On" then
+		--
+		--	-- Function to show vendor price
+		--	local function ShowSellPrice(tooltip, tooltipObject)
+		--		if tooltip.shownMoneyFrames then return end
+		--		tooltipObject = tooltipObject or GameTooltip
+		--		-- Get container
+		--		local container = GetMouseFocus()
+		--		if not container then return end
+		--		-- Get item
+		--		local itemName, itemlink = tooltipObject:GetItem()
+		--		if not itemlink then return end
+		--		local void, void, void, void, void, void, void, void, void, void, sellPrice, classID = GetItemInfo(itemlink)
+		--		if sellPrice and sellPrice > 0 then
+		--			local count = container and type(container.count) == "number" and container.count or 1
+		--			if sellPrice and count > 0 then
+		--				if classID and classID == 11 then count = 1 end -- Fix for quiver/ammo pouch so ammo is not included
+		--				SetTooltipMoney(tooltip, sellPrice * count, "STATIC", SELL_PRICE .. ":")
+		--			end
+		--		end
+		--		-- Refresh chat tooltips
+		--		if tooltipObject == ItemRefTooltip then ItemRefTooltip:Show() end
+		--	end
+		--
+		--	-- Show vendor price when tooltips are shown
+		--	GameTooltip:HookScript("OnTooltipSetItem", ShowSellPrice)
+		--	hooksecurefunc(GameTooltip, "SetHyperlink", function(tip) ShowSellPrice(tip, GameTooltip) end)
+		--	hooksecurefunc(ItemRefTooltip, "SetHyperlink", function(tip) ShowSellPrice(tip, ItemRefTooltip) end)
+		--
+		--end
 
 		----------------------------------------------------------------------
 		--	Dismount me
 		----------------------------------------------------------------------
 
-		if LeaPlusLC["StandAndDismount"] == "On" then
-
-			local eFrame = CreateFrame("FRAME")
-			eFrame:RegisterEvent("UI_ERROR_MESSAGE")
-			eFrame:SetScript("OnEvent", function(self, event, messageType, msg)
-				-- Auto dismount
-				if msg == ERR_OUT_OF_RAGE and LeaPlusLC["DismountNoResource"] == "On"
-				or msg == ERR_OUT_OF_MANA and LeaPlusLC["DismountNoResource"] == "On"
-				or msg == ERR_OUT_OF_ENERGY and LeaPlusLC["DismountNoResource"] == "On"
-				or msg == SPELL_FAILED_MOVING and LeaPlusLC["DismountNoMoving"] == "On"
-				or msg == ERR_TAXIPLAYERSHAPESHIFTED
-				then
-					local void, class = UnitClass("player")
-					if class == "SHAMAN" and GetShapeshiftFormID() then
-						-- Cancel Ghost Wolf
-						RunScript('CancelShapeshiftForm()')
-					end
-					if IsMounted() then
-						Dismount()
-						UIErrorsFrame:Clear()
-					end
-				end
-			end)
-
-			-- Dismount when flight point map is opened
-			local taxiFrame = CreateFrame("FRAME")
-			taxiFrame:RegisterEvent("TAXIMAP_OPENED")
-			taxiFrame:SetScript("OnEvent", function()
-				local void, class = UnitClass("player")
-				if class == "SHAMAN" and GetShapeshiftFormID() then
-					-- Cancel Ghost Wolf
-					RunScript('CancelShapeshiftForm()')
-				end
-				if IsMounted() then Dismount() end
-			end)
-
-			-- Create configuration panel
-			local DismountFrame = LeaPlusLC:CreatePanel("Dismount me", "DismountFrame")
-
-			LeaPlusLC:MakeTx(DismountFrame, "Settings", 16, -72)
-			LeaPlusLC:MakeCB(DismountFrame, "DismountNoResource", "Dismount when not enough rage, mana or energy", 16, -92, false, "If checked, you will be dismounted when you attempt to cast a spell but don't have the rage, mana or energy to cast it.")
-			LeaPlusLC:MakeCB(DismountFrame, "DismountNoMoving", "Dismount when casting a spell while moving", 16, -112, false, "If checked, you will be dismounted when you attempt to cast a non-instant cast spell while moving.")
-			LeaPlusLC:MakeCB(DismountFrame, "DismountNoTaxi", "Dismount when the flight map opens", 16, -132, false, "If checked, you will be dismounted when you instruct a flight master to open the flight map.")
-			LeaPlusLC:MakeCB(DismountFrame, "DismountShowFormBtn", "Show cancel form button on flight map", 16, -152, false, "If checked, a cancel form button will be shown on the flight map while you are playing as a shapeshifted druid or shaman.")
-
-			-- Help button hidden
-			DismountFrame.h.tiptext = L["The game will dismount you if you successfully cast a spell without addons.  These settings let you set some additional dismount rules."]
-
-			-- Back button handler
-			DismountFrame.b:SetScript("OnClick", function()
-				DismountFrame:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page7"]:Show()
-				return
-			end)
-
-			-- Function to set dismount options
-			local function SetDismount()
-				if LeaPlusLC["DismountNoTaxi"] == "On" then
-					taxiFrame:RegisterEvent("TAXIMAP_OPENED")
-				else
-					taxiFrame:UnregisterEvent("TAXIMAP_OPENED")
-				end
-			end
-
-			-- Run function when certain options are clicked and on startup
-			LeaPlusCB["DismountNoTaxi"]:HookScript("OnClick", SetDismount)
-			SetDismount()
-
-			-- Reset button handler
-			DismountFrame.r:SetScript("OnClick", function()
-
-				-- Reset checkboxes
-				LeaPlusLC["DismountNoResource"] = "On"
-				LeaPlusLC["DismountNoMoving"] = "On"
-				LeaPlusLC["DismountNoTaxi"] = "On"
-				LeaPlusLC["DismountShowFormBtn"] = "On"
-
-				-- Update settings and configuration panel
-				SetDismount()
-				DismountFrame:Hide(); DismountFrame:Show()
-
-			end)
-
-			-- Show configuration panal when options panel button is clicked
-			LeaPlusCB["DismountBtn"]:SetScript("OnClick", function()
-				if IsShiftKeyDown() and IsControlKeyDown() then
-					-- Preset profile
-					LeaPlusLC["DismountNoResource"] = "On"
-					LeaPlusLC["DismountNoMoving"] = "On"
-					LeaPlusLC["DismountNoTaxi"] = "On"
-					LeaPlusLC["DismountShowFormBtn"] = "On"
-					SetDismount()
-				else
-					DismountFrame:Show()
-					LeaPlusLC:HideFrames()
-				end
-			end)
-
-			-- Druid cancel form button
-			local void, class = UnitClass("player")
-			if class == "DRUID" or class == "SHAMAN" then
-
-				-- Create button
-				local cancelFormBtn = CreateFrame("Button", nil, TaxiFrame, "InsecureActionButtonTemplate")
-				cancelFormBtn:SetAttribute("type", "macro")
-				cancelFormBtn:SetAttribute("macrotext", "/cancelform")
-				cancelFormBtn:ClearAllPoints()
-				cancelFormBtn:SetSize(24, 24)
-				cancelFormBtn:SetPoint("TOPRIGHT", TaxiFrame, "TOPRIGHT", -46, -46)
-				cancelFormBtn:SetNormalTexture("Interface\\ICONS\\Achievement_Character_Nightelf_Female")
-				cancelFormBtn:SetPushedTexture("Interface\\ICONS\\Achievement_Character_Nightelf_Female")
-				cancelFormBtn:SetHighlightTexture("Interface\\ICONS\\Achievement_Character_Nightelf_Female")
-
-				-- Button message
-				cancelFormBtn.f = cancelFormBtn:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
-				cancelFormBtn.f:SetHeight(32)
-				cancelFormBtn.f:SetPoint('RIGHT', cancelFormBtn, 'LEFT', -10, 0)
-				cancelFormBtn.f:SetText(L["Click to unshift"])
-
-				-- Toggle button when form changes
-				cancelFormBtn:SetScript("OnEvent", function()
-					local form = GetShapeshiftForm() or 0
-					if form ~= 0 then
-						if not cancelFormBtn:IsShown() then	cancelFormBtn:Show() end
-					else
-						cancelFormBtn:Hide()
-					end
-				end)
-
-				-- Function to set event and button status
-				local function SetShiftEvent()
-					if LeaPlusLC["DismountShowFormBtn"] == "On" then
-						cancelFormBtn:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
-						local form = GetShapeshiftForm() or 0
-						if form ~= 0 then cancelFormBtn:Show() else cancelFormBtn:Hide() end
-					else
-						cancelFormBtn:UnregisterEvent("UPDATE_SHAPESHIFT_FORM")
-						cancelFormBtn:Hide()
-					end
-				end
-
-				-- Set button when option is clicked, when reset button is clicked, preset profile and on startup
-				LeaPlusCB["DismountShowFormBtn"]:HookScript("OnClick", SetShiftEvent)
-				DismountFrame.r:HookScript("OnClick", SetShiftEvent)
-				LeaPlusCB["DismountBtn"]:HookScript("OnClick", function()
-					if IsShiftKeyDown() and IsControlKeyDown() then	SetShiftEvent() end
-				end)
-				SetShiftEvent()
-
-			end
-
-		end
+		--if LeaPlusLC["StandAndDismount"] == "On" then
+		--
+		--	local eFrame = CreateFrame("FRAME")
+		--	eFrame:RegisterEvent("UI_ERROR_MESSAGE")
+		--	eFrame:SetScript("OnEvent", function(self, event, messageType, msg)
+		--		-- Auto dismount
+		--		if msg == ERR_OUT_OF_RAGE and LeaPlusLC["DismountNoResource"] == "On"
+		--		or msg == ERR_OUT_OF_MANA and LeaPlusLC["DismountNoResource"] == "On"
+		--		or msg == ERR_OUT_OF_ENERGY and LeaPlusLC["DismountNoResource"] == "On"
+		--		or msg == SPELL_FAILED_MOVING and LeaPlusLC["DismountNoMoving"] == "On"
+		--		or msg == ERR_TAXIPLAYERSHAPESHIFTED
+		--		then
+		--			local void, class = UnitClass("player")
+		--			if class == "SHAMAN" and GetShapeshiftFormID() then
+		--				-- Cancel Ghost Wolf
+		--				RunScript('CancelShapeshiftForm()')
+		--			end
+		--			if IsMounted() then
+		--				Dismount()
+		--				UIErrorsFrame:Clear()
+		--			end
+		--		end
+		--	end)
+		--
+		--	-- Dismount when flight point map is opened
+		--	local taxiFrame = CreateFrame("FRAME")
+		--	taxiFrame:RegisterEvent("TAXIMAP_OPENED")
+		--	taxiFrame:SetScript("OnEvent", function()
+		--		local void, class = UnitClass("player")
+		--		if class == "SHAMAN" and GetShapeshiftFormID() then
+		--			-- Cancel Ghost Wolf
+		--			RunScript('CancelShapeshiftForm()')
+		--		end
+		--		if IsMounted() then Dismount() end
+		--	end)
+		--
+		--	-- Create configuration panel
+		--	local DismountFrame = LeaPlusLC:CreatePanel("Dismount me", "DismountFrame")
+		--
+		--	LeaPlusLC:MakeTx(DismountFrame, "Settings", 16, -72)
+		--	LeaPlusLC:MakeCB(DismountFrame, "DismountNoResource", "Dismount when not enough rage, mana or energy", 16, -92, false, "If checked, you will be dismounted when you attempt to cast a spell but don't have the rage, mana or energy to cast it.")
+		--	LeaPlusLC:MakeCB(DismountFrame, "DismountNoMoving", "Dismount when casting a spell while moving", 16, -112, false, "If checked, you will be dismounted when you attempt to cast a non-instant cast spell while moving.")
+		--	LeaPlusLC:MakeCB(DismountFrame, "DismountNoTaxi", "Dismount when the flight map opens", 16, -132, false, "If checked, you will be dismounted when you instruct a flight master to open the flight map.")
+		--	LeaPlusLC:MakeCB(DismountFrame, "DismountShowFormBtn", "Show cancel form button on flight map", 16, -152, false, "If checked, a cancel form button will be shown on the flight map while you are playing as a shapeshifted druid or shaman.")
+		--
+		--	-- Help button hidden
+		--	DismountFrame.h.tiptext = L["The game will dismount you if you successfully cast a spell without addons.  These settings let you set some additional dismount rules."]
+		--
+		--	-- Back button handler
+		--	DismountFrame.b:SetScript("OnClick", function()
+		--		DismountFrame:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page7"]:Show()
+		--		return
+		--	end)
+		--
+		--	-- Function to set dismount options
+		--	local function SetDismount()
+		--		if LeaPlusLC["DismountNoTaxi"] == "On" then
+		--			taxiFrame:RegisterEvent("TAXIMAP_OPENED")
+		--		else
+		--			taxiFrame:UnregisterEvent("TAXIMAP_OPENED")
+		--		end
+		--	end
+		--
+		--	-- Run function when certain options are clicked and on startup
+		--	LeaPlusCB["DismountNoTaxi"]:HookScript("OnClick", SetDismount)
+		--	SetDismount()
+		--
+		--	-- Reset button handler
+		--	DismountFrame.r:SetScript("OnClick", function()
+		--
+		--		-- Reset checkboxes
+		--		LeaPlusLC["DismountNoResource"] = "On"
+		--		LeaPlusLC["DismountNoMoving"] = "On"
+		--		LeaPlusLC["DismountNoTaxi"] = "On"
+		--		LeaPlusLC["DismountShowFormBtn"] = "On"
+		--
+		--		-- Update settings and configuration panel
+		--		SetDismount()
+		--		DismountFrame:Hide(); DismountFrame:Show()
+		--
+		--	end)
+		--
+		--	-- Show configuration panal when options panel button is clicked
+		--	LeaPlusCB["DismountBtn"]:SetScript("OnClick", function()
+		--		if IsShiftKeyDown() and IsControlKeyDown() then
+		--			-- Preset profile
+		--			LeaPlusLC["DismountNoResource"] = "On"
+		--			LeaPlusLC["DismountNoMoving"] = "On"
+		--			LeaPlusLC["DismountNoTaxi"] = "On"
+		--			LeaPlusLC["DismountShowFormBtn"] = "On"
+		--			SetDismount()
+		--		else
+		--			DismountFrame:Show()
+		--			LeaPlusLC:HideFrames()
+		--		end
+		--	end)
+		--
+		--	-- Druid cancel form button
+		--	local void, class = UnitClass("player")
+		--	if class == "DRUID" or class == "SHAMAN" then
+		--
+		--		-- Create button
+		--		local cancelFormBtn = CreateFrame("Button", nil, TaxiFrame, "InsecureActionButtonTemplate")
+		--		cancelFormBtn:SetAttribute("type", "macro")
+		--		cancelFormBtn:SetAttribute("macrotext", "/cancelform")
+		--		cancelFormBtn:ClearAllPoints()
+		--		cancelFormBtn:SetSize(24, 24)
+		--		cancelFormBtn:SetPoint("TOPRIGHT", TaxiFrame, "TOPRIGHT", -46, -46)
+		--		cancelFormBtn:SetNormalTexture("Interface\\ICONS\\Achievement_Character_Nightelf_Female")
+		--		cancelFormBtn:SetPushedTexture("Interface\\ICONS\\Achievement_Character_Nightelf_Female")
+		--		cancelFormBtn:SetHighlightTexture("Interface\\ICONS\\Achievement_Character_Nightelf_Female")
+		--
+		--		-- Button message
+		--		cancelFormBtn.f = cancelFormBtn:CreateFontString(nil, 'ARTWORK', 'GameFontNormal')
+		--		cancelFormBtn.f:SetHeight(32)
+		--		cancelFormBtn.f:SetPoint('RIGHT', cancelFormBtn, 'LEFT', -10, 0)
+		--		cancelFormBtn.f:SetText(L["Click to unshift"])
+		--
+		--		-- Toggle button when form changes
+		--		cancelFormBtn:SetScript("OnEvent", function()
+		--			local form = GetShapeshiftForm() or 0
+		--			if form ~= 0 then
+		--				if not cancelFormBtn:IsShown() then	cancelFormBtn:Show() end
+		--			else
+		--				cancelFormBtn:Hide()
+		--			end
+		--		end)
+		--
+		--		-- Function to set event and button status
+		--		local function SetShiftEvent()
+		--			if LeaPlusLC["DismountShowFormBtn"] == "On" then
+		--				cancelFormBtn:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+		--				local form = GetShapeshiftForm() or 0
+		--				if form ~= 0 then cancelFormBtn:Show() else cancelFormBtn:Hide() end
+		--			else
+		--				cancelFormBtn:UnregisterEvent("UPDATE_SHAPESHIFT_FORM")
+		--				cancelFormBtn:Hide()
+		--			end
+		--		end
+		--
+		--		-- Set button when option is clicked, when reset button is clicked, preset profile and on startup
+		--		LeaPlusCB["DismountShowFormBtn"]:HookScript("OnClick", SetShiftEvent)
+		--		DismountFrame.r:HookScript("OnClick", SetShiftEvent)
+		--		LeaPlusCB["DismountBtn"]:HookScript("OnClick", function()
+		--			if IsShiftKeyDown() and IsControlKeyDown() then	SetShiftEvent() end
+		--		end)
+		--		SetShiftEvent()
+		--
+		--	end
+		--
+		--end
 
 		----------------------------------------------------------------------
 		--	Use class colors in chat
@@ -14161,12 +14161,12 @@
 				LeaPlusLC:LoadVarChk("NoConfirmLoot", "Off")				-- Disable loot warnings
 				LeaPlusLC:LoadVarChk("FasterLooting", "Off")				-- Faster auto loot
 				LeaPlusLC:LoadVarChk("FasterMovieSkip", "Off")				-- Faster movie skip
-				LeaPlusLC:LoadVarChk("StandAndDismount", "Off")				-- Dismount me
+				--LeaPlusLC:LoadVarChk("StandAndDismount", "Off")				-- Dismount me
 				LeaPlusLC:LoadVarChk("DismountNoResource", "On")			-- Dismount on resource error
 				LeaPlusLC:LoadVarChk("DismountNoMoving", "On")				-- Dismount on moving
 				LeaPlusLC:LoadVarChk("DismountNoTaxi", "On")				-- Dismount on flight map open
 				LeaPlusLC:LoadVarChk("DismountShowFormBtn", "On")			-- Dismount cancel form button
-				LeaPlusLC:LoadVarChk("ShowVendorPrice", "Off")				-- Show vendor price
+				--LeaPlusLC:LoadVarChk("ShowVendorPrice", "Off")				-- Show vendor price
 				LeaPlusLC:LoadVarChk("CombatPlates", "Off")					-- Combat plates
 				LeaPlusLC:LoadVarChk("EasyItemDestroy", "Off")				-- Easy item destroy
 
@@ -14573,12 +14573,12 @@
 			LeaPlusDB["NoConfirmLoot"] 			= LeaPlusLC["NoConfirmLoot"]
 			LeaPlusDB["FasterLooting"] 			= LeaPlusLC["FasterLooting"]
 			LeaPlusDB["FasterMovieSkip"] 		= LeaPlusLC["FasterMovieSkip"]
-			LeaPlusDB["StandAndDismount"] 		= LeaPlusLC["StandAndDismount"]
+			--LeaPlusDB["StandAndDismount"] 		= LeaPlusLC["StandAndDismount"]
 			LeaPlusDB["DismountNoResource"] 	= LeaPlusLC["DismountNoResource"]
 			LeaPlusDB["DismountNoMoving"] 		= LeaPlusLC["DismountNoMoving"]
 			LeaPlusDB["DismountNoTaxi"] 		= LeaPlusLC["DismountNoTaxi"]
 			LeaPlusDB["DismountShowFormBtn"] 	= LeaPlusLC["DismountShowFormBtn"]
-			LeaPlusDB["ShowVendorPrice"] 		= LeaPlusLC["ShowVendorPrice"]
+			--LeaPlusDB["ShowVendorPrice"] 		= LeaPlusLC["ShowVendorPrice"]
 			LeaPlusDB["CombatPlates"]			= LeaPlusLC["CombatPlates"]
 			LeaPlusDB["EasyItemDestroy"]		= LeaPlusLC["EasyItemDestroy"]
 
@@ -16738,8 +16738,8 @@
 				LeaPlusDB["NoConfirmLoot"] = "On"				-- Disable loot warnings
 				LeaPlusDB["FasterLooting"] = "On"				-- Faster auto loot
 				LeaPlusDB["FasterMovieSkip"] = "On"				-- Faster movie skip
-				LeaPlusDB["StandAndDismount"] = "On"			-- Dismount me
-				LeaPlusDB["ShowVendorPrice"] = "On"				-- Show vendor price
+				--LeaPlusDB["StandAndDismount"] = "On"			-- Dismount me
+				--LeaPlusDB["ShowVendorPrice"] = "On"				-- Show vendor price
 				LeaPlusDB["CombatPlates"] = "On"				-- Combat plates
 				LeaPlusDB["EasyItemDestroy"] = "On"				-- Easy item destroy
 
@@ -17135,8 +17135,8 @@
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoConfirmLoot"				, 	"Disable loot warnings"			,	340, -132, 	false,	"If checked, confirmations will no longer appear when you choose a loot roll option or attempt to sell or mail a tradable item.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "FasterLooting"				, 	"Faster auto loot"				,	340, -152, 	true,	"If checked, the amount of time it takes to auto loot creatures will be significantly reduced.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "FasterMovieSkip"			, 	"Faster movie skip"				,	340, -172, 	true,	"If checked, you will be able to cancel cinematics without being prompted for confirmation.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "StandAndDismount"			, 	"Dismount me"					,	340, -192, 	true,	"If checked, you will be able to set some additional rules for when your character is automatically dismounted.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowVendorPrice"			, 	"Show vendor price"				,	340, -212, 	true,	"If checked, the vendor price will be shown in item tooltips.")
+	--LeaPlusLC:MakeCB(LeaPlusLC[pg], "StandAndDismount"			, 	"Dismount me"					,	340, -192, 	true,	"If checked, you will be able to set some additional rules for when your character is automatically dismounted.")
+	--LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowVendorPrice"			, 	"Show vendor price"				,	340, -212, 	true,	"If checked, the vendor price will be shown in item tooltips.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "CombatPlates"				, 	"Combat plates"					,	340, -232, 	true,	"If checked, enemy nameplates will be shown during combat and hidden when combat ends.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "EasyItemDestroy"			, 	"Easy item destroy"				,	340, -252, 	true,	"If checked, you will no longer need to type delete when destroying a superior quality item.|n|nIn addition, item links will be shown in all item destroy confirmation windows.")
 
@@ -17144,7 +17144,7 @@
 	LeaPlusLC:CfgBtn("ModViewportBtn", LeaPlusCB["ViewPortEnable"])
 	--LeaPlusLC:CfgBtn("MuteGameSoundsBtn", LeaPlusCB["MuteGameSounds"])
 	--LeaPlusLC:CfgBtn("MuteCustomSoundsBtn", LeaPlusCB["MuteCustomSounds"])
-	LeaPlusLC:CfgBtn("DismountBtn", LeaPlusCB["StandAndDismount"])
+	--LeaPlusLC:CfgBtn("DismountBtn", LeaPlusCB["StandAndDismount"])
 
 ----------------------------------------------------------------------
 -- 	LC8: Settings
