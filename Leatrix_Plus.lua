@@ -3722,6 +3722,9 @@
 				end
 			end
 
+			-- Disable mouse on invisible minimap cluster
+			MinimapCluster:EnableMouse(false)
+
 			----------------------------------------------------------------------
 			-- Configuration panel
 			----------------------------------------------------------------------
