@@ -23,6 +23,7 @@
 		--===== Check for if 3.3.5 or 2.4.3 game client. =====--
 	local isTBC = select(4, GetBuildInfo()) == 20400 -- true if TBC 2.4.3
 	local isWOTLK = select(4, GetBuildInfo()) == 30300 -- true if WOTLK 3.3.5
+	local isPastWOTLK = select(4, GetBuildInfo()) > 30300 -- true if more than 3.3.5 ala 4.3.4
 
 	-- Version
 	LeaPlusLC["AddonVer"] = "3.3.5"
@@ -1252,26 +1253,11 @@
 
 		if LeaPlusLC["FasterMovieSkip"] == "On" then
 
-			-- Allow space bar, escape key and enter key to cancel cinematic without confirmation
-			CinematicFrame:HookScript("OnKeyDown", function(self, key)
-				if key == "ESCAPE" then
-					if CinematicFrame:IsShown() and CinematicFrame.closeDialog and CinematicFrameCloseDialogConfirmButton then
-						CinematicFrameCloseDialog:Hide()
-					end
-				end
-			end)
-			CinematicFrame:HookScript("OnKeyUp", function(self, key)
-				if key == "SPACE" or key == "ESCAPE" or key == "ENTER" then
-					if CinematicFrame:IsShown() and CinematicFrame.closeDialog and CinematicFrameCloseDialogConfirmButton then
-						CinematicFrameCloseDialogConfirmButton:Click()
-					end
-				end
-			end)
-			MovieFrame:HookScript("OnKeyUp", function(self, key)
-				if key == "SPACE" or key == "ESCAPE" or key == "ENTER" then
-					if MovieFrame:IsShown() and MovieFrame.CloseDialog and MovieFrame.CloseDialog.ConfirmButton then
-						MovieFrame.CloseDialog.ConfirmButton:Click()
-					end
+			CinematicFrame:HookScript("OnShow", function(self, ...)
+				if not isPastWOTLK then
+					HideUIPanel(self);
+					GameMovieFinished()
+					LibCompat.After(0.01, function() StopCinematic();  end)
 				end
 			end)
 
