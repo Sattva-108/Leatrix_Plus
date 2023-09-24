@@ -119,7 +119,7 @@ ManageBuff               - Add Debuffs mover. Currently only moving Buffs, but n
 
 GUI 					 - FIX the width for long strings https://cdn.discordapp.com/attachments/766767499987386402/1119067878885437531/wow_otLn4jPKyo.jpg
 
-
+Move Objectives          - aka Quest Tracker
 
 --------------------------------------------------------------------------------
 -- Not sure if need to do yet:
