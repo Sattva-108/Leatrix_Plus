@@ -247,32 +247,32 @@
 				["0.59:0.45:0.42:0.37:0.45:0.37"] = 303, -- Revantusk Village, Undercity, The Bulwark
 
 				-- Horde: Shattered Sun Staging Area (Isle of Quel'Danas)
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66:0.41:0.93"] = 1117, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Booty Bay
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66:0.42:0.86"] = 1058, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Grom'gol
-				["0.58:0.06:0.61:0.28"] = 233, -- Shattered Sun Staging Area, Zul'Aman
-				["0.58:0.06:0.59:0.19"] = 167, -- Shattered Sun Staging Area, Silvermoon City
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66:0.46:0.65"] = 876, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Thorium Point
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66:0.54:0.79"] = 1044, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Stonard
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.59:0.45"] = 469, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66"] = 820, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66:0.50:0.69"] = 888, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Flame Crest
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.59:0.45:0.55:0.46"] = 562, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall
-				["0.58:0.06:0.61:0.28:0.61:0.35"] = 329, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.59:0.55:0.55:0.54:0.50:0.34:0.41:0.07"] = 1117, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Booty Bay
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.59:0.55:0.55:0.54:0.50:0.34:0.42:0.14"] = 1058, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Grom'gol
+				["0.58:0.94:0.61:0.73"] = 233, -- Shattered Sun Staging Area, Zul'Aman
+				["0.58:0.94:0.59:0.82"] = 167, -- Shattered Sun Staging Area, Silvermoon City
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.59:0.55:0.55:0.54:0.50:0.34:0.46:0.35"] = 876, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Thorium Point
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.59:0.55:0.55:0.54:0.50:0.34:0.54:0.21"] = 1044, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Stonard
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.59:0.55"] = 469, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.59:0.55:0.55:0.54:0.50:0.34"] = 820, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.59:0.55:0.55:0.54:0.50:0.34:0.50:0.31"] = 888, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Flame Crest
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.59:0.55:0.55:0.54"] = 562, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Hammerfall
+				["0.58:0.94:0.61:0.73:0.61:0.65"] = 329, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel
 				["0.58:0.06:0.61:0.28:0.61:0.35:0.59:0.45:0.46:0.43"] = 629, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Revantusk Village, Tarren Mill
-				["0.58:0.06:0.59:0.19:0.58:0.25"] = 231, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien
+				["0.58:0.94:0.59:0.82:0.58:0.75"] = 231, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien
 				["0.58:0.06:0.61:0.28:0.61:0.35:0.42:0.37"] = 590, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Undercity
 				["0.58:0.06:0.61:0.28:0.61:0.35:0.42:0.37:0.37:0.41"] = 623, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Undercity, The Sepulcher
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66:0.41:0.93"] = 1129, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Booty Bay
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.42:0.37"] = 602, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Undercity
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66:0.54:0.79"] = 1060, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Stonard
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.51:0.36:0.45:0.37"] = 504, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondroril River, The Bulwark
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.51:0.36"] = 427, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondroril River
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.62:0.34"] = 394, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Acherus: The Ebon Hold
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.51:0.64:0.45:0.63"] = 504, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondroril River, The Bulwark
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.51:0.64"] = 427, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondroril River
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.62:0.66"] = 394, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Acherus: The Ebon Hold
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.59:0.45:0.46:0.43"] = 641, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Revantusk Village, Tarren Mill
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35"] = 346, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.51:0.36:0.46:0.43:0.55:0.46:0.50:0.66:0.54:0.79"] = 1139, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Thondoril River, Tarren Mill, Hammerfall, Kargath, Stonard
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.42:0.37:0.45:0.37"] = 622, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Undercity, The Bulwark
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.51:0.36:0.42:0.37"] = 588, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondoril River, Undercity
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.51:0.64:0.42:0.63"] = 588, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondoril River, Undercity
 				["0.58:0.06:0.61:0.28:0.61:0.35:0.42:0.37:0.45:0.37"] = 609, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Undercity, The Bulwark
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66:0.42:0.86"] = 1072, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath, Grom'gol
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.51:0.36:0.42:0.37"] = 600, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Thondoril River, Undercity
@@ -280,9 +280,9 @@
 				["0.58:0.06:0.61:0.28:0.61:0.35:0.42:0.37:0.50:0.66:0.41:0.93"] = 1300, -- Sammelpunkt der Zerschmetterten Sonne, Zul'Aman, Kapelle des hoffnungsvollen Lichts, Unterstadt, Kargath, Beutebucht
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.42:0.37:0.50:0.66:0.41:0.93"] = 1313, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Undercity, Kargath, Booty Bay
 				["0.58:0.06:0.61:0.28:0.61:0.35:0.51:0.36:0.46:0.43:0.55:0.46:0.50:0.66:0.41:0.93"] = 1203, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondoril River, Tarren Mill, Hammerfall, Kargath, Booty Bay
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.51:0.36:0.46:0.43"] = 526, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondoril River, Tarren Mill
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.51:0.64:0.46:0.57"] = 526, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondoril River, Tarren Mill
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.51:0.36:0.46:0.43:0.37:0.41"] = 642, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Thondoril River, Tarren Mill, The Sepulcher
-				["0.58:0.06:0.61:0.28:0.61:0.35:0.51:0.36:0.46:0.43:0.37:0.41"] = 629, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondoril River, Tarren Mill, The Sepulcher
+				["0.58:0.94:0.61:0.73:0.61:0.65:0.51:0.64:0.46:0.57:0.37:0.59"] = 629, -- Shattered Sun Staging Area, Zul'Aman, Light's Hope Chapel, Thondoril River, Tarren Mill, The Sepulcher
 				["0.58:0.06:0.59:0.19:0.58:0.25:0.61:0.35:0.59:0.45:0.55:0.46:0.50:0.66"] = 833, -- Shattered Sun Staging Area, Silvermoon City, Tranquillien, Light's Hope Chapel, Revantusk Village, Hammerfall, Kargath
 
 				-- Horde: Silvermoon City (Eversong Woods)
