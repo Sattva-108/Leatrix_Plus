@@ -4,22 +4,15 @@
 -- Backport to-do before release:
 --------------------------------------------------------------------------------
 
-
-Main Panel		 		- Need to fix transparency of settings in Settings main window. 
-
-AutoQuest		 		- May be backport retail quest accept.
-
 RecentChatWindow		- Need to rename .xml file and the backported template name.
 
 MinimapButton			- Either add functions to alt-click and other on button or remove descriptions in GUI.
 
 ElvUI	 				- Need to see what disabled for when ElvUI is loaded. May be something is not made in 3.3.5 ElvUI backport, but still disabled.
 
-General					- Check all Preset profiles to make sure user doesn't have option being enabled, that is not working.
+General					- Check all Preset profiles (ctrl + shift click on options gear) to make sure user doesn't have option being enabled, that is not working.
 
 EnhanceMinimap			- "Example Input" needs Locales!
-
-InviteFromWhispers		- Need to fix visual bag in config panel.
 
 EnhanceMinimap			- Hide Tracking needs updated description! About right clicking minimap. 
 
@@ -40,6 +33,10 @@ WebLink					- Fix ruRU encoding!!!
 Minimap 				- Move the zone text overlapping the mail icon
 
 ViewPort                - fixes, left,right, transperency or disable
+
+DisableLootWarning      - Make sure it's working
+
+FlightTimers            - disable report by default
 
 
 --------------------------------------------------------------------------------
@@ -121,6 +118,8 @@ AutoSellJunk			 - Make user be able to alt-ctrl (or other bind) click on an item
 AutoSellJunk			 - The editbox must be scrollable.
 
 HideChatButtons			 - Add Configuration to enable certain chat buttons.
+
+ManageBuff               - Add Debuffs mover. Currently only moving Buffs, but not Debuffs.
 
 
 

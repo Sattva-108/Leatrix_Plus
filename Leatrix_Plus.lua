@@ -9780,13 +9780,13 @@
 						if LeaPlusLC["AhBuyoutOnly"] == "Off" and LeaPlusLC["AhGoldOnly"] == "On" then
 							StartPriceGold:SetFocus(true)
 						end
-					end
-				end)
-
-				BuyoutPriceGold:HookScript("OnTabPressed", function()
+					else
 						if LeaPlusLC["AhTabConfirm"] == "On"  then
 							AuctionsCreateAuctionButton:Click()
+							BuyoutPriceGold:ClearFocus()
 						end
+
+					end
 				end)
 
 				local function AddItemToAuction(button, bag, slot)
@@ -9798,6 +9798,11 @@
 				        if GetAuctionSellItemInfo() == name then
 				            PickupContainerItem(bag, slot)
 				        end
+						if LeaPlusLC["AhBuyoutOnly"] == "Off" then
+							StartPriceGold:SetFocus(true)
+						else
+							BuyoutPriceGold:SetFocus(true)
+						end
 				    else
 				        button:SetAttribute("type", "macro")
 				        button:SetAttribute("macrotext", "/click AuctionsItemButton")
