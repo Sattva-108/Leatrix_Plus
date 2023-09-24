@@ -6753,7 +6753,9 @@
 							debugString = debugString .. ":" .. destination
 							routeString = routeString .. ":" .. destination
 						end
-						debugString = debugString .. '"] = '
+						--debugString = debugString .. '"] = '
+						debugString = debugString .. '"]'
+
 
 						-- Show flight time in tooltip if it exists
 						if data[faction] and data[faction][continent] and data[faction][continent][routeString] then
@@ -6771,7 +6773,8 @@
 						local debugTwonumEnterHops = (GetNumRoutes(index) - 1)
 
 						-- Add node names to debug string
-						debugString = debugString .. " -- " .. nodeName
+						--debugString = debugString .. " -- " .. nodeName
+						debugString = debugString
 						-- for i = 20, numEnterHops do
 						-- 	local fpName = TaxiNodeName(i)
 
@@ -6786,11 +6789,22 @@
 
 						-- If debug string does not contain destination, add it to the end
 						if not string.find(debugString, barName) then
-							debugString = debugString .. ", " .. barName .. " with " .. debugTwonumEnterHops .. " hops"
+							--debugString = debugString .. ", " .. barName .. " with " .. debugTwonumEnterHops .. " hops"
+							debugString = debugString
 						end
 
 						-- Print debug string (used for showing full routes for nodes)
 						print(debugString)
+
+						-- Open the chat edit box, pre-fill with debugString, and highlight the text for easy copying
+						local defaultChatFrame = DEFAULT_CHAT_FRAME
+						if defaultChatFrame then
+							ChatFrame_OpenChat(debugString, defaultChatFrame)
+							local editBox = ChatFrame1EditBox
+							if editBox then
+								LibCompat.After(0.1, function() editBox:HighlightText()  end)
+							end
+						end
 
 					end
 				end

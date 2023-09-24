@@ -22,19 +22,13 @@ MinimapEnhance			- Replace non-standard buttons option! Aka those that don't use
 
 AhExtras				- Need to make new description for alt click, tab confirm. And do locales.
 
-SlashCommand			- /ltp neeeds to be fixed, not working at all.
-
-GUI 					- FIX the width for long strings https://cdn.discordapp.com/attachments/766767499987386402/1119067878885437531/wow_otLn4jPKyo.jpg
-
 Tooltip					- FIX center popup when closed the leatrix window, its still staying...
 
 WebLink					- Fix ruRU encoding!!!
 
-Minimap 				- Move the zone text overlapping the mail icon
-
 ViewPort                - fixes, left,right, transperency or disable
 
-DisableLootWarning      - Make sure it's working
+FlightTimers            - Start Working on DB
 
 FlightTimers            - disable report by default
 
@@ -50,9 +44,11 @@ Accept Ress				 - Will it ever accept ressurection if ressurecter in combat ?
 
 QueueTimer				 - Need to test if timer .After 0.1 is fine in SetupBar func (was 1 second before)
 
-LibCandyBar				 - Will it be conflicting with other addons that use 3.3.5 version of CandyBar lib? 
+LibCandyBar				 - Will it be conflicting with other addons that use 3.3.5 version of CandyBar lib? Like with BigWigs?
 
 ShowFlightPaths			 - Will StopLandingEvent work correctly on summon, BG/arena accept
+
+DisableLootWarning       - Make sure it's working
 
 
 --------------------------------------------------------------------------------
@@ -120,6 +116,8 @@ AutoSellJunk			 - The editbox must be scrollable.
 HideChatButtons			 - Add Configuration to enable certain chat buttons.
 
 ManageBuff               - Add Debuffs mover. Currently only moving Buffs, but not Debuffs.
+
+GUI 					 - FIX the width for long strings https://cdn.discordapp.com/attachments/766767499987386402/1119067878885437531/wow_otLn4jPKyo.jpg
 
 
 
