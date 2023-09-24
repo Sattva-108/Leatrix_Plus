@@ -30,7 +30,7 @@ ViewPort                - fixes, left,right, transperency or disable
 
 FlightTimers            - Start Working on DB
 
-FlightTimers            - disable report by default
+FlightTimers            - fix report window editbox
 
 
 --------------------------------------------------------------------------------
