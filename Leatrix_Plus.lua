@@ -6727,6 +6727,7 @@
 						-- Build route string and debug string
 						local numEnterHops = GetNumRoutes(index)
 						local debugString = '["' .. currentNode
+						local debugChatString = '["' .. currentNode
 						local routeString = currentNode
 						for i = 1, numEnterHops do
 							local nextHopX = TaxiGetDestX(index, i)
@@ -6747,6 +6748,7 @@
 
 
 							debugString = debugString .. ":" .. hopPos
+							debugChatString = debugChatString .. ":" .. hopPos
 							routeString = routeString .. ":" .. hopPos
 						end
 						-- print(routeString .. destination)
@@ -6754,10 +6756,13 @@
 						if not string.find(routeString, destination) then
 							-- print(routeString .. "and" .. destination)
 							debugString = debugString .. ":" .. destination
+							debugChatString = debugString .. ":" .. destination
 							routeString = routeString .. ":" .. destination
 						end
 						--debugString = debugString .. '"] = '
 						debugString = debugString .. '"]'
+						debugChatString = debugChatString .. '"] = '
+
 
 
 						-- Show flight time in tooltip if it exists
@@ -6778,6 +6783,8 @@
 						-- Add node names to debug string
 						--debugString = debugString .. " -- " .. nodeName
 						debugString = debugString
+						debugChatString = debugChatString .. " -- " .. nodeName
+
 						-- for i = 20, numEnterHops do
 						-- 	local fpName = TaxiNodeName(i)
 
@@ -6794,10 +6801,14 @@
 						if not string.find(debugString, barName) then
 							--debugString = debugString .. ", " .. barName .. " with " .. debugTwonumEnterHops .. " hops"
 							debugString = debugString
+							debugChatString = debugChatString .. ", " .. barName .. " with " .. debugTwonumEnterHops .. " hops"
+
 						end
 
 						-- Print debug string (used for showing full routes for nodes)
-						print(debugString)
+						-- Clear chat for easier working with data. FIXME REMOVEME before release IMPORTANT
+						for i = 1, NUM_CHAT_WINDOWS do _G["ChatFrame"..i]:Clear() end
+						print(debugChatString)
 
 						-- Open the chat edit box, pre-fill with debugString, and highlight the text for easy copying
 						local defaultChatFrame = DEFAULT_CHAT_FRAME
