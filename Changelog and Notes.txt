@@ -121,17 +121,6 @@ GUI 					 - FIX the width for long strings https://cdn.discordapp.com/attachment
 
 Move Objectives          - aka Quest Tracker
 
---------------------------------------------------------------------------------
----- Flights
---------------------------------------------------------------------------------
-
---===== Horde - Eastern Kingdoms: =====--
-
-Tarren Mill - Shattered Sun (Isle)
-
-Shattered Sun (Isle) - a lot to check. (without Zul'Aman learned)
-
-
 
 --------------------------------------------------------------------------------
 -- Not sure if need to do yet:
@@ -196,3 +185,5 @@ Right Click totems to destroy them
 Show best gold value for quest reward.
 
 Open all bag user config option at merchant.
+
+AutoGossip - Add https://wowhead.com/wotlk/search?q=Surristrasz to ignore the dialog auto-confirm.
