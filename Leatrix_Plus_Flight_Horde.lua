@@ -1230,7 +1230,7 @@
 				["0.81:0.23:0.66:0.23"] = 67, -- Altar of Sha'tar, Shadowmoon Village
 				["0.81:0.23:0.51:0.27:0.44:0.33"] = 193, -- Altar of Sha'tar, Stonebreaker Hold, Shattrath
 				["0.81:0.23:0.51:0.27"] = 140, -- Altar of Sha'tar, Stonebreaker Hold
-				["0.81:0.23:0.51:0.27:0.65:0.50"] = 263, -- Altar of Sha'tar, Stonebreaker Hold, Thrallmar
+				["0.81:0.23:0.51:0.27:0.65:0.50:0.66:0.50"] = 263, -- Altar of Sha'tar, Stonebreaker Hold, Thrallmar
 				["0.81:0.23:0.51:0.27:0.44:0.33:0.23:0.50"] = 329, -- Altar of Sha'tar, Stonebreaker Hold, Shattrath, Zabra'jin
 				["0.81:0.23:0.51:0.27:0.44:0.33:0.29:0.38"] = 274, -- Altar of Sha'tar, Stonebreaker Hold, Shattrath, Garadar
 				["0.81:0.23:0.51:0.27:0.44:0.33:0.44:0.49:0.49:0.64:0.58:0.73"] = 398, -- Altar of Sha'tar, Stonebreaker Hold, Shattrath, Swamprat Post, Mok'Nathal Village, Area 52
@@ -1265,7 +1265,7 @@
 				["0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23"] = 357, -- Area 52, Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village
 				["0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.68:0.37"] = 342, -- Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.79:0.46"] = 343, -- Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50"] = 273, -- Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar
+				["0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 273, -- Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar
 				["0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43"] = 204, -- Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch
 				["0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27"] = 292, -- Area 52, Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold
 				["0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33"] = 224, -- Area 52, Mok'Nathal Village, Swamprat Post, Shattrath
@@ -1281,7 +1281,7 @@
 				["0.58:0.73:0.38:0.68:0.44:0.49:0.54:0.43"] = 287, -- Area 52, Thunderlord Stronghold, Swamprat Post, Falcon Watch
 				["0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23:0.78:0.15"] = 420, -- Area 52, Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village, Sanctum of the Stars
 				["0.58:0.73:0.38:0.68:0.44:0.49:0.44:0.33"] = 311, -- Area 52, Thunderlord Stronghold, Swamprat Post, Shattrath
-				["0.58:0.73:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50"] = 359, -- Area 52, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
+				["0.58:0.73:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 359, -- Area 52, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
 				["0.58:0.73:0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23"] = 443, -- Area 52, Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village
 				["0.58:0.73:0.38:0.68:0.44:0.49"] = 224, -- Area 52, Thunderlord Stronghold, Swamprat Post
 				["0.58:0.73:0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27"] = 379, -- Area 52, Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold
@@ -1298,7 +1298,7 @@
 				["0.72:0.72:0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23"] = 420, -- Cosmowrench, Area 52, Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village
 				["0.72:0.72:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.68:0.37"] = 401, -- Cosmowrench, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.72:0.72:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.79:0.46"] = 406, -- Cosmowrench, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.72:0.72:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50"] = 336, -- Cosmowrench, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar
+				["0.72:0.72:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 336, -- Cosmowrench, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar
 				["0.72:0.72:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43"] = 264, -- Cosmowrench, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch
 				["0.72:0.72:0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27"] = 355, -- Cosmowrench, Area 52, Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold
 				["0.72:0.72:0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33"] = 287, -- Cosmowrench, Area 52, Mok'Nathal Village, Swamprat Post, Shattrath
@@ -1315,14 +1315,14 @@
 				["0.72:0.72:0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23:0.81:0.23"] = 501, -- Cosmowrench, Area 52, Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village, Altar of Sha'tar
 				["0.72:0.72:0.58:0.73:0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27"] = 442, -- Cosmowrench, Area 52, Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold
 				["0.72:0.72:0.58:0.73:0.38:0.68:0.44:0.49"] = 288, -- Cosmowrench, Area 52, Thunderlord Stronghold, Swamprat Post
-				["0.72:0.72:0.63:0.82:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50"] = 457, -- Cosmowrench, The Stormspire, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
+				["0.72:0.72:0.63:0.82:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 457, -- Cosmowrench, The Stormspire, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
 				["0.72:0.72:0.58:0.73:0.38:0.68:0.23:0.50"] = 320, -- Cosmowrench, Area 52, Thunderlord Stronghold, Zabra'jin
 				["0.72:0.72:0.58:0.73:0.38:0.68:0.44:0.49:0.44:0.33:0.29:0.38"] = 456, -- Cosmowrench, Area 52, Thunderlord Stronghold, Swamprat Post, Shattrath, Garadar
 				["0.72:0.72:0.63:0.82:0.38:0.68:0.44:0.49:0.44:0.33"] = 409, -- Cosmowrench, The Stormspire, Thunderlord Stronghold, Swamprat Post, Shattrath
 				["0.72:0.72:0.58:0.73:0.38:0.68:0.23:0.50:0.29:0.38"] = 398, -- Cosmowrench, Area 52, Thunderlord Stronghold, Zabra'jin, Garadar
 				["0.72:0.72:0.58:0.73:0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23:0.78:0.15"] = 571, -- Cosmowrench, Area 52, Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village, Sanctum of the Stars
 				["0.72:0.72:0.63:0.82:0.38:0.68:0.44:0.49"] = 322, -- Cosmowrench, The Stormspire, Thunderlord Stronghold, Swamprat Post
-				["0.72:0.72:0.58:0.73:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50"] = 423, -- Kosmozang, Area 52, Donnerfeste, Sumpfrattenposten, Falkenwacht, Thrallmar
+				["0.72:0.72:0.58:0.73:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 423, -- Kosmozang, Area 52, Donnerfeste, Sumpfrattenposten, Falkenwacht, Thrallmar
 				["0.72:0.72:0.58:0.73:0.38:0.68:0.44:0.49:0.54:0.43"] = 351, -- Cosmowrench, Area 52, Thunderlord Stronghold, Swamprat Post, Falcon Watch
 				["0.72:0.72:0.58:0.73:0.38:0.68:0.23:0.50:0.54:0.43"] = 464, -- Космоворот, Зона 52, Оплот Громоборцев, Забра'джин, Соколиный дозор
 
@@ -1330,7 +1330,7 @@
 				["0.42:0.72:0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23"] = 371, -- Evergrove, Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village
 				["0.42:0.72:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.68:0.37"] = 353, -- Evergrove, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.42:0.72:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.79:0.46"] = 358, -- Evergrove, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.42:0.72:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50"] = 287, -- Evergrove, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
+				["0.42:0.72:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 287, -- Evergrove, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
 				["0.42:0.72:0.38:0.68:0.44:0.49:0.54:0.43"] = 215, -- Evergrove, Thunderlord Stronghold, Swamprat Post, Falcon Watch
 				["0.42:0.72:0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27"] = 306, -- Evergrove, Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold
 				["0.42:0.72:0.38:0.68:0.44:0.49:0.44:0.33"] = 238, -- Evergrove, Thunderlord Stronghold, Swamprat Post, Shattrath
@@ -1380,7 +1380,7 @@
 				["0.29:0.38:0.44:0.33"] = 77, -- Garadar, Shattrath
 				["0.29:0.38:0.54:0.43:0.65:0.50:0.68:0.37"] = 266, -- Garadar, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.29:0.38:0.54:0.43:0.65:0.50:0.79:0.46"] = 270, -- Garadar, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.29:0.38:0.54:0.43:0.65:0.50"] = 199, -- Garadar, Falcon Watch, Thrallmar (Manuel Frank Griesel reported 41)
+				["0.29:0.38:0.54:0.43:0.65:0.50:0.66:0.50"] = 199, -- Garadar, Falcon Watch, Thrallmar (Manuel Frank Griesel reported 41)
 				["0.29:0.38:0.54:0.43"] = 126, -- Garadar, Falcon Watch
 				["0.29:0.38:0.44:0.33:0.44:0.49"] = 156, -- Garadar, Shattrath, Swamprat Post
 				["0.29:0.38:0.23:0.50"] = 67, -- Garadar, Zabra'jin
@@ -1397,7 +1397,7 @@
 				["0.29:0.38:0.44:0.33:0.44:0.49:0.38:0.68:0.58:0.73"] = 359, -- Garadar, Shattrath, Swamprat Post, Thunderlord Stronghold, Area 52
 				["0.29:0.38:0.44:0.33:0.44:0.49:0.38:0.68:0.42:0.72"] = 287, -- Garadar, Shattrath, Swamprat Post, Thunderlord Stronghold, Evergrove
 				["0.29:0.38:0.44:0.33:0.44:0.49:0.38:0.68"] = 262, -- Garadar, Shattrath, Swamprat Post, Thunderlord Stronghold
-				["0.29:0.38:0.44:0.33:0.65:0.50"] = 205, -- Garadar, Shattrath, Thrallmar
+				["0.29:0.38:0.44:0.33:0.65:0.50:0.66:0.50"] = 205, -- Garadar, Shattrath, Thrallmar
 				["0.29:0.38:0.23:0.50:0.38:0.68:0.49:0.64"] = 233, -- Garadar, Zabra'jin, Thunderlord Stronghold, Mok'Nathal Village
 				["0.29:0.38:0.23:0.50:0.38:0.68:0.63:0.82"] = 333, -- Garadar, Zabra'jin, Thunderlord Stronghold, The Stormspire
 				["0.29:0.38:0.44:0.33:0.44:0.49:0.49:0.64:0.58:0.73:0.63:0.82"] = 330, -- Garadar, Shattrath, Swamprat Post, Mok'Nathal Village, Area 52, The Stormspire
@@ -1406,7 +1406,7 @@
 				-- Horde: Hellfire Peninsula (Hellfire Peninsula) (Dark Portal)
 				["0.79:0.46:0.65:0.50:0.51:0.27:0.66:0.23"] = 252, -- Hellfire Peninsula, Thrallmar, Stonebreaker Hold, Shadowmoon Village
 				["0.79:0.46:0.65:0.50:0.68:0.37"] = 125, -- Hellfire Peninsula, Thrallmar, Spinebreaker Ridge
-				["0.79:0.46:0.65:0.50"] = 59, -- Hellfire Peninsula, Thrallmar (Edward Barroso reported 81)
+				["0.79:0.46:0.65:0.50:0.66:0.50"] = 59, -- Hellfire Peninsula, Thrallmar (Edward Barroso reported 81)
 				["0.79:0.46:0.54:0.43"] = 122, -- Hellfire Peninsula, Falcon Watch
 				["0.79:0.46:0.65:0.50:0.51:0.27"] = 188, -- Hellfire Peninsula, Thrallmar, Stonebreaker Hold
 				["0.79:0.46:0.54:0.43:0.44:0.33"] = 193, -- Hellfire Peninsula, Falcon Watch, Shattrath
@@ -1435,7 +1435,7 @@
 				["0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23"] = 292, -- Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village
 				["0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.68:0.37"] = 274, -- Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.79:0.46"] = 279, -- Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50"] = 208, -- Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar
+				["0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 208, -- Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar
 				["0.49:0.64:0.44:0.49:0.54:0.43"] = 136, -- Mok'Nathal Village, Swamprat Post, Falcon Watch
 				["0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27"] = 228, -- Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold
 				["0.49:0.64:0.44:0.49:0.44:0.33"] = 160, -- Mok'Nathal Village, Swamprat Post, Shattrath
@@ -1460,7 +1460,7 @@
 				["0.78:0.15:0.51:0.27:0.44:0.33"] = 187, -- Sanctum of the Stars, Stonebreaker Hold, Shattrath
 				["0.78:0.15:0.51:0.27:0.65:0.50:0.68:0.37"] = 322, -- Sanctum of the Stars, Stonebreaker Hold, Thrallmar, Spinebreaker Ridge
 				["0.78:0.15:0.51:0.27:0.44:0.33:0.29:0.38"] = 268, -- Sanctum of the Stars, Stonebreaker Hold, Shattrath, Garadar
-				["0.78:0.15:0.51:0.27:0.65:0.50"] = 257, -- Sanctum of the Stars, Stonebreaker Hold, Thrallmar
+				["0.78:0.15:0.51:0.27:0.65:0.50:0.66:0.50"] = 257, -- Sanctum of the Stars, Stonebreaker Hold, Thrallmar
 				["0.78:0.15:0.51:0.27:0.44:0.33:0.23:0.50"] = 323, -- Sanctum of the Stars, Stonebreaker Hold, Shattrath, Zabra'jin
 				["0.78:0.15:0.51:0.27:0.44:0.33:0.44:0.49:0.49:0.64:0.58:0.73:0.63:0.82"] = 439, -- Sanctum of the Stars, Stonebreaker Hold, Shattrath, Swamprat Post, Mok'Nathal Village, Area 52, The Stormspire
 				["0.78:0.15:0.51:0.27:0.44:0.33:0.44:0.49:0.49:0.64:0.58:0.73:0.72:0.72"] = 457, -- Sanctum of the Stars, Stonebreaker Hold, Shattrath, Swamprat Post, Mok'Nathal Village, Area 52, Cosmowrench
@@ -1478,7 +1478,7 @@
 				["0.78:0.15:0.66:0.23:0.51:0.27:0.44:0.33:0.44:0.49:0.38:0.68:0.58:0.73"] = 468, -- Sanctum of the Stars, Shadowmoon Village, Stonebreaker Hold, Shattrath, Swamprat Post, Thunderlord Stronghold, Area 52
 				["0.78:0.15:0.66:0.23:0.51:0.27:0.44:0.33:0.44:0.49:0.38:0.68"] = 372, -- Sanctum of the Stars, Shadowmoon Village, Stonebreaker Hold, Shattrath, Swamprat Post, Thunderlord Stronghold
 				["0.78:0.15:0.66:0.23:0.51:0.27:0.44:0.33:0.54:0.43"] = 263, -- Sanctum of the Stars, Shadowmoon Village, Stonebreaker Hold, Shattrath, Falcon Watch
-				["0.78:0.15:0.66:0.23:0.51:0.27:0.65:0.50"] = 257, -- Sanctum of the Stars, Shadowmoon Village, Stonebreaker Hold, Thrallmar
+				["0.78:0.15:0.66:0.23:0.51:0.27:0.65:0.50:0.66:0.50"] = 257, -- Sanctum of the Stars, Shadowmoon Village, Stonebreaker Hold, Thrallmar
 				["0.78:0.15:0.66:0.23:0.51:0.27:0.44:0.33:0.23:0.50"] = 323, -- Sanctum of the Stars, Shadowmoon Village, Stonebreaker Hold, Shattrath, Zabra'jin
 				["0.78:0.15:0.66:0.23:0.51:0.27:0.44:0.33:0.44:0.49:0.49:0.64:0.58:0.73:0.72:0.72"] = 457, -- Sanctum of the Stars, Shadowmoon Village, Stonebreaker Hold, Shattrath, Swamprat Post, Mok'Nathal Village, Area 52, Cosmowrench
 				["0.78:0.15:0.66:0.23:0.51:0.27:0.44:0.33:0.44:0.49:0.49:0.64"] = 336, -- Sanctum of the Stars, Shadowmoon Village, Stonebreaker Hold, Shattrath, Swamprat Post, Mok'Nathal Village
@@ -1493,7 +1493,7 @@
 				["0.66:0.23:0.51:0.27:0.44:0.33:0.54:0.43"] = 202, -- Shadowmoon Village, Stonebreaker Hold, Shattrath, Falcon Watch
 				["0.66:0.23:0.51:0.27:0.65:0.50:0.68:0.37"] = 262, -- Shadowmoon Village, Stonebreaker Hold, Thrallmar, Spinebreaker Ridge
 				["0.66:0.23:0.51:0.27:0.65:0.50:0.79:0.46"] = 267, -- Shadowmoon Village, Stonebreaker Hold, Thrallmar, Hellfire Peninsula
-				["0.66:0.23:0.51:0.27:0.65:0.50"] = 196, -- Shadowmoon Village, Stonebreaker Hold, Thrallmar
+				["0.66:0.23:0.51:0.27:0.65:0.50:0.66:0.50"] = 196, -- Shadowmoon Village, Stonebreaker Hold, Thrallmar
 				["0.66:0.23:0.51:0.27:0.44:0.33:0.44:0.49:0.49:0.64"] = 276, -- Shadowmoon Village, Stonebreaker Hold, Shattrath, Swamprat Post, Mok'Nathal Village
 				["0.66:0.23:0.51:0.27:0.44:0.33:0.44:0.49:0.38:0.68"] = 311, -- Shadowmoon Village, Stonebreaker Hold, Shattrath, Swamprat Post, Thunderlord Stronghold
 				["0.66:0.23:0.51:0.27:0.44:0.33:0.44:0.49:0.38:0.68:0.42:0.72"] = 336, -- Shadowmoon Village, Stonebreaker Hold, Shattrath, Swamprat Post, Thunderlord Stronghold, Evergrove (Kristopher Williamson reported 73, not changed)
@@ -1515,7 +1515,7 @@
 				["0.44:0.33:0.51:0.27:0.66:0.23"] = 133, -- Shattrath, Stonebreaker Hold, Shadowmoon Village (anders brøndum bach reported 150)
 				["0.44:0.33:0.54:0.43:0.65:0.50:0.68:0.37"] = 215, -- Shattrath, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.44:0.33:0.54:0.43:0.65:0.50:0.79:0.46"] = 220, -- Shattrath, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.44:0.33:0.54:0.43:0.65:0.50"] = 150, -- Shattrath, Falcon Watch, Thrallmar (Mirko Riemann reported 78, not changed yet)
+				["0.44:0.33:0.54:0.43:0.65:0.50:0.66:0.50"] = 150, -- Shattrath, Falcon Watch, Thrallmar (Mirko Riemann reported 78, not changed yet)
 				["0.44:0.33:0.44:0.49:0.49:0.64"] = 150, -- Shattrath, Swamprat Post, Mok'Nathal Village
 				["0.44:0.33:0.44:0.49:0.38:0.68:0.42:0.72"] = 211, -- Shattrath, Swamprat Post, Thunderlord Stronghold, Evergrove
 				["0.44:0.33:0.44:0.49:0.38:0.68"] = 185, -- Shattrath, Swamprat Post, Thunderlord Stronghold
@@ -1527,12 +1527,12 @@
 				["0.44:0.33:0.51:0.27:0.66:0.23:0.78:0.15"] = 198, -- Shattrath, Stonebreaker Hold, Shadowmoon Village, Sanctum of the Stars
 				["0.44:0.33:0.44:0.49:0.38:0.68:0.58:0.73"] = 282, -- Shattrath, Swamprat Post, Thunderlord Stronghold, Area 52
 				["0.44:0.33:0.44:0.49:0.38:0.68:0.58:0.73:0.63:0.82"] = 329, -- Shattrath, Swamprat Post, Thunderlord Stronghold, Area 52, The Stormspire
-				["0.44:0.33:0.51:0.27:0.65:0.50"] = 193, -- Shattrath, Stonebreaker Hold, Thrallmar
+				["0.44:0.33:0.51:0.27:0.65:0.50:0.66:0.50"] = 193, -- Shattrath, Stonebreaker Hold, Thrallmar
 				["0.44:0.33:0.44:0.49:0.38:0.68:0.63:0.82"] = 341, -- Shattrath, Swamprat Post, Thunderlord Stronghold, The Stormspire
 				["0.44:0.33:0.51:0.27:0.65:0.50:0.68:0.37"] = 257, -- Shattrath, Stonebreaker Hold, Thrallmar, Spinebreaker Ridge
 				["0.44:0.33:0.44:0.49:0.49:0.64:0.58:0.73:0.42:0.72"] = 286, -- Shattrath, Swamprat Post, Mok'Nathal Village, Area 52, Evergrove
 				["0.44:0.33:0.23:0.50:0.38:0.68:0.58:0.73"] = 344, -- Shattrath, Zabra'jin, Thunderlord Stronghold, Area 52
-				["0.44:0.33:0.65:0.50"] = 132, -- Shattrath, Thrallmar
+				["0.44:0.33:0.65:0.50:0.66:0.50"] = 132, -- Shattrath, Thrallmar
 				["0.44:0.33:0.65:0.50:0.79:0.46"] = 202, -- Shattrath, Thrallmar, Hellfire Peninsula
 				["0.44:0.33:0.65:0.50:0.68:0.37"] = 197, -- Shattrath, Thrallmar, Spinebreaker Ridge
 				["0.44:0.33:0.44:0.49:0.38:0.68:0.63:0.82:0.72:0.72"] = 409, -- Shattrath, Swamprat Post, Thunderlord Stronghold, The Stormspire, Cosmowrench
@@ -1546,7 +1546,7 @@
 				["0.68:0.37:0.65:0.50:0.51:0.27"] = 190, -- Spinebreaker Ridge, Thrallmar, Stonebreaker Hold
 				["0.68:0.37:0.65:0.50:0.51:0.27:0.66:0.23"] = 255, -- Spinebreaker Ridge, Thrallmar, Stonebreaker Hold, Shadowmoon Village
 				["0.68:0.37:0.65:0.50:0.79:0.46"] = 133, -- Spinebreaker Ridge, Thrallmar, Hellfire Peninsula
-				["0.68:0.37:0.65:0.50"] = 62, -- Spinebreaker Ridge, Thrallmar
+				["0.68:0.37:0.65:0.50:0.66:0.50"] = 62, -- Spinebreaker Ridge, Thrallmar
 				["0.68:0.37:0.65:0.50:0.54:0.43"] = 129, -- Spinebreaker Ridge, Thrallmar, Falcon Watch
 				["0.68:0.37:0.65:0.50:0.54:0.43:0.44:0.49"] = 198, -- Spinebreaker Ridge, Thrallmar, Falcon Watch, Swamprat Post
 				["0.68:0.37:0.65:0.50:0.54:0.43:0.23:0.50"] = 280, -- Spinebreaker Ridge, Thrallmar, Falcon Watch, Zabra'jin
@@ -1564,7 +1564,7 @@
 				["0.51:0.27:0.66:0.23"] = 68, -- Stonebreaker Hold, Shadowmoon Village
 				["0.51:0.27:0.65:0.50:0.68:0.37"] = 191, -- Stonebreaker Hold, Thrallmar, Spinebreaker Ridge
 				["0.51:0.27:0.65:0.50:0.79:0.46"] = 195, -- Stonebreaker Hold, Thrallmar, Hellfire Peninsula
-				["0.51:0.27:0.65:0.50"] = 125, -- Stonebreaker Hold, Thrallmar
+				["0.51:0.27:0.65:0.50:0.66:0.50"] = 125, -- Stonebreaker Hold, Thrallmar
 				["0.51:0.27:0.44:0.33:0.54:0.43"] = 132, -- Stonebreaker Hold, Shattrath, Falcon Watch
 				["0.51:0.27:0.44:0.33"] = 56, -- Stonebreaker Hold, Shattrath
 				["0.51:0.27:0.44:0.33:0.29:0.38"] = 137, -- Stonebreaker Hold, Shattrath, Garadar
@@ -1591,7 +1591,7 @@
 				["0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23"] = 220, -- Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village
 				["0.44:0.49:0.54:0.43:0.65:0.50:0.68:0.37"] = 201, -- Swamprat Post, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.44:0.49:0.54:0.43:0.65:0.50:0.79:0.46"] = 206, -- Swamprat Post, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.44:0.49:0.54:0.43:0.65:0.50"] = 136, -- Swamprat Post, Falcon Watch, Thrallmar
+				["0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 136, -- Swamprat Post, Falcon Watch, Thrallmar
 				["0.44:0.49:0.54:0.43"] = 61, -- Swamprat Post, Falcon Watch
 				["0.44:0.49:0.44:0.33:0.51:0.27"] = 155, -- Swamprat Post, Shattrath, Stonebreaker Hold
 				["0.44:0.49:0.44:0.33"] = 86, -- Swamprat Post, Shattrath
@@ -1608,7 +1608,7 @@
 				["0.44:0.49:0.38:0.68:0.58:0.73"] = 202, -- Swamprat Post, Thunderlord Stronghold, Area 52
 				["0.44:0.49:0.38:0.68:0.58:0.73:0.63:0.82"] = 250, -- Swamprat Post, Thunderlord Stronghold, Area 52, The Stormspire
 				["0.44:0.49:0.54:0.43:0.65:0.50:0.51:0.27"] = 264, -- Swamprat Post, Falcon Watch, Thrallmar, Stonebreaker Hold
-				["0.44:0.49:0.44:0.33:0.65:0.50"] = 215, -- Swamprat Post, Shattrath, Thrallmar
+				["0.44:0.49:0.44:0.33:0.65:0.50:0.66:0.50"] = 215, -- Swamprat Post, Shattrath, Thrallmar
 				["0.44:0.49:0.38:0.68:0.58:0.73:0.72:0.72"] = 268, -- Swamprat Post, Thunderlord Stronghold, Area 52, Cosmowrench
 				["0.44:0.49:0.54:0.43:0.29:0.38"] = 195, -- Swamprat Post, Falcon Watch, Garadar
 				["0.44:0.49:0.23:0.50:0.29:0.38"] = 187, -- Swamprat Post, Zabra'jin, Garadar
@@ -1617,7 +1617,7 @@
 				["0.63:0.82:0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23"] = 410, -- The Stormspire, Area 52, Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village
 				["0.63:0.82:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.68:0.37"] = 390, -- The Stormspire, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.63:0.82:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.79:0.46"] = 395, -- The Stormspire, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.63:0.82:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50"] = 326, -- The Stormspire, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar
+				["0.63:0.82:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 326, -- The Stormspire, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch, Thrallmar
 				["0.63:0.82:0.58:0.73:0.49:0.64:0.44:0.49:0.54:0.43"] = 254, -- The Stormspire, Area 52, Mok'Nathal Village, Swamprat Post, Falcon Watch
 				["0.63:0.82:0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27"] = 345, -- The Stormspire, Area 52, Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold
 				["0.63:0.82:0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33"] = 277, -- The Stormspire, Area 52, Mok'Nathal Village, Swamprat Post, Shattrath
@@ -1634,7 +1634,7 @@
 				["0.63:0.82:0.58:0.73:0.49:0.64:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23:0.81:0.23"] = 490, -- The Stormspire, Area 52, Mok'Nathal Village, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village, Altar of Sha'tar
 				["0.63:0.82:0.38:0.68:0.23:0.50:0.29:0.38"] = 372, -- The Stormspire, Thunderlord Stronghold, Zabra'jin, Garadar
 				["0.63:0.82:0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23"] = 481, -- The Stormspire, Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village
-				["0.63:0.82:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50"] = 397, -- The Stormspire, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
+				["0.63:0.82:0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 397, -- The Stormspire, Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
 				["0.63:0.82:0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27"] = 417, -- The Stormspire, Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold
 				["0.63:0.82:0.38:0.68:0.44:0.49"] = 262, -- The Stormspire, Thunderlord Stronghold, Swamprat Post
 				["0.63:0.82:0.38:0.68:0.23:0.50:0.44:0.33"] = 443, -- The Stormspire, Thunderlord Stronghold, Zabra'jin, Shattrath
@@ -1676,7 +1676,7 @@
 				["0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27:0.66:0.23"] = 335, -- Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold, Shadowmoon Village
 				["0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.68:0.37"] = 316, -- Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.79:0.46"] = 322, -- Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50"] = 251, -- Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
+				["0.38:0.68:0.44:0.49:0.54:0.43:0.65:0.50:0.66:0.50"] = 251, -- Thunderlord Stronghold, Swamprat Post, Falcon Watch, Thrallmar
 				["0.38:0.68:0.44:0.49:0.54:0.43"] = 179, -- Thunderlord Stronghold, Swamprat Post, Falcon Watch
 				["0.38:0.68:0.44:0.49:0.44:0.33:0.51:0.27"] = 271, -- Thunderlord Stronghold, Swamprat Post, Shattrath, Stonebreaker Hold
 				["0.38:0.68:0.44:0.49:0.44:0.33"] = 202, -- Thunderlord Stronghold, Swamprat Post, Shattrath
@@ -1700,7 +1700,7 @@
 				["0.23:0.50:0.44:0.33:0.51:0.27:0.66:0.23"] = 284, -- Zabra'jin, Shattrath, Stonebreaker Hold, Shadowmoon Village
 				["0.23:0.50:0.54:0.43:0.65:0.50:0.68:0.37"] = 287, -- Zabra'jin, Falcon Watch, Thrallmar, Spinebreaker Ridge
 				["0.23:0.50:0.54:0.43:0.65:0.50:0.79:0.46"] = 290, -- Zabra'jin, Falcon Watch, Thrallmar, Hellfire Peninsula
-				["0.23:0.50:0.54:0.43:0.65:0.50"] = 220, -- Zabra'jin, Falcon Watch, Thrallmar
+				["0.23:0.50:0.54:0.43:0.65:0.50:0.66:0.50"] = 220, -- Zabra'jin, Falcon Watch, Thrallmar
 				["0.23:0.50:0.54:0.43"] = 147, -- Zabra'jin, Falcon Watch
 				["0.23:0.50:0.44:0.49"] = 112, -- Zabra'jin, Swamprat Post
 				["0.23:0.50:0.38:0.68"] = 113, -- Zabra'jin, Thunderlord Stronghold
@@ -1712,10 +1712,10 @@
 				["0.23:0.50:0.44:0.33:0.51:0.27:0.66:0.23:0.78:0.15"] = 349, -- Zabra'jin, Shattrath, Stonebreaker Hold, Shadowmoon Village, Sanctum of the Stars
 				["0.23:0.50:0.44:0.49:0.49:0.64:0.58:0.73:0.72:0.72"] = 304, -- Zabra'jin, Swamprat Post, Mok'Nathal Village, Area 52, Cosmowrench
 				["0.23:0.50:0.44:0.33:0.51:0.27:0.66:0.23:0.81:0.23"] = 365, -- Zabra'jin, Shattrath, Stonebreaker Hold, Shadowmoon Village, Altar of Sha'tar
-				["0.23:0.50:0.44:0.33:0.51:0.27:0.65:0.50"] = 343, -- Zabra'jin, Shattrath, Stonebreaker Hold, Thrallmar
+				["0.23:0.50:0.44:0.33:0.51:0.27:0.65:0.50:0.66:0.50"] = 343, -- Zabra'jin, Shattrath, Stonebreaker Hold, Thrallmar
 				["0.23:0.50:0.54:0.43:0.65:0.50:0.51:0.27"] = 349, -- Zabra'jin, Falcon Watch, Thrallmar, Stonebreaker Hold
 				["0.23:0.50:0.44:0.33:0.65:0.50:0.68:0.37"] = 344, -- Zabra'jin, Shattrath, Thrallmar, Spinebreaker Ridge
-				["0.23:0.50:0.44:0.33:0.65:0.50"] = 280, -- Zabra'jin, Shattrath, Thrallmar
+				["0.23:0.50:0.44:0.33:0.65:0.50:0.66:0.50"] = 280, -- Zabra'jin, Shattrath, Thrallmar
 				["0.23:0.50:0.44:0.49:0.49:0.64:0.58:0.73"] = 238, -- Zabra'jin, Swamprat Post, Mok'Nathal Village, Area 52
 
 			},
