@@ -122,6 +122,18 @@ GUI 					 - FIX the width for long strings https://cdn.discordapp.com/attachment
 Move Objectives          - aka Quest Tracker
 
 --------------------------------------------------------------------------------
+---- Flights
+--------------------------------------------------------------------------------
+
+--===== Horde - Eastern Kingdoms: =====--
+
+Tarren Mill - Shattered Sun (Isle)
+
+Shattered Sun (Isle) - a lot to check. (without Zul'Aman learned)
+
+
+
+--------------------------------------------------------------------------------
 -- Not sure if need to do yet:
 --------------------------------------------------------------------------------
 
