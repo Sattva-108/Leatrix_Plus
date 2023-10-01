@@ -725,30 +725,30 @@
 			[1] = {
 
 				-- Alliance: Blood Watch (Bloodmyst Isle)
-				["0.22:0.18:0.21:0.26"] = 77, -- Blood Watch, The Exodar (Nick Bijl reported 110)
+				["0.22:0.82:0.21:0.74"] = 77, -- Blood Watch, The Exodar (Nick Bijl reported 110)
 
 				-- Alliance: The Exodar (The Exodar)
-				["0.21:0.26:0.22:0.18"] = 77, -- The Exodar, Blood Watch
+				["0.21:0.74:0.22:0.82"] = 77, -- The Exodar, Blood Watch
 
 				-- Alliance: Astranaar (Ashenvale)
-				["0.46:0.40:0.39:0.40:0.40:0.51:0.31:0.69"] = 511, -- Astranaar, Stonetalon Peak, Nijel's Point, Feathermoon
-				["0.46:0.40:0.61:0.55:0.60:0.81:0.42:0.79"] = 631, -- Astranaar, Ratchet, Gadgetzan, Cenarion Hold
-				["0.46:0.40:0.61:0.55:0.60:0.81:0.50:0.76"] = 538, -- Astranaar, Ratchet, Gadgetzan, Marshal's Refuge
-				["0.46:0.40:0.61:0.55:0.64:0.67:0.48:0.70"] = 457, -- Astranaar, Ratchet, Theramore, Thalanaar
-				["0.46:0.40:0.61:0.55:0.64:0.67:0.58:0.70"] = 357, -- Astranaar, Ratchet, Theramore, Mudsprocket
-				["0.46:0.40:0.64:0.67"] = 388, -- Astranaar, Theramore
-				["0.46:0.40:0.61:0.55:0.60:0.81"] = 434, -- Astranaar, Ratchet, Gadgetzan
-				["0.46:0.40:0.61:0.55"] = 194, -- Astranaar, Ratchet
-				["0.46:0.40:0.39:0.40:0.40:0.51"] = 279, -- Astranaar, Stonetalon Peak, Nijel's Point
-				["0.46:0.40:0.39:0.40"] = 153, -- Astranaar, Stonetalon Peak
-				["0.46:0.40:0.61:0.40"] = 148, -- Astranaar, Talrendis Point
-				["0.46:0.40:0.58:0.39"] = 134, -- Astranaar, Forest Song
-				["0.46:0.40:0.50:0.35"] = 79, -- Astranaar, Emerald Sanctuary
-				["0.46:0.40:0.50:0.35:0.53:0.26:0.65:0.23"] = 296, -- Astranaar, Emerald Sanctuary, Talonbranch Glade, Everlook
-				["0.46:0.40:0.50:0.35:0.53:0.26"] = 206, -- Astranaar, Emerald Sanctuary, Talonbranch Glade
-				["0.46:0.40:0.50:0.35:0.53:0.26:0.55:0.21"] = 265, -- Astranaar, Emerald Sanctuary, Talonbranch Glade, Moonglade
-				["0.46:0.40:0.43:0.25"] = 149, -- Astranaar, Auberdine
-				["0.46:0.40:0.43:0.25:0.42:0.16"] = 233, -- Astranaar, Auberdine, Rut'theran Village
+				["0.46:0.60:0.39:0.60:0.40:0.49:0.31:0.31"] = 511, -- Astranaar, Stonetalon Peak, Nijel's Point, Feathermoon
+				["0.46:0.60:0.61:0.45:0.60:0.19:0.42:0.21"] = 631, -- Astranaar, Ratchet, Gadgetzan, Cenarion Hold
+				["0.46:0.60:0.61:0.45:0.60:0.19:0.50:0.24"] = 538, -- Astranaar, Ratchet, Gadgetzan, Marshal's Refuge
+				["0.46:0.60:0.61:0.45:0.64:0.33:0.48:0.30"] = 457, -- Astranaar, Ratchet, Theramore, Thalanaar
+				["0.46:0.60:0.61:0.45:0.64:0.33:0.58:0.30"] = 357, -- Astranaar, Ratchet, Theramore, Mudsprocket
+				["0.46:0.60:0.64:0.33"] = 388, -- Astranaar, Theramore
+				["0.46:0.60:0.61:0.45:0.60:0.19"] = 434, -- Astranaar, Ratchet, Gadgetzan
+				["0.46:0.60:0.61:0.45"] = 194, -- Astranaar, Ratchet
+				["0.46:0.60:0.39:0.60:0.40:0.49"] = 279, -- Astranaar, Stonetalon Peak, Nijel's Point
+				["0.46:0.60:0.39:0.60"] = 153, -- Astranaar, Stonetalon Peak
+				["0.46:0.60:0.61:0.60"] = 148, -- Astranaar, Talrendis Point
+				["0.46:0.60:0.58:0.61"] = 134, -- Astranaar, Forest Song
+				["0.46:0.60:0.50:0.65"] = 79, -- Astranaar, Emerald Sanctuary
+				["0.46:0.60:0.50:0.65:0.53:0.74:0.65:0.77"] = 296, -- Astranaar, Emerald Sanctuary, Talonbranch Glade, Everlook
+				["0.46:0.60:0.50:0.65:0.53:0.74"] = 206, -- Astranaar, Emerald Sanctuary, Talonbranch Glade
+				["0.46:0.60:0.50:0.65:0.53:0.74:0.55:0.79"] = 265, -- Astranaar, Emerald Sanctuary, Talonbranch Glade, Moonglade
+				["0.46:0.60:0.43:0.75"] = 149, -- Astranaar, Auberdine
+				["0.46:0.60:0.43:0.75:0.42:0.84"] = 233, -- Astranaar, Auberdine, Rut'theran Village
 				["0.46:0.40:0.43:0.25:0.53:0.26"] = 338, -- Astranaar, Auberdine, Talonbranch Glade
 				["0.46:0.40:0.43:0.25:0.40:0.51"] = 440, -- Astranaar, Auberdine, Nijel's Point
 				["0.46:0.40:0.61:0.40:0.65:0.23"] = 327, -- Astranaar, Talrendis Point, Everlook
