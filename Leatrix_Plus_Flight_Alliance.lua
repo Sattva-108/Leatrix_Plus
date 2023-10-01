@@ -19,26 +19,26 @@
 			[2] = {
 
 				-- Alliance: Acherus (Eastern Plaguelands)
-				["0.62:0.34:0.61:0.35:0.58:0.06"] = 385, -- Acherus: The Ebon Hold, Light's Hope Chapel, Shattered Sun Staging Area
-				["0.62:0.34:0.61:0.35"] = 50, -- Acherus: The Ebon Hold, Light's Hope Chapel
-				["0.62:0.34:0.61:0.35:0.51:0.36"] = 149, -- Acherus: The Ebon Hold, Light's Hope Chapel, Thondoril River
-				["0.62:0.34:0.61:0.35:0.61:0.28"] = 151, -- Acherus: The Ebon Hold, Light's Hope Chapel, Zul'Aman
-				["0.62:0.34:0.61:0.35:0.48:0.39"] = 198, -- Acherus: The Ebon Hold, Light's Hope Chapel, Chillwind Camp
-				["0.62:0.34:0.61:0.35:0.50:0.42"] = 210, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak
-				["0.62:0.34:0.61:0.35:0.50:0.42:0.44:0.45"] = 272, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak, Southshore
-				["0.62:0.34:0.61:0.35:0.50:0.42:0.51:0.47"] = 280, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak, Refuge Pointe
-				["0.62:0.34:0.61:0.35:0.50:0.42:0.44:0.45:0.45:0.56"] = 380, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak, Southshore, Menethil Harbor
-				["0.62:0.34:0.61:0.35:0.47:0.59"] = 416, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge
-				["0.62:0.34:0.61:0.35:0.50:0.42:0.51:0.47:0.53:0.61"] = 450, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak, Refuge Pointe, Thelsamar
-				["0.62:0.34:0.61:0.35:0.47:0.59:0.47:0.65"] = 464, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point
-				["0.62:0.34:0.61:0.35:0.47:0.59:0.47:0.65:0.52:0.72"] = 548, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Morgan's Vigil
-				["0.62:0.34:0.61:0.35:0.47:0.59:0.47:0.65:0.41:0.73"] = 576, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Stormwind
-				["0.62:0.34:0.61:0.35:0.47:0.59:0.47:0.65:0.52:0.72:0.50:0.75"] = 580, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Morgan's Vigil, Lakeshire
-				["0.62:0.34:0.61:0.35:0.47:0.59:0.47:0.65:0.52:0.72:0.50:0.75:0.47:0.79"] = 638, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Morgan's Vigil, Lakeshire, Darkshire
-				["0.62:0.34:0.61:0.35:0.47:0.59:0.47:0.65:0.52:0.72:0.55:0.81"] = 717, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Morgan's Vigil, Nethergarde Keep
-				["0.62:0.34:0.61:0.35:0.47:0.59:0.47:0.65:0.41:0.73:0.39:0.80"] = 638, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Stormwind, Sentinel Hill
-				["0.62:0.34:0.61:0.35:0.47:0.59:0.47:0.65:0.41:0.73:0.43:0.82"] = 654, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Stormwind, Rebel Camp
-				["0.62:0.34:0.61:0.35:0.47:0.59:0.47:0.65:0.41:0.73:0.41:0.93"] = 760, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Stormwind, Booty Bay
+				["0.62:0.66:0.61:0.65:0.58:0.94"] = 385, -- Acherus: The Ebon Hold, Light's Hope Chapel, Shattered Sun Staging Area
+				["0.62:0.66:0.61:0.65"] = 50, -- Acherus: The Ebon Hold, Light's Hope Chapel
+				["0.62:0.66:0.61:0.65:0.51:0.64"] = 149, -- Acherus: The Ebon Hold, Light's Hope Chapel, Thondoril River
+				["0.62:0.66:0.61:0.65:0.61:0.73"] = 151, -- Acherus: The Ebon Hold, Light's Hope Chapel, Zul'Aman
+				["0.62:0.66:0.61:0.65:0.48:0.61"] = 198, -- Acherus: The Ebon Hold, Light's Hope Chapel, Chillwind Camp
+				["0.62:0.66:0.61:0.65:0.50:0.58"] = 210, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak
+				["0.62:0.66:0.61:0.65:0.50:0.58:0.44:0.55"] = 272, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak, Southshore
+				["0.62:0.66:0.61:0.65:0.50:0.58:0.51:0.53"] = 280, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak, Refuge Pointe
+				["0.62:0.66:0.61:0.65:0.50:0.58:0.44:0.55:0.45:0.44"] = 380, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak, Southshore, Menethil Harbor
+				["0.62:0.66:0.61:0.65:0.47:0.41"] = 416, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge
+				["0.62:0.66:0.61:0.65:0.50:0.58:0.51:0.53:0.53:0.39"] = 450, -- Acherus: The Ebon Hold, Light's Hope Chapel, Aerie Peak, Refuge Pointe, Thelsamar
+				["0.62:0.66:0.61:0.65:0.47:0.41:0.47:0.35"] = 464, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point
+				["0.62:0.66:0.61:0.65:0.47:0.41:0.47:0.35:0.52:0.28"] = 548, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Morgan's Vigil
+				["0.62:0.66:0.61:0.65:0.47:0.41:0.47:0.35:0.41:0.27"] = 576, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Stormwind
+				["0.62:0.66:0.61:0.65:0.47:0.41:0.47:0.35:0.52:0.28:0.50:0.25"] = 580, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Morgan's Vigil, Lakeshire
+				["0.62:0.66:0.61:0.65:0.47:0.41:0.47:0.35:0.52:0.28:0.50:0.25:0.47:0.21"] = 638, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Morgan's Vigil, Lakeshire, Darkshire
+				["0.62:0.66:0.61:0.65:0.47:0.41:0.47:0.35:0.52:0.28:0.55:0.19"] = 717, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Morgan's Vigil, Nethergarde Keep
+				["0.62:0.66:0.61:0.65:0.47:0.41:0.47:0.35:0.41:0.27:0.39:0.20"] = 638, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Stormwind, Sentinel Hill
+				["0.62:0.66:0.61:0.65:0.47:0.41:0.47:0.35:0.41:0.27:0.43:0.18"] = 654, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Stormwind, Rebel Camp
+				["0.62:0.66:0.61:0.65:0.47:0.41:0.47:0.35:0.41:0.27:0.41:0.07"] = 760, -- Acherus: The Ebon Hold, Light's Hope Chapel, Ironforge, Thorium Point, Stormwind, Booty Bay
 
 				-- Alliance: Aerie Peak (The Hinterlands)
 				["0.50:0.42:0.51:0.47:0.53:0.61:0.47:0.65:0.41:0.73:0.41:0.93"] = 633, -- Aerie Peak, Refuge Pointe, Thelsamar, Thorium Point, Stormwind, Booty Bay
