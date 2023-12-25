@@ -609,6 +609,7 @@
 		LeaPlusLC:LockOption("ClassColFrames", "ClassColFramesBtn", true)			-- Class colored frames
 		LeaPlusLC:LockOption("SetWeatherDensity", "SetWeatherDensityBtn", false)	-- Set weather density
 		LeaPlusLC:LockOption("ViewPortEnable", "ModViewportBtn", true)				-- Enable viewport
+		LeaPlusLC:LockOption("FasterLooting", "ModFasterLootingBtn", true)				-- Enable fasterlooting
 		--LeaPlusLC:LockOption("MuteGameSounds", "MuteGameSoundsBtn", false)			-- Mute game sounds
 		--LeaPlusLC:LockOption("MuteCustomSounds", "MuteCustomSoundsBtn", false)		-- Mute custom sounds
 		--LeaPlusLC:LockOption("StandAndDismount", "DismountBtn", true)				-- Dismount me
@@ -1682,6 +1683,107 @@
 
 		if LeaPlusLC["FasterLooting"] == "On" then
 
+			--===== WA Custom Options - Sound database  =====--
+			local soundFiles = {
+				[1] = "Sound/Interface/Pickup/putDownRocks_Ore01.wav",
+				[2] = "sound/character/gnome/gnomemaleerrormessages/gnomemale_err_inventoryfull01.wav",
+				[3] = "sound/character/dwarf/dwarfmaleerrormessages/dwarfmale_err_inventoryfull02.wav",
+				-- Add more sound file paths if needed
+			}
+
+			-- Create configuration panel
+			--local weatherSliderTable = {L["Very Low"], L["Low"], L["Medium"], L["High"]}
+			--LeaPlusCB["WeatherLevel"].f:SetText(LeaPlusLC["WeatherLevel"] .. "  (" .. weatherSliderTable[LeaPlusLC["WeatherLevel"] + 1] .. ")")
+			local FasterLootPanel = LeaPlusLC:CreatePanel("Faster Looting", "FasterLootPanel")
+
+			LeaPlusLC:MakeTx(FasterLootPanel, "Settings", 16, -72)
+			LeaPlusLC:MakeCB(FasterLootPanel, "SmallerErrorFrame", "Smaller Error Frame", 16, -92, false, "If checked, your red error text frame, will be only one line long.")
+			LeaPlusLC:MakeCB(FasterLootPanel, "FasterErrorFrame", "Faster Error Frame", 16, -112, false, "If checked, your red error text frame, will be faster to fade (1 second instead of 5).")
+
+
+			LeaPlusLC:MakeTx(FasterLootPanel, "Full Inventory Sound", 356, -72)
+			LeaPlusLC:MakeSL(FasterLootPanel, "FullInvSound", "Drag to set the desired sound played when your inventory is Full. Set 0 to disable sound.", 0, 3, 1, 356, -92, "%.0f")
+
+			local FullInvSoundSliderTable = {"Disabled", "Default", "Gnome", "Dwarf"}
+			local function SetFullInvSliderText()
+				-- set text next to the number of sound from FullInvSoundSliderTable
+				LeaPlusCB["FullInvSound"].f:SetText(LeaPlusLC["FullInvSound"] .. "  (" .. FullInvSoundSliderTable[LeaPlusLC["FullInvSound"] + 1] .. ")")
+				local soundPath = soundFiles[LeaPlusLC["FullInvSound"]]
+				if soundPath then
+					PlaySoundFile(soundPath, "Sound")
+				end
+			end
+
+			--===== Function to make error frame contain only 1 line =====--
+			--===== It also checks if frame is not already 1 line, to make sure error frame doesnt get hidden fully. =====--
+			local function SetErrorFrameHeight()
+				local errorFrameHeight = 20
+				if LeaPlusLC["SmallerErrorFrame"] == "On" then
+
+					if UIErrorsFrame:GetHeight() ~= errorFrameHeight then
+
+						UIErrorsFrame:SetHeight(errorFrameHeight)
+
+					end
+				else
+					UIErrorsFrame:SetHeight(60)
+				end
+			end
+			SetErrorFrameHeight()
+
+			local function SetErroFrameFadeTime()
+				if LeaPlusLC["FasterErrorFrame"] == "On" then
+					UIErrorsFrame:SetTimeVisible(1)
+				else
+					UIErrorsFrame:SetTimeVisible(5)
+				end
+			end
+			SetErroFrameFadeTime()
+
+			LeaPlusCB["FullInvSound"]:HookScript("OnValueChanged", SetFullInvSliderText)
+			LeaPlusCB["SmallerErrorFrame"]:HookScript("OnClick", SetErrorFrameHeight)
+			LeaPlusCB["FasterErrorFrame"]:HookScript("OnClick", SetErroFrameFadeTime)
+
+
+
+			-- Help button hidden
+			FasterLootPanel.h:Hide()
+
+			-- Back button handler
+			FasterLootPanel.b:SetScript("OnClick", function()
+				FasterLootPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page7"]:Show();
+				return
+			end)
+
+			-- Reset button handler
+			FasterLootPanel.r:SetScript("OnClick", function()
+
+				-- Reset checkboxes
+				LeaPlusLC["SmallerErrorFrame"] = "Off"
+				LeaPlusLC["FasterErrorFrame"] = "Off"
+				LeaPlusLC["FullInvSound"] = 1
+				UIErrorsFrame:SetHeight(60)
+				UIErrorsFrame:SetTimeVisible(5)
+				-- Refresh panel
+				FasterLootPanel:Hide(); FasterLootPanel:Show()
+
+			end)
+
+			-- Show panal when options panel button is clicked
+			LeaPlusCB["ModFasterLootingBtn"]:SetScript("OnClick", function()
+				if IsShiftKeyDown() and IsControlKeyDown() then
+					-- Preset profile
+					LeaPlusLC["SmallerErrorFrame"] = "On"
+					LeaPlusLC["FasterErrorFrame"] = "On"
+					LeaPlusLC["FullInvSound"] = 1
+					UIErrorsFrame:SetHeight(20)
+					UIErrorsFrame:SetTimeVisible(1)
+				else
+					FasterLootPanel:Show()
+					LeaPlusLC:HideFrames()
+				end
+			end)
+
 			--------------------------------------------------------------------------------
 			-- Code taken, and modified by Sattva.
 			-- Source code is from SpeedyAutoLoot addon.
@@ -1716,14 +1818,6 @@
 			--===== Check for if 3.3.5 or 2.4.3 game client. =====--
 			local isTBC = select(4, GetBuildInfo()) == 20400 -- true if TBC 2.4.3
 			local isWOTLK = select(4, GetBuildInfo()) == 30300 -- true if WOTLK 3.3.5
-
-			--===== WA Custom Options - Sound database  =====--
-			local soundFiles = {
-				[1] = "Sound/Interface/Pickup/putDownRocks_Ore01.wav",
-				[2] = "sound/character/gnome/gnomemaleerrormessages/gnomemale_err_inventoryfull01.wav",
-				[3] = "sound/character/dwarf/dwarfmaleerrormessages/dwarfmale_err_inventoryfull02.wav",
-				-- Add more sound file paths if needed
-			}
 
 
 			-----------------------------------------------------------------
@@ -1877,34 +1971,34 @@
 
 			-- if aura_env.config["error_filter"] then
 
-			local AutoLootErrScript = UIErrorsFrame:GetScript('OnEvent')
-
-			-- Error message events
-			UIErrorsFrame:SetScript('OnEvent', function (self, event, AutoLootError, ...)
-
-				-- Handle error messages
-				if event == "UI_ERROR_MESSAGE" then
-
-					-- if aura_env.config["error_filter"] then
-
-					if  AutoLootError == ERR_LOOT_GONE or
-							AutoLootError == ERR_LOOT_DIDNT_KILL or
-							AutoLootError == ERR_NO_LOOT then
-
-						return -- hide the error message
-
-					end
-
-					-- else
-
-					--     return -- hide the error message
-
-					-- end
-				end
-
-				return AutoLootErrScript(self, event, AutoLootError, ...)
-
-			end)
+			--local AutoLootErrScript = UIErrorsFrame:GetScript('OnEvent')
+			--
+			---- Error message events
+			--UIErrorsFrame:SetScript('OnEvent', function (self, event, AutoLootError, ...)
+			--
+			--	-- Handle error messages
+			--	if event == "UI_ERROR_MESSAGE" then
+			--
+			--		-- if aura_env.config["error_filter"] then
+			--
+			--		if  AutoLootError == ERR_LOOT_GONE or
+			--				AutoLootError == ERR_LOOT_DIDNT_KILL or
+			--				AutoLootError == ERR_NO_LOOT then
+			--
+			--			return -- hide the error message
+			--
+			--		end
+			--
+			--		-- else
+			--
+			--		--     return -- hide the error message
+			--
+			--		-- end
+			--	end
+			--
+			--	return AutoLootErrScript(self, event, AutoLootError, ...)
+			--
+			--end)
 
 			-- end
 
@@ -2038,19 +2132,11 @@
 
 			function AutoLoot:OnInvFull()
 
-				-- local soundIndex = aura_env.config["full_inventory_sound"]
-				local soundIndex = 1
-				if soundIndex == 1 then
+			 	local soundIndex = LeaPlusLC["FullInvSound"]
 
-					local soundPath = soundFiles[soundIndex]
+				local soundPath = soundFiles[soundIndex]
+				if soundPath then
 					PlaySoundFile(soundPath, "Sound")
-
-					-- elseif (soundIndex == 2 or soundIndex == 3) and (not aura_env.lastPlayTime or (GetTime() - aura_env.lastPlayTime) >= 1.5) then
-
-					--     aura_env.lastPlayTime = GetTime()
-					--     local soundPath = soundFiles[soundIndex]
-					--     PlaySoundFile(soundPath, "Sound")
-
 				end
 
 				self:ShowLootFrame(true)
@@ -2116,25 +2202,11 @@
 				--===== Function to make error frame fade out animation faster. =====--
 				-- if aura_env.config["errorFaster"] then
 
-				UIErrorsFrame:SetTimeVisible(1)
+				--UIErrorsFrame:SetTimeVisible(1)
 
 				-- end
 
 
-				--===== Function to make error frame contain only 1 line =====--
-				--===== It also checks if frame is not already 1 line, to make sure error frame doesnt get hidden fully. =====--
-				local errorFrameHeight = 20
-				-- if aura_env.config["error_tiny"] then
-
-				if UIErrorsFrame:GetHeight() ~= errorFrameHeight then
-
-					UIErrorsFrame:SetHeight(errorFrameHeight)
-
-				end
-
-				-- end
-
-				-- end
 
 
 				self:SetToplevel(true)
@@ -14627,6 +14699,10 @@
 				LeaPlusLC:LoadVarNum("ViewPortResizeTop", 0, 0, 300)		-- Resize top border
 				LeaPlusLC:LoadVarNum("ViewPortResizeBottom", 0, 0, 300)		-- Resize bottom border
 				LeaPlusLC:LoadVarNum("ViewPortAlpha", 0, 0, 0.9)			-- Border alpha
+				LeaPlusLC:LoadVarNum("FullInvSound", 1, 0, 3)
+				LeaPlusLC:LoadVarChk("SmallerErrorFrame", "Off")			-- Release in PvP Exclude Alterac Valley
+				LeaPlusLC:LoadVarChk("FasterErrorFrame", "Off")			-- Release in PvP Exclude Alterac Valley
+
 
 				LeaPlusLC:LoadVarChk("NoRestedEmotes", "Off")				-- Silence rested emotes
 				--LeaPlusLC:LoadVarChk("MuteGameSounds", "Off")				-- Mute game sounds
@@ -15039,6 +15115,9 @@
 			LeaPlusDB["ViewPortResizeTop"]		= LeaPlusLC["ViewPortResizeTop"]
 			LeaPlusDB["ViewPortResizeBottom"]	= LeaPlusLC["ViewPortResizeBottom"]
 			LeaPlusDB["ViewPortAlpha"]			= LeaPlusLC["ViewPortAlpha"]
+			LeaPlusDB["FullInvSound"] 			= LeaPlusLC["FullInvSound"]
+			LeaPlusDB["SmallerErrorFrame"] 		= LeaPlusLC["SmallerErrorFrame"]
+			LeaPlusDB["FasterErrorFrame"] 		= LeaPlusLC["SmallerErrorFrame"]
 
 			LeaPlusDB["NoRestedEmotes"]			= LeaPlusLC["NoRestedEmotes"]
 			LeaPlusDB["MuteGameSounds"]			= LeaPlusLC["MuteGameSounds"]
@@ -15395,7 +15474,7 @@
 
 		-- Add label and tooltip
 		Cbox.f = Cbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
-		Cbox.f:SetPoint('LEFT', 20, 0)
+		Cbox.f:SetPoint('LEFT', 23, 0)
 		if reload then
 			-- Checkbox requires UI reload
 			Cbox.f:SetText(L[caption] .. "*")
@@ -17619,6 +17698,7 @@
 
 	LeaPlusLC:CfgBtn("SetWeatherDensityBtn", LeaPlusCB["SetWeatherDensity"])
 	LeaPlusLC:CfgBtn("ModViewportBtn", LeaPlusCB["ViewPortEnable"])
+	LeaPlusLC:CfgBtn("ModFasterLootingBtn", LeaPlusCB["FasterLooting"])
 	--LeaPlusLC:CfgBtn("MuteGameSoundsBtn", LeaPlusCB["MuteGameSounds"])
 	--LeaPlusLC:CfgBtn("MuteCustomSoundsBtn", LeaPlusCB["MuteCustomSounds"])
 	--LeaPlusLC:CfgBtn("DismountBtn", LeaPlusCB["StandAndDismount"])
