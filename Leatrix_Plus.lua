@@ -1682,55 +1682,496 @@
 
 		if LeaPlusLC["FasterLooting"] == "On" then
 
-			-- Time delay
-			local tDelay = 0
+			--------------------------------------------------------------------------------
+			-- Code taken, and modified by Sattva.
+			-- Source code is from SpeedyAutoLoot addon.
+			-- Increase speed of looting singnificantly. Makes the feel of it better.
+			-- The main approach is to not load the looting window, when is not needed.
+			-- It was initially made for my WeakAura https://wago.io/uGLs2fARD
+			--------------------------------------------------------------------------------
 
-			-- Fast loot function
-			local function FastLoot()
-				if GetTime() - tDelay >= 0.3 then
-					tDelay = GetTime()
-					if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-						if TSMDestroyBtn and TSMDestroyBtn:IsShown() and TSMDestroyBtn:GetButtonState() == "DISABLED" then tDelay = GetTime() return end
-						local lootMethod = GetLootMethod()
-						if lootMethod == "master" then
-							-- Master loot is enabled so fast loot if item should be auto looted
-							local lootThreshold = GetLootThreshold()
-							for i = GetNumLootItems(), 1, -1 do
-								local lootIcon, lootName, lootQuantity, lootQuality = GetLootSlotInfo(i)
-								if lootQuality and lootThreshold and lootQuality < lootThreshold then
-									LootSlot(i)
-								end
-							end
-						else
-							-- Master loot is disabled so fast loot regardless
-							local grouped = IsInGroup()
-							for i = GetNumLootItems(), 1, -1 do
-								local lootIcon, lootName, lootQuantity, lootQuality, locked = GetLootSlotInfo(i)
-								--local slotType = GetLootSlotType(i)
-								if lootName and not locked then
-									if not grouped then
-										LootSlot(i)
-									else
-										--if lootMethod == "freeforall" then
-										--	if slotType == LOOT_SLOT_ITEM then
-										--		LootSlot(i)
-										--	end
-										--else
-											LootSlot(i)
-										--end
-									end
-								end
-							end
-						end
-						tDelay = GetTime()
+
+			local AutoLoot = CreateFrame("Frame")
+			-- local aura_env = aura_env or {}
+
+			local SetCVar = SetCVar
+			local BACKPACK_CONTAINER, LOOT_SLOT_ITEM, NUM_BAG_SLOTS = BACKPACK_CONTAINER, LOOT_SLOT_ITEM, NUM_BAG_SLOTS
+			local GetContainerNumFreeSlots = GetContainerNumFreeSlots
+			local GetCursorPosition = GetCursorPosition
+			local GetItemCount = GetItemCount
+			local GetItemInfo = GetItemInfo
+			local GetLootSlotInfo = GetLootSlotInfo
+			local GetLootSlotLink = GetLootSlotLink
+			local GetNumLootItems = GetNumLootItems
+			local IsModifiedClick = IsModifiedClick
+			local LootSlot = LootSlot
+			local band = bit.band
+			local select = select
+			local tContains = tContains
+			_G.ElvLootFrame = ElvLootFrame
+			_G.ElvLootFrameHolder = ElvLootFrameHolder
+			local slotType = slotType
+			local invFullSoundPlayed = false
+
+			--===== Check for if 3.3.5 or 2.4.3 game client. =====--
+			local isTBC = select(4, GetBuildInfo()) == 20400 -- true if TBC 2.4.3
+			local isWOTLK = select(4, GetBuildInfo()) == 30300 -- true if WOTLK 3.3.5
+
+			--===== WA Custom Options - Sound database  =====--
+			local soundFiles = {
+				[1] = "Sound/Interface/Pickup/putDownRocks_Ore01.wav",
+				[2] = "sound/character/gnome/gnomemaleerrormessages/gnomemale_err_inventoryfull01.wav",
+				[3] = "sound/character/dwarf/dwarfmaleerrormessages/dwarfmale_err_inventoryfull02.wav",
+				-- Add more sound file paths if needed
+			}
+
+
+			-----------------------------------------------------------------
+			-- Function checks for if player has free bag slots,
+			-- If not then checks if looted item can fit in existing stacks.
+			-----------------------------------------------------------------
+
+			function AutoLoot:ProcessLoot(item, q)
+
+				local total, free, bagFamily = 0
+				local itemFamily = GetItemFamily(item)
+
+				for i = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+
+					free, bagFamily = GetContainerNumFreeSlots(i)
+
+					if (not bagFamily or bagFamily == 0) or (itemFamily and band(itemFamily, bagFamily) > 0) then
+
+						total = total + free
+
 					end
+
+				end
+
+				if total > 0 then
+
+					return true
+
+				end
+
+				local have = (GetItemCount(item) or 0)
+				if have > 0 then
+
+					local itemStackCount = (select(8,GetItemInfo(item)) or 0)
+					if itemStackCount > 1 then
+
+						while have > itemStackCount do
+
+							have = have - itemStackCount
+
+						end
+
+						local remain = itemStackCount - have
+						if remain >= q then
+
+							return true
+
+						end
+
+					end
+
+				end
+
+				return false
+
+			end
+
+			--------------------------------------------------------------------------------
+			-- Function checks and helps to handle (show, hide) ElvUI looting frame.
+			-- It also helps to handle default looting frame.
+			--------------------------------------------------------------------------------
+
+
+			function AutoLoot:ShowLootFrame(show)
+				-- print("ShowLootFrame: Show: " .. tostring(show))
+
+				if IsAddOnLoaded("ElvUI") then
+					-- print("ShowLootFrame: ElvUI loaded")
+					if show then
+						-- print("ShowLootFrame: Show ElvLootFrame")
+						ElvLootFrame:SetParent(ElvLootFrameHolder)
+						ElvLootFrame:SetFrameStrata("HIGH")
+						self:LootUnderMouse(ElvLootFrame, ElvLootFrameHolder, 20)
+						self.isHidden = false
+					else
+						-- print("ShowLootFrame: Hide ElvLootFrame")
+						ElvLootFrame:SetParent(self)
+						self.isHidden = true
+					end
+				elseif LootFrame:IsEventRegistered("LOOT_SLOT_CLEARED") then
+					-- print("ShowLootFrame: Default UI loot frame")
+					LootFrame.page = 1;
+					if show then
+						if isWOTLK then
+							LootFrame_Show(LootFrame)
+						elseif isTBC then
+							ShowUIPanel(LootFrame)
+						end
+						self.isHidden = false
+					else
+						-- HideUIPanel(LootFrame)
+						self.isHidden = true
+					end
+				else
+					-- print("ShowLootFrame: No valid loot frames")
+					self.isHidden = true
+				end
+				-- print("ShowLootFrame: Done")
+			end
+
+
+
+
+			----------------------------------------------------------------------------------------------------
+			-- Function to automate looting items, before looting it checks for if item is being master looted.
+			----------------------------------------------------------------------------------------------------
+
+
+
+			function AutoLoot:LootItems(numItems)
+
+				local lootThreshold = (self.isClassic and select(2,GetLootMethod()) == 0) and GetLootThreshold() or 10
+				for i = numItems, 1, -1 do
+
+					local itemLink = GetLootSlotLink(i)
+					local _, _, lootQuantity, rarity, locked = GetLootSlotInfo(i)
+					-- print("itemLink: ", itemLink, "quantity: ", lootQuantity, "quality: ", rarity, "locked: ", locked)
+
+					if locked or (rarity and rarity >= lootThreshold) then
+
+						-- print("item is locked")
+						self.isItemLocked = true
+
+					else
+
+						--===== FIX ME =====--
+						--===== not sure why there is slotType ~= LOOT_SLOT_ITEM, its not defined =====--
+						if slotType ~= LOOT_SLOT_ITEM or self:ProcessLoot(itemLink, lootQuantity) then
+							-- print("It's working!")
+
+							numItems = numItems - 1
+							LootSlot(i)
+
+						end
+					end
+				end
+
+				if numItems > 0 then
+
+					self:ShowLootFrame(true)
+
+				end
+
+			end
+
+
+			--------------------------------------------------------------------------------
+			-- Function to filter error messages
+			--------------------------------------------------------------------------------
+
+
+			-- if aura_env.config["error_filter"] then
+
+			local AutoLootErrScript = UIErrorsFrame:GetScript('OnEvent')
+
+			-- Error message events
+			UIErrorsFrame:SetScript('OnEvent', function (self, event, AutoLootError, ...)
+
+				-- Handle error messages
+				if event == "UI_ERROR_MESSAGE" then
+
+					-- if aura_env.config["error_filter"] then
+
+					if  AutoLootError == ERR_LOOT_GONE or
+							AutoLootError == ERR_LOOT_DIDNT_KILL or
+							AutoLootError == ERR_NO_LOOT then
+
+						return -- hide the error message
+
+					end
+
+					-- else
+
+					--     return -- hide the error message
+
+					-- end
+				end
+
+				return AutoLootErrScript(self, event, AutoLootError, ...)
+
+			end)
+
+			-- end
+
+
+			-------------------------------------------------------------------------------------
+			-- Function to handle all events related to looting.
+			-- Such as opening/closing loot windows and checking for inventory space.
+			--------------------------------------------------------------------------------
+
+
+
+			function AutoLoot:OnEvent(e, ...)
+
+				--===== Loot functions are called here =====--
+				if (e == "LOOT_READY" or e == "LOOT_OPENED") and not self.isLooting then
+
+					local numItems = GetNumLootItems()
+
+
+					--===== if nothing to loot, stop script =====--
+					if numItems == 0 then
+
+						return
+
+					end
+
+					self.isLooting = true
+					self.isHidden = true
+
+
+					--===== Checks for if modifier is held and stops looting if given errors are fired, to avoid looping when it's not needed  =====--
+					if not IsModifiedClick("AUTOLOOTTOGGLE") and not tContains(({ERR_INV_FULL, ERR_ITEM_MAX_COUNT, ERR_LOOT_ROLL_PENDING}), select(1, ...)) then
+
+						self:LootItems(numItems)
+						-- print("loot")
+
+					else
+
+						self:ShowLootFrame(true)
+						-- print("show")
+
+					end
+
+				elseif e == "LOOT_CLOSED" then
+
+					self.isLooting = false
+					self.isHidden = false
+					self.isItemLocked = false
+					self:ShowLootFrame(false)
+					invFullSoundPlayed = false
+
+
+					--===== If inventory is full or you have too many of items, show loot frame and play sound. =====--
+				elseif tContains(({ERR_INV_FULL, ERR_ITEM_MAX_COUNT}), select(1, ...)) then
+					if not invFullSoundPlayed and self.isLooting then
+
+						AutoLoot:OnInvFull()
+						invFullSoundPlayed = true
+
+					end
+
+					--===== If item being rolled for (Group Loot), show loot frame. =====--
+				elseif tContains(({ERR_LOOT_ROLL_PENDING}), select(1, ...)) then
+
+					if self.isLooting then
+
+						self:ShowLootFrame(true)
+						-- print("pickup")
+
+					end
+
+
+				elseif e == "LOOT_BIND_CONFIRM" then
+
+					if self.isLooting and self.isHidden then
+
+						AutoLoot:OnBindConfirm()
+
+					end
+
+				elseif e == "OPEN_MASTER_LOOT_LIST" then
+
+					if self.isLooting and self.isHidden then
+
+						self:ShowLootFrame(true);
+						-- print("master loot")
+
+					end
+
+					-- elseif e == "PLAYER_LOGIN" or e == "ADDON_LOADED" and aura_env.config["autoLootGlobalEnabled"] then
+				elseif e == "PLAYER_LOGIN" or e == "ADDON_LOADED" then
+
+					if isTBC then
+
+						SetCVar("autoLootCorpse",1)
+
+					elseif isWOTLK then
+
+						SetCVar("autoLootDefault",1)
+
+					end
+
+
+					--===== Disable Auto Loot button in Interface menu and add tooltip to it. =====--
+					-- if aura_env.config["autoLootGlobalEnabled"] then
+
+					InterfaceOptionsControlsPanelAutoLootCorpse:Disable()
+
+					local autoLootText = InterfaceOptionsControlsPanelAutoLootCorpseText
+					autoLootText:SetText("Auto Loot option is controlled by Leatrix Plus.")
+					autoLootText:SetAlpha(0.6)
+
+					-- print("Auto Loot Set")
+
+					-- else
+
+					--     InterfaceOptionsControlsPanelAutoLootCorpse:Enable()
+
+					-- end
+
+
+				end
+
+			end
+
+
+			--------------------------------------------------------------------------------
+			-- Inventory Full Function
+			--------------------------------------------------------------------------------
+
+
+			function AutoLoot:OnInvFull()
+
+				-- local soundIndex = aura_env.config["full_inventory_sound"]
+				local soundIndex = 1
+				if soundIndex == 1 then
+
+					local soundPath = soundFiles[soundIndex]
+					PlaySoundFile(soundPath, "Sound")
+
+					-- elseif (soundIndex == 2 or soundIndex == 3) and (not aura_env.lastPlayTime or (GetTime() - aura_env.lastPlayTime) >= 1.5) then
+
+					--     aura_env.lastPlayTime = GetTime()
+					--     local soundPath = soundFiles[soundIndex]
+					--     PlaySoundFile(soundPath, "Sound")
+
+				end
+
+				self:ShowLootFrame(true)
+				-- print("inv full")
+
+			end
+
+
+			--------------------------------------------------------------------------------
+			-- Bind confirm Function
+			--------------------------------------------------------------------------------
+
+			function AutoLoot:OnBindConfirm(slot)
+
+				if self.isLooting then
+
+					self:ShowLootFrame(true);
+					-- print("bind confirm")
+
+				end
+
+			end
+
+
+			--------------------------------------------------------------------------------
+			-- Function to make sure the Looting Window is positioned well, when shown.
+			--------------------------------------------------------------------------------
+
+
+
+			function AutoLoot:LootUnderMouse(frame, parent, yoffset)
+				if ( GetCVar("lootUnderMouse") == "1" ) then
+					local x, y = GetCursorPosition()
+					x = x / frame:GetEffectiveScale()
+					y = y / frame:GetEffectiveScale()
+
+					frame:ClearAllPoints()
+					frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x - 40, y + (yoffset or 20))
+					frame:GetCenter()
+					frame:Raise()
+
+					-- print("Loot under mouse enabled. Positioning frame under cursor.")
+
+				else
+					frame:ClearAllPoints()
+					frame:SetPoint("TOPLEFT", parent, "TOPLEFT")
+
+					-- print("Loot under mouse disabled. Positioning frame at top-left of parent.")
 				end
 			end
 
-			-- Event frame
-			local faster = CreateFrame("Frame")
-			faster:RegisterEvent("LOOT_OPENED")
-			faster:SetScript("OnEvent", FastLoot)
+
+
+			--------------------------------------------------------------------------------
+			-- Function to setup events.
+			--------------------------------------------------------------------------------
+
+
+			function AutoLoot:OnLoad()
+
+				-- if (aura_env.config["errorFaster"] or aura_env.config["error_tiny"])  then
+
+				--===== Function to make error frame fade out animation faster. =====--
+				-- if aura_env.config["errorFaster"] then
+
+				UIErrorsFrame:SetTimeVisible(1)
+
+				-- end
+
+
+				--===== Function to make error frame contain only 1 line =====--
+				--===== It also checks if frame is not already 1 line, to make sure error frame doesnt get hidden fully. =====--
+				local errorFrameHeight = 20
+				-- if aura_env.config["error_tiny"] then
+
+				if UIErrorsFrame:GetHeight() ~= errorFrameHeight then
+
+					UIErrorsFrame:SetHeight(errorFrameHeight)
+
+				end
+
+				-- end
+
+				-- end
+
+
+				self:SetToplevel(true)
+				self:Hide()
+
+				--===== Function sets the OnEvent script for the AutoLoot frame to call the self:OnEvent(...) function. =====--
+				--===== Whenever an event is detected by the addon. =====--
+				self:SetScript("OnEvent", function(_,...)
+
+					self:OnEvent(...)
+
+				end)
+
+
+				for _,e in next, ({    "ADDON_LOADED", "PLAYER_LOGIN", "LOOT_READY", "LOOT_OPENED", "LOOT_CLOSED", "UI_ERROR_MESSAGE", "CVAR_UPDATE", "LOOT_BIND_CONFIRM", "OPEN_MASTER_LOOT_LIST"}) do
+
+					self:RegisterEvent(e)
+
+				end
+
+
+				-- I did not change this for 2.4.3 and 3.3.5, it's working, so i let it be "Classic" :D
+				self.isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+
+				if self.isClassic then
+
+					-- print("classic")
+					self:RegisterEvent("LOOT_BIND_CONFIRM")
+					self:RegisterEvent("OPEN_MASTER_LOOT_LIST")
+
+				end
+
+				LootFrame:UnregisterEvent('LOOT_OPENED')
+
+			end
+
+			AutoLoot:OnLoad()
 
 		end
 
