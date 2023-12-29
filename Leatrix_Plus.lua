@@ -4324,7 +4324,7 @@
 				-- Add second Framestack button
 				local MiniExcludedButton2 = LeaPlusLC:CreateButton("FramestackButton2", ExcludedButtonsPanel, "Framestack", "TOPLEFT", 16, -72, 0, 25, true, "Click to toggle framestack, to view names of minimap buttons, and then be able to exclude them by entering their name.")
 				LeaPlusCB["FramestackButton2"]:ClearAllPoints()
-				LeaPlusCB["FramestackButton2"]:SetPoint("LEFT", ExcludedButtonsPanel.h, "RIGHT", 80, 0)
+				LeaPlusCB["FramestackButton2"]:SetPoint("LEFT", ExcludedButtonsPanel.h, "RIGHT", 90, 0)
 				-- LeaPlusCB["FramestackButton2"]:SetScript("OnClick", function()
 				-- 	ExcludedButtonsPanel:Hide(); SideMinimap:Show()
 				-- 	return
@@ -13123,8 +13123,8 @@
 				BordLeft:SetWidth(LeaPlusLC["ViewPortLeft"]); BordLeft:SetAlpha(1 - LeaPlusLC["ViewPortAlpha"])
 				BordRight:SetWidth(LeaPlusLC["ViewPortRight"]); BordRight:SetAlpha(1 - LeaPlusLC["ViewPortAlpha"])
 
-				-- Show formatted slider value
-				LeaPlusCB["ViewPortAlpha"].f:SetFormattedText("%.0f%%", LeaPlusLC["ViewPortAlpha"] * 100)
+				---- Show formatted slider value
+				--LeaPlusCB["ViewPortAlpha"].f:SetFormattedText("%.0f%%", LeaPlusLC["ViewPortAlpha"] * 100)
 
 				-- Disable lock button if borders match viewport size
 				if LeaPlusLC["ViewPortTop"] == LeaPlusLC["ViewPortResizeTop"] and LeaPlusLC["ViewPortBottom"] == LeaPlusLC["ViewPortResizeBottom"] then
@@ -13144,17 +13144,17 @@
 			LeaPlusLC:MakeSL(SideViewport, "ViewPortBottom", "Drag to set the size of the bottom border.", 0, 300, 5, 16, -152, "%.0f")
 			LeaPlusCB["ViewPortBottom"]:HookScript("OnValueChanged", RefreshViewport)
 
-			LeaPlusLC:MakeTx(SideViewport, "Left", 186, -72)
-			LeaPlusLC:MakeSL(SideViewport, "ViewPortLeft", "Drag to set the size of the left border.", 0, 300, 5, 186, -92, "%.0f")
-			LeaPlusCB["ViewPortLeft"]:HookScript("OnValueChanged", RefreshViewport)
-
-			LeaPlusLC:MakeTx(SideViewport, "Right", 186, -132)
-			LeaPlusLC:MakeSL(SideViewport, "ViewPortRight", "Drag to set the size of the right border.", 0, 300, 5, 186, -152, "%.0f")
-			LeaPlusCB["ViewPortRight"]:HookScript("OnValueChanged", RefreshViewport)
-
-			LeaPlusLC:MakeTx(SideViewport, "Transparency", 356, -132)
-			LeaPlusLC:MakeSL(SideViewport, "ViewPortAlpha", "Drag to set the transparency of the borders.", 0, 0.9, 0.1, 356, -152, "%.1f")
-			LeaPlusCB["ViewPortAlpha"]:HookScript("OnValueChanged", RefreshViewport)
+			--LeaPlusLC:MakeTx(SideViewport, "Left", 186, -72)
+			--LeaPlusLC:MakeSL(SideViewport, "ViewPortLeft", "Drag to set the size of the left border.", 0, 300, 5, 186, -92, "%.0f")
+			--LeaPlusCB["ViewPortLeft"]:HookScript("OnValueChanged", RefreshViewport)
+			--
+			--LeaPlusLC:MakeTx(SideViewport, "Right", 186, -132)
+			--LeaPlusLC:MakeSL(SideViewport, "ViewPortRight", "Drag to set the size of the right border.", 0, 300, 5, 186, -152, "%.0f")
+			--LeaPlusCB["ViewPortRight"]:HookScript("OnValueChanged", RefreshViewport)
+			--
+			--LeaPlusLC:MakeTx(SideViewport, "Transparency", 356, -132)
+			--LeaPlusLC:MakeSL(SideViewport, "ViewPortAlpha", "Drag to set the transparency of the borders.", 0, 0.9, 0.1, 356, -152, "%.1f")
+			--LeaPlusCB["ViewPortAlpha"]:HookScript("OnValueChanged", RefreshViewport)
 
 			-- Help button tooltip
 			SideViewport.h.tiptext = L["This panel will close automatically if you enter combat."]
@@ -17710,7 +17710,10 @@
 	pg = "Page8";
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Addon"						, 146, -72);
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowMinimapIcon"			, "Show minimap button"				, 146, -92,		false,	"If checked, a minimap button will be available.|n|nClick - Toggle options panel.|n|nSHIFT-click - Toggle music.|n|nALT-click - Toggle errors (if enabled).|n|nCTRL/SHIFT-click - Toggle Zygor (if installed).|n|nCTRL/ALT-click - Toggle windowed mode.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowMinimapIcon"			, "Show minimap button"				, 146, -92,		false,	"If checked, a minimap button will be available.|n|nClick - Toggle options panel.|n|nRight-Click - Reload UI.")
+	-- todo: add more minimap button click functions
+	--LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowMinimapIcon"			, "Show minimap button"				, 146, -92,		false,	"If checked, a minimap button will be available.|n|nClick - Toggle options panel.|n|nSHIFT-click - Toggle music.|n|nALT-click - Toggle errors (if enabled).|n|nCTRL/SHIFT-click - Toggle Zygor (if installed).|n|nCTRL/ALT-click - Toggle windowed mode.")
+
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Scale", 340, -72);
 	LeaPlusLC:MakeSL(LeaPlusLC[pg], "PlusPanelScale", "Drag to set the scale of the Leatrix Plus panel.", 1, 2, 0.1, 340, -92, "%.1f")
