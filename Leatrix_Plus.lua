@@ -193,18 +193,18 @@
 			eFrame.t:SetBackdropColor(1.0, 1.0, 1.0, 0.3)
 			-- Handler
 			-- it doesnt work in 3.3.5
-			eFrame.b:SetScript("OnKeyDown", function(void, key)
-				if key == "c" and IsControlKeyDown() then
-					LibCompat.After(0.1, function()
-						eFrame:Hide()
-						ActionStatus_DisplayMessage(L["Copied to clipboard."], true)
-						if LeaPlusLC.FactoryEditBoxFocusChat then
-							local eBox = ChatEdit_ChooseBoxForSend()
-							ChatEdit_ActivateChat(eBox)
-						end
-					end)
-				end
-			end)
+			--eFrame.b:SetScript("OnKeyDown", function(void, key)
+			--	if key == "c" and IsControlKeyDown() then
+			--		LibCompat.After(0.1, function()
+			--			eFrame:Hide()
+			--			ActionStatus_DisplayMessage(L["Copied to clipboard."], true)
+			--			if LeaPlusLC.FactoryEditBoxFocusChat then
+			--				local eBox = ChatEdit_ChooseBoxForSend()
+			--				ChatEdit_ActivateChat(eBox)
+			--			end
+			--		end)
+			--	end
+			--end)
 			-- Prevent changes
 			-- eFrame.b:SetScript("OnEscapePressed", function() eFrame:Hide() end)
 			-- eFrame.b:SetScript("OnEnterPressed", eFrame.b.HighlightText)
@@ -221,7 +221,13 @@
 		LeaPlusLC.FactoryEditBox:Show()
 		LeaPlusLC.FactoryEditBox.b:SetText(word)
 		LeaPlusLC.FactoryEditBox.b:HighlightText()
-		LeaPlusLC.FactoryEditBox.b:SetScript("OnChar", function() LeaPlusLC.FactoryEditBox.b:SetFocus(true) LeaPlusLC.FactoryEditBox.b:SetText(word) LeaPlusLC.FactoryEditBox.b:HighlightText() end)
+		LeaPlusLC.FactoryEditBox.b:SetScript("OnChar", function(_, char)
+			if char == 'w' or char == 'a' or char == 's' or char == 'd' then
+				LeaPlusLC.FactoryEditBox:Hide()
+				--LeaPlusLC.FactoryEditBox:SetFocus(false)
+			end
+			LeaPlusLC.FactoryEditBox.b:SetFocus(true) LeaPlusLC.FactoryEditBox.b:SetText(word) LeaPlusLC.FactoryEditBox.b:HighlightText()
+		end)
 		LeaPlusLC.FactoryEditBox.b:SetScript("OnKeyUp", function() LeaPlusLC.FactoryEditBox.b:SetFocus(true) LeaPlusLC.FactoryEditBox.b:SetText(word) LeaPlusLC.FactoryEditBox.b:HighlightText() end)
 	end
 
