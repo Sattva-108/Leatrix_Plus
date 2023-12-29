@@ -15958,6 +15958,17 @@
 				end
 				return
 			elseif str == "id" then
+				--------------------------------------------------------------------------------
+				-- Define urlencode function for Lua 5.3
+				--------------------------------------------------------------------------------
+
+
+				local function urlencode(str)
+					return string.gsub(str, "([^%w%.%- ])", function(c)
+						return string.format("%%%02X", string.byte(c))
+					end):gsub(" ", "+")
+				end
+
 				-- Show web link
 				if not LeaPlusLC.WowheadLock then
 					-- Set Wowhead link prefix
@@ -16072,8 +16083,8 @@
 						local unitFocus
 						if mouseFocus == WorldFrame then unitFocus = "mouseover" else unitFocus = select(2, GameTooltip:GetUnit()) end
 						if not unitFocus or not UnitIsPlayer(unitFocus) then
-							tipTitle = tipTitle:gsub("|c%x%x%x%x%x%x%x%x", "") -- Remove color tag
-							LeaPlusLC:ShowSystemEditBox("https://" .. LeaPlusLC.WowheadLock .. "/search?q=" .. tipTitle, false)
+							tipTitle = tipTitle:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+							LeaPlusLC:ShowSystemEditBox("https://" .. LeaPlusLC.WowheadLock .. "/search?q=" .. urlencode(tipTitle), false)
 							LeaPlusLC.FactoryEditBox.f:SetText("|cffff0000" .. L["Link will search Wowhead"])
 							return
 						end

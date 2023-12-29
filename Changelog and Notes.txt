@@ -12,6 +12,8 @@ Tooltip					- FIX center popup when closed the leatrix window, its still staying
 
 WebLink					- Fix ruRU encoding!!!
 
+WebLink					- WASD should close the weblink window.
+
 FlightTimers            - fix report window editbox
 
 Manage Quest Tracker (under minimap) - let user move it.
