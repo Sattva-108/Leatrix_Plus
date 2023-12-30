@@ -7018,16 +7018,29 @@
 			-- Set frame parameters
 			editFrame:ClearAllPoints()
 			editFrame:SetPoint("BOTTOM", 0, 130)
-			editFrame:SetSize(600, 200)
-			editFrame:SetFrameStrata("MEDIUM")
+			editFrame:SetSize(600, 300)
+			editFrame:SetFrameStrata("HIGH")
 			editFrame:SetToplevel(true)
 			editFrame:Hide()
-			-- editFrame.CharCount:Hide()
+			editFrame.CharCount:Hide()
+			editFrame:SetHitRectInsets(10, 10, 10, 10)
 
-			-- Add background color
-			editFrame.t = editFrame:CreateTexture(nil, "BACKGROUND")
-			editFrame.t:SetAllPoints()
-			editFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
+			-- Set solid white color for background instead of using 8x8 texture
+			editFrame:SetBackdrop({
+				bgFile = "Interface\\BUTTONS\\WHITE8X8", -- use 8x8 texture
+				edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+				tile = true,
+				tileEdge = true,
+				tileSize = 16,
+				edgeSize = 16,
+				insets = { left = 4, right = 4, top = 4, bottom = 4 }
+			})
+			editFrame:SetBackdropColor(0.00, 0.00, 0.0, 0.6) -- set transparency
+
+			--===== Create Scroll Frame =====--
+			local scroll = CreateFrame("ScrollFrame", "LeatrixChatScroll", editFrame, "UIPanelScrollFrameTemplate")
+			scroll:SetPoint("TOPLEFT", editFrame, 26, -36)
+			scroll:SetPoint("BOTTOMRIGHT", editFrame, "BOTTOMRIGHT", -34, 8)
 
 			-- Set textures
 			-- editFrame.LeftTex:SetTexture(editFrame.RightTex:GetTexture()); editFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
@@ -7039,31 +7052,40 @@
 			-- Create title bar
 			local titleFrame = CreateFrame("ScrollFrame", nil, editFrame, "Leatrix_InputScrollFrameTemplate")
 			titleFrame:ClearAllPoints()
-			titleFrame:SetPoint("TOP", 0, 32)
-			titleFrame:SetSize(600, 24)
+			titleFrame:SetPoint("TOP", 0, 40)
+			titleFrame:SetSize(600, 36)
 			titleFrame:SetFrameStrata("MEDIUM")
 			titleFrame:SetToplevel(true)
 			titleFrame:SetHitRectInsets(-6, -6, -6, -6)
-			-- titleFrame.CharCount:Hide()
-			titleFrame.t = titleFrame:CreateTexture(nil, "BACKGROUND")
-			titleFrame.t:SetAllPoints()
-			titleFrame.t:SetVertexColor(0.00, 0.00, 0.0, 0.6)
+
 			-- titleFrame.LeftTex:SetTexture(titleFrame.RightTex:GetTexture()); titleFrame.LeftTex:SetTexCoord(1, 0, 0, 1)
 			-- titleFrame.BottomTex:SetTexture(titleFrame.TopTex:GetTexture()); titleFrame.BottomTex:SetTexCoord(0, 1, 1, 0)
 			-- titleFrame.BottomRightTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomRightTex:SetTexCoord(0, 1, 1, 0)
 			-- titleFrame.BottomLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.BottomLeftTex:SetTexCoord(1, 0, 1, 0)
 			-- titleFrame.TopLeftTex:SetTexture(titleFrame.TopRightTex:GetTexture()); titleFrame.TopLeftTex:SetTexCoord(1, 0, 0, 1)
 
-			-- Add title
+			-- Set background texture for titleFrame
+			titleFrame:SetBackdrop({
+				bgFile = "Interface\\BUTTONS\\WHITE8X8", -- use 8x8 texture
+				edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+				tile = true,
+				tileEdge = true,
+				tileSize = 16,
+				edgeSize = 16,
+				insets = { left = 4, right = 4, top = 4, bottom = 4 }
+			})
+			titleFrame:SetBackdropColor(0.00, 0.00, 0.0, 0.6) -- set transparency
+
+			-- Add message count
 			titleFrame.m = titleFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-			titleFrame.m:SetPoint("LEFT", 4, 0)
-			titleFrame.m:SetText(L["Leatrix Plus"])
+			titleFrame.m:SetPoint("LEFT", 9, 0)
+			titleFrame.m:SetText("Flight Timer Bug Report")
 			titleFrame.m:SetFont(titleFrame.m:GetFont(), 16, nil)
 
 			-- Add right-click to close message
 			titleFrame.x = titleFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-			titleFrame.x:SetPoint("RIGHT", -4, 0)
-			titleFrame.x:SetText(L["Right-click to close"])
+			titleFrame.x:SetPoint("RIGHT", -9, 0)
+			titleFrame.x:SetText(L["Drag to size"] .. " | " .. L["Right-click to close"])
 			titleFrame.x:SetFont(titleFrame.x:GetFont(), 16, nil)
 			titleFrame.x:SetWidth(600 - titleFrame.m:GetStringWidth() - 30)
 			titleFrame.x:SetWordWrap(false)
@@ -7074,45 +7096,103 @@
 			-- titleBox:SetEnabled(false)
 			-- titleBox:SetMaxLetters(0)
 
+			-- Drag to resize
+			editFrame:SetResizable(true)
+			editFrame:SetMinResize(600, 50)
+			editFrame:SetMaxResize(600, 680)
+
+			titleFrame:HookScript("OnMouseDown", function(self, btn)
+				if btn == "LeftButton" then
+					editFrame:StartSizing("TOP")
+				end
+			end)
+			titleFrame:HookScript("OnMouseUp", function(self, btn)
+				if btn == "LeftButton" then
+					editFrame:StopMovingOrSizing()
+					LeaPlusLC["RecentChatSize"] = editFrame:GetHeight()
+				elseif btn == "MiddleButton" then
+					-- Reset frame size
+					LeaPlusLC["RecentChatSize"] = 170
+					editFrame:SetSize(600, LeaPlusLC["RecentChatSize"])
+					editFrame:ClearAllPoints()
+					editFrame:SetPoint("BOTTOM", 0, 130)
+				end
+			end)
+
 			-- Create editbox
 			local editBox = editFrame.EditBox
 			editBox:SetAltArrowKeyMode(false)
-			editBox:SetTextInsets(4, 4, 4, 4)
-			editBox:SetWidth(editFrame:GetWidth() - 30)
+			editBox:SetTextInsets(10, 10, 10, 10)
+			editBox:SetWidth(editFrame:GetWidth() - 50)
 			-- editBox:SetSecurityDisablePaste()
-			editBox:SetFont(_G["ChatFrame1"]:GetFont())
 			editBox:SetMaxLetters(0)
+
+			-- Manage focus
+			editBox:HookScript("OnEditFocusLost", function()
+				if MouseIsOver(titleFrame) and IsMouseButtonDown("LeftButton") then
+					editBox:SetFocus()
+				end
+			end)
 
 			local introMsg = L["Leatrix Plus needs to be updated with the flight details.  Press CTRL/C to copy the flight details below then paste them into an email to flight@leatrix.com.  When your report is received, Leatrix Plus will be updated and you will never see this window again for this flight."] .. "|n|n"
 			local startHighlight = string.len(introMsg)
 
-			local function DoHighlight()
-				editBox:HighlightText(startHighlight)
-			end
+			-- Define a boolean variable to keep track of the editFrame visibility
+			local isNormWindowShown = false;
+			local isTempWindowShown = false;
 
-			editBox:SetScript("OnEscapePressed", DoHighlight)
-			editBox:SetScript("OnEnterPressed", DoHighlight)
-			editBox:SetScript("OnMouseUp", DoHighlight)
-			editBox:HookScript("OnShow", function()
-				editBox:SetFocus(); DoHighlight()
-			end)
+
 
 			-- Close frame with right-click of editframe or editbox
-			local function CloseRecentChatWindow(self, btn)
-				if btn and btn == "RightButton" then
-					editBox:SetText("")
-					editBox:ClearFocus()
-					editFrame:Hide()
+			local function CloseRecentChatWindow()
+				editBox:SetText("")
+				editBox:ClearFocus()
+				editFrame:Hide()
+			end
+
+			editFrame:SetScript("OnMouseDown", function(self, btn)
+				if btn == "RightButton" then CloseRecentChatWindow() isNormWindowShown = false; isTempWindowShown = false; end
+			end)
+
+			editBox:SetScript("OnMouseDown", function(self, btn)
+				if btn == "RightButton" then CloseRecentChatWindow() isNormWindowShown = false; isTempWindowShown = false; end
+			end)
+
+			titleFrame:HookScript("OnMouseDown", function(self, btn)
+				if btn == "RightButton" then CloseRecentChatWindow() isNormWindowShown = false; isTempWindowShown = false; end
+			end)
+
+			-- Disable text changes while still allowing editing controls to work
+			editBox:EnableKeyboard(true)
+			editBox:SetScript("OnKeyDown", function() end)
+
+			--- Clear highlighted text if escape key is pressed
+			editBox:HookScript("OnEscapePressed", function()
+				CloseRecentChatWindow() isNormWindowShown = false; isTempWindowShown = false;
+			end)
+
+			-- Clear highlighted text and clear focus if enter key is pressed
+			editBox:SetScript("OnEnterPressed", function()
+				editBox:HighlightText(0, 0)
+				editBox:ClearFocus()
+			end)
+
+			--===== Hide ScrollBar if window too small. =====--
+			function HideScrollBar()
+				if editFrame:GetHeight() < 80 then
+					scroll:Hide()
+				else
+					scroll:Show()
 				end
 			end
 
-			editFrame:SetScript("OnMouseDown", CloseRecentChatWindow)
-			editBox:SetScript("OnMouseDown", CloseRecentChatWindow)
-			titleFrame:HookScript("OnMouseDown", CloseRecentChatWindow)
+			editFrame:HookScript("OnSizeChanged", HideScrollBar)
 
-			-- Disable text changes while still allowing editing controls to work
-			editBox:EnableKeyboard(false)
-			editBox:SetScript("OnKeyDown", function() end)
+			HideScrollBar()
+
+			editFrame:SetScript("OnUpdate", function(self, elapsed)
+				HideScrollBar()
+			end)
 
 			-- Load LibCandyBar
 			Leatrix_Plus:LeaPlusCandyBar()
@@ -7155,7 +7235,7 @@
 							    LibCompat.CancelTimer(ticker) -- stop the timer
 							    --PLAYER_ON_TAXI = false
 							    Leatrix_HandleFlightLanding()
-							    print("unregister event")
+							    --print("unregister event")
 							    --if PLAYER_ON_TAXI == false then print("unregister event") else print("event still registered") end
 							    if LeaPlusLC.FlightProgressBar then
 							    	LeaPlusLC.FlightProgressBar:Stop()
@@ -7230,7 +7310,7 @@
 						end
 
 						-- Print debug string (used for showing full routes for nodes)
-						print(debugString)
+						--print(debugString)
 
 
 						-- Handle flight time not correct or flight does not exist in database
@@ -7254,7 +7334,7 @@
 						end)
 
 						function Leatrix_HandleFlightLanding()
-							print("debug report script fire")
+							--print("debug report script fire")
 							local timeEnd = GetTime()
 							local timeTaken = timeEnd - timeStart
 							debugString = gsub(debugString, "TimeTakenPlaceHolder", string.format("%0.0f", timeTaken))
@@ -7534,18 +7614,18 @@
 
 						-- Print debug string (used for showing full routes for nodes)
 						-- Clear chat for easier working with data. FIXME REMOVEME before release IMPORTANT
-						for i = 1, NUM_CHAT_WINDOWS do _G["ChatFrame"..i]:Clear() end
-						print(debugChatString)
-
-						-- Open the chat edit box, pre-fill with debugString, and highlight the text for easy copying
-						local defaultChatFrame = DEFAULT_CHAT_FRAME
-						if defaultChatFrame then
-							ChatFrame_OpenChat(debugString, defaultChatFrame)
-							local editBox = ChatFrame1EditBox
-							if editBox then
-								LibCompat.After(0.1, function() editBox:HighlightText()  end)
-							end
-						end
+						--for i = 1, NUM_CHAT_WINDOWS do _G["ChatFrame"..i]:Clear() end
+						----print(debugChatString)
+						--
+						---- Open the chat edit box, pre-fill with debugString, and highlight the text for easy copying
+						--local defaultChatFrame = DEFAULT_CHAT_FRAME
+						--if defaultChatFrame then
+						--	ChatFrame_OpenChat(debugString, defaultChatFrame)
+						--	local editBox = ChatFrame1EditBox
+						--	if editBox then
+						--		LibCompat.After(0.1, function() editBox:HighlightText()  end)
+						--	end
+						--end
 
 					end
 				end
@@ -7615,7 +7695,7 @@
 			LeaPlusLC:MakeCB(FlightPanel, "FlightBarBackground", "Show background", 16, -92, false, "If checked, the flight progress bar background texture will be shown.")
 			LeaPlusLC:MakeCB(FlightPanel, "FlightBarDestination", "Show destination", 16, -112, false, "If checked, the flight progress bar destination will be shown.")
 			LeaPlusLC:MakeCB(FlightPanel, "FlightBarFillBar", "Fill instead of drain", 16, -132, false, "If checked, the flight progress bar background will fill instead of drain.")
-			LeaPlusLC:MakeCB(FlightPanel, "FlightBarSpeech", "Speak the remaining time", 16, -152, false, "If checked, the remaining flight time will be spoken using text to speech.|n|nChanges to this setting will take effect on the next flight you take.")
+			--LeaPlusLC:MakeCB(FlightPanel, "FlightBarSpeech", "Speak the remaining time", 16, -152, false, "If checked, the remaining flight time will be spoken using text to speech.|n|nChanges to this setting will take effect on the next flight you take.")
 
 			LeaPlusLC:MakeTx(FlightPanel, "Contribute", 16, -192)
 			LeaPlusLC:MakeCB(FlightPanel, "FlightBarContribute", "Help contribute flight times", 16, -212, false, "If checked, you will be prompted to submit missing flight times.")
@@ -7759,7 +7839,7 @@
 				LeaPlusLC["FlightBarDestination"] = "On"
 				LeaPlusLC["FlightBarFillBar"] = "Off"; SetProgressBarFillMode()
 				LeaPlusLC["FlightBarSpeech"] = "Off"
-				LeaPlusLC["FlightBarContribute"] = "On"
+				LeaPlusLC["FlightBarContribute"] = "Off"
 				-- Reset live progress bar
 				if LeaPlusLC.FlightProgressBar then
 					-- Reset position
@@ -7785,7 +7865,7 @@
 			LeaPlusCB["ShowFlightTimesBtn"]:SetScript("OnClick", function()
 				if IsShiftKeyDown() and IsControlKeyDown() then
 					-- Preset profile
-					LeaPlusLC["FlightBarContribute"] = "On"
+					LeaPlusLC["FlightBarContribute"] = "Off"
 				else
 					FlightPanel:Show()
 					LeaPlusLC:HideFrames()
@@ -15044,7 +15124,7 @@
 				LeaPlusLC:LoadVarChk("FlightBarFillBar", "Off")				-- Show flight times bar fill mode
 				LeaPlusLC:LoadVarChk("FlightBarSpeech", "Off")				-- Show flight times bar speech
 
-				LeaPlusLC:LoadVarChk("FlightBarContribute", "On")			-- Show flight times contribute
+				LeaPlusLC:LoadVarChk("FlightBarContribute", "Off")			-- Show flight times contribute
 				LeaPlusLC:LoadVarAnc("FlightBarA", "TOP")					-- Show flight times anchor
 				LeaPlusLC:LoadVarAnc("FlightBarR", "TOP")					-- Show flight times relative
 				LeaPlusLC:LoadVarNum("FlightBarX", 0, -5000, 5000)			-- Show flight position X
@@ -17669,7 +17749,7 @@
 				LeaPlusDB["FlightBarBackground"] = "Off"		-- Show flight times bar background
 				LeaPlusDB["FlightBarDestination"] = "On"		-- Show flight times bar destination
 				LeaPlusDB["FlightBarFillBar"] = "Off"			-- Show flight times bar fill mode
-				LeaPlusDB["FlightBarSpeech"] = "On"				-- Show flight times bar speech
+				LeaPlusDB["FlightBarSpeech"] = "Off"				-- Show flight times bar speech
 				LeaPlusDB["FlightBarContribute"] = "On"			-- Show flight times contribute
 
 				-- Interface: Manage frames
