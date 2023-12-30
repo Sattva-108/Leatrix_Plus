@@ -607,6 +607,7 @@
 		LeaPlusLC:LockOption("ShowFlightTimes", "ShowFlightTimesBtn", true)			-- Show flight times
 		LeaPlusLC:LockOption("FrmEnabled", "MoveFramesButton", true)				-- Manage frames
 		LeaPlusLC:LockOption("ManageBuffs", "ManageBuffsButton", true)				-- Manage buffs
+		LeaPlusLC:LockOption("ManageDeBuffs", "ManageDeBuffsButton", true)				-- Manage buffs
 		LeaPlusLC:LockOption("ManageWidget", "ManageWidgetButton", true)			-- Manage widget
 		LeaPlusLC:LockOption("ManageFocus", "ManageFocusButton", true)				-- Manage focus
 		LeaPlusLC:LockOption("ManageTimer", "ManageTimerButton", true)				-- Manage timer
@@ -685,6 +686,7 @@
 		-- Frames
 		or	(LeaPlusLC["FrmEnabled"]			~= LeaPlusDB["FrmEnabled"])				-- Manage frames
 		or	(LeaPlusLC["ManageBuffs"]			~= LeaPlusDB["ManageBuffs"])			-- Manage buffs
+		or	(LeaPlusLC["ManageDeBuffs"]			~= LeaPlusDB["ManageDeBuffs"])			-- Manage buffs
 		or	(LeaPlusLC["ManageWidget"]			~= LeaPlusDB["ManageWidget"])			-- Manage widget
 		or	(LeaPlusLC["ManageFocus"]			~= LeaPlusDB["ManageFocus"])			-- Manage focus
 		or	(LeaPlusLC["ManageTimer"]			~= LeaPlusDB["ManageTimer"])			-- Manage timer
@@ -10864,6 +10866,200 @@
 
 		end
 
+
+		----------------------------------------------------------------------
+		-- L41: Manage debuffs
+		----------------------------------------------------------------------
+
+		if LeaPlusLC["ManageDeBuffs"] == "On" and not LeaLockList["ManageDeBuffs"] then
+
+			--if DebuffButton1 == nil then return end
+			--
+			---- Allow buff frame to be moved
+			--DebuffButton1:SetMovable(true)
+			--DebuffButton1:SetUserPlaced(true)
+			--DebuffButton1:SetDontSavePosition(true)
+			--DebuffButton1:SetClampedToScreen(true)
+			--
+			---- Set buff frame position at startup
+			--DebuffButton1:ClearAllPoints()
+			--DebuffButton1:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
+			--DebuffButton1:SetScale(LeaPlusLC["DebuffButton1Scale"])
+
+			-- Create drag frame
+			local dragframe = CreateFrame("FRAME", nil, nil)
+
+			if DebuffButton_UpdateAnchors then
+				hooksecurefunc("DebuffButton_UpdateAnchors", function()
+					local d = _G.DebuffButton1
+					if d then
+						d:SetMovable(true)
+						d:SetUserPlaced(true)
+						d:SetDontSavePosition(true)
+						d:SetClampedToScreen(true)
+
+						-- Set buff frame position at startup
+						d:ClearAllPoints()
+						d:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
+						d:SetScale(LeaPlusLC["DebuffButton1Scale"])
+						local isDebuffButton1Moving = false
+						local deBuffFrameSetPoint = DebuffButton1.SetPoint
+
+						DebuffButton1.SetPoint = function(self, ...)
+							if not InCombatLockdown() and not isDebuffButton1Moving then
+								deBuffFrameSetPoint(self, LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
+							end
+						end
+						dragframe:SetPoint("TOPRIGHT", d, "TOPRIGHT", 5, 5)
+					end
+				end)
+			end
+
+
+
+			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
+			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
+			dragframe:SetToplevel(true)
+			dragframe:Hide()
+			dragframe:EnableMouse(true)
+			dragframe:SetScale(LeaPlusLC["DebuffButton1Scale"])
+
+			dragframe.t = dragframe:CreateTexture()
+			dragframe.t:SetAllPoints()
+			dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetAlpha(0.5)
+
+			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
+			dragframe.f:SetPoint('CENTER', 0, 0)
+			dragframe.f:SetText(L["DeBuffs"])
+
+			--local isDebuffButton1Moving = false
+			--local deBuffFrameSetPoint = DebuffButton1.SetPoint
+			--
+			--DebuffButton1.SetPoint = function(self, ...)
+			--	if not InCombatLockdown() and not isDebuffButton1Moving then
+			--		deBuffFrameSetPoint(self, LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
+			--	end
+			--end
+
+			dragframe:SetScript("OnMouseDown", function(self, btn)
+				-- Start dragging if left clicked
+				if btn == "LeftButton" then
+					isDebuffButton1Moving = true
+					DebuffButton1:StartMoving()
+				end
+			end)
+
+			dragframe:SetScript("OnMouseUp", function()
+				-- Save frame positions
+				DebuffButton1:StopMovingOrSizing()
+				isDebuffButton1Moving = false
+				LeaPlusLC["DebuffButton1A"], void, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"] = DebuffButton1:GetPoint()
+				DebuffButton1:SetMovable(true)
+				DebuffButton1:ClearAllPoints()
+				DebuffButton1:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
+			end)
+
+			-- Create configuration panel
+			local DeBuffPanel = LeaPlusLC:CreatePanel("Manage buffs", "DeBuffPanel")
+
+			LeaPlusLC:MakeTx(DeBuffPanel, "Scale", 16, -72)
+			LeaPlusLC:MakeSL(DeBuffPanel, "DebuffButton1Scale", "Drag to set the buffs frame scale.", 0.5, 2, 0.05, 16, -92, "%.2f")
+
+			-- Set scale when slider is changed
+			LeaPlusCB["DebuffButton1Scale"]:HookScript("OnValueChanged", function()
+				DebuffButton1:SetScale(LeaPlusLC["DebuffButton1Scale"])
+				dragframe:SetScale(LeaPlusLC["DebuffButton1Scale"])
+				-- Show formatted slider value
+				LeaPlusCB["DebuffButton1Scale"].f:SetFormattedText("%.0f%%", LeaPlusLC["DebuffButton1Scale"] * 100)
+			end)
+
+			-- Hide frame alignment grid with panel
+			DeBuffPanel:HookScript("OnHide", function()
+				LeaPlusLC.grid:Hide()
+			end)
+
+			-- Toggle grid button
+			local DeBuffsToggleGridButton = LeaPlusLC:CreateButton("DeBuffsToggleGridButton", DeBuffPanel, "Toggle Grid", "TOPLEFT", 16, -72, 0, 25, true, "Click to toggle the frame alignment grid.")
+			LeaPlusCB["DeBuffsToggleGridButton"]:ClearAllPoints()
+			LeaPlusCB["DeBuffsToggleGridButton"]:SetPoint("LEFT", DeBuffPanel.h, "RIGHT", 10, 0)
+			LeaPlusCB["DeBuffsToggleGridButton"]:SetScript("OnClick", function()
+				if LeaPlusLC.grid:IsShown() then LeaPlusLC.grid:Hide() else LeaPlusLC.grid:Show() end
+			end)
+			DeBuffPanel:HookScript("OnHide", function()
+				if LeaPlusLC.grid then LeaPlusLC.grid:Hide() end
+			end)
+
+			-- Help button tooltip
+			DeBuffPanel.h.tiptext = L["Drag the frame overlay with the left button to position it freely or with the right button to position it using snap-to-grid."]
+
+			-- Back button handler
+			DeBuffPanel.b:SetScript("OnClick", function()
+				DeBuffPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page6"]:Show()
+				return
+			end)
+
+			-- Reset button handler
+			DeBuffPanel.r:SetScript("OnClick", function()
+
+				-- Reset position and scale
+				LeaPlusLC["DebuffButton1A"] = "TOPRIGHT"
+				LeaPlusLC["DebuffButton1R"] = "TOPRIGHT"
+				LeaPlusLC["DebuffButton1X"] = -205
+				LeaPlusLC["DebuffButton1Y"] = -13
+				LeaPlusLC["DebuffButton1Scale"] = 1
+				DebuffButton1:ClearAllPoints()
+				DebuffButton1:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
+
+				-- Refresh configuration panel
+				DeBuffPanel:Hide(); DeBuffPanel:Show()
+				dragframe:Show()
+
+				-- Show frame alignment grid
+				LeaPlusLC.grid:Show()
+
+			end)
+
+			-- Show configuration panel when options panel button is clicked
+			LeaPlusCB["ManageDeBuffsButton"]:SetScript("OnClick", function()
+				if IsShiftKeyDown() and IsControlKeyDown() then
+					-- Preset profile
+					LeaPlusLC["DebuffButton1A"] = "TOPRIGHT"
+					LeaPlusLC["DebuffButton1R"] = "TOPRIGHT"
+					LeaPlusLC["DebuffButton1X"] = -271
+					LeaPlusLC["DebuffButton1Y"] = 0
+					LeaPlusLC["DebuffButton1Scale"] = 0.80
+					DebuffButton1:ClearAllPoints()
+					DebuffButton1:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
+					DebuffButton1:SetScale(LeaPlusLC["DebuffButton1Scale"])
+				else
+					-- Find out if the UI has a non-standard scale
+					if GetCVar("useuiscale") == "1" then
+						LeaPlusLC["gscale"] = GetCVar("uiscale")
+					else
+						LeaPlusLC["gscale"] = 1
+					end
+
+					-- Set drag frame size according to UI scale
+					dragframe:SetWidth(280 * LeaPlusLC["gscale"])
+					dragframe:SetHeight(225 * LeaPlusLC["gscale"])
+
+					-- Show configuration panel
+					DeBuffPanel:Show()
+					LeaPlusLC:HideFrames()
+					dragframe:Show()
+
+					-- Show frame alignment grid
+					LeaPlusLC.grid:Show()
+				end
+			end)
+
+			-- Hide drag frame when configuration panel is closed
+			DeBuffPanel:HookScript("OnHide", function() dragframe:Hide() end)
+
+		end
+
+
 		----------------------------------------------------------------------
 		-- L42: Manage frames
 		----------------------------------------------------------------------
@@ -14851,6 +15047,13 @@
 				LeaPlusLC:LoadVarNum("BuffFrameY", -13, -5000, 5000)		-- Manage buffs position Y
 				LeaPlusLC:LoadVarNum("BuffFrameScale", 1, 0.5, 2)			-- Manage buffs scale
 
+				LeaPlusLC:LoadVarChk("ManageDeBuffs", "Off")					-- Manage buffs
+				LeaPlusLC:LoadVarAnc("DebuffButton1A", "TOPRIGHT")				-- Manage buffs anchor
+				LeaPlusLC:LoadVarAnc("DebuffButton1R", "TOPRIGHT")				-- Manage buffs relative
+				LeaPlusLC:LoadVarNum("DebuffButton1X", -205, -5000, 5000)		-- Manage buffs position X
+				LeaPlusLC:LoadVarNum("DebuffButton1Y", -13, -5000, 5000)		-- Manage buffs position Y
+				LeaPlusLC:LoadVarNum("DebuffButton1Scale", 1, 0.5, 2)			-- Manage buffs scale
+
 				LeaPlusLC:LoadVarChk("ManageWidget", "Off")					-- Manage widget
 				LeaPlusLC:LoadVarAnc("WidgetA", "TOP")						-- Manage widget anchor
 				LeaPlusLC:LoadVarAnc("WidgetR", "TOP")						-- Manage widget relative
@@ -15040,6 +15243,7 @@
 							-- Buffs: Disable Blizzard
 							if E.private.auras.disableBlizzard then
 								Lock("ManageBuffs", reason, "Buffs and Debuffs (Disable Blizzard)") -- Manage buffs
+								Lock("ManageDeBuffs", reason, "Buffs and Debuffs (Disable Blizzard)") -- Manage buffs
 							end
 
 							-- UnitFrames: Disabled Blizzard: Focus
@@ -15274,6 +15478,13 @@
 			LeaPlusDB["BuffFrameX"]				= LeaPlusLC["BuffFrameX"]
 			LeaPlusDB["BuffFrameY"]				= LeaPlusLC["BuffFrameY"]
 			LeaPlusDB["BuffFrameScale"]			= LeaPlusLC["BuffFrameScale"]
+
+			LeaPlusDB["ManageDeBuffs"]			= LeaPlusLC["ManageDeBuffs"]
+			LeaPlusDB["DebuffButton1A"]				= LeaPlusLC["DebuffButton1A"]
+			LeaPlusDB["DebuffButton1R"]				= LeaPlusLC["DebuffButton1R"]
+			LeaPlusDB["DebuffButton1X"]				= LeaPlusLC["DebuffButton1X"]
+			LeaPlusDB["DebuffButton1Y"]				= LeaPlusLC["DebuffButton1Y"]
+			LeaPlusDB["DebuffButton1Scale"]			= LeaPlusLC["DebuffButton1Scale"]
 
 			LeaPlusDB["ManageWidget"]			= LeaPlusLC["ManageWidget"]
 			LeaPlusDB["WidgetA"]				= LeaPlusLC["WidgetA"]
@@ -17471,6 +17682,13 @@
 				LeaPlusDB["BuffFrameY"] = 0						-- Manage buffs position Y
 				LeaPlusDB["BuffFrameScale"] = 0.8				-- Manage buffs scale
 
+				LeaPlusDB["ManageDeBuffs"] = "On"					-- Manage buffs
+				LeaPlusDB["DebuffButton1A"] = "TOPRIGHT"			-- Manage buffs anchor
+				LeaPlusDB["DebuffButton1R"] = "TOPRIGHT"			-- Manage buffs relative
+				LeaPlusDB["DebuffButton1X"] = -271					-- Manage buffs position X
+				LeaPlusDB["DebuffButton1Y"] = 0						-- Manage buffs position Y
+				LeaPlusDB["DebuffButton1Scale"] = 0.8				-- Manage buffs scale
+
 				LeaPlusDB["ManageWidget"] = "On"				-- Manage widget
 				LeaPlusDB["WidgetA"] = "TOP"					-- Manage widget anchor
 				LeaPlusDB["WidgetR"] = "TOP"					-- Manage widget relative
@@ -17897,6 +18115,8 @@
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageVehicle"				,	"Manage vehicle"				, 	146, -212, 	true,	"If checked, you will be able to change the position and scale of the vehicle seat indicator frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ClassColFrames"			, 	"Class colored frames"			,	146, -232, 	true,	"If checked, class coloring will be used in the player frame, target frame and focus frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageTracker"			,	"Manage Quest Tracker"				, 	146, -252, 	true,	"If checked, you will be able to change the position and scale of the Quest Tracker frame (the one under minimap).")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageDeBuffs"				,	"Manage Debuffs"					, 	146, -272, 	true,	"If checked, you will be able to change the position and scale of the debuffs frame.")
+
 
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Visibility"				, 	340, -72);
@@ -17913,6 +18133,8 @@
 	LeaPlusLC:CfgBtn("ManageVehicleButton", LeaPlusCB["ManageVehicle"])
 	LeaPlusLC:CfgBtn("ClassColFramesBtn", LeaPlusCB["ClassColFrames"])
 	LeaPlusLC:CfgBtn("ManageTrackerButton", LeaPlusCB["ManageTracker"])
+	LeaPlusLC:CfgBtn("ManageDeBuffsButton", LeaPlusCB["ManageDeBuffs"])
+
 
 ----------------------------------------------------------------------
 -- 	LC7: System
