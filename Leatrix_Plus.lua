@@ -12755,11 +12755,12 @@
 			TipDrag.t:SetAlpha(0.5);
 
 
-			-- Create moving message
-			local LeaPlusMoveTipMsg = UIParent:CreateFontString(nil, "OVERLAY", 'GameFontNormalLarge')
-			LeaPlusMoveTipMsg:SetPoint("CENTER", 0, 0)
-			LeaPlusMoveTipMsg:SetText("Drag the tooltip frame then right-click it to finish.")
-			LeaPlusMoveTipMsg:Hide();
+			---- Create moving message
+			--local LeaPlusMoveTipMsg = UIParent:CreateFontString(nil, "OVERLAY", 'GameFontNormalLarge')
+			--LeaPlusMoveTipMsg:SetParent(TipDrag)
+			--LeaPlusMoveTipMsg:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+			--LeaPlusMoveTipMsg:SetText("Drag the blue tooltip frame or right-click it to hide")
+			--LeaPlusMoveTipMsg:Hide();
 
 			---------------------------------------------------------------------------------------------------------
 			-- Tooltip movement settings
@@ -12805,11 +12806,12 @@
 			-- Function to enable or disable anchor controls
 			local function SetAnchorControls()
 				-- Hide overlay if anchor is set to none
-				if LeaPlusLC["TooltipAnchorMenu"] == 1 then
-					LeaPlusMoveTipMsg:Hide()
-					TipDrag:Hide()
-				else
+				if LeaPlusLC["TooltipAnchorMenu"] == 2 then
+					--LeaPlusMoveTipMsg:Show()
 					TipDrag:Show()
+				else
+					--LeaPlusMoveTipMsg:Hide()
+					TipDrag:Hide()
 				end
 				-- Set the X and Y sliders
 				if LeaPlusLC["TooltipAnchorMenu"] == 1 or LeaPlusLC["TooltipAnchorMenu"] == 2 or LeaPlusLC["TooltipAnchorMenu"] == 3 then
@@ -12840,7 +12842,7 @@
 
 			-- Back button handler
 			SideTip.b:SetScript("OnClick", function()
-				LeaPlusMoveTipMsg:Hide()
+				--LeaPlusMoveTipMsg:Hide()
 				SideTip:Hide();
 				if TipDrag:IsShown() then
 					TipDrag:Hide();
@@ -12868,7 +12870,7 @@
 				SetAnchorControls()
 				LeaPlusLC:SetTipScale()
 				SideTip:Hide(); SideTip:Show();
-				LeaPlusMoveTipMsg:Hide()
+				--LeaPlusMoveTipMsg:Hide()
 			end)
 
 			-- Show drag frame with configuration panel if anchor is not set to none
@@ -12887,11 +12889,11 @@
 				if btn == "LeftButton" then
 					void, void, void, LTax, LTay = TipDrag:GetPoint()
 					TipDrag:StartMoving()
-					LeaPlusMoveTipMsg:Show()
+					--LeaPlusMoveTipMsg:Show()
 					void, void, void, LTbx, LTby = TipDrag:GetPoint()
 
 				elseif btn == "RightButton" then
-					LeaPlusMoveTipMsg:Hide();
+					--LeaPlusMoveTipMsg:Hide();
 					if TipDrag:IsShown() then
 						TipDrag:Hide();
 					end
