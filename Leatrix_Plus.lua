@@ -611,6 +611,8 @@
 		LeaPlusLC:LockOption("ManageFocus", "ManageFocusButton", true)				-- Manage focus
 		LeaPlusLC:LockOption("ManageTimer", "ManageTimerButton", true)				-- Manage timer
 		LeaPlusLC:LockOption("ManageDurability", "ManageDurabilityButton", true)	-- Manage durability
+		LeaPlusLC:LockOption("ManageTracker", "ManageTrackerButton", true)	-- Manage Tracker
+
 		LeaPlusLC:LockOption("ManageVehicle", "ManageVehicleButton", true)			-- Manage vehicle
 		LeaPlusLC:LockOption("ClassColFrames", "ClassColFramesBtn", true)			-- Class colored frames
 		LeaPlusLC:LockOption("SetWeatherDensity", "SetWeatherDensityBtn", false)	-- Set weather density
@@ -687,6 +689,7 @@
 		or	(LeaPlusLC["ManageFocus"]			~= LeaPlusDB["ManageFocus"])			-- Manage focus
 		or	(LeaPlusLC["ManageTimer"]			~= LeaPlusDB["ManageTimer"])			-- Manage timer
 		or	(LeaPlusLC["ManageDurability"]		~= LeaPlusDB["ManageDurability"])		-- Manage durability
+		or	(LeaPlusLC["ManageTracker"]			~= LeaPlusDB["ManageTracker"])			-- Manage Tracker
 		or	(LeaPlusLC["ManageVehicle"]			~= LeaPlusDB["ManageVehicle"])			-- Manage vehicle
 		or	(LeaPlusLC["ClassColFrames"]		~= LeaPlusDB["ClassColFrames"])			-- Class colored frames
 		or	(LeaPlusLC["NoAlerts"]				~= LeaPlusDB["NoAlerts"])				-- Hide alerts
@@ -6215,6 +6218,206 @@
 			DurabilityPanel:HookScript("OnHide", function() dragframe:Hide() end)
 
 		end
+
+
+		----------------------------------------------------------------------
+		-- Manage Tracker
+		----------------------------------------------------------------------
+
+		if LeaPlusLC["ManageTracker"] == "On" and not LeaLockList["ManageTracker"] then
+
+			-- Create and manage container for WatchFrame
+			local trackerHolder = CreateFrame("Frame", nil, UIParent)
+			trackerHolder:SetPoint("TOP", UIParent, "TOP", 0, -15)
+			trackerHolder:SetSize(92, 75)
+
+			local trackerContainer = _G.WatchFrame
+			trackerContainer:ClearAllPoints()
+			trackerContainer:SetPoint('CENTER', trackerHolder)
+			--trackerContainer:SetIgnoreParentScale(true) -- Needed to keep drag frame position when scaled
+
+			local isWatchFrameMoving = false
+			local WatchFrameSetPoint = trackerContainer.SetPoint
+
+			trackerContainer.SetPoint = function(self, _, relativeTo)
+				if not InCombatLockdown() and not isWatchFrameMoving and relativeTo ~= trackerHolder then
+					WatchFrameSetPoint(self, 'TOPRIGHT', trackerHolder) -- Has to be TOPRIGHT (drag frame while moving between subzones)
+					self:SetParent(trackerHolder)
+				end
+			end
+
+			-- Allow tracker frame to be moved
+			trackerHolder:SetMovable(true)
+			trackerHolder:SetUserPlaced(true)
+			trackerHolder:SetDontSavePosition(true)
+			trackerHolder:SetClampedToScreen(false)
+
+			-- Set tracker frame position at startup
+			trackerHolder:ClearAllPoints()
+			trackerHolder:SetPoint(LeaPlusLC["TrackerA"], UIParent, LeaPlusLC["TrackerR"], LeaPlusLC["TrackerX"], LeaPlusLC["TrackerY"])
+			trackerHolder:SetScale(LeaPlusLC["TrackerScale"])
+			WatchFrame:SetScale(LeaPlusLC["TrackerScale"])
+
+			-- Create drag frame
+			local dragframe = CreateFrame("FRAME", nil, nil)
+			dragframe:SetPoint("CENTER", trackerHolder, "CENTER", 0, 1)
+			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
+			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
+			dragframe:SetToplevel(true)
+			dragframe:EnableMouse(true)
+			dragframe:Hide()
+			dragframe:SetScale(LeaPlusLC["TrackerScale"])
+
+			dragframe.t = dragframe:CreateTexture()
+			dragframe.t:SetAllPoints()
+			dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
+			dragframe.t:SetAlpha(0.5)
+
+			dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
+			dragframe.f:SetPoint('CENTER', 0, 0)
+			dragframe.f:SetText(L["Tracker"])
+
+			-- Click handler
+			dragframe:SetScript("OnMouseDown", function(self, btn)
+				-- Start dragging if left clicked
+				if btn == "LeftButton" then
+					trackerHolder:StartMoving()
+				end
+			end)
+
+			dragframe:SetScript("OnMouseUp", function()
+				-- Save frame position
+				trackerHolder:StopMovingOrSizing()
+				LeaPlusLC["TrackerA"], void, LeaPlusLC["TrackerR"], LeaPlusLC["TrackerX"], LeaPlusLC["TrackerY"] = trackerHolder:GetPoint()
+				trackerHolder:SetMovable(true)
+				trackerHolder:ClearAllPoints()
+				trackerHolder:SetPoint(LeaPlusLC["TrackerA"], UIParent, LeaPlusLC["TrackerR"], LeaPlusLC["TrackerX"], LeaPlusLC["TrackerY"])
+			end)
+
+			-- Snap-to-grid
+			do
+				local frame, grid = dragframe, 10
+				local w, h = 65, 75
+				local xpos, ypos, scale, uiscale
+				frame:RegisterForDrag("RightButton")
+				frame:HookScript("OnDragStart", function()
+					frame:SetScript("OnUpdate", function()
+						scale, uiscale = frame:GetScale(), UIParent:GetScale()
+						xpos, ypos = GetCursorPosition()
+						xpos = floor((xpos / scale / uiscale) / grid) * grid - w / 2
+						ypos = ceil((ypos / scale / uiscale) / grid) * grid + h / 2
+						trackerHolder:ClearAllPoints()
+						trackerHolder:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", xpos, ypos)
+					end)
+				end)
+				frame:HookScript("OnDragStop", function()
+					frame:SetScript("OnUpdate", nil)
+					frame:GetScript("OnMouseUp")()
+				end)
+			end
+
+			-- Create configuration panel
+			local TrackerPanel = LeaPlusLC:CreatePanel("Manage tracker", "TrackerPanel")
+
+			LeaPlusLC:MakeTx(TrackerPanel, "Scale", 16, -72)
+			LeaPlusLC:MakeSL(TrackerPanel, "TrackerScale", "Drag to set the tracker frame scale.", 0.5, 2, 0.05, 16, -92, "%.2f")
+
+			-- Set scale when slider is changed
+			LeaPlusCB["TrackerScale"]:HookScript("OnValueChanged", function()
+				trackerHolder:SetScale(LeaPlusLC["TrackerScale"])
+				WatchFrame:SetScale(LeaPlusLC["TrackerScale"])
+				dragframe:SetScale(LeaPlusLC["TrackerScale"])
+				-- Show formatted slider value
+				LeaPlusCB["TrackerScale"].f:SetFormattedText("%.0f%%", LeaPlusLC["TrackerScale"] * 100)
+			end)
+
+			-- Hide frame alignment grid with panel
+			TrackerPanel:HookScript("OnHide", function()
+				LeaPlusLC.grid:Hide()
+			end)
+
+			-- Toggle grid button
+			local TrackerToggleGridButton = LeaPlusLC:CreateButton("TrackerToggleGridButton", TrackerPanel, "Toggle Grid", "TOPLEFT", 16, -72, 0, 25, true, "Click to toggle the frame alignment grid.")
+			LeaPlusCB["TrackerToggleGridButton"]:ClearAllPoints()
+			LeaPlusCB["TrackerToggleGridButton"]:SetPoint("LEFT", TrackerPanel.h, "RIGHT", 10, 0)
+			LeaPlusCB["TrackerToggleGridButton"]:SetScript("OnClick", function()
+				if LeaPlusLC.grid:IsShown() then LeaPlusLC.grid:Hide() else LeaPlusLC.grid:Show() end
+			end)
+			TrackerPanel:HookScript("OnHide", function()
+				if LeaPlusLC.grid then LeaPlusLC.grid:Hide() end
+			end)
+
+			-- Help button tooltip
+			TrackerPanel.h.tiptext = L["Drag the frame overlay with the left button to position it freely or with the right button to position it using snap-to-grid."]
+
+			-- Back button handler
+			TrackerPanel.b:SetScript("OnClick", function()
+				TrackerPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page6"]:Show()
+				return
+			end)
+
+			-- Reset button handler
+			TrackerPanel.r:SetScript("OnClick", function()
+
+				-- Reset position and scale
+				LeaPlusLC["TrackerA"] = "TOPRIGHT"
+				LeaPlusLC["TrackerR"] = "TOPRIGHT"
+				LeaPlusLC["TrackerX"] = 0
+				LeaPlusLC["TrackerY"] = -170
+				LeaPlusLC["TrackerScale"] = 1
+				trackerHolder:ClearAllPoints()
+				trackerHolder:SetPoint(LeaPlusLC["TrackerA"], UIParent, LeaPlusLC["TrackerR"], LeaPlusLC["TrackerX"], LeaPlusLC["TrackerY"])
+
+				-- Refresh configuration panel
+				TrackerPanel:Hide(); TrackerPanel:Show()
+				dragframe:Show()
+
+				-- Show frame alignment grid
+				LeaPlusLC.grid:Show()
+
+			end)
+
+			-- Show configuration panel when options panel button is clicked
+			LeaPlusCB["ManageTrackerButton"]:SetScript("OnClick", function()
+				if IsShiftKeyDown() and IsControlKeyDown() then
+					-- Preset profile
+					LeaPlusLC["TrackerA"] = "TOPRIGHT"
+					LeaPlusLC["TrackerR"] = "TOPRIGHT"
+					LeaPlusLC["TrackerX"] = 0
+					LeaPlusLC["TrackerY"] = -170
+					LeaPlusLC["TrackerScale"] = 1
+					trackerHolder:ClearAllPoints()
+					trackerHolder:SetPoint(LeaPlusLC["TrackerA"], UIParent, LeaPlusLC["TrackerR"], LeaPlusLC["TrackerX"], LeaPlusLC["TrackerY"])
+					trackerHolder:SetScale(LeaPlusLC["TrackerScale"])
+					WatchFrame:SetScale(LeaPlusLC["TrackerScale"])
+				else
+					-- Find out if the UI has a non-standard scale
+					if GetCVar("useuiscale") == "1" then
+						LeaPlusLC["gscale"] = GetCVar("uiscale")
+					else
+						LeaPlusLC["gscale"] = 1
+					end
+
+					-- Set drag frame size according to UI scale
+					dragframe:SetWidth(92 * LeaPlusLC["gscale"])
+					dragframe:SetHeight(75 * LeaPlusLC["gscale"])
+
+					-- Show configuration panel
+					TrackerPanel:Show()
+					LeaPlusLC:HideFrames()
+					dragframe:Show()
+
+					-- Show frame alignment grid
+					LeaPlusLC.grid:Show()
+				end
+			end)
+
+			-- Hide drag frame when configuration panel is closed
+			TrackerPanel:HookScript("OnHide", function() dragframe:Hide() end)
+
+		end
+
+
 
 		----------------------------------------------------------------------
 		-- Manage timer
@@ -14676,6 +14879,13 @@
 				LeaPlusLC:LoadVarNum("DurabilityY", -170, -5000, 5000)		-- Manage durability position Y
 				LeaPlusLC:LoadVarNum("DurabilityScale", 1, 0.5, 2)			-- Manage durability scale
 
+				LeaPlusLC:LoadVarChk("ManageTracker", "Off")				-- Manage Tracker
+				LeaPlusLC:LoadVarAnc("TrackerA", "TOPRIGHT")				-- Manage Tracker anchor
+				LeaPlusLC:LoadVarAnc("TrackerR", "TOPRIGHT")				-- Manage Tracker relative
+				LeaPlusLC:LoadVarNum("TrackerX", 0, -5000, 5000)			-- Manage Tracker position X
+				LeaPlusLC:LoadVarNum("TrackerY", -170, -5000, 5000)		-- Manage Tracker position Y
+				LeaPlusLC:LoadVarNum("TrackerScale", 1, 0.5, 2)			-- Manage Tracker scale
+
 				LeaPlusLC:LoadVarChk("ManageVehicle", "Off")				-- Manage vehicle
 				LeaPlusLC:LoadVarAnc("VehicleA", "TOPRIGHT")				-- Manage vehicle anchor
 				LeaPlusLC:LoadVarAnc("VehicleR", "TOPRIGHT")				-- Manage vehicle relative
@@ -14864,6 +15074,7 @@
 								Lock("ManageTimer", reason) -- Manage timer
 								Lock("ManageDurability", reason) -- Manage durability
 								Lock("ManageVehicle", reason) -- Manage vehicle
+								Lock("ManageTracker", reason) -- Manage tracker
 							end
 
 						end
@@ -15098,6 +15309,13 @@
 			LeaPlusDB["VehicleX"]				= LeaPlusLC["VehicleX"]
 			LeaPlusDB["VehicleY"]				= LeaPlusLC["VehicleY"]
 			LeaPlusDB["VehicleScale"]			= LeaPlusLC["VehicleScale"]
+
+			LeaPlusDB["ManageTracker"]			= LeaPlusLC["ManageTracker"]
+			LeaPlusDB["TrackerA"]				= LeaPlusLC["TrackerA"]
+			LeaPlusDB["TrackerR"]				= LeaPlusLC["TrackerR"]
+			LeaPlusDB["TrackerX"]				= LeaPlusLC["TrackerX"]
+			LeaPlusDB["TrackerY"]				= LeaPlusLC["TrackerY"]
+			LeaPlusDB["TrackerScale"]			= LeaPlusLC["TrackerScale"]
 
 			LeaPlusDB["ClassColFrames"]			= LeaPlusLC["ClassColFrames"]
 			LeaPlusDB["ClassColPlayer"]			= LeaPlusLC["ClassColPlayer"]
@@ -17281,6 +17499,13 @@
 				LeaPlusDB["DurabilityY"] = -170					-- Manage durability position Y
 				LeaPlusDB["DurabilityScale"] = 1.00				-- Manage durability scale
 
+				LeaPlusDB["ManageTracker"] = "On"				-- Manage Tracker
+				LeaPlusDB["TrackerA"] = "TOPRIGHT"				-- Manage Tracker anchor
+				LeaPlusDB["TrackerR"] = "TOPRIGHT"				-- Manage Tracker relative
+				LeaPlusDB["TrackerX"] = 0						-- Manage Tracker position X
+				LeaPlusDB["TrackerY"] = -170					-- Manage Tracker position Y
+				LeaPlusDB["TrackerScale"] = 1.00				-- Manage Tracker scale
+
 				LeaPlusDB["ManageVehicle"] = "On"				-- Manage vehicle
 				LeaPlusDB["VehicleA"] = "TOPRIGHT"				-- Manage vehicle anchor
 				LeaPlusDB["VehicleR"] = "TOPRIGHT"				-- Manage vehicle relative
@@ -17671,6 +17896,8 @@
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageDurability"			,	"Manage durability"				, 	146, -192, 	true,	"If checked, you will be able to change the position and scale of the armored man durability frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageVehicle"				,	"Manage vehicle"				, 	146, -212, 	true,	"If checked, you will be able to change the position and scale of the vehicle seat indicator frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ClassColFrames"			, 	"Class colored frames"			,	146, -232, 	true,	"If checked, class coloring will be used in the player frame, target frame and focus frame.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageTracker"			,	"Manage Quest Tracker"				, 	146, -252, 	true,	"If checked, you will be able to change the position and scale of the Quest Tracker frame (the one under minimap).")
+
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Visibility"				, 	340, -72);
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoAlerts"					,	"Hide alerts"					, 	340, -92, 	true,	"If checked, alert frames will not be shown.|n|nWhen you earn an achievement, a message will be shown in chat instead.")
@@ -17685,6 +17912,7 @@
 	LeaPlusLC:CfgBtn("ManageDurabilityButton", LeaPlusCB["ManageDurability"])
 	LeaPlusLC:CfgBtn("ManageVehicleButton", LeaPlusCB["ManageVehicle"])
 	LeaPlusLC:CfgBtn("ClassColFramesBtn", LeaPlusCB["ClassColFrames"])
+	LeaPlusLC:CfgBtn("ManageTrackerButton", LeaPlusCB["ManageTracker"])
 
 ----------------------------------------------------------------------
 -- 	LC7: System
