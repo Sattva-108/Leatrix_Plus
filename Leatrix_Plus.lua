@@ -10193,7 +10193,7 @@
 					-- Create checkboxes
 					CreateAuctionCB("AhBuyoutOnly", "BOTTOMLEFT", 200, 16, "Buyout Only")
 					CreateAuctionCB("AhGoldOnly", "BOTTOMLEFT", 320, 16, "Gold Only")
-					CreateAuctionCB("AhTabConfirm", "BOTTOMLEFT", 440, 16, "Tab Confirm")
+					CreateAuctionCB("AhTabConfirm", "BOTTOMLEFT", 440, 16, "Tab To Confirm")
 				end
 
 				if LeaPlusLC.ElvUI then
@@ -10331,7 +10331,7 @@
 							StartPriceGold:SetFocus(true)
 						end
 					else
-						if LeaPlusLC["AhTabConfirm"] == "On"  then
+						if LeaPlusLC["AhTabConfirm"] == "On" and LeaPlusLC["AhBuyoutOnly"] == "On" and LeaPlusLC["AhGoldOnly"] == "On" then
 							AuctionsCreateAuctionButton:Click()
 							BuyoutPriceGold:ClearFocus()
 						end

@@ -4,10 +4,6 @@
 -- Backport to-do before release:
 --------------------------------------------------------------------------------
 
-MinimapEnhance			- Replace non-standard buttons option! Aka those that don't use LibDBIcon, or may be just set size of them ? 
-
-AhExtras				- Need to make new description for alt click, tab confirm. And do locales.
-
 Tooltip					- FIX center popup when closed the leatrix window, its still staying...
 
 FlightTimers            - fix report window editbox
@@ -21,6 +17,10 @@ Enhance Minimap - Combine Addon Buttons             - make this frame be movable
 --------------------------------------------------------------------------------
 -- What needs to be tested:
 --------------------------------------------------------------------------------
+
+MinimapEnhance			- Replace non-standard buttons option! Aka those that don't use LibDBIcon, or may be just set size of them ?
+
+GUI - ruRU             - rename names of functions, they are too long to read
 
 ElvUI	 				 - Need to see what disabled for when ElvUI is loaded. May be something is not made in 3.3.5 ElvUI backport, but still disabled.
 
@@ -175,3 +175,9 @@ Show best gold value for quest reward.
 Open all bag user config option at merchant.
 
 AutoGossip - Add https://wowhead.com/wotlk/search?q=Surristrasz to ignore the dialog auto-confirm.
+
+--------------------------------------------------------------------------------
+---- Things to include in presentation
+--------------------------------------------------------------------------------
+
+- Tab to confirm auction
