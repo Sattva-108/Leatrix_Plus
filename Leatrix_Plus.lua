@@ -10886,6 +10886,16 @@
 			--DebuffButton1:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
 			--DebuffButton1:SetScale(LeaPlusLC["DebuffButton1Scale"])
 
+			-- Function to update scale for all Debuff Buttons
+			local function UpdateDebuffButtonScales(scale)
+				for i = 1, DEBUFF_MAX_DISPLAY  do
+					local debuffButton = _G["DebuffButton"..i]
+					if debuffButton then
+						debuffButton:SetScale(scale)
+					end
+				end
+			end
+
 			-- Create drag frame
 			local dragframe = CreateFrame("FRAME", nil, nil)
 
@@ -10901,7 +10911,8 @@
 						-- Set buff frame position at startup
 						d:ClearAllPoints()
 						d:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
-						d:SetScale(LeaPlusLC["DebuffButton1Scale"])
+						--d:SetScale(LeaPlusLC["DebuffButton1Scale"])
+						UpdateDebuffButtonScales(LeaPlusLC["DebuffButton1Scale"])
 						local isDebuffButton1Moving = false
 						local deBuffFrameSetPoint = DebuffButton1.SetPoint
 
@@ -10961,14 +10972,15 @@
 			end)
 
 			-- Create configuration panel
-			local DeBuffPanel = LeaPlusLC:CreatePanel("Manage buffs", "DeBuffPanel")
+			local DeBuffPanel = LeaPlusLC:CreatePanel("Manage DeBuffs", "DeBuffPanel")
 
 			LeaPlusLC:MakeTx(DeBuffPanel, "Scale", 16, -72)
 			LeaPlusLC:MakeSL(DeBuffPanel, "DebuffButton1Scale", "Drag to set the buffs frame scale.", 0.5, 2, 0.05, 16, -92, "%.2f")
 
 			-- Set scale when slider is changed
 			LeaPlusCB["DebuffButton1Scale"]:HookScript("OnValueChanged", function()
-				DebuffButton1:SetScale(LeaPlusLC["DebuffButton1Scale"])
+				UpdateDebuffButtonScales(LeaPlusLC["DebuffButton1Scale"])
+				--DebuffButton1:SetScale(LeaPlusLC["DebuffButton1Scale"])
 				dragframe:SetScale(LeaPlusLC["DebuffButton1Scale"])
 				-- Show formatted slider value
 				LeaPlusCB["DebuffButton1Scale"].f:SetFormattedText("%.0f%%", LeaPlusLC["DebuffButton1Scale"] * 100)
@@ -11006,7 +11018,7 @@
 				LeaPlusLC["DebuffButton1A"] = "TOPRIGHT"
 				LeaPlusLC["DebuffButton1R"] = "TOPRIGHT"
 				LeaPlusLC["DebuffButton1X"] = -205
-				LeaPlusLC["DebuffButton1Y"] = -13
+				LeaPlusLC["DebuffButton1Y"] = -205
 				LeaPlusLC["DebuffButton1Scale"] = 1
 				DebuffButton1:ClearAllPoints()
 				DebuffButton1:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
@@ -11027,11 +11039,12 @@
 					LeaPlusLC["DebuffButton1A"] = "TOPRIGHT"
 					LeaPlusLC["DebuffButton1R"] = "TOPRIGHT"
 					LeaPlusLC["DebuffButton1X"] = -271
-					LeaPlusLC["DebuffButton1Y"] = 0
+					LeaPlusLC["DebuffButton1Y"] = -205
 					LeaPlusLC["DebuffButton1Scale"] = 0.80
 					DebuffButton1:ClearAllPoints()
 					DebuffButton1:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
-					DebuffButton1:SetScale(LeaPlusLC["DebuffButton1Scale"])
+					--DebuffButton1:SetScale(LeaPlusLC["DebuffButton1Scale"])
+					UpdateDebuffButtonScales(LeaPlusLC["DebuffButton1Scale"])
 				else
 					-- Find out if the UI has a non-standard scale
 					if GetCVar("useuiscale") == "1" then
