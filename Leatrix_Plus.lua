@@ -4308,7 +4308,7 @@
 				LeaPlusLC:MakeTx(SideMinimap, "Minimap buttons scale", 356, -212)
 
 			end
-			LeaPlusLC:MakeSL(SideMinimap, "MiniAddonPanelScale", "Drag to set the cluster scale.|n|nNote: Adjusting the cluster scale affects the entire cluster including frames attached to it such as the quest watch frame.|n|nIt will also cause the default UI right-side action bars to scale when you login.  If you use the default UI right-side action bars, you may want to leave this at 100%.", 0, 2, 0.1, 356, -232, "%.2f")
+			LeaPlusLC:MakeSL(SideMinimap, "MiniAddonPanelScale", "Drag to adjust scale of the Minimap Combined Addons button frame.", 0, 2, 0.1, 356, -232, "%.2f")
 
 
 			-- set x position for now to 10000, FIXME
@@ -4913,6 +4913,8 @@
 
 
 
+
+
 				--------------------------------------------------------------------------------
 				-- Some code for testing - adds buttons to minimap
 				--------------------------------------------------------------------------------
@@ -5171,7 +5173,7 @@
 			end
 
 			--------------------------------------------------------------------------------
-			---- Combine addon buttons frame scale
+			---- Combine addon buttons frame scale and move button
 			--------------------------------------------------------------------------------
 
 
@@ -5182,14 +5184,57 @@
 				LeaPlusCB["MiniAddonPanelScale"].f:SetFormattedText("%.0f%%", LeaPlusLC["MiniAddonPanelScale"] * 100)
 			end
 
+			-- 	Create drag frame
+			local TipDrag = CreateFrame("Frame", nil, LeaPlusLC['minimapFrameGlobal'])
+			TipDrag:SetPoint("CENTER")
+			TipDrag:SetToplevel(true);
+			TipDrag:SetClampedToScreen(false);
+			LibCompat.After(3, function()
+				TipDrag:SetWidth(LeaPlusLC['minimapFrameGlobal']:GetWidth());
+				TipDrag:SetHeight(LeaPlusLC['minimapFrameGlobal']:GetHeight());
+			end)
+
+			TipDrag:Hide();
+			TipDrag:SetFrameStrata("TOOLTIP")
+			TipDrag:SetMovable(true)
+			TipDrag:EnableMouse(true)
+			TipDrag:RegisterForDrag("LeftButton")
+			TipDrag:SetBackdropColor(0.0, 0.5, 1.0);
+			TipDrag:SetBackdrop({
+				edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+				tile = false, tileSize = 0, edgeSize = 16,
+				insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+
+			-- Show text in drag frame
+			TipDrag.f = TipDrag:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
+			TipDrag.f:SetPoint("CENTER", 0, 0)
+			TipDrag.f:SetText(L["Tooltip"])
+
+			-- Create texture
+			TipDrag.t = TipDrag:CreateTexture();
+			TipDrag.t:SetAllPoints();
+			TipDrag.t:SetTexture(0.0, 0.5, 1.0,0.5)
+			TipDrag.t:SetAlpha(0.5);
+
 
 			if LeaPlusLC["CombineAddonButtons"] == "On" then
 				-- Set minimap scale when slider is changed and on startup
 				LeaPlusCB["MiniAddonPanelScale"]:HookScript("OnValueChanged", SetMinimapAddonButtonsFrameScale)
 				SetMinimapAddonButtonsFrameScale()
+
+
+
+				-- Add Button to Move Combined Minimap Buttons frame
+				local MoveCombinedFrame = LeaPlusLC:CreateButton("MoveCombinedFrame", SideMinimap, "Move Combined Frame", "TOPLEFT", 16, -72, 0, 25, true, "Click to move Minimap Combined Addon Buttons Frame.")
+				LeaPlusCB["MoveCombinedFrame"]:ClearAllPoints()
+				LeaPlusCB["MoveCombinedFrame"]:SetPoint("LEFT", SideMinimap.h, "RIGHT", 90, 0)
+				LeaPlusCB["MoveCombinedFrame"]:SetScript("OnClick", function() print('something') TipDrag:Show()  end)
+
+
 			else
 				LeaPlusCB["MiniAddonPanelScale"]:Hide()
 			end
+
 
 			----------------------------------------------------------------------
 			-- Square minimap
