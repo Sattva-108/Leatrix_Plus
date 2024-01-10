@@ -4270,7 +4270,7 @@
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniMapButton", "Hide the world map button", 16, -132, false, "If checked, the world map button will be hidden.")
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniTracking", "Hide the tracking button", 16, -152, true, "If checked, the tracking button will be hidden while the pointer is not over the minimap.")
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniAddonButtons", "Hide addon buttons", 16, -172, true, "If checked, addon buttons will be hidden while the pointer is not over the minimap.")
-			LeaPlusLC:MakeCB(SideMinimap, "CombineAddonButtons", "Combine addon buttons", 16, -192, true, "If checked, addon buttons will be combined into a single button frame which you can toggle by right-clicking the minimap.|n|nNote that enabling this option will lock out the 'Hide addon buttons' setting.")
+
 			LeaPlusLC:MakeCB(SideMinimap, "SquareMinimap", "Square minimap", 16, -212, true, "If checked, the minimap shape will be square.")
 			LeaPlusLC:MakeCB(SideMinimap, "ShowWhoPinged", "Show who pinged", 16, -232, false, "If checked, when someone pings the minimap, their name will be shown.  This does not apply to your pings.")
 
@@ -4300,6 +4300,16 @@
 
 			LeaPlusLC:MakeTx(SideMinimap, "Cluster scale", 356, -132)
 			LeaPlusLC:MakeSL(SideMinimap, "MiniClusterScale", "Drag to set the cluster scale.|n|nNote: Adjusting the cluster scale affects the entire cluster including frames attached to it such as the quest watch frame.|n|nIt will also cause the default UI right-side action bars to scale when you login.  If you use the default UI right-side action bars, you may want to leave this at 100%.", 1, 2, 0.1, 356, -152, "%.2f")
+
+			LeaPlusLC:MakeCB(SideMinimap, "CombineAddonButtons", "Combine addon buttons", 352, -182, true, "If checked, addon buttons will be combined into a single button frame which you can toggle by right-clicking the minimap.|n|nNote that enabling this option will lock out the 'Hide addon buttons' setting.")
+
+			if LeaPlusLC["CombineAddonButtons"] == "On" then
+
+				LeaPlusLC:MakeTx(SideMinimap, "Minimap buttons scale", 356, -212)
+
+			end
+			LeaPlusLC:MakeSL(SideMinimap, "MiniAddonPanelScale", "Drag to set the cluster scale.|n|nNote: Adjusting the cluster scale affects the entire cluster including frames attached to it such as the quest watch frame.|n|nIt will also cause the default UI right-side action bars to scale when you login.  If you use the default UI right-side action bars, you may want to leave this at 100%.", 0, 2, 0.1, 356, -232, "%.2f")
+
 
 			-- set x position for now to 10000, FIXME
 			LeaPlusLC:MakeCB(SideMinimap, "MinimapNoScale", "Not minimap", 10000, -242, false, "If checked, adjusting the cluster scale will not affect the minimap scale.")
@@ -4614,6 +4624,7 @@
 
 				-- First, we create a new frame to hold all the minimap buttons.
 				local minimapFrame = CreateFrame("Frame", "Leatrix_ButtonGrabber", UIParent)
+				LeaPlusLC['minimapFrameGlobal'] = minimapFrame
 				minimapFrame:SetSize(1, 1)
 				minimapFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -2, -1.2)
 				minimapFrame:SetBackdrop({
@@ -4866,14 +4877,14 @@
 					minimapFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.90)
 					minimapFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -5, -1)
 				end
-				LeaPlusCB["MinimapScale"]:HookScript("OnValueChanged", function()
-					if LeaPlusLC["SquareMinimap"] == "On" then
-						minimapFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.85)
-					else
-						minimapFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.90)
-					minimapFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -5, -1)
-					end
-				end)
+				--LeaPlusCB["MinimapScale"]:HookScript("OnValueChanged", function()
+				--	if LeaPlusLC["SquareMinimap"] == "On" then
+				--		minimapFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.85)
+				--	else
+				--		minimapFrame:SetScale(LeaPlusLC["MinimapScale"] * 0.90)
+				--	minimapFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -5, -1)
+				--	end
+				--end)
 
 
 
@@ -5157,6 +5168,27 @@
 				-- 	end
 				-- end)
 
+			end
+
+			--------------------------------------------------------------------------------
+			---- Combine addon buttons frame scale
+			--------------------------------------------------------------------------------
+
+
+			-- Function to set the minimap cluster scale
+			local function SetMinimapAddonButtonsFrameScale()
+				LeaPlusLC['minimapFrameGlobal']:SetScale(LeaPlusLC["MiniAddonPanelScale"])
+				-- Set slider formatted text
+				LeaPlusCB["MiniAddonPanelScale"].f:SetFormattedText("%.0f%%", LeaPlusLC["MiniAddonPanelScale"] * 100)
+			end
+
+
+			if LeaPlusLC["CombineAddonButtons"] == "On" then
+				-- Set minimap scale when slider is changed and on startup
+				LeaPlusCB["MiniAddonPanelScale"]:HookScript("OnValueChanged", SetMinimapAddonButtonsFrameScale)
+				SetMinimapAddonButtonsFrameScale()
+			else
+				LeaPlusCB["MiniAddonPanelScale"]:Hide()
 			end
 
 			----------------------------------------------------------------------
@@ -5889,7 +5921,13 @@
 				LeaPlusLC["MinimapSize"] = 140; if LeaPlusLC.SetMinimapSize then LeaPlusLC:SetMinimapSize() end
 				LeaPlusLC["MiniClusterScale"] = 1; LeaPlusLC["MinimapNoScale"] = "Off"; SetClusterScale()
 				Minimap:SetScale(1)
-				SetMiniScale()
+                SetMiniScale()
+
+                LeaPlusLC["MiniAddonPanelScale"] = 1;
+                if LeaPlusLC["CombineAddonButtons"] == "On" then
+                    SetMinimapAddonButtonsFrameScale()
+                end
+
 				-- Reset map position
 				LeaPlusLC["MinimapA"], LeaPlusLC["MinimapR"], LeaPlusLC["MinimapX"], LeaPlusLC["MinimapY"] = "TOPRIGHT", "TOPRIGHT", -17, -45
 				Minimap:ClearAllPoints()
@@ -5914,7 +5952,13 @@
 						LeaPlusLC["MinimapSize"] = 180; if LeaPlusLC.SetMinimapSize then LeaPlusLC:SetMinimapSize() end
 						LeaPlusLC["MiniClusterScale"] = 1; LeaPlusLC["MinimapNoScale"] = "Off"; SetClusterScale()
 						Minimap:SetScale(1)
-						SetMiniScale()
+                        SetMiniScale()
+
+                        LeaPlusLC["MiniAddonPanelScale"] = 1;
+                        if LeaPlusLC["CombineAddonButtons"] == "On" then
+                            SetMinimapAddonButtonsFrameScale()
+                        end
+
 						-- Hide world map button
 						LeaPlusLC["HideMiniMapButton"] = "On"; SetWorldMapButton()
 						-- Map position
@@ -15066,6 +15110,8 @@
 				LeaPlusLC:LoadVarNum("MinimapScale", 1, 1, 4)				-- Minimap scale slider
 				LeaPlusLC:LoadVarNum("MinimapSize", 140, 140, 560)			-- Minimap size slider
 				LeaPlusLC:LoadVarNum("MiniClusterScale", 1, 1, 2)			-- Minimap cluster scale
+				LeaPlusLC:LoadVarNum("MiniAddonPanelScale", 1, 0, 2)			-- Minimap cluster scale
+
 				LeaPlusLC:LoadVarChk("MinimapNoScale", "Off")				-- Minimap not minimap
 				LeaPlusLC:LoadVarAnc("MinimapA", "TOPRIGHT")				-- Minimap anchor
 				LeaPlusLC:LoadVarAnc("MinimapR", "TOPRIGHT")				-- Minimap relative
@@ -15496,6 +15542,7 @@
 			LeaPlusDB["MinimapScale"]			= LeaPlusLC["MinimapScale"]
 			LeaPlusDB["MinimapSize"]			= LeaPlusLC["MinimapSize"]
 			LeaPlusDB["MiniClusterScale"]		= LeaPlusLC["MiniClusterScale"]
+			LeaPlusDB["MiniAddonPanelScale"]		= LeaPlusLC["MiniAddonPanelScale"]
 			LeaPlusDB["MinimapNoScale"]			= LeaPlusLC["MinimapNoScale"]
 			LeaPlusDB["MinimapA"]				= LeaPlusLC["MinimapA"]
 			LeaPlusDB["MinimapR"]				= LeaPlusLC["MinimapR"]
@@ -17708,6 +17755,7 @@
 				LeaPlusDB["MinimapScale"] = 1.40				-- Minimap scale slider
 				LeaPlusDB["MinimapSize"] = 180					-- Minimap size slider
 				LeaPlusDB["MiniClusterScale"] = 1				-- Minimap cluster scale
+				LeaPlusDB["MiniAddonPanelScale"] = 1				-- Minimap cluster scale
 				LeaPlusDB["MinimapNoScale"] = "Off"				-- Minimap not minimap
 				LeaPlusDB["HideMiniZoneText"] = "On"			-- Hide zone text bar
 				LeaPlusDB["HideMiniMapButton"] = "On"			-- Hide world map button

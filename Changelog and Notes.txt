@@ -4,8 +4,6 @@
 -- Backport to-do before release:
 --------------------------------------------------------------------------------
 
-FlightTimers            - test if no problem with BigWigs libraries
-
 Enhance Minimap - Combine Addon Buttons             - make this frame be movable, size-adjustable and make option to make it be hidden by default,
                                                     but shown when either: mouse is over minimap or user chooses option to middle click minimap to show it.
 
