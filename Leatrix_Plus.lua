@@ -4301,7 +4301,7 @@
 			LeaPlusLC:MakeTx(SideMinimap, "Cluster scale", 356, -132)
 			LeaPlusLC:MakeSL(SideMinimap, "MiniClusterScale", "Drag to set the cluster scale.|n|nNote: Adjusting the cluster scale affects the entire cluster including frames attached to it such as the quest watch frame.|n|nIt will also cause the default UI right-side action bars to scale when you login.  If you use the default UI right-side action bars, you may want to leave this at 100%.", 1, 2, 0.1, 356, -152, "%.2f")
 
-			LeaPlusLC:MakeCB(SideMinimap, "CombineAddonButtons", "Combine addon buttons", 16, -192, true, "If checked, addon buttons will be combined into a single button frame which you can toggle by right-clicking the minimap.|n|nNote that enabling this option will lock out the 'Hide addon buttons' setting.")
+			LeaPlusLC:MakeCB(SideMinimap, "CombineAddonButtons", "Combine addon buttons", 16, -192, true, "If checked, addon buttons will be combined into a single button frame which you can toggle by right-clicking the minimap.|n|nNote that enabling this option will lock out the 'Hide addon buttons' setting." , "Use slider to increase size of the frame and `Move Combined Frame` button to move it around. ")
 
 			if LeaPlusLC["CombineAddonButtons"] == "On" then
 				LeaPlusLC:MakeTx(SideMinimap, "Minimap buttons scale", 356, -212)
@@ -5006,9 +5006,9 @@
 
 
 					-- Add Button to Move Combined Minimap Buttons frame
-					local MoveCombinedFrame = LeaPlusLC:CreateButton("MoveCombinedFrame", SideMinimap, "Move Combined Frame", "TOPLEFT", 16, -72, 0, 25, true, "Click to move:|n|nCombined addon buttons frame.")
-					LeaPlusCB["MoveCombinedFrame"]:ClearAllPoints()
-					LeaPlusCB["MoveCombinedFrame"]:SetPoint("LEFT", SideMinimap.h, "RIGHT", 90, 0)
+					local MoveCombinedFrame = LeaPlusLC:CreateButton("MoveCombinedFrame", SideMinimap, "Move Combined Frame", "TOPLEFT", 16, -262, 0, 25, true, "Click to move:|n|nCombined addon buttons frame.")
+					--LeaPlusCB["MoveCombinedFrame"]:ClearAllPoints()
+					--LeaPlusCB["MoveCombinedFrame"]:SetPoint("LEFT", SideMinimap.h, "LEFT", 90, 0)
 					LeaPlusCB["MoveCombinedFrame"]:SetScript("OnClick", function()
 						if dragframe:IsShown() then
 							dragframe:Hide()
@@ -16155,7 +16155,7 @@
 	end
 
 	-- Create a checkbox control (uses standard template)
-	function LeaPlusLC:MakeCB(parent, field, caption, x, y, reload, tip, tipstyle)
+	function LeaPlusLC:MakeCB(parent, field, caption, x, y, reload, tip, extratip)
 
 		-- Create the checkbox
 		local Cbox = CreateFrame('CheckButton', nil, parent, "ChatConfigCheckButtonTemplate")
@@ -16167,15 +16167,24 @@
 		-- Add label and tooltip
 		Cbox.f = Cbox:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
 		Cbox.f:SetPoint('LEFT', 23, 0)
+		local tooltipText = L[tip]
+		-- Add extra tip if provided
+		if extratip and extratip ~= "" then
+			tooltipText = tooltipText .. "|n|n" .. L[extratip]
+		end
+
+		-- Add indicator and text if UI reload is required
 		if reload then
 			-- Checkbox requires UI reload
 			Cbox.f:SetText(L[caption] .. "*")
-			Cbox.tiptext = L[tip] .. "|n|n* " .. L["Requires UI reload."]
+			tooltipText = tooltipText .. "|n|n* " .. L["Requires UI reload."]
 		else
 			-- Checkbox does not require UI reload
 			Cbox.f:SetText(L[caption])
-			Cbox.tiptext = L[tip]
 		end
+
+		-- Set the tooltip text
+		Cbox.tiptext = tooltipText
 
 		-- Set label parameters
 		Cbox.f:SetJustifyH("LEFT")
@@ -18379,7 +18388,7 @@
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageVehicle"				,	"Manage vehicle"				, 	146, -212, 	true,	"If checked, you will be able to change the position and scale of the vehicle seat indicator frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ClassColFrames"			, 	"Class colored frames"			,	146, -232, 	true,	"If checked, class coloring will be used in the player frame, target frame and focus frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageTracker"			,	"Manage Quest Tracker"				, 	146, -252, 	true,	"If checked, you will be able to change the position and scale of the Quest Tracker frame (the one under minimap).")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageDeBuffs"				,	"Manage Debuffs"					, 	146, -272, 	true,	"If checked, you will be able to change the position and scale of the debuffs frame.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ManageDeBuffs"				,	"Manage Debuffs"					, 	146, -272, 	true,	"If checked, you will be able to change the position and scale of the debuffs frame.", "* Requires you to have some debuff in order to change position.")
 
 
 
@@ -18419,7 +18428,7 @@
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Game Options"				, 	340, -72);
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoBagAutomation"			, 	"Disable bag automation"		, 	340, -92, 	true,	"If checked, your bags will not be opened or closed automatically when you interact with a merchant, bank or mailbox.")
 	--LeaPlusLC:MakeCB(LeaPlusLC[pg], "CharAddonList"				, 	"Show character addons"			, 	340, -112, 	true,	"If checked, the addon list (accessible from the game menu) will show character based addons by default.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoConfirmLoot"				, 	"Disable loot warnings"			,	340, -132, 	false,	"If checked, confirmations will no longer appear when you choose a loot roll option or attempt to sell or mail a tradable item.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoConfirmLoot"				, 	"Disable loot warnings"			,	340, -132, 	false,	"If checked, confirmations will no longer appear when you choose a loot roll option or attempt to sell or mail a tradable item.", "Also disables confirmation popup when you try to loot BOP item.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "FasterLooting"				, 	"Faster auto loot"				,	340, -152, 	true,	"If checked, the amount of time it takes to auto loot creatures will be significantly reduced.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "FasterMovieSkip"			, 	"Faster movie skip"				,	340, -172, 	true,	"If checked, you will be able to cancel cinematics without being prompted for confirmation.")
 	--LeaPlusLC:MakeCB(LeaPlusLC[pg], "StandAndDismount"			, 	"Dismount me"					,	340, -192, 	true,	"If checked, you will be able to set some additional rules for when your character is automatically dismounted.")

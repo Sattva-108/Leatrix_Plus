@@ -4,16 +4,16 @@
 -- Backport to-do before release:
 --------------------------------------------------------------------------------
 
-Auto Accept Quests - add user options.
+Auto Accept Quests       - add user options.
+
+GUI - ruRU               - rename names of functions (texts), they are too long to read
+
+Chat History             - (needs fixing) make sure it can be working with more than 128 lines correctly.
 
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
 --------------------------------------------------------------------------------
-
-MinimapEnhance			- Replace non-standard buttons option! Aka those that don't use LibDBIcon, or may be just set size of them ?
-
-GUI - ruRU             - rename names of functions, they are too long to read
 
 ElvUI	 				 - Need to see what disabled for when ElvUI is loaded. May be something is not made in 3.3.5 ElvUI backport, but still disabled.
 
@@ -27,12 +27,12 @@ LibCandyBar				 - Will it be conflicting with other addons that use 3.3.5 versio
 
 ShowFlightPaths			 - Will StopLandingEvent work correctly on summon, BG/arena accept
 
-DisableLootWarning       - Make sure it's working
-
 
 --------------------------------------------------------------------------------
 -- Stuff to-do:
 --------------------------------------------------------------------------------
+
+MinimapEnhance			 - Replace non-standard buttons option! Aka those that don't use LibDBIcon, or may be just set size of them ?
 
 MinimapButton			 - Add functions to alt-click and other clicks on button
 
@@ -177,3 +177,9 @@ AutoGossip - Add https://wowhead.com/wotlk/search?q=Surristrasz to ignore the di
 --------------------------------------------------------------------------------
 
 - Tab to confirm auction
+
+- Flight Paths
+
+- Square Minimap with Combine Addon Buttons
+
+- Copy text from tab (make sure to show that Ctrl modifier needed)
