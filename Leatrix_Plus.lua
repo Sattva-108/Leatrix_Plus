@@ -4301,14 +4301,12 @@
 			LeaPlusLC:MakeTx(SideMinimap, "Cluster scale", 356, -132)
 			LeaPlusLC:MakeSL(SideMinimap, "MiniClusterScale", "Drag to set the cluster scale.|n|nNote: Adjusting the cluster scale affects the entire cluster including frames attached to it such as the quest watch frame.|n|nIt will also cause the default UI right-side action bars to scale when you login.  If you use the default UI right-side action bars, you may want to leave this at 100%.", 1, 2, 0.1, 356, -152, "%.2f")
 
-			LeaPlusLC:MakeCB(SideMinimap, "CombineAddonButtons", "Combine addon buttons", 352, -182, true, "If checked, addon buttons will be combined into a single button frame which you can toggle by right-clicking the minimap.|n|nNote that enabling this option will lock out the 'Hide addon buttons' setting.")
+			LeaPlusLC:MakeCB(SideMinimap, "CombineAddonButtons", "Combine addon buttons", 16, -192, true, "If checked, addon buttons will be combined into a single button frame which you can toggle by right-clicking the minimap.|n|nNote that enabling this option will lock out the 'Hide addon buttons' setting.")
 
 			if LeaPlusLC["CombineAddonButtons"] == "On" then
-
 				LeaPlusLC:MakeTx(SideMinimap, "Minimap buttons scale", 356, -212)
-
+				LeaPlusLC:MakeSL(SideMinimap, "MiniAddonPanelScale", "Drag to adjust scale of the Minimap Combined Addons button frame.", 0, 2, 0.1, 356, -232, "%.2f")
 			end
-			LeaPlusLC:MakeSL(SideMinimap, "MiniAddonPanelScale", "Drag to adjust scale of the Minimap Combined Addons button frame.", 0, 2, 0.1, 356, -232, "%.2f")
 
 
 			-- set x position for now to 10000, FIXME
@@ -4912,7 +4910,119 @@
 				eventFrame:SetScript("OnEvent", OnLoginHideCombine)
 
 
+				--------------------------------------------------------------------------------
+				---- Combine addon buttons frame scale and move button
+				--------------------------------------------------------------------------------
 
+
+				-- Function to set the combined addons frame scale
+				function LeaPlusLC:SetMinimapAddonButtonsFrameScale()
+					LeaPlusLC['minimapFrameGlobal']:SetScale(LeaPlusLC["MiniAddonPanelScale"])
+					-- Set slider formatted text
+					LeaPlusCB["MiniAddonPanelScale"].f:SetFormattedText("%.0f%%", LeaPlusLC["MiniAddonPanelScale"] * 100)
+				end
+
+
+
+
+				if LeaPlusLC["CombineAddonButtons"] == "On" then
+
+					-- Create drag frame
+					local dragframe = CreateFrame("FRAME", nil, nil)
+
+					-- Set combined addons frame scale when slider is changed and on startup
+					LeaPlusCB["MiniAddonPanelScale"]:HookScript("OnValueChanged", function()
+						LeaPlusLC:SetMinimapAddonButtonsFrameScale()
+						dragframe:SetScale(LeaPlusLC['minimapFrameGlobal']:GetScale() - 0.10)
+					end)
+					LeaPlusLC:SetMinimapAddonButtonsFrameScale()
+
+					--------------------------------------------------------------------------------
+					---- Allow CombineAddonsFrame frame to be moved
+					--------------------------------------------------------------------------------
+
+					LeaPlusLC['minimapFrameGlobal']:SetMovable(true)
+					LeaPlusLC['minimapFrameGlobal']:SetUserPlaced(true)
+					LeaPlusLC['minimapFrameGlobal']:SetDontSavePosition(true)
+					LeaPlusLC['minimapFrameGlobal']:SetClampedToScreen(false)
+
+					-- Set CombineAddonsFrame frame position at startup
+					LeaPlusLC['minimapFrameGlobal']:ClearAllPoints()
+
+
+					-- reanchor to UIParent if user moved the frame, because if relative to Minimap we getting bugs.
+					if LeaPlusLC["CombineAddonsFrameX"] == -2 and LeaPlusLC["CombineAddonsFrameY"] == -1.2  then
+						LeaPlusLC['minimapFrameGlobal']:SetPoint(LeaPlusLC["CombineAddonsFrameA"], Minimap, LeaPlusLC["CombineAddonsFrameR"], LeaPlusLC["CombineAddonsFrameX"], LeaPlusLC["CombineAddonsFrameY"])
+					else
+						LeaPlusLC['minimapFrameGlobal']:SetPoint(LeaPlusLC["CombineAddonsFrameA"], UIParent, LeaPlusLC["CombineAddonsFrameR"], LeaPlusLC["CombineAddonsFrameX"], LeaPlusLC["CombineAddonsFrameY"])
+					end
+					--LeaPlusLC['minimapFrameGlobal']:SetScale(LeaPlusLC["CombineAddonsFrameScale"])
+					--LeaPlusLC['minimapFrameGlobal']:SetScale(LeaPlusLC["CombineAddonsFrameScale"])
+
+
+					dragframe:SetPoint("CENTER", LeaPlusLC['minimapFrameGlobal'], "CENTER", 0, 1)
+					LibCompat.After(3, function()
+						dragframe:SetWidth(LeaPlusLC['minimapFrameGlobal']:GetWidth());
+						dragframe:SetHeight(LeaPlusLC['minimapFrameGlobal']:GetHeight());
+					end)
+					dragframe:SetBackdropColor(0.0, 0.5, 1.0)
+					dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
+					dragframe:SetToplevel(true)
+					dragframe:EnableMouse(true)
+					dragframe:SetFrameStrata("TOOLTIP")
+					dragframe:Hide()
+					dragframe:SetScale(LeaPlusLC['minimapFrameGlobal']:GetScale() - 0.10)
+
+					dragframe.t = dragframe:CreateTexture()
+					dragframe.t:SetAllPoints()
+					dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
+					dragframe.t:SetAlpha(0.5)
+
+					dragframe.f = dragframe:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
+					dragframe.f:SetPoint('CENTER', 0, 0)
+					dragframe.f:SetText("Move")
+
+					-- Click handler
+					dragframe:SetScript("OnMouseDown", function(self, btn)
+						-- Start dragging if left clicked
+						if btn == "LeftButton" then
+							LeaPlusLC['minimapFrameGlobal']:StartMoving()
+							-- Hide frame if right button is clicked
+						else
+							LeaPlusLC['minimapFrameGlobal']:StopMovingOrSizing()
+							dragframe:Hide()
+						end
+					end)
+
+					dragframe:SetScript("OnMouseUp", function()
+						-- Save frame position
+						LeaPlusLC['minimapFrameGlobal']:StopMovingOrSizing()
+						LeaPlusLC["CombineAddonsFrameA"], void, LeaPlusLC["CombineAddonsFrameR"], LeaPlusLC["CombineAddonsFrameX"], LeaPlusLC["CombineAddonsFrameY"] = LeaPlusLC['minimapFrameGlobal']:GetPoint()
+						LeaPlusLC['minimapFrameGlobal']:SetMovable(true)
+						LeaPlusLC['minimapFrameGlobal']:ClearAllPoints()
+						LeaPlusLC['minimapFrameGlobal']:SetPoint(LeaPlusLC["CombineAddonsFrameA"], UIParent, LeaPlusLC["CombineAddonsFrameR"], LeaPlusLC["CombineAddonsFrameX"], LeaPlusLC["CombineAddonsFrameY"])
+					end)
+
+
+
+					-- Add Button to Move Combined Minimap Buttons frame
+					local MoveCombinedFrame = LeaPlusLC:CreateButton("MoveCombinedFrame", SideMinimap, "Move Combined Frame", "TOPLEFT", 16, -72, 0, 25, true, "Click to move:|n|nCombined addon buttons frame.")
+					LeaPlusCB["MoveCombinedFrame"]:ClearAllPoints()
+					LeaPlusCB["MoveCombinedFrame"]:SetPoint("LEFT", SideMinimap.h, "RIGHT", 90, 0)
+					LeaPlusCB["MoveCombinedFrame"]:SetScript("OnClick", function()
+						if dragframe:IsShown() then
+							dragframe:Hide()
+						else
+							dragframe:Show()
+						end
+					end)
+
+
+				else
+					if LeaPlusCB["MiniAddonPanelScale"] then
+						LeaPlusCB["MiniAddonPanelScale"]:Hide()
+					end
+				end
 
 
 				--------------------------------------------------------------------------------
@@ -5172,68 +5282,7 @@
 
 			end
 
-			--------------------------------------------------------------------------------
-			---- Combine addon buttons frame scale and move button
-			--------------------------------------------------------------------------------
 
-
-			-- Function to set the minimap cluster scale
-			local function SetMinimapAddonButtonsFrameScale()
-				LeaPlusLC['minimapFrameGlobal']:SetScale(LeaPlusLC["MiniAddonPanelScale"])
-				-- Set slider formatted text
-				LeaPlusCB["MiniAddonPanelScale"].f:SetFormattedText("%.0f%%", LeaPlusLC["MiniAddonPanelScale"] * 100)
-			end
-
-			-- 	Create drag frame
-			local TipDrag = CreateFrame("Frame", nil, LeaPlusLC['minimapFrameGlobal'])
-			TipDrag:SetPoint("CENTER")
-			TipDrag:SetToplevel(true);
-			TipDrag:SetClampedToScreen(false);
-			LibCompat.After(3, function()
-				TipDrag:SetWidth(LeaPlusLC['minimapFrameGlobal']:GetWidth());
-				TipDrag:SetHeight(LeaPlusLC['minimapFrameGlobal']:GetHeight());
-			end)
-
-			TipDrag:Hide();
-			TipDrag:SetFrameStrata("TOOLTIP")
-			TipDrag:SetMovable(true)
-			TipDrag:EnableMouse(true)
-			TipDrag:RegisterForDrag("LeftButton")
-			TipDrag:SetBackdropColor(0.0, 0.5, 1.0);
-			TipDrag:SetBackdrop({
-				edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-				tile = false, tileSize = 0, edgeSize = 16,
-				insets = { left = 0, right = 0, top = 0, bottom = 0 }});
-
-			-- Show text in drag frame
-			TipDrag.f = TipDrag:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
-			TipDrag.f:SetPoint("CENTER", 0, 0)
-			TipDrag.f:SetText(L["Tooltip"])
-
-			-- Create texture
-			TipDrag.t = TipDrag:CreateTexture();
-			TipDrag.t:SetAllPoints();
-			TipDrag.t:SetTexture(0.0, 0.5, 1.0,0.5)
-			TipDrag.t:SetAlpha(0.5);
-
-
-			if LeaPlusLC["CombineAddonButtons"] == "On" then
-				-- Set minimap scale when slider is changed and on startup
-				LeaPlusCB["MiniAddonPanelScale"]:HookScript("OnValueChanged", SetMinimapAddonButtonsFrameScale)
-				SetMinimapAddonButtonsFrameScale()
-
-
-
-				-- Add Button to Move Combined Minimap Buttons frame
-				local MoveCombinedFrame = LeaPlusLC:CreateButton("MoveCombinedFrame", SideMinimap, "Move Combined Frame", "TOPLEFT", 16, -72, 0, 25, true, "Click to move Minimap Combined Addon Buttons Frame.")
-				LeaPlusCB["MoveCombinedFrame"]:ClearAllPoints()
-				LeaPlusCB["MoveCombinedFrame"]:SetPoint("LEFT", SideMinimap.h, "RIGHT", 90, 0)
-				LeaPlusCB["MoveCombinedFrame"]:SetScript("OnClick", function() print('something') TipDrag:Show()  end)
-
-
-			else
-				LeaPlusCB["MiniAddonPanelScale"]:Hide()
-			end
 
 
 			----------------------------------------------------------------------
@@ -5968,10 +6017,19 @@
 				Minimap:SetScale(1)
                 SetMiniScale()
 
+				LeaPlusLC["CombineAddonsFrameA"] = "BOTTOMRIGHT"
+				LeaPlusLC["CombineAddonsFrameR"] = "BOTTOMLEFT"
+				LeaPlusLC["CombineAddonsFrameX"] = -2
+				LeaPlusLC["CombineAddonsFrameY"] = -1.2
+				--LeaPlusLC["CombineAddonsFrameScale"] = 1
+
                 LeaPlusLC["MiniAddonPanelScale"] = 1;
-                if LeaPlusLC["CombineAddonButtons"] == "On" then
-                    SetMinimapAddonButtonsFrameScale()
-                end
+                if LeaPlusLC["CombineAddonButtons"] == "On" and LeaPlusLC['minimapFrameGlobal'] then
+					LeaPlusLC:SetMinimapAddonButtonsFrameScale()
+
+					LeaPlusLC['minimapFrameGlobal']:ClearAllPoints()
+					LeaPlusLC['minimapFrameGlobal']:SetPoint(LeaPlusLC["CombineAddonsFrameA"], Minimap, LeaPlusLC["CombineAddonsFrameR"], LeaPlusLC["CombineAddonsFrameX"], LeaPlusLC["CombineAddonsFrameY"])
+				end
 
 				-- Reset map position
 				LeaPlusLC["MinimapA"], LeaPlusLC["MinimapR"], LeaPlusLC["MinimapX"], LeaPlusLC["MinimapY"] = "TOPRIGHT", "TOPRIGHT", -17, -45
@@ -6000,8 +6058,8 @@
                         SetMiniScale()
 
                         LeaPlusLC["MiniAddonPanelScale"] = 1;
-                        if LeaPlusLC["CombineAddonButtons"] == "On" then
-                            SetMinimapAddonButtonsFrameScale()
+                        if LeaPlusLC["CombineAddonButtons"] == "On" and LeaPlusLC['minimapFrameGlobal'] then
+							LeaPlusLC:SetMinimapAddonButtonsFrameScale()
                         end
 
 						-- Hide world map button
@@ -15268,6 +15326,12 @@
 				LeaPlusLC:LoadVarNum("DurabilityY", -170, -5000, 5000)		-- Manage durability position Y
 				LeaPlusLC:LoadVarNum("DurabilityScale", 1, 0.5, 2)			-- Manage durability scale
 
+				LeaPlusLC:LoadVarAnc("CombineAddonsFrameA", "BOTTOMRIGHT")				-- Manage CombineAddonsFrame anchor
+				LeaPlusLC:LoadVarAnc("CombineAddonsFrameR", "BOTTOMLEFT")				-- Manage CombineAddonsFrame relative
+				LeaPlusLC:LoadVarNum("CombineAddonsFrameX", -2, -5000, 5000)			-- Manage CombineAddonsFrame position X
+				LeaPlusLC:LoadVarNum("CombineAddonsFrameY", -1.2, -5000, 5000)		-- Manage CombineAddonsFrame position Y
+				--LeaPlusLC:LoadVarNum("CombineAddonsFrameScale", 1, 0.5, 2)			-- Manage CombineAddonsFrame scale
+
 				LeaPlusLC:LoadVarChk("ManageTracker", "Off")				-- Manage Tracker
 				LeaPlusLC:LoadVarAnc("TrackerA", "TOPRIGHT")				-- Manage Tracker anchor
 				LeaPlusLC:LoadVarAnc("TrackerR", "TOPRIGHT")				-- Manage Tracker relative
@@ -15700,6 +15764,12 @@
 			LeaPlusDB["DurabilityX"]			= LeaPlusLC["DurabilityX"]
 			LeaPlusDB["DurabilityY"]			= LeaPlusLC["DurabilityY"]
 			LeaPlusDB["DurabilityScale"]		= LeaPlusLC["DurabilityScale"]
+
+			LeaPlusDB["CombineAddonsFrameA"]			= LeaPlusLC["CombineAddonsFrameA"]
+			LeaPlusDB["CombineAddonsFrameR"]			= LeaPlusLC["CombineAddonsFrameR"]
+			LeaPlusDB["CombineAddonsFrameX"]			= LeaPlusLC["CombineAddonsFrameX"]
+			LeaPlusDB["CombineAddonsFrameY"]			= LeaPlusLC["CombineAddonsFrameY"]
+			--LeaPlusDB["CombineAddonsFrameScale"]		= LeaPlusLC["CombineAddonsFrameScale"]
 
 			LeaPlusDB["ManageVehicle"]			= LeaPlusLC["ManageVehicle"]
 			LeaPlusDB["VehicleA"]				= LeaPlusLC["VehicleA"]
@@ -17904,6 +17974,12 @@
 				LeaPlusDB["DurabilityX"] = 0					-- Manage durability position X
 				LeaPlusDB["DurabilityY"] = -170					-- Manage durability position Y
 				LeaPlusDB["DurabilityScale"] = 1.00				-- Manage durability scale
+
+				LeaPlusDB["CombineAddonsFrameA"] = "TOPRIGHT"			-- Manage CombineAddonsFrame anchor
+				LeaPlusDB["CombineAddonsFrameR"] = "TOPRIGHT"			-- Manage CombineAddonsFrame relative
+				LeaPlusDB["CombineAddonsFrameX"] = 0					-- Manage CombineAddonsFrame position X
+				LeaPlusDB["CombineAddonsFrameY"] = -170					-- Manage CombineAddonsFrame position Y
+				--LeaPlusDB["CombineAddonsFrameScale"] = 1.00				-- Manage CombineAddonsFrame scale
 
 				LeaPlusDB["ManageTracker"] = "On"				-- Manage Tracker
 				LeaPlusDB["TrackerA"] = "TOPRIGHT"				-- Manage Tracker anchor

@@ -4,8 +4,7 @@
 -- Backport to-do before release:
 --------------------------------------------------------------------------------
 
-Enhance Minimap - Combine Addon Buttons             - make this frame be movable, size-adjustable and make option to make it be hidden by default,
-                                                    but shown when either: mouse is over minimap or user chooses option to middle click minimap to show it.
+Auto Accept Quests - add user options.
 
 
 --------------------------------------------------------------------------------
@@ -35,11 +34,14 @@ DisableLootWarning       - Make sure it's working
 -- Stuff to-do:
 --------------------------------------------------------------------------------
 
-MinimapButton			- Add functions to alt-click and other clicks on button
+MinimapButton			 - Add functions to alt-click and other clicks on button
 
 MinimapEnhance			 - Add Timer module, just like ShaguTweaks.
 
 CombineAddonButtons		 - Make it change position from left to right if minimap is on left side of screen.
+
+CombineAddonButtons      - Make the toggle-mode button, that appears on frame TOPRIGHT hover to change the mode of frame
+                          (Modes: 1 - Always Shown, 2 - Shown only on Minimap or this frame HOVER)
 
 HideMiniButtons			 - Make a copy edit box with  a link to "guide" for Frame Stack 
 
