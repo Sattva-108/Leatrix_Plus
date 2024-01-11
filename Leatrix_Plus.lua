@@ -1709,7 +1709,7 @@
 
 			LeaPlusLC:MakeTx(FasterLootPanel, "Settings", 16, -72)
 			LeaPlusLC:MakeCB(FasterLootPanel, "SmallerErrorFrame", "Smaller Error Frame", 16, -92, false, "If checked, your red error text frame, will be only one line long.")
-			LeaPlusLC:MakeCB(FasterLootPanel, "FasterErrorFrame", "Faster Error Frame", 16, -112, false, "If checked, your red error text frame, will be faster to fade (1 second instead of 5).")
+			LeaPlusLC:MakeCB(FasterLootPanel, "FasterErrorFrame", "Faster Error Frame", 16, -112, false, "If checked, your red error text frame, will be faster to fade|n(1 second instead of 5).")
 
 
 			LeaPlusLC:MakeTx(FasterLootPanel, "Full Inventory Sound", 356, -72)
@@ -18349,7 +18349,7 @@
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Extras"					, 	146, -232);
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowVolume"				, 	"Show volume slider"			, 	146, -252, 	true,	"If checked, a master volume slider will be shown in the character frame.")
-	LeaPlusLC:MakeCB(LeaPlusLC[pg], "AhExtras"					, 	"Show auction controls"			, 	146, -272, 	true,	"If checked, additional functionality will be added to the auction house.|n|nBuyout only - create buyout auctions without filling in the starting price.|n|nGold only - set the copper and silver prices at 99 to speed up new auctions.|n|nFind item - search the auction house for the item you are selling.|n|nIn addition, the auction duration setting will be saved account-wide.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "AhExtras"					, 	"Show auction controls"			, 	146, -272, 	true,	"If checked, additional functionality will be added to the auction house.|n|nBuyout only - create buyout auctions without filling in the starting price.|n|nGold only - set the copper and silver prices at 99 to speed up new auctions.|n|nFind item - search the auction house for the item you are selling.|n|nIn addition, the auction duration setting will be saved account-wide.", "New option: Tab Confirm.|nUse Tab instead of mouse to navigate and post items to AH - faster.")
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Extras"					, 	340, -72);
 	-- LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowCooldowns"				, 	"Show cooldowns"				, 	340, -92, 	true,	"If checked, you will be able to place up to five beneficial cooldown icons above the target frame.")

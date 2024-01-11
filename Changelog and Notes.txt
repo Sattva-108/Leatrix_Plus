@@ -10,6 +10,8 @@ GUI - ruRU               - rename names of functions (texts), they are too long 
 
 Chat History             - (needs fixing) make sure it can be working with more than 128 lines correctly.
 
+IsMoviePlayable()
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
