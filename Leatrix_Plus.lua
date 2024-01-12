@@ -14636,15 +14636,18 @@
 							uframe:RegisterEvent("LOADING_SCREEN_DISABLED")
 							return
 						elseif strfind(item, "|r") then
+							--print(item)
 							-- A movie was clicked
 							local movieName, movieID = item:match("([^,]+)%|r([^,]+)")
+							--print(movieName)
 							movieID = strtrim(movieID, "()")
-							if IsMoviePlayable(movieID) then
+							--if IsMoviePlayable(movieID) then
 								stopBtn:Click()
-								MovieFrame_PlayMovie(MovieFrame, movieID)
-							else
-								LeaPlusLC:Print("Movie not playable.")
-							end
+								MovieFrame_PlayMovie(MovieFrame, movieName)
+								print("Movies are not yet supported in 3.3.5 backport.")
+							--else
+							--	LeaPlusLC:Print("Movie not playable.")
+							--end
 							return
 						else
 							-- A zone was clicked so show track listing

@@ -191,18 +191,18 @@
 		"musical moments/gloomy/gloomy01.mp3#36",
 	}) -- Mystery1:10
 	Zn(L["Various"], L["Various"], L["Cinematics"], {"|cffffd800" .. L["Various"] .. ": " .. L["Cinematics"], prefol,
-		-- World of Warcraft
-		"|cffffd800", "|cffffd800" .. L["World of Warcraft"],
-		"cinematics/logo.mp3#27",
-		"cinematics/wow_intro.mp3#170",
-		-- The Burning Crusade
-		"|cffffd800", "|cffffd800" .. L["The Burning Crusade"],
-		"cinematics/wow_intro_bc.mp3#167",
-		-- Wrath of the Lich King
-		"|cffffd800", "|cffffd800" .. L["Wrath of the Lich King"],
-		"cinematics/wow_intro_lk.mp3#198",
-		"cinematics/wow_wrathgate.mp3#265",
-		"cinematics/wow_fotlk.mp3#231",
+		---- World of Warcraft
+		--"|cffffd800", "|cffffd800" .. L["World of Warcraft"],
+		--"cinematics/logo.mp3#27",
+		--"cinematics/wow_intro.mp3#170",
+		---- The Burning Crusade
+		--"|cffffd800", "|cffffd800" .. L["The Burning Crusade"],
+		--"cinematics/wow_intro_bc.mp3#167",
+		---- Wrath of the Lich King
+		--"|cffffd800", "|cffffd800" .. L["Wrath of the Lich King"],
+		--"cinematics/wow_intro_lk.mp3#198",
+		--"cinematics/wow_wrathgate.mp3#265",
+		--"cinematics/wow_fotlk.mp3#231",
 	})
 
 	Zn(L["Various"], L["Various"], L["Credits"], {	"|cffffd800" .. L["Various"] .. ": " .. L["Credits"], prefol,
