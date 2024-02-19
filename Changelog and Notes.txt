@@ -12,6 +12,8 @@ Chat History             - (needs fixing) make sure it can be working with more 
 
 IsMoviePlayable()
 
+Minimap - MoveCombinedFrame - after reload became too small and un-clickable...
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -173,6 +175,8 @@ Show best gold value for quest reward.
 Open all bag user config option at merchant.
 
 AutoGossip - Add https://wowhead.com/wotlk/search?q=Surristrasz to ignore the dialog auto-confirm.
+
+MediaPlayer - resolve videos issue, they are not playing.
 
 --------------------------------------------------------------------------------
 ---- Things to include in presentation
