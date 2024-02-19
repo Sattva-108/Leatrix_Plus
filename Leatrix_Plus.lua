@@ -4961,9 +4961,27 @@
 
 
 					dragframe:SetPoint("CENTER", LeaPlusLC['minimapFrameGlobal'], "CENTER", 0, 1)
+
+					local function getDragFrameSize()
+						local width = LeaPlusLC['minimapFrameGlobal']:GetWidth()
+						local height = LeaPlusLC['minimapFrameGlobal']:GetHeight()
+						return width, height
+					end
+
+					local function setDragFrameSize()
+						local width, height = getDragFrameSize()
+						dragframe:SetSize(width, height)
+					end
+
 					LibCompat.After(3, function()
-						dragframe:SetWidth(LeaPlusLC['minimapFrameGlobal']:GetWidth());
-						dragframe:SetHeight(LeaPlusLC['minimapFrameGlobal']:GetHeight());
+						setDragFrameSize()
+						local width, height = getDragFrameSize()
+						if width <= 1 or height <= 1 then
+							--print("go agane")
+							LibCompat.After(3, function()
+								setDragFrameSize()
+							end)
+						end
 					end)
 					dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 					dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
@@ -5010,6 +5028,9 @@
 					--LeaPlusCB["MoveCombinedFrame"]:ClearAllPoints()
 					--LeaPlusCB["MoveCombinedFrame"]:SetPoint("LEFT", SideMinimap.h, "LEFT", 90, 0)
 					LeaPlusCB["MoveCombinedFrame"]:SetScript("OnClick", function()
+						if dragframe:GetWidth() == 1 then
+							setDragFrameSize()
+						end
 						if dragframe:IsShown() then
 							dragframe:Hide()
 						else
