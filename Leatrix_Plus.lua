@@ -4305,7 +4305,7 @@
 
 			if LeaPlusLC["CombineAddonButtons"] == "On" then
 				LeaPlusLC:MakeTx(SideMinimap, "Minimap buttons scale", 356, -212)
-				LeaPlusLC:MakeSL(SideMinimap, "MiniAddonPanelScale", "Drag to adjust scale of the Minimap Combined Addons button frame.", 0, 2, 0.1, 356, -232, "%.2f")
+				LeaPlusLC:MakeSL(SideMinimap, "MiniAddonPanelScale", "Drag to adjust scale of the Minimap Combined Addons button frame.", 0, 2, 0.01, 356, -232, "%.2f")
 			end
 
 
@@ -10938,9 +10938,18 @@
 			BuffFrame:SetDontSavePosition(true)
 			BuffFrame:SetClampedToScreen(true)
 
+			TemporaryEnchantFrame:SetMovable(true)
+			TemporaryEnchantFrame:SetUserPlaced(true)
+			TemporaryEnchantFrame:SetDontSavePosition(true)
+			TemporaryEnchantFrame:SetClampedToScreen(true)
+
 			-- Set buff frame position at startup
 			BuffFrame:ClearAllPoints()
+			TemporaryEnchantFrame:ClearAllPoints()
+
 			BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+			TemporaryEnchantFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+
 			BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
 			TemporaryEnchantFrame:SetScale(LeaPlusLC["BuffFrameScale"])
 			ConsolidatedBuffs:SetScale(LeaPlusLC["BuffFrameScale"])
@@ -10966,17 +10975,26 @@
 
 			local isBuffFrameMoving = false
 			local buffFrameSetPoint = BuffFrame.SetPoint
+			local tempEnchSetPoint = TemporaryEnchantFrame.SetPoint
 
 			BuffFrame.SetPoint = function(self, ...)
 				if not InCombatLockdown() and not isBuffFrameMoving then
 					buffFrameSetPoint(self, LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 				end
 			end
+
+			TemporaryEnchantFrame.SetPoint = function(self, ...)
+				if not InCombatLockdown() and not isBuffFrameMoving then
+					tempEnchSetPoint(self, LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+				end
+			end
+
 			dragframe:SetScript("OnMouseDown", function(self, btn)
 				-- Start dragging if left clicked
 				if btn == "LeftButton" then
 					isBuffFrameMoving = true
 					BuffFrame:StartMoving()
+					TemporaryEnchantFrame:StartMoving()
 				end
 			end)
 
@@ -10988,6 +11006,11 @@
 				BuffFrame:SetMovable(true)
 				BuffFrame:ClearAllPoints()
 				BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+
+				TemporaryEnchantFrame:StopMovingOrSizing()
+				TemporaryEnchantFrame:SetMovable(true)
+				TemporaryEnchantFrame:ClearAllPoints()
+				TemporaryEnchantFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 			end)
 
 			---- Snap-to-grid

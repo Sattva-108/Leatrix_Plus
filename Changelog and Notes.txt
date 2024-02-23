@@ -14,6 +14,8 @@ IsMoviePlayable()
 
 Minimap - MoveCombinedFrame - after reload became too small and un-clickable...
 
+Minimap - Hide POI ARROWS Tweak.
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -177,6 +179,12 @@ Open all bag user config option at merchant.
 AutoGossip - Add https://wowhead.com/wotlk/search?q=Surristrasz to ignore the dialog auto-confirm.
 
 MediaPlayer - resolve videos issue, they are not playing.
+
+UnitFrames - make them movable with Shift+Ctrl held.
+
+UnitFrames - make them auto-hidden while not in combat (but full mana or health, conditions)
+
+Chat - Clear Chat button / dropdown.
 
 --------------------------------------------------------------------------------
 ---- Things to include in presentation
