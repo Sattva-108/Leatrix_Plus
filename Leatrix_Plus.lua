@@ -4292,7 +4292,7 @@
 
 			-- Add slider controls
 			LeaPlusLC:MakeTx(SideMinimap, "Scale", 356, -72)
-			LeaPlusLC:MakeSL(SideMinimap, "MinimapScale", "Drag to set the minimap scale.|n|nAdjusting this slider makes the minimap and all the elements bigger.", 1, 4, 0.1, 356, -92, "%.2f")
+			LeaPlusLC:MakeSL(SideMinimap, "MinimapScale", "Drag to set the minimap scale.|n|nAdjusting this slider makes the minimap and all the elements bigger.", 1, 4, 0.01, 356, -92, "%.2f")
 
 			-- set x position for now to 10000, FIXME
 			LeaPlusLC:MakeTx(SideMinimap, "Square size", 10000, -132)
@@ -4984,7 +4984,7 @@
 						end
 					end)
 					dragframe:SetBackdropColor(0.0, 0.5, 1.0)
-					dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
+					--dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0}})
 					dragframe:SetToplevel(true)
 					dragframe:EnableMouse(true)
 					dragframe:SetFrameStrata("TOOLTIP")
@@ -4992,7 +4992,7 @@
 					dragframe:SetScale(LeaPlusLC['minimapFrameGlobal']:GetScale() - 0.10)
 
 					dragframe.t = dragframe:CreateTexture()
-					dragframe.t:SetAllPoints()
+					dragframe.t:SetAllPoints(LeaPlusLC['minimapFrameGlobal'])
 					dragframe.t:SetTexture(0.0, 1.0, 0.0, 0.5)
 					dragframe.t:SetAlpha(0.5)
 
@@ -12494,7 +12494,7 @@
 			local function ShowChatbox(chtfrm)
 				editBox:SetText("")
 				local NumMsg = chtfrm:GetNumMessages()
-				scrollbar:SetMinMaxValues(1, 8 * NumMsg) -- Adjust the min and max values as needed
+				scrollbar:SetMinMaxValues(1, 10 * NumMsg) -- Adjust the min and max values as needed
 
 				local StartMsg = 1
 				if NumMsg > 128 then StartMsg = NumMsg - 127 end
