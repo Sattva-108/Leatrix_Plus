@@ -26,9 +26,7 @@ HideErrors - You are in shapeshift form
 
 Chat - Alt Click to Invite.
 
-Social	 - Add Block Guild Invites
-
-
+GetColoredName() - Recent Chat
 --------------------------------------------------------------------------------
 -- What needs to be tested:
 --------------------------------------------------------------------------------

@@ -638,6 +638,7 @@
 		or	(LeaPlusLC["UnclampChat"]			~= LeaPlusDB["UnclampChat"])			-- Unclamp chat frame
 		or	(LeaPlusLC["MoveChatEditBoxToTop"]	~= LeaPlusDB["MoveChatEditBoxToTop"])	-- Move editbox to top
 		or	(LeaPlusLC["MoreFontSizes"]			~= LeaPlusDB["MoreFontSizes"])			-- More font sizes
+		or	(LeaPlusLC["AltClickInv"]			~= LeaPlusDB["AltClickInv"])			-- Alt click invite
 		or	(LeaPlusLC["NoStickyChat"]			~= LeaPlusDB["NoStickyChat"])			-- Disable sticky chat
 		or	(LeaPlusLC["UseArrowKeysInChat"]	~= LeaPlusDB["UseArrowKeysInChat"])		-- Use arrow keys in chat
 		or	(LeaPlusLC["NoChatFade"]			~= LeaPlusDB["NoChatFade"])				-- Disable chat fade
@@ -8390,6 +8391,24 @@
 		end
 
 		----------------------------------------------------------------------
+		-- Alt click invite
+		----------------------------------------------------------------------
+
+		if LeaPlusLC["AltClickInv"] == "On" then
+			local originSetItemRef = SetItemRef;
+			local function HandleAltClick(link, text, button)
+				local linkType, playerName = strsplit(":", link);
+				if linkType == "player" and IsAltKeyDown()
+				then
+					return InviteUnit(playerName)
+				else
+					return originSetItemRef(link,text,button)
+				end
+			end
+			SetItemRef = HandleAltClick;
+		end
+
+		----------------------------------------------------------------------
 		--	Show vanity controls (must be before Enhance dressup)
 		----------------------------------------------------------------------
 
@@ -15259,6 +15278,7 @@
 				LeaPlusLC:LoadVarChk("UnclampChat", "Off")					-- Unclamp chat frame
 				LeaPlusLC:LoadVarChk("MoveChatEditBoxToTop", "Off")			-- Move editbox to top
 				LeaPlusLC:LoadVarChk("MoreFontSizes", "Off")				-- More font sizes
+				LeaPlusLC:LoadVarChk("AltClickInv", "Off")				-- More font sizes
 
 				LeaPlusLC:LoadVarChk("NoStickyChat", "Off")					-- Disable sticky chat
 				LeaPlusLC:LoadVarChk("UseArrowKeysInChat", "Off")			-- Use arrow keys in chat
@@ -15698,6 +15718,7 @@
 			LeaPlusDB["UnclampChat"]			= LeaPlusLC["UnclampChat"]
 			LeaPlusDB["MoveChatEditBoxToTop"]	= LeaPlusLC["MoveChatEditBoxToTop"]
 			LeaPlusDB["MoreFontSizes"]			= LeaPlusLC["MoreFontSizes"]
+			LeaPlusDB["AltClickInv"]			= LeaPlusLC["AltClickInv"]
 
 			LeaPlusDB["NoStickyChat"] 			= LeaPlusLC["NoStickyChat"]
 			LeaPlusDB["UseArrowKeysInChat"]		= LeaPlusLC["UseArrowKeysInChat"]
@@ -17935,6 +17956,7 @@
 				LeaPlusDB["UnclampChat"] = "On"					-- Unclamp chat frame
 				LeaPlusDB["MoveChatEditBoxToTop"] = "On"		-- Move editbox to top
 				LeaPlusDB["MoreFontSizes"] = "On"				-- More font sizes
+				LeaPlusDB["AltClickInv"] = "On"				-- More font sizes
 
 				LeaPlusDB["NoStickyChat"] = "On"				-- Disable sticky chat
 				LeaPlusDB["UseArrowKeysInChat"] = "On"			-- Use arrow keys in chat
@@ -18390,6 +18412,7 @@
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "UnclampChat"				,	"Unclamp chat frame"			,	146, -152,	true,	"If checked, you will be able to drag the chat frame to the edge of the screen.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "MoveChatEditBoxToTop" 		, 	"Move editbox to top"			,	146, -172, 	true,	"If checked, the editbox will be moved to the top of the chat frame.")
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "MoreFontSizes"		 		, 	"More font sizes"				,	146, -192, 	true,	"If checked, additional font sizes will be available in the chat frame font size menu.")
+	LeaPlusLC:MakeCB(LeaPlusLC[pg], "AltClickInv"		 		, 	"Alt click for Party Invite"				,	146, -212, 	true,	"If checked, you will be able to invite to party by simply holding ALT key when clicking on chat name.")
 
 	LeaPlusLC:MakeTx(LeaPlusLC[pg], "Mechanics"					, 	340, -72);
 	LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoStickyChat"				, 	"Disable sticky chat"			,	340, -92,	true,	"If checked, sticky chat will be disabled.|n|nNote that this does not apply to temporary chat windows.")
