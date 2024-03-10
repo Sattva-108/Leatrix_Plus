@@ -14727,7 +14727,9 @@
 							movieID = strtrim(movieID, "()")
 							--if IsMoviePlayable(movieID) then
 								stopBtn:Click()
-								MovieFrame_PlayMovie(MovieFrame, movieName)
+								--MovieFrame_PlayMovie(MovieFrame, movieName)
+								--FIXME
+								--_G["MovieFrame"]:StartMovie(movieName,100); MovieFrame:Show()
 								print("Movies are not yet supported in 3.3.5 backport.")
 							--else
 							--	LeaPlusLC:Print("Movie not playable.")
@@ -15994,7 +15996,7 @@
 			--SetCVar("RAIDweatherDensity", "3")
 
 			-- Max camera zoom (LeaPlusLC["MaxCameraZoom"])
-			SetCVar("cameraDistanceMaxZoomFactor", 1.9)
+			SetCVar("cameraDistanceMaxFactor", 1.9)
 
 			-- Universal group color (LeaPlusLC["UnivGroupColor"])
 			ChangeChatColor("RAID", 1, 0.50, 0)

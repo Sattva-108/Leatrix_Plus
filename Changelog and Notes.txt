@@ -22,11 +22,18 @@ Manage Debuffs  - Fix it
 
 MinimapButtons - Add combat login workaround - currently after combat, the icons are not updated.
 
-HideErrors - You are in shapeshift form
-
-Chat - Alt Click to Invite.
+HideErrorMessages - You are in shapeshift form
 
 GetColoredName() - Recent Chat
+
+Minimap - Add option to hide Calendar, instead show it with middle button.
+
+MinimapButtons - Make re-init if user reloaded in combat.
+
+Arena queue timer
+
+Hide Error text, permit user to enter partial to not un-hide some error text.
+     -(For example arena ready crystal red error shows how many players ready.)
 --------------------------------------------------------------------------------
 -- What needs to be tested:
 --------------------------------------------------------------------------------
