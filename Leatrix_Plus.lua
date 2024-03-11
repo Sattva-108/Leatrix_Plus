@@ -665,6 +665,7 @@
 		or	(LeaPlusLC["SquareMinimap"]			~= LeaPlusDB["SquareMinimap"])			-- Square minimap
 		or	(LeaPlusLC["CombineAddonButtons"]	~= LeaPlusDB["CombineAddonButtons"])	-- Combine addon buttons
 		or	(LeaPlusLC["HideMiniTracking"]		~= LeaPlusDB["HideMiniTracking"])		-- Hide tracking button
+		or	(LeaPlusLC["HideMiniCalendar"]		~= LeaPlusDB["HideMiniCalendar"])		-- Hide tracking button
 		or	(LeaPlusLC["MiniExcludeList"]		~= LeaPlusDB["MiniExcludeList"])		-- Minimap exclude list
 		or	(LeaPlusLC["TipModEnable"]			~= LeaPlusDB["TipModEnable"])			-- Enhance tooltip
 		or	(LeaPlusLC["TipNoHealthBar"]		~= LeaPlusDB["TipNoHealthBar"])			-- Tooltip hide health bar
@@ -4279,7 +4280,8 @@
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniZoomBtns", "Hide the zoom buttons", 16, -92, false, "If checked, the zoom buttons will be hidden.  You can use the mousewheel to zoom regardless of this setting.")
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniZoneText", "Hide the zone text bar", 16, -112, false, "If checked, the zone text bar will be hidden.")
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniMapButton", "Hide the world map button", 16, -132, false, "If checked, the world map button will be hidden.")
-			LeaPlusLC:MakeCB(SideMinimap, "HideMiniTracking", "Hide the tracking button", 16, -152, true, "If checked, the tracking button will be hidden while the pointer is not over the minimap.")
+			LeaPlusLC:MakeCB(SideMinimap, "HideMiniTracking", "Hide the tracking button", 16, -152, true, "If checked, the tracking button will be hidden. Right-click on the minimap to show tracking menu.")
+			LeaPlusLC:MakeCB(SideMinimap, "HideMiniCalendar", "Hide calendar button.", 226, -92, true, "If checked, the calendar button will be hidden. Middle-click on the minimap to show calendar frame.")
 			LeaPlusLC:MakeCB(SideMinimap, "HideMiniAddonButtons", "Hide addon buttons", 16, -172, true, "If checked, addon buttons will be hidden while the pointer is not over the minimap.")
 
 			LeaPlusLC:MakeCB(SideMinimap, "SquareMinimap", "Square minimap", 16, -212, true, "If checked, the minimap shape will be square.")
@@ -4302,21 +4304,21 @@
 			SetExcludeButtonsFunc()
 
 			-- Add slider controls
-			LeaPlusLC:MakeTx(SideMinimap, "Scale", 356, -72)
-			LeaPlusLC:MakeSL(SideMinimap, "MinimapScale", "Drag to set the minimap scale.|n|nAdjusting this slider makes the minimap and all the elements bigger.", 1, 4, 0.01, 356, -92, "%.2f")
+			LeaPlusLC:MakeTx(SideMinimap, "Scale", 406, -72)
+			LeaPlusLC:MakeSL(SideMinimap, "MinimapScale", "Drag to set the minimap scale.|n|nAdjusting this slider makes the minimap and all the elements bigger.", 1, 4, 0.01, 406, -92, "%.2f")
 
 			-- set x position for now to 10000, FIXME
 			LeaPlusLC:MakeTx(SideMinimap, "Square size", 10000, -132)
 			LeaPlusLC:MakeSL(SideMinimap, "MinimapSize", "Drag to set the square minimap size.|n|nAdjusting this slider makes the minimap bigger but keeps the elements the same size.", 140, 560, 1, 10000, -152, "%.0f")
 
-			LeaPlusLC:MakeTx(SideMinimap, "Cluster scale", 356, -132)
-			LeaPlusLC:MakeSL(SideMinimap, "MiniClusterScale", "Drag to set the cluster scale.|n|nNote: Adjusting the cluster scale affects the entire cluster including frames attached to it such as the quest watch frame.|n|nIt will also cause the default UI right-side action bars to scale when you login.  If you use the default UI right-side action bars, you may want to leave this at 100%.", 1, 2, 0.1, 356, -152, "%.2f")
+			LeaPlusLC:MakeTx(SideMinimap, "Cluster scale", 406, -132)
+			LeaPlusLC:MakeSL(SideMinimap, "MiniClusterScale", "Drag to set the cluster scale.|n|nNote: Adjusting the cluster scale affects the entire cluster including frames attached to it such as the quest watch frame.|n|nIt will also cause the default UI right-side action bars to scale when you login.  If you use the default UI right-side action bars, you may want to leave this at 100%.", 1, 2, 0.1, 406, -152, "%.2f")
 
 			LeaPlusLC:MakeCB(SideMinimap, "CombineAddonButtons", "Combine addon buttons", 16, -192, true, "If checked, addon buttons will be combined into a single button frame which you can toggle by right-clicking the minimap.|n|nNote that enabling this option will lock out the 'Hide addon buttons' setting." , "Use slider to increase size of the frame and `Move Combined Frame` button to move it around. ")
 
 			if LeaPlusLC["CombineAddonButtons"] == "On" then
-				LeaPlusLC:MakeTx(SideMinimap, "Minimap buttons scale", 356, -212)
-				LeaPlusLC:MakeSL(SideMinimap, "MiniAddonPanelScale", "Drag to adjust scale of the Minimap Combined Addons button frame.", 0, 2, 0.01, 356, -232, "%.2f")
+				LeaPlusLC:MakeTx(SideMinimap, "Minimap buttons scale", 406, -212)
+				LeaPlusLC:MakeSL(SideMinimap, "MiniAddonPanelScale", "Drag to adjust scale of the Minimap Combined Addons button frame.", 0, 2, 0.01, 406, -232, "%.2f")
 			end
 
 
@@ -6124,12 +6126,6 @@
 							self:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
 						end)
 						ToggleDropDownMenu(1, nil, MiniMapTrackingDropDown, "cursor", -3, -3)
-					elseif button == "MiddleButton" then
-						if not WorldMapFrame:IsShown() then
-							ShowUIPanel(WorldMapFrame);
-						else
-							HideUIPanel(WorldMapFrame);
-						end
 					elseif button == "LeftButton" then
 						Minimap_OnClick(self)
 					end
@@ -6138,6 +6134,19 @@
 
 
 			end
+
+			-- Hide calendar button
+			if LeaPlusLC["HideMiniCalendar"] == "On" then
+				GameTimeFrame:Hide()
+
+				Minimap:HookScript("OnMouseUp", function(self, button)
+					if button == "MiddleButton" then
+							GameTimeFrame_OnClick(self)
+					end
+				end)
+			end
+
+
 
 			-- -- LibDBIcon callback (search LibDBIcon_IconCreated to find calls to this)
 			-- LibDBIconStub.RegisterCallback(miniFrame, "LibDBIcon_IconCreated", function(self, button, name)
@@ -15323,6 +15332,7 @@
 				LeaPlusLC:LoadVarChk("HideMiniAddonButtons", "On")			-- Hide addon buttons
 				LeaPlusLC:LoadVarChk("HideMiniMapButton", "On")				-- Hide the world map button
 				LeaPlusLC:LoadVarChk("HideMiniTracking", "Off")				-- Hide the tracking button
+				LeaPlusLC:LoadVarChk("HideMiniCalendar", "Off")				-- Hide the tracking button
 				LeaPlusLC:LoadVarNum("MinimapScale", 1, 1, 4)				-- Minimap scale slider
 				LeaPlusLC:LoadVarNum("MinimapSize", 140, 140, 560)			-- Minimap size slider
 				LeaPlusLC:LoadVarNum("MiniClusterScale", 1, 1, 2)			-- Minimap cluster scale
@@ -15763,6 +15773,7 @@
 			LeaPlusDB["HideMiniAddonButtons"]	= LeaPlusLC["HideMiniAddonButtons"]
 			LeaPlusDB["HideMiniMapButton"]		= LeaPlusLC["HideMiniMapButton"]
 			LeaPlusDB["HideMiniTracking"]		= LeaPlusLC["HideMiniTracking"]
+			LeaPlusDB["HideMiniCalendar"]		= LeaPlusLC["HideMiniCalendar"]
 			LeaPlusDB["MinimapScale"]			= LeaPlusLC["MinimapScale"]
 			LeaPlusDB["MinimapSize"]			= LeaPlusLC["MinimapSize"]
 			LeaPlusDB["MiniClusterScale"]		= LeaPlusLC["MiniClusterScale"]
@@ -18001,6 +18012,7 @@
 				LeaPlusDB["HideMiniZoneText"] = "On"			-- Hide zone text bar
 				LeaPlusDB["HideMiniMapButton"] = "On"			-- Hide world map button
 				LeaPlusDB["HideMiniTracking"] = "On"			-- Hide tracking button
+				LeaPlusDB["HideMiniCalendar"] = "On"			-- Hide tracking button
 				LeaPlusDB["MinimapA"] = "TOPRIGHT"				-- Minimap anchor
 				LeaPlusDB["MinimapR"] = "TOPRIGHT"				-- Minimap relative
 				LeaPlusDB["MinimapX"] = 0						-- Minimap X

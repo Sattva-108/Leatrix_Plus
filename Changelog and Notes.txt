@@ -6,15 +6,9 @@
 
 Auto Accept Quests       - add user options.
 
-GUI - ruRU               - rename names of functions (texts), they are too long to read
-
 Chat History             - (needs fixing) make sure it can be working with more than 128 lines correctly.
 
-IsMoviePlayable()
-
-Minimap - MoveCombinedFrame - after reload became too small and un-clickable...
-
-Minimap - Hide POI ARROWS Tweak.
+Media                    - Need to fix Movies, to be playable.
 
 Manage Buffs - Consolidated Buffs Test, and fix if needed. Will it be moved as intended if user has Consolidated Buffs?
 
@@ -22,18 +16,18 @@ Manage Debuffs  - Fix it
 
 MinimapButtons - Add combat login workaround - currently after combat, the icons are not updated.
 
-HideErrorMessages - You are in shapeshift form
-
 GetColoredName() - Recent Chat
-
-Minimap - Add option to hide Calendar, instead show it with middle button.
-
-MinimapButtons - Make re-init if user reloaded in combat.
 
 Arena queue timer
 
 Hide Error text, permit user to enter partial to not un-hide some error text.
      -(For example arena ready crystal red error shows how many players ready.)
+     - You are in shapeshift,
+
+Minimap - Add option to hide Calendar, instead show it with middle button.
+
+Minimap - MailIcon - Move and May be make it custom texture.
+
 --------------------------------------------------------------------------------
 -- What needs to be tested:
 --------------------------------------------------------------------------------
@@ -54,6 +48,10 @@ ShowFlightPaths			 - Will StopLandingEvent work correctly on summon, BG/arena ac
 --------------------------------------------------------------------------------
 -- Stuff to-do:
 --------------------------------------------------------------------------------
+
+Minimap - Hide POI ARROWS Tweak.
+
+Recent Chat - Need Escape key to close it.
 
 MinimapEnhance - Option to hide calendar. How to make it so user still can open it? Add to tracking dropdown?
 
