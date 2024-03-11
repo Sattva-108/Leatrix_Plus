@@ -5316,7 +5316,21 @@
 
 			end
 
+			-- Define the directory for your textures
+			local uiminimap2x = "Interface\\AddOns\\Leatrix_Plus\\assets\\uiminimap2x"
 
+			-- Store atlas information
+			Leatrix_Plus.atlasinfo = {
+				['ui-hud-minimap-mail-up'] = { uiminimap2x, 512, 1024, 21, 14, 42, 81, 520, 550 },
+			}
+
+			-- Function to unpack atlas information
+			function Leatrix_Plus.atlas_unpack(atlas)
+				assert(Leatrix_Plus.atlasinfo[atlas], 'Atlas ['..atlas..']: failed to unpack')
+				return unpack(Leatrix_Plus.atlasinfo[atlas])
+			end
+
+			Leatrix_Plus.atlas_unpack('ui-hud-minimap-mail-up')
 
 
 			----------------------------------------------------------------------
@@ -5324,6 +5338,26 @@
 			----------------------------------------------------------------------
 
 			if LeaPlusLC["SquareMinimap"] == "On" then
+
+
+
+
+				-- Function to apply the atlas to a frame
+				function Leatrix_Plus.applyAtlas(frame, atlas, size)
+					if not atlas then
+						frame:SetTexture(nil)
+						return
+					end
+
+					local tex, dimension_x, dimension_y, width, height, left, right, top, bottom = Leatrix_Plus.atlas_unpack(atlas)
+					frame:SetTexture(tex)
+					frame:SetTexCoord(left / dimension_x, right / dimension_x, top / dimension_y, bottom / dimension_y)
+
+					if size then
+						frame:SetWidth(width)
+						frame:SetHeight(height)
+					end
+				end
 
 				-- Set minimap shape
 				_G.GetMinimapShape = function() return "SQUARE" end
@@ -5390,56 +5424,89 @@
 				--------------------------------------------------------------------------------
 
 
-				miniFrame.ClearAllPoints(MiniMapMailFrame)
-	            -- Hide Circle around mail button
-	            MiniMapMailFrame:DisableDrawLayer("OVERLAY")
-	            -- Get the texture of MiniMapMailFrame
-	            local mailIcon = MiniMapMailFrame:GetRegions()
-	            mailIcon:SetTexture("Interface\\Minimap\\TRACKING\\Mailbox")
-	            -- Set the scale of the icon
-	            MiniMapMailFrame:SetScale(1.2)
-	            -- MiniMapMailFrame:SetFrameLevel(2)
-	            -- Move the icon to the top right of the minimap
-	            MiniMapMailFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", 19, 14)
-	            	            MiniMapMailFrame:SetHitRectInsets(10, 10, 5, 8)
-	            -- Flag to track if mail icon is hidden
-	            local isHidden = false
+				--miniFrame.ClearAllPoints(MiniMapMailFrame)
+	            ---- Hide Circle around mail button
+	            --MiniMapMailFrame:DisableDrawLayer("OVERLAY")
+	            ---- Get the texture of MiniMapMailFrame
+	            --local mailIcon = MiniMapMailFrame:GetRegions()
+	            --mailIcon:SetTexture("Interface\\Minimap\\TRACKING\\Mailbox")
+	            ---- Set the scale of the icon
+	            --MiniMapMailFrame:SetScale(1.2)
+	            ---- MiniMapMailFrame:SetFrameLevel(2)
+	            ---- Move the icon to the top right of the minimap
+	            --MiniMapMailFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", 19, 14)
+	            --	            MiniMapMailFrame:SetHitRectInsets(10, 10, 5, 8)
+	            ---- Flag to track if mail icon is hidden
+	            --local isHidden = false
+				--
+	            ---- Function to toggle mail icon visibility
+	            --local function toggleMailIcon()
+	            --    if isHidden then
+	            --        mailIcon:Show()
+	            --        isHidden = false
+	            --    else
+	            --        mailIcon:Hide()
+	            --        GameTooltip:Hide() -- re-show the tooltip to update its size
+	            --        isHidden = true
+	            --        -- UIErrorsFrame:AddMessage("Mail button is hidden. Right click again to show.", 0.1, 1.0, 0.1, 1.0, 3)
+	            --    end
+	            --end
+				--
+	            ---- Make the mail icon hide/show on right-click
+	            --MiniMapMailFrame:SetScript("OnMouseUp", function(self, button)
+	            --    if button == "RightButton" then
+	            --        toggleMailIcon()
+	            --    end
+	            --end)
+				--
+				--
+	            ---- Add new tooltip to the mail button
+	            --local originalMailFrame_OnEnter = MiniMapMailFrame:GetScript("OnEnter")
+				--
+	            --local function modifiedMailFrame_OnEnter(self)
+	            --    originalMailFrame_OnEnter(self)
+				--
+	            --    GameTooltip:AddLine("  ", 1, 1, 1, true)
+	            --    GameTooltip:AddLine("|cffeda55fRight-Click|r |cff99ff00to toggle minimap button.|r")
+				--
+	            --    GameTooltip:SetMinimumWidth(200) -- set the minimum width of the tooltip
+	            --    GameTooltip:Show() -- re-show the tooltip to update its size
+	            --end
+				--
+	            --MiniMapMailFrame:SetScript("OnEnter", modifiedMailFrame_OnEnter)
 
-	            -- Function to toggle mail icon visibility
-	            local function toggleMailIcon()
-	                if isHidden then
-	                    mailIcon:Show()
-	                    isHidden = false
-	                else
-	                    mailIcon:Hide()
-	                    GameTooltip:Hide() -- re-show the tooltip to update its size
-	                    isHidden = true
-	                    -- UIErrorsFrame:AddMessage("Mail button is hidden. Right click again to show.", 0.1, 1.0, 0.1, 1.0, 3)
-	                end
-	            end
+				-- Example usage for setting a new mail icon
+				function Leatrix_Plus.setNewMailIcon()
+					--local MiniMapMailIcon = MiniMapMailFrame:CreateTexture(nil, "OVERLAY")
+					Leatrix_Plus.applyAtlas(MiniMapMailIcon, 'ui-hud-minimap-mail-up', true)
+					MiniMapMailFrame:ClearAllPoints()
+					MiniMapMailFrame:SetPoint('TOPLEFT', Minimap, 'TOPLEFT', -6, 5)
 
-	            -- Make the mail icon hide/show on right-click
-	            MiniMapMailFrame:SetScript("OnMouseUp", function(self, button)
-	                if button == "RightButton" then
-	                    toggleMailIcon()
-	                end
-	            end)
+					-- Function to adjust the appearance of the Minimap Mail Icon
+					local function AdjustMailIconLook()
+						local mailIcon = MiniMapMailFrame
+
+						-- Adjust icon texture to make it square
+						for i = 1, mailIcon:GetNumRegions() do
+							local region = select(i, mailIcon:GetRegions())
+							if region:GetObjectType() == "Texture" then
+								local texture = region:GetTexture()
+								-- Remove unwanted textures
+								if texture and (string.find(texture, "Border") or string.find(texture, "Background") or string.find(texture, "AlphaMask")) then
+									region:SetTexture(nil)
+								end
+							end
+						end
+					end
+
+					-- Call the function to adjust the mail icon's look
+					AdjustMailIconLook()
+
+				end
+
+				Leatrix_Plus.setNewMailIcon()
 
 
-	            -- Add new tooltip to the mail button
-	            local originalMailFrame_OnEnter = MiniMapMailFrame:GetScript("OnEnter")
-
-	            local function modifiedMailFrame_OnEnter(self)
-	                originalMailFrame_OnEnter(self)
-
-	                GameTooltip:AddLine("  ", 1, 1, 1, true)
-	                GameTooltip:AddLine("|cffeda55fRight-Click|r |cff99ff00to toggle minimap button.|r")
-
-	                GameTooltip:SetMinimumWidth(200) -- set the minimum width of the tooltip
-	                GameTooltip:Show() -- re-show the tooltip to update its size
-	            end
-
-	            MiniMapMailFrame:SetScript("OnEnter", modifiedMailFrame_OnEnter)
 
 				--------------------------------------------------------------------------------
 				-- Style the Calendar Mail Button
