@@ -11199,19 +11199,12 @@
 						d:SetDontSavePosition(true)
 						d:SetClampedToScreen(true)
 
-						-- Set buff frame position at startup
+						-- Anchor DebuffButton1 using LeaPlusLC values
 						d:ClearAllPoints()
 						d:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
-						--d:SetScale(LeaPlusLC["DebuffButton1Scale"])
 						UpdateDebuffButtonScales(LeaPlusLC["DebuffButton1Scale"])
-						local isDebuffButton1Moving = false
-						local deBuffFrameSetPoint = DebuffButton1.SetPoint
 
-						DebuffButton1.SetPoint = function(self, ...)
-							if not InCombatLockdown() and not isDebuffButton1Moving then
-								deBuffFrameSetPoint(self, LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
-							end
-						end
+						-- Position dragframe
 						dragframe:SetPoint("TOPRIGHT", d, "TOPRIGHT", 5, 5)
 					end
 				end)
