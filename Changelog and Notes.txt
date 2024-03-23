@@ -10,12 +10,6 @@ Chat History             - (needs fixing) make sure it can be working with more 
 
 Media                    - Need to fix Movies, to be playable.
 
-Manage Buffs - Consolidated Buffs Test, and fix if needed. Will it be moved as intended if user has Consolidated Buffs?
-
-Manage Debuffs  - Fix it
-
-MinimapButtons - Add combat login workaround - currently after combat, the icons are not updated.
-
 GetColoredName() - Recent Chat
 
 Arena queue timer
@@ -24,11 +18,10 @@ Hide Error text, permit user to enter partial to not un-hide some error text.
      -(For example arena ready crystal red error shows how many players ready.)
      - You are in shapeshift,
 
-Minimap - Add option to hide Calendar, instead show it with middle button.
-
 Minimap - MailIcon - Move - Create Dropdown with anchor.
 
-ManageBuffs - fix it, currently if 2 rows, it breaks.
+Manage Debuffs - make it somehow to be movable even if there are no debuffs shown.
+
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -45,6 +38,8 @@ QueueTimer				 - Need to test if timer .After 0.1 is fine in SetupBar func (was 
 LibCandyBar				 - Will it be conflicting with other addons that use 3.3.5 version of CandyBar lib? Like with BigWigs?
 
 ShowFlightPaths			 - Will StopLandingEvent work correctly on summon, BG/arena accept
+
+Manage Debuffs  - Test IT in fight.
 
 
 --------------------------------------------------------------------------------

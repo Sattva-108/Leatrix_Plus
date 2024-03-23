@@ -4784,9 +4784,10 @@
 				    local maxButtonsPerColumn = 5 -- maximum number of buttons per column
 				    local maxColumns = 3 -- maximum number of columns
 
-				    if InCombatLockdown() then
-				        return -- Stop execution if player is in combat.
-				    end
+					-- not sure why i added it.
+				    --if InCombatLockdown() then
+				    --    return -- Stop execution if player is in combat.
+				    --end
 
 				    local excludedPatterns = {}
 				    for pattern in string.gmatch(LeaPlusDB["MiniExcludeList"], "[^,]+") do
@@ -5697,12 +5698,6 @@
 						        end
 						    end
 						end
-
-
-
-
-
-
 
 
 						-- This function shows the minimap buttons by setting their alpha to 1.
