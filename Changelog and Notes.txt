@@ -26,7 +26,9 @@ Hide Error text, permit user to enter partial to not un-hide some error text.
 
 Minimap - Add option to hide Calendar, instead show it with middle button.
 
-Minimap - MailIcon - Move and May be make it custom texture.
+Minimap - MailIcon - Move - Create Dropdown with anchor.
+
+ManageBuffs - fix it, currently if 2 rows, it breaks.
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:

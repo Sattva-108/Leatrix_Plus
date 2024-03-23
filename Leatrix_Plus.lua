@@ -10971,30 +10971,23 @@
 		if LeaPlusLC["ManageBuffs"] == "On" and not LeaLockList["ManageBuffs"] then
 
 			-- Allow buff frame to be moved
-			BuffFrame:SetMovable(true)
-			BuffFrame:SetUserPlaced(true)
-			BuffFrame:SetDontSavePosition(true)
-			BuffFrame:SetClampedToScreen(true)
+			ConsolidatedBuffs:SetMovable(true)
+			ConsolidatedBuffs:SetUserPlaced(true)
+			ConsolidatedBuffs:SetDontSavePosition(true)
+			ConsolidatedBuffs:SetClampedToScreen(true)
 
-			TemporaryEnchantFrame:SetMovable(true)
-			TemporaryEnchantFrame:SetUserPlaced(true)
-			TemporaryEnchantFrame:SetDontSavePosition(true)
-			TemporaryEnchantFrame:SetClampedToScreen(true)
 
 			-- Set buff frame position at startup
-			BuffFrame:ClearAllPoints()
-			TemporaryEnchantFrame:ClearAllPoints()
+			ConsolidatedBuffs:ClearAllPoints()
 
-			BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
-			TemporaryEnchantFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+			ConsolidatedBuffs:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 
-			BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
-			TemporaryEnchantFrame:SetScale(LeaPlusLC["BuffFrameScale"])
 			ConsolidatedBuffs:SetScale(LeaPlusLC["BuffFrameScale"])
+
 
 			-- Create drag frame
 			local dragframe = CreateFrame("FRAME", nil, nil)
-			dragframe:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, 2.5)
+			dragframe:SetPoint("TOPRIGHT", ConsolidatedBuffs, "TOPRIGHT", 0, 2.5)
 			dragframe:SetBackdropColor(0.0, 0.5, 1.0)
 			dragframe:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = false, tileSize = 0, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
 			dragframe:SetToplevel(true)
@@ -11012,43 +11005,32 @@
 			dragframe.f:SetText(L["Buffs"])
 
 			local isBuffFrameMoving = false
-			local buffFrameSetPoint = BuffFrame.SetPoint
-			local tempEnchSetPoint = TemporaryEnchantFrame.SetPoint
+			local buffFrameSetPoint = ConsolidatedBuffs.SetPoint
 
-			BuffFrame.SetPoint = function(self, ...)
+			ConsolidatedBuffs.SetPoint = function(self, ...)
 				if not InCombatLockdown() and not isBuffFrameMoving then
 					buffFrameSetPoint(self, LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 				end
 			end
 
-			TemporaryEnchantFrame.SetPoint = function(self, ...)
-				if not InCombatLockdown() and not isBuffFrameMoving then
-					tempEnchSetPoint(self, LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
-				end
-			end
 
 			dragframe:SetScript("OnMouseDown", function(self, btn)
 				-- Start dragging if left clicked
 				if btn == "LeftButton" then
 					isBuffFrameMoving = true
-					BuffFrame:StartMoving()
-					TemporaryEnchantFrame:StartMoving()
+					ConsolidatedBuffs:StartMoving()
 				end
 			end)
 
 			dragframe:SetScript("OnMouseUp", function()
 				-- Save frame positions
-				BuffFrame:StopMovingOrSizing()
+				ConsolidatedBuffs:StopMovingOrSizing()
 				isBuffFrameMoving = false
-				LeaPlusLC["BuffFrameA"], void, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"] = BuffFrame:GetPoint()
-				BuffFrame:SetMovable(true)
-				BuffFrame:ClearAllPoints()
-				BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+				LeaPlusLC["BuffFrameA"], void, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"] = ConsolidatedBuffs:GetPoint()
+				ConsolidatedBuffs:SetMovable(true)
+				ConsolidatedBuffs:ClearAllPoints()
+				ConsolidatedBuffs:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 
-				TemporaryEnchantFrame:StopMovingOrSizing()
-				TemporaryEnchantFrame:SetMovable(true)
-				TemporaryEnchantFrame:ClearAllPoints()
-				TemporaryEnchantFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 			end)
 
 			---- Snap-to-grid
@@ -11081,8 +11063,6 @@
 
 			-- Set scale when slider is changed
 			LeaPlusCB["BuffFrameScale"]:HookScript("OnValueChanged", function()
-				BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
-				TemporaryEnchantFrame:SetScale(LeaPlusLC["BuffFrameScale"])
 				ConsolidatedBuffs:SetScale(LeaPlusLC["BuffFrameScale"])
 				dragframe:SetScale(LeaPlusLC["BuffFrameScale"])
 				-- Show formatted slider value
@@ -11123,8 +11103,8 @@
 				LeaPlusLC["BuffFrameX"] = -205
 				LeaPlusLC["BuffFrameY"] = -13
 				LeaPlusLC["BuffFrameScale"] = 1
-				BuffFrame:ClearAllPoints()
-				BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+				ConsolidatedBuffs:ClearAllPoints()
+				ConsolidatedBuffs:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 
 				-- Refresh configuration panel
 				BuffPanel:Hide(); BuffPanel:Show()
@@ -11144,10 +11124,8 @@
 					LeaPlusLC["BuffFrameX"] = -271
 					LeaPlusLC["BuffFrameY"] = 0
 					LeaPlusLC["BuffFrameScale"] = 0.80
-					BuffFrame:ClearAllPoints()
-					BuffFrame:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
-					BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
-					TemporaryEnchantFrame:SetScale(LeaPlusLC["BuffFrameScale"])
+					ConsolidatedBuffs:ClearAllPoints()
+					ConsolidatedBuffs:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 					ConsolidatedBuffs:SetScale(LeaPlusLC["BuffFrameScale"])
 				else
 					-- Find out if the UI has a non-standard scale
