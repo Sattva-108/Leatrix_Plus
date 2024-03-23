@@ -10982,6 +10982,7 @@
 
 			ConsolidatedBuffs:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
 
+			BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
 			ConsolidatedBuffs:SetScale(LeaPlusLC["BuffFrameScale"])
 
 
@@ -11063,6 +11064,7 @@
 
 			-- Set scale when slider is changed
 			LeaPlusCB["BuffFrameScale"]:HookScript("OnValueChanged", function()
+				BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
 				ConsolidatedBuffs:SetScale(LeaPlusLC["BuffFrameScale"])
 				dragframe:SetScale(LeaPlusLC["BuffFrameScale"])
 				-- Show formatted slider value
@@ -11126,6 +11128,7 @@
 					LeaPlusLC["BuffFrameScale"] = 0.80
 					ConsolidatedBuffs:ClearAllPoints()
 					ConsolidatedBuffs:SetPoint(LeaPlusLC["BuffFrameA"], UIParent, LeaPlusLC["BuffFrameR"], LeaPlusLC["BuffFrameX"], LeaPlusLC["BuffFrameY"])
+					BuffFrame:SetScale(LeaPlusLC["BuffFrameScale"])
 					ConsolidatedBuffs:SetScale(LeaPlusLC["BuffFrameScale"])
 				else
 					-- Find out if the UI has a non-standard scale
