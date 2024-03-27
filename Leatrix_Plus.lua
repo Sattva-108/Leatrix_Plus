@@ -2332,7 +2332,7 @@
 			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestCompleted", "Turn-in completed quests automatically", 16, -112, false, "If checked, completed quests will be turned-in automatically.")
 			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestShift", "Require override key for quest automation", 16, -132, false, "If checked, you will need to hold the override key down for quests to be automated.|n|nIf unchecked, holding the override key will prevent quests from being automated.")
 
-			LeaPlusLC:CreateDropDown("AutoQuestKeyMenu", "Override key", QuestPanel, 146, "TOPLEFT", 356, -115, {L["SHIFT"], L["ALT"], L["CONTROL"], L["CMD (MAC)"]}, "")
+			LeaPlusLC:CreateDropDown("AutoQuestKeyMenu", "Override key", QuestPanel, 146, "TOPLEFT", 356, -115, {L["SHIFT"], L["ALT"], L["CONTROL"]}, "")
 
 			-- Help button hidden
 			QuestPanel.h:Hide()
@@ -2375,6 +2375,25 @@
 			addon.completed_quests = {}
 			addon.uncompleted_quests = {}
 
+			function addon.onevent (self, event, ...)
+				if self[event] then
+					self[event](self, ...)
+				end
+			end
+
+
+
+			addon:SetScript('OnEvent', addon.onevent)
+			addon:RegisterEvent('GOSSIP_SHOW')
+			addon:RegisterEvent('QUEST_COMPLETE')
+			addon:RegisterEvent('QUEST_DETAIL')
+			addon:RegisterEvent('QUEST_FINISHED')
+			addon:RegisterEvent('QUEST_GREETING')
+			addon:RegisterEvent('QUEST_LOG_UPDATE')
+			addon:RegisterEvent('QUEST_PROGRESS')
+
+			_G.Leatrix_Plus = addon
+
 			function addon:canAutomate ()
 				if IsShiftKeyDown() then
 					return false
@@ -2391,6 +2410,22 @@
 				text = text:trim()
 				return text
 			end
+
+			-- Function to determine if override key is being held
+			local function IsOverrideKeyDown()
+				if LeaPlusLC["AutoQuestKeyMenu"] == 1 and IsShiftKeyDown()
+				or LeaPlusLC["AutoQuestKeyMenu"] == 2 and IsAltKeyDown()
+				or LeaPlusLC["AutoQuestKeyMenu"] == 3 and IsControlKeyDown()
+				then
+					return true
+				end
+			end
+
+			-- Check for SHIFT key modifier
+			if LeaPlusLC["AutoQuestShift"] == "On" and not IsOverrideKeyDown() then return
+			elseif LeaPlusLC["AutoQuestShift"] == "Off" and IsOverrideKeyDown() then return
+			end
+
 
 			function addon:QUEST_PROGRESS ()
 				if LeaPlusLC["AutomateQuests"] == "Off" then return end
@@ -2484,26 +2519,6 @@
 					GetQuestReward(QuestFrameRewardPanel.itemChoice)
 				end
 			end
-
-			function addon.onevent (self, event, ...)
-				if self[event] then
-					self[event](self, ...)
-				end
-			end
-
-
-
-			addon:SetScript('OnEvent', addon.onevent)
-			addon:RegisterEvent('GOSSIP_SHOW')
-			addon:RegisterEvent('QUEST_COMPLETE')
-			addon:RegisterEvent('QUEST_DETAIL')
-			addon:RegisterEvent('QUEST_FINISHED')
-			addon:RegisterEvent('QUEST_GREETING')
-			addon:RegisterEvent('QUEST_LOG_UPDATE')
-			addon:RegisterEvent('QUEST_PROGRESS')
-
-			_G.Leatrix_Plus = addon
-
 
 
 		end
@@ -15269,7 +15284,7 @@
 				LeaPlusLC:LoadVarChk("AutoQuestShift", "Off")				-- Automate quests requires shift
 				LeaPlusLC:LoadVarChk("AutoQuestAvailable", "On")			-- Accept available quests
 				LeaPlusLC:LoadVarChk("AutoQuestCompleted", "On")			-- Turn-in completed quests
-				LeaPlusLC:LoadVarNum("AutoQuestKeyMenu", 1, 1, 4)			-- Automate quests override key
+				LeaPlusLC:LoadVarNum("AutoQuestKeyMenu", 1, 1, 3)			-- Automate quests override key
 				LeaPlusLC:LoadVarChk("AutomateGossip", "Off")				-- Automate gossip
 				LeaPlusLC:LoadVarChk("AutoAcceptSummon", "Off")				-- Accept summon
 				LeaPlusLC:LoadVarChk("AutoAcceptRes", "Off")				-- Accept resurrection
