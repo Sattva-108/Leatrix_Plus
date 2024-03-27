@@ -2332,7 +2332,7 @@
 			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestCompleted", "Turn-in completed quests automatically", 16, -112, false, "If checked, completed quests will be turned-in automatically.")
 			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestShift", "Require override key for quest automation", 16, -132, false, "If checked, you will need to hold the override key down for quests to be automated.|n|nIf unchecked, holding the override key will prevent quests from being automated.")
 
-			LeaPlusLC:CreateDropDown("AutoQuestKeyMenu", "Override key", QuestPanel, 146, "TOPLEFT", 356, -115, {L["SHIFT"], L["ALT"], L["CONTROL"]}, "")
+			LeaPlusLC:CreateDropDown("AutoQuestKeyMenu", "Override key", QuestPanel, 146, "TOPLEFT", 356, -115, {L["SHIFT"], L["ALT"], L["CONTROL"], L["CMD (MAC)"]}, "")
 
 			-- Help button hidden
 			QuestPanel.h:Hide()
@@ -2372,18 +2372,127 @@
 			end)
 
 			local addon = CreateFrame('Frame')
-			addon.completed_quests = {}
-			addon.uncompleted_quests = {}
 
-			function addon.onevent (self, event, ...)
+			addon.completedQuests = {}
+			addon.uncompletedQuests = {}
+
+
+			-- Function to determine if override key is being held (from 2nd code)
+			local function IsOverrideKeyDown()
+				if LeaPlusLC["AutoQuestKeyMenu"] == 1 and IsShiftKeyDown()
+						or LeaPlusLC["AutoQuestKeyMenu"] == 2 and IsAltKeyDown()
+						or LeaPlusLC["AutoQuestKeyMenu"] == 3 and IsControlKeyDown()
+						or LeaPlusLC["AutoQuestKeyMenu"] == 4 and IsMetaKeyDown()
+				then
+					return true
+				end
+			end
+
+			function addon:canAutomate()
+				if LeaPlusLC["AutoQuestCompleted"] == "Off" or (LeaPlusLC["AutoQuestShift"] == "On" and not IsOverrideKeyDown()) or (LeaPlusLC["AutoQuestShift"] == "Off" and IsOverrideKeyDown()) then
+					return false
+				else
+					print(LeaPlusLC["AutoQuestCompleted"] == "Off")
+					return true
+				end
+			end
+
+			function addon:strip_text(text)
+				if not text then return end
+				text = text:gsub('|c%x%x%x%x%x%x%x%x(.-)|r','%1')
+				text = text:gsub('%[.*%]%s*','')
+				text = text:gsub('(.+) %(.+%)', '%1')
+				text = text:trim()
+				return text
+			end
+
+			function addon:QUEST_PROGRESS()
+				if not self:canAutomate() then return end
+				if IsQuestCompletable() then
+					CompleteQuest()
+				end
+			end
+
+			function addon:QUEST_LOG_UPDATE()
+				if not self:canAutomate() then return end
+				local start_entry = GetQuestLogSelection()
+				local num_entries = GetNumQuestLogEntries()
+				local title, is_complete, no_objectives
+
+				self.completedQuests = {}
+				self.uncompletedQuests = {}
+
+				if num_entries > 0 then
+					for i = 1, num_entries do
+						SelectQuestLogEntry(i)
+						title, _, _, _, _, _, is_complete = GetQuestLogTitle(i)
+						no_objectives = GetNumQuestLeaderBoards(i) == 0
+						if title and (is_complete or no_objectives) then
+							self.completedQuests[title] = true
+						else
+							self.uncompletedQuests[title] = true
+						end
+					end
+				end
+				SelectQuestLogEntry(start_entry)
+			end
+
+			function addon:GOSSIP_SHOW()
+				if not self:canAutomate() then return end
+
+				local button, text
+				for i = 1, 32 do
+					button = _G['GossipTitleButton' .. i]
+					if button:IsVisible() then
+						text = self:strip_text(button:GetText())
+						if button.type == 'Available' and LeaPlusLC["AutoQuestAvailable"] == "On" then
+							button:Click()
+						elseif button.type == 'Active' and LeaPlusLC["AutoQuestCompleted"] == "On" and self.completedQuests[text] then
+							button:Click()
+						end
+					end
+				end
+			end
+
+			function addon:QUEST_GREETING(...)
+				if not self:canAutomate() then return end
+
+				local button, text
+				for i = 1, 32 do
+					button = _G['QuestTitleButton' .. i]
+					if button:IsVisible() then
+						text = self:strip_text(button:GetText())
+						if LeaPlusLC["AutoQuestCompleted"] == "On" and self.completedQuests[text] then
+							button:Click()
+						elseif LeaPlusLC["AutoQuestAvailable"] == "On" and not self.uncompletedQuests[text] then
+							button:Click()
+						end
+					end
+				end
+			end
+
+			function addon:QUEST_DETAIL()
+				if not self:canAutomate() then return end
+				if LeaPlusLC["AutoQuestAvailable"] == "On" then
+					AcceptQuest()
+				end
+			end
+
+			function addon:QUEST_COMPLETE(event)
+				if not self:canAutomate() then return end
+				if LeaPlusLC["AutoQuestCompleted"] == "On" and GetNumQuestChoices() <= 1 then
+					GetQuestReward(QuestFrameRewardPanel.itemChoice)
+				end
+			end
+
+			function addon:OnEvent(event, ...)
 				if self[event] then
 					self[event](self, ...)
 				end
 			end
 
+			addon:SetScript('OnEvent', addon.OnEvent)
 
-
-			addon:SetScript('OnEvent', addon.onevent)
 			addon:RegisterEvent('GOSSIP_SHOW')
 			addon:RegisterEvent('QUEST_COMPLETE')
 			addon:RegisterEvent('QUEST_DETAIL')
@@ -2393,132 +2502,6 @@
 			addon:RegisterEvent('QUEST_PROGRESS')
 
 			_G.Leatrix_Plus = addon
-
-			function addon:canAutomate ()
-				if IsShiftKeyDown() then
-					return false
-				else
-					return true
-				end
-			end
-
-			function addon:strip_text (text)
-				if not text then return end
-				text = text:gsub('|c%x%x%x%x%x%x%x%x(.-)|r','%1')
-				text = text:gsub('%[.*%]%s*','')
-				text = text:gsub('(.+) %(.+%)', '%1')
-				text = text:trim()
-				return text
-			end
-
-			-- Function to determine if override key is being held
-			local function IsOverrideKeyDown()
-				if LeaPlusLC["AutoQuestKeyMenu"] == 1 and IsShiftKeyDown()
-				or LeaPlusLC["AutoQuestKeyMenu"] == 2 and IsAltKeyDown()
-				or LeaPlusLC["AutoQuestKeyMenu"] == 3 and IsControlKeyDown()
-				then
-					return true
-				end
-			end
-
-			-- Check for SHIFT key modifier
-			if LeaPlusLC["AutoQuestShift"] == "On" and not IsOverrideKeyDown() then return
-			elseif LeaPlusLC["AutoQuestShift"] == "Off" and IsOverrideKeyDown() then return
-			end
-
-
-			function addon:QUEST_PROGRESS ()
-				if LeaPlusLC["AutomateQuests"] == "Off" then return end
-				if not self:canAutomate() then return end
-				if IsQuestCompletable() then
-					CompleteQuest()
-				end
-			end
-
-			function addon:QUEST_LOG_UPDATE ()
-				if LeaPlusLC["AutomateQuests"] == "Off" then return end
-				if not self:canAutomate() then return end
-				local start_entry = GetQuestLogSelection()
-				local num_entries = GetNumQuestLogEntries()
-				local title
-				local is_complete
-				local no_objectives
-
-				self.completed_quests = {}
-				self.uncompleted_quests = {}
-
-				if num_entries > 0 then
-					for i = 1, num_entries do
-						SelectQuestLogEntry(i)
-						title, _, _, _, _, _, is_complete = GetQuestLogTitle(i)
-						no_objectives = GetNumQuestLeaderBoards(i) == 0
-						if title and (is_complete or no_objectives) then
-							self.completed_quests[title] = true
-						else
-							self.uncompleted_quests[title] = true
-						end
-					end
-				end
-
-				SelectQuestLogEntry(start_entry)
-			end
-
-			function addon:GOSSIP_SHOW ()
-				if LeaPlusLC["AutomateQuests"] == "Off" then return end
-				if not self:canAutomate() then return end
-
-				local button
-				local text
-
-				for i = 1, 32 do
-					button = _G['GossipTitleButton' .. i]
-					if button:IsVisible() then
-						text = self:strip_text(button:GetText())
-						ABCDE={button:GetText(), text}
-						if button.type == 'Available' then
-							button:Click()
-						elseif button.type == 'Active' then
-							if self.completed_quests[text] then
-								button:Click()
-							end
-						end
-					end
-				end
-			end
-
-			function addon:QUEST_GREETING (...)
-				if LeaPlusLC["AutomateQuests"] == "Off" then return end
-				if not self:canAutomate() then return end
-
-				local button
-				local text
-
-				for i = 1, 32 do
-					button = _G['QuestTitleButton' .. i]
-					if button:IsVisible() then
-						text = self:strip_text(button:GetText())
-						if self.completed_quests[text] then
-							button:Click()
-						elseif not self.uncompleted_quests[text] then
-							button:Click()
-						end
-					end
-				end
-			end
-
-			function addon:QUEST_DETAIL ()
-				if LeaPlusLC["AutomateQuests"] == "Off" then return end
-				if not self:canAutomate() then return end
-				AcceptQuest()
-			end
-
-			function addon:QUEST_COMPLETE (event)
-				if LeaPlusLC["AutomateQuests"] == "Off" then return end
-				if not self:canAutomate() then return end
-				if GetNumQuestChoices() <= 1 then
-					GetQuestReward(QuestFrameRewardPanel.itemChoice)
-				end
-			end
 
 
 		end
