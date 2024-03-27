@@ -27,6 +27,8 @@ Manage Debuffs - make it somehow to be movable even if there are no debuffs show
 -- What needs to be tested:
 --------------------------------------------------------------------------------
 
+Manage Debuffs - if debuff button reset working fine.
+
 ElvUI	 				 - Need to see what disabled for when ElvUI is loaded. May be something is not made in 3.3.5 ElvUI backport, but still disabled.
 
 Auto-Ress in BG 		 - With option "Exclude Alterac" will it not auto-res in Alterac BG ?

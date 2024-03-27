@@ -2319,10 +2319,37 @@
 
 		----------------------------------------------------------------------
 		--	Automate quests (no reload required)
-		-- 	Code from idQuestAutomation 2.4.3
 		----------------------------------------------------------------------
 
 		do
+
+			local addon = CreateFrame('Frame')
+
+			addon.completedQuests = {}
+			addon.uncompletedQuests = {}
+
+			function addon:OnEvent(event, ...)
+				if self[event] then
+					self[event](self, ...)
+				end
+			end
+
+			addon:SetScript('OnEvent', addon.OnEvent)
+
+			-- Function to setup events
+			local function SetupEvents()
+				if LeaPlusLC["AutomateQuests"] == "On" then
+					addon:RegisterEvent('GOSSIP_SHOW')
+					addon:RegisterEvent('QUEST_COMPLETE')
+					addon:RegisterEvent('QUEST_DETAIL')
+					addon:RegisterEvent('QUEST_FINISHED')
+					addon:RegisterEvent('QUEST_GREETING')
+					addon:RegisterEvent('QUEST_LOG_UPDATE')
+					addon:RegisterEvent('QUEST_PROGRESS')
+				else
+					addon:UnregisterAllEvents()
+				end
+			end
 
 			-- Create configuration panel
 			local QuestPanel = LeaPlusLC:CreatePanel("Automate quests", "QuestPanel")
@@ -2332,7 +2359,11 @@
 			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestCompleted", "Turn-in completed quests automatically", 16, -112, false, "If checked, completed quests will be turned-in automatically.")
 			LeaPlusLC:MakeCB(QuestPanel, "AutoQuestShift", "Require override key for quest automation", 16, -132, false, "If checked, you will need to hold the override key down for quests to be automated.|n|nIf unchecked, holding the override key will prevent quests from being automated.")
 
-			LeaPlusLC:CreateDropDown("AutoQuestKeyMenu", "Override key", QuestPanel, 146, "TOPLEFT", 356, -115, {L["SHIFT"], L["ALT"], L["CONTROL"], L["CMD (MAC)"]}, "")
+			LeaPlusLC:CreateDropDown("AutoQuestKeyMenu", "Override key", QuestPanel, 146, "TOPLEFT", 356, -115, {L["SHIFT"], L["ALT"], L["CONTROL"]}, "")
+
+			-- Setup events when option is clicked and on startup (if option is enabled)
+			LeaPlusCB["AutomateQuests"]:HookScript("OnClick", SetupEvents)
+			if LeaPlusLC["AutomateQuests"] == "On" then SetupEvents() end
 
 			-- Help button hidden
 			QuestPanel.h:Hide()
@@ -2340,6 +2371,7 @@
 			-- Back button handler
 			QuestPanel.b:SetScript("OnClick", function()
 				QuestPanel:Hide(); LeaPlusLC["PageF"]:Show(); LeaPlusLC["Page1"]:Show();
+				SetupEvents()
 				return
 			end)
 
@@ -2354,7 +2386,7 @@
 
 				-- Refresh panel
 				QuestPanel:Hide(); QuestPanel:Show()
-
+				SetupEvents()
 			end)
 
 			-- Show panal when options panel button is clicked
@@ -2369,20 +2401,16 @@
 					QuestPanel:Show()
 					LeaPlusLC:HideFrames()
 				end
+				SetupEvents()
 			end)
 
-			local addon = CreateFrame('Frame')
-
-			addon.completedQuests = {}
-			addon.uncompletedQuests = {}
-
+			--===== Config Panel Setup END =====--
 
 			-- Function to determine if override key is being held (from 2nd code)
 			local function IsOverrideKeyDown()
 				if LeaPlusLC["AutoQuestKeyMenu"] == 1 and IsShiftKeyDown()
 						or LeaPlusLC["AutoQuestKeyMenu"] == 2 and IsAltKeyDown()
 						or LeaPlusLC["AutoQuestKeyMenu"] == 3 and IsControlKeyDown()
-						or LeaPlusLC["AutoQuestKeyMenu"] == 4 and IsMetaKeyDown()
 				then
 					return true
 				end
@@ -2392,7 +2420,6 @@
 				if LeaPlusLC["AutoQuestCompleted"] == "Off" or (LeaPlusLC["AutoQuestShift"] == "On" and not IsOverrideKeyDown()) or (LeaPlusLC["AutoQuestShift"] == "Off" and IsOverrideKeyDown()) then
 					return false
 				else
-					print(LeaPlusLC["AutoQuestCompleted"] == "Off")
 					return true
 				end
 			end
@@ -2484,22 +2511,6 @@
 					GetQuestReward(QuestFrameRewardPanel.itemChoice)
 				end
 			end
-
-			function addon:OnEvent(event, ...)
-				if self[event] then
-					self[event](self, ...)
-				end
-			end
-
-			addon:SetScript('OnEvent', addon.OnEvent)
-
-			addon:RegisterEvent('GOSSIP_SHOW')
-			addon:RegisterEvent('QUEST_COMPLETE')
-			addon:RegisterEvent('QUEST_DETAIL')
-			addon:RegisterEvent('QUEST_FINISHED')
-			addon:RegisterEvent('QUEST_GREETING')
-			addon:RegisterEvent('QUEST_LOG_UPDATE')
-			addon:RegisterEvent('QUEST_PROGRESS')
 
 			_G.Leatrix_Plus = addon
 
@@ -11344,8 +11355,10 @@
 				LeaPlusLC["DebuffButton1X"] = -205
 				LeaPlusLC["DebuffButton1Y"] = -205
 				LeaPlusLC["DebuffButton1Scale"] = 1
-				DebuffButton1:ClearAllPoints()
-				DebuffButton1:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
+				if DebuffButton1 then
+					DebuffButton1:ClearAllPoints()
+					DebuffButton1:SetPoint(LeaPlusLC["DebuffButton1A"], UIParent, LeaPlusLC["DebuffButton1R"], LeaPlusLC["DebuffButton1X"], LeaPlusLC["DebuffButton1Y"])
+				end
 
 				-- Refresh configuration panel
 				DeBuffPanel:Hide(); DeBuffPanel:Show()
@@ -11358,6 +11371,7 @@
 
 			-- Show configuration panel when options panel button is clicked
 			LeaPlusCB["ManageDeBuffsButton"]:SetScript("OnClick", function()
+				if not DebuffButton1 then print("Leatrix Plus: In order to move debuffs, need to have one. \nFor example Ghost.") return end
 				if IsShiftKeyDown() and IsControlKeyDown() then
 					-- Preset profile
 					LeaPlusLC["DebuffButton1A"] = "TOPRIGHT"
