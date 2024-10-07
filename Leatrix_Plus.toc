@@ -1,6 +1,6 @@
 ## Interface: 30300
 
-## Title: Leatrix Plus
+## Title: |cff33ffccLeatrix |cffffffffPlus |cffff5555[ALPHA]
 ## Title-zhCN: Leatrix Plus [|cffeda55f功能百宝箱|r]
 ## Title-zhTW: Leatrix Plus [|cffeda55f功能百寶箱|r]
 
@@ -8,7 +8,7 @@
 ## Notes-zhCN: 哆啦A梦的百宝袋
 ## Notes-zhTW: 哆啦A夢的百寶袋
 
-## Version: 3.0.131
+## Version: 3.3.5 (3.0.131)
 ## Author: Leatrix
 ## SavedVariables: LeaPlusDB
 
@@ -18,7 +18,7 @@
 
 Leatrix_InputScrollFrameTemplate.xml
 
--- Leatrix_Plus_Library.lua
+# Leatrix_Plus_Library.lua
 libs\LibStub\LibStub.lua
 libs\LibCompat-1.0\lib.xml
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml

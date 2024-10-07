@@ -1,12 +1,12 @@
 ## Interface: 30300
 
-## Title: Leatrix Plus
-## Title-zhCN: Leatrix Plus [|cffeda55f功能百宝箱|r]
-## Title-zhTW: Leatrix Plus [|cffeda55f功能百寶箱|r]
+## Title: |cff33ffccLeatrix |cffffffffPlus |cffff5555[ALPHA]
+--## Title-zhCN: Leatrix Plus [|cffeda55f功能百宝箱|r]
+--## Title-zhTW: Leatrix Plus [|cffeda55f功能百寶箱|r]
 
 ## Notes: Quality of life addon.
-## Notes-zhCN: 哆啦A梦的百宝袋
-## Notes-zhTW: 哆啦A夢的百寶袋
+--## Notes-zhCN: 哆啦A梦的百宝袋
+--## Notes-zhTW: 哆啦A夢的百寶袋
 
 ## Version: 3.0.131
 ## Author: Leatrix

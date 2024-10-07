@@ -4826,7 +4826,8 @@
 					"NauticusMiniIcon",
 					"WestPointer",
 					-- QuestPointer
-					"poiMinimap"
+					"poiMinimap",
+					"pfMiniMapPin"
 				}
 
 
@@ -5712,7 +5713,8 @@
 								"GatherNote",
 								"poiWorldMapPOIFrame",
 								"WorldMapPOIFrame",
-								"QuestMapPOI"
+								"QuestMapPOI",
+								"pfMiniMapPin"
 							}
 							if searchStr == "" then
 						        -- Set alpha of all buttons to 0 if MiniExcludeList is empty
