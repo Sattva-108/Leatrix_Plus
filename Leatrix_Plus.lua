@@ -6723,6 +6723,8 @@ function LeaPlusLC:Player()
         local trackerContainer = _G.WatchFrame
         trackerContainer:ClearAllPoints()
         trackerContainer:SetPoint('CENTER', trackerHolder)
+        trackerContainer:SetClampedToScreen(false)
+
 
         local function SetWatchFrameHeight()
             local top = WatchFrame:GetTop() or 0

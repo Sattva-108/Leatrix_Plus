@@ -4,12 +4,6 @@
 -- Backport to-do before release:
 --------------------------------------------------------------------------------
 
-Auto Accept Quests       - add user options.
-
-Chat History             - (needs fixing) make sure it can be working with more than 128 lines correctly.
-
-Media                    - Need to fix Movies, to be playable.
-
 GetColoredName() - Recent Chat
 
 Arena queue timer
@@ -17,10 +11,6 @@ Arena queue timer
 Hide Error text, permit user to enter partial to not un-hide some error text.
      -(For example arena ready crystal red error shows how many players ready.)
      - You are in shapeshift,
-
-Minimap - MailIcon - Move - Create Dropdown with anchor.
-
-Manage Debuffs - make it somehow to be movable even if there are no debuffs shown.
 
 
 --------------------------------------------------------------------------------
@@ -47,6 +37,14 @@ Manage Debuffs  - Test IT in fight.
 --------------------------------------------------------------------------------
 -- Stuff to-do:
 --------------------------------------------------------------------------------
+
+Minimap - MailIcon - Move - Create Dropdown with anchor.
+
+Manage Debuffs - make it somehow to be movable even if there are no debuffs shown.
+
+Media                    - Need to fix Movies, to be playable.
+
+Chat History             - (needs fixing) make sure it can be working with more than 128 lines correctly.
 
 Minimap - Hide POI ARROWS Tweak.
 
