@@ -3881,7 +3881,12 @@ function LeaPlusLC:Isolated()
                             err == ERR_FEIGN_DEATH_RESISTED or
                             err == SPELL_FAILED_TARGET_NO_POCKETS or
                             err == ERR_ALREADY_PICKPOCKETED or
-                            string.match(err, "Requires") then
+                            string.match(err, "Requires") or
+                            string.match(err, "mounted") or
+                            string.match(err, "gold") or
+                            string.match(err, "shapeshifted")
+
+                    then
                         return OrigErrHandler(self, event, err, ...)
                     end
                 else
@@ -6718,6 +6723,19 @@ function LeaPlusLC:Player()
         local trackerContainer = _G.WatchFrame
         trackerContainer:ClearAllPoints()
         trackerContainer:SetPoint('CENTER', trackerHolder)
+
+        local function SetWatchFrameHeight()
+            local top = WatchFrame:GetTop() or 0
+            local screenHeight = GetScreenHeight()
+            local gapFromTop = screenHeight - top
+            local maxHeight = screenHeight - gapFromTop
+            local watchFrameHeight = min(maxHeight, 800)
+
+            WatchFrame:SetHeight(watchFrameHeight)
+        end
+
+        SetWatchFrameHeight()
+
         --trackerContainer:SetIgnoreParentScale(true) -- Needed to keep drag frame position when scaled
 
         local isWatchFrameMoving = false
