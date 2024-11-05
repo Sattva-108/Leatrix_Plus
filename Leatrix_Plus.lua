@@ -3882,9 +3882,10 @@ function LeaPlusLC:Isolated()
                             err == SPELL_FAILED_TARGET_NO_POCKETS or
                             err == ERR_ALREADY_PICKPOCKETED or
                             string.match(err, "Requires") or
-                            string.match(err, "mounted") or
+                            string.match(err, "mount") or
                             string.match(err, "gold") or
-                            string.match(err, "shapeshifted")
+                            string.match(err, "shapeshift") or
+                            string.match(err, "disarm")
 
                     then
                         return OrigErrHandler(self, event, err, ...)
@@ -10071,7 +10072,7 @@ function LeaPlusLC:Player()
     --	Enhance professions
     ----------------------------------------------------------------------
 
-    if LeaPlusLC["EnhanceProfessions"] == "On" then
+    if LeaPlusLC["EnhanceProfessions"] == "On" and not LeaLockList["EnhanceProfessions"] then
 
         -- Set increased height of professions frame and maximum number of recipes listed
         local tall, numTallProfs = 73, 19
@@ -10214,7 +10215,7 @@ function LeaPlusLC:Player()
             TradeSkillFrameAvailableFilterCheckButtonText:SetWordWrap(false)
             TradeSkillFrameAvailableFilterCheckButtonText:SetJustifyH("LEFT")
 
-            -- ElvUI fixes
+            -- ElvUI fixes, in 3.3.5 this code doesnt matter, we dont tweak tradeskill if elvui is loaded
             if LeaPlusLC.ElvUI then
                 local E = LeaPlusLC.ElvUI
                 if E.private.skins.blizzard.enable and E.private.skins.blizzard.tradeskill then
@@ -16325,6 +16326,10 @@ local function eventHandler(self, event, arg1, arg2, ...)
                             Lock("NoChatFade", reason, "Chat") -- Disable chat fade
                             Lock("MaxChatHstory", reason, "Chat") -- Increase chat history
                             Lock("RestoreChatMessages", reason, "Chat") -- Restore chat messages
+                        end
+
+                        if E.private.skins.blizzard.enable and E.private.skins.blizzard.tradeskill then
+                            Lock("EnhanceProfessions", reason, "Interface")
                         end
 
                         -- Minimap
