@@ -13062,6 +13062,7 @@ function LeaPlusLC:Player()
         local function ShowChatbox(chtfrm)
             editBox:SetText("")
             local NumMsg = chtfrm:GetNumMessages()
+            if NumMsg == 0 then return end
             scrollbar:SetMinMaxValues(1, 10 * NumMsg) -- Adjust the min and max values as needed
 
             local StartMsg = 1

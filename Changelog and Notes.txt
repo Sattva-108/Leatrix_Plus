@@ -4,14 +4,6 @@
 -- Backport to-do before release:
 --------------------------------------------------------------------------------
 
-GetColoredName() - Recent Chat
-
-Arena queue timer
-
-Hide Error text, permit user to enter partial to not un-hide some error text.
-     -(For example arena ready crystal red error shows how many players ready.)
-     - You are in shapeshift,
-
 
 --------------------------------------------------------------------------------
 -- What needs to be tested:
@@ -37,6 +29,8 @@ Manage Debuffs  - Test IT in fight.
 --------------------------------------------------------------------------------
 -- Stuff to-do:
 --------------------------------------------------------------------------------
+
+Arena queue timer
 
 Minimap - MailIcon - Move - Create Dropdown with anchor.
 
@@ -199,6 +193,10 @@ UnitFrames - make them movable with Shift+Ctrl held.
 UnitFrames - make them auto-hidden while not in combat (but full mana or health, conditions)
 
 Chat - Clear Chat button / dropdown.
+
+Hide Error text, permit user to enter partial to not un-hide some error text.
+     -(For example arena ready crystal red error shows how many players ready.)
+     - You are in shapeshift,
 
 --------------------------------------------------------------------------------
 ---- Things to include in presentation
