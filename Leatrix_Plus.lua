@@ -3884,6 +3884,8 @@ function LeaPlusLC:Isolated()
                             string.match(err, "Requires") or
                             string.match(err, "mount") or
                             string.match(err, "gold") or
+                            string.match(err, "money") or
+                            string.match(err, "afford") or
                             string.match(err, "shapeshift") or
                             string.match(err, "disarm")
 
@@ -4533,7 +4535,7 @@ function LeaPlusLC:Player()
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniZoneText", "Hide the zone text bar", 16, -112, false, "If checked, the zone text bar will be hidden.")
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniMapButton", "Hide the world map button", 16, -132, false, "If checked, the world map button will be hidden.")
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniTracking", "Hide the tracking button", 16, -152, true, "If checked, the tracking button will be hidden. Right-click on the minimap to show tracking menu.")
-        LeaPlusLC:MakeCB(SideMinimap, "HideMiniCalendar", "Hide calendar button.", 226, -92, true, "If checked, the calendar button will be hidden. Middle-click on the minimap to show calendar frame.")
+        LeaPlusLC:MakeCB(SideMinimap, "HideMiniCalendar", "Hide calendar button.", 226, -92, true, "If checked, the calendar button will be hidden. Shift+Middle-click on the minimap to show calendar frame.")
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniAddonButtons", "Hide addon buttons", 16, -172, true, "If checked, addon buttons will be hidden while the pointer is not over the minimap.")
 
         LeaPlusLC:MakeCB(SideMinimap, "SquareMinimap", "Square minimap", 16, -212, true, "If checked, the minimap shape will be square.")
@@ -5189,6 +5191,34 @@ function LeaPlusLC:Player()
 
             -- eventFrame:RegisterEvent("PLAYER_LOGIN")
             eventFrame:SetScript("OnEvent", OnLoginHideCombine)
+
+            -- Modify the Minimap's OnMouseUp event handler to use MiddleButton
+            LibCompat.After(1, function()
+                Minimap:HookScript("OnMouseUp", function(self, button)
+                    if button == "MiddleButton" and not IsShiftKeyDown() then
+                        if LeaPlusLC['minimapFrameGlobal']:IsShown() then
+                            LeaPlusLC['minimapFrameGlobal']:Hide()
+                            LeaPlusDB["HiddenCombineFrame"] = "On" -- Set the DB value to "On" if hidden
+                        else
+                            LeaPlusLC['minimapFrameGlobal']:Show()
+                            LeaPlusDB["HiddenCombineFrame"] = "Off" -- Set the DB value to "Off" if shown
+                        end
+                    end
+                end)
+            end)
+
+            -- Function to handle the PLAYER_ENTERING_WORLD event
+            local function OnLoginCombineVisibilityState(eventName, ...)
+                    if LeaPlusDB["HiddenCombineFrame"] == "On" then
+                        LeaPlusLC['minimapFrameGlobal']:Hide() -- Hide the frame if the DB value is "On"
+                    else
+                        LeaPlusLC['minimapFrameGlobal']:Show() -- Show the frame if the DB value is not "On"
+                    end
+            end
+
+            -- eventFrame:RegisterEvent("PLAYER_LOGIN")
+            eventFrame:HookScript("OnEvent", OnLoginCombineVisibilityState)
+
 
 
             --------------------------------------------------------------------------------
@@ -6429,8 +6459,10 @@ function LeaPlusLC:Player()
             GameTimeFrame:Hide()
 
             Minimap:HookScript("OnMouseUp", function(self, button)
-                if button == "MiddleButton" then
-                    GameTimeFrame_OnClick(self)
+                if IsShiftKeyDown() then -- Check if the Shift key is pressed
+                    if button == "MiddleButton" then
+                        GameTimeFrame_OnClick(self) -- Trigger the GameTimeFrame function
+                    end
                 end
             end)
         end
