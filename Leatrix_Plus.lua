@@ -17225,7 +17225,9 @@ function LeaPlusLC:CreateButton(name, frame, label, anchor, x, y, width, height,
         -- Set skinned button textures
         if not naked then
             mbtn:SetNormalTexture("Interface\\AddOns\\Leatrix_Plus\\LeatrixPlus.blp")
-            mbtn:GetNormalTexture():SetTexCoord(0.125, 0.25, 0.4375, 0.5)
+            if mbtn:GetNormalTexture() then
+                mbtn:GetNormalTexture():SetTexCoord(0.125, 0.25, 0.4375, 0.5)
+            end
         end
         mbtn:SetHighlightTexture("Interface\\AddOns\\Leatrix_Plus\\LeatrixPlus.blp")
         mbtn:GetHighlightTexture():SetTexCoord(0, 0.125, 0.4375, 0.5)
@@ -17241,7 +17243,9 @@ function LeaPlusLC:CreateButton(name, frame, label, anchor, x, y, width, height,
         --===== 3.3.5 texture disables =====--
 
         -- mbtn:GetNormalTexture():SetTexture(nil)
-        mbtn:GetPushedTexture():SetTexture(nil)
+        if mbtn:GetPushedTexture() then
+            mbtn:GetPushedTexture():SetTexture(nil)
+        end
         -- mbtn:GetDisabledTexture():SetTexture(nil)
         -- mbtn:GetHighlightTexture():SetTexture(nil)
 
