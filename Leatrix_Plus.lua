@@ -4758,9 +4758,9 @@ function LeaPlusLC:Player()
 
             -- Set position
             if LeaPlusLC["SquareMinimap"] == "On" then
-                pFrame:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 0, -3)
+                pFrame:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 0, -3) -- Move to the left
             else
-                pFrame:SetPoint("BOTTOM", Minimap, "BOTTOM", 0, 2)
+                pFrame:SetPoint("BOTTOM", Minimap, "BOTTOM", -50, 2) -- Slightly offset to the left
             end
 
             -- Set backdrop
@@ -4786,37 +4786,34 @@ function LeaPlusLC:Player()
             local lastUnit, lastX, lastY = "player", 0, 0
 
             -- Show who pinged
-            pFrame:SetScript("OnEvent", function(void, void, unit, x, y)
-
-                -- Do nothing if unit has not changed
-                if UnitIsUnit(unit, "player") or UnitIsUnit(unit, lastUnit) and x == lastX and y == lastY then
+            pFrame:SetScript("OnEvent", function(_, _, unit, x, y)
+                -- Ignore if the ping is from the player or the same unit at the same location
+                if UnitIsUnit(unit, "player") or (UnitIsUnit(unit, lastUnit) and x == lastX and y == lastY) then
                     return
                 end
-                -- if UnitIsUnit(unit, lastUnit) and x == lastX and y == lastY then print("end") return end
                 lastUnit, lastX, lastY = unit, x, y
 
                 -- Show name in class color
-                local void, class = UnitClass(unit)
+                local _, class = UnitClass(unit)
                 if class then
                     local color = CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS[class] or RAID_CLASS_COLORS[class]
                     if color then
-
                         -- Set frame details
                         pFrame.f:SetFormattedText("|cff%02x%02x%02x%s|r", color.r * 255, color.g * 255, color.b * 255, UnitName(unit))
                         pFrame:SetSize(pFrame.f:GetStringWidth() + 12, 20)
 
-                        -- Hide frame after 5 seconds
+                        -- Show frame
                         pFrame:Show()
-                        pingTime = GetTime()
-                        LibCompat.After(5, function()
-                            if GetTime() - pingTime >= 5 then
+
+                        -- Hide frame after 3 second
+                        LibCompat.After(3, function()
+                            -- Only hide if the last ping matches the current state
+                            if UnitIsUnit(unit, lastUnit) and x == lastX and y == lastY then
                                 pFrame:Hide()
                             end
                         end)
-
                     end
                 end
-
             end)
 
             -- Set event when option is clicked and on startup
