@@ -4536,6 +4536,7 @@ function LeaPlusLC:Player()
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniMapButton", "Hide the world map button", 16, -132, false, "If checked, the world map button will be hidden.")
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniTracking", "Hide the tracking button", 16, -152, true, "If checked, the tracking button will be hidden. Right-click on the minimap to show tracking menu.")
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniCalendar", "Hide calendar button.", 226, -92, true, "If checked, the calendar button will be hidden. Shift+Middle-click on the minimap to show calendar frame.")
+        LeaPlusLC:MakeCB(SideMinimap, "HideMiniPOIArrows", "Hide POI arrows.", 226, -112, false, "If checked, the POI arrows (those on the edges of minimap) will be hidden.")
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniAddonButtons", "Hide addon buttons", 16, -172, true, "If checked, addon buttons will be hidden while the pointer is not over the minimap.")
 
         LeaPlusLC:MakeCB(SideMinimap, "SquareMinimap", "Square minimap", 16, -212, true, "If checked, the minimap shape will be square.")
@@ -6463,6 +6464,27 @@ function LeaPlusLC:Player()
                 end
             end)
         end
+
+        local function SetupPOI()
+            -- Hide POI arrows
+            if LeaPlusLC["HideMiniPOIArrows"] == "On" then
+                Minimap:SetStaticPOIArrowTexture("Interface\\addons\\Leatrix_Plus\\assets\\ROTATING-MINIMAPARROW")
+            else
+                Minimap:SetStaticPOIArrowTexture("Interface\\Minimap\\Rotating-MinimapArrow")
+            end
+        end
+
+        if LeaPlusLC["HideMiniPOIArrows"] == "On" then
+            local frame=CreateFrame("Frame");
+            frame:RegisterEvent("PLAYER_ENTERING_WORLD");
+            frame:SetScript("OnEvent",function(self,event,...)
+                -- Put code here
+                Minimap:SetStaticPOIArrowTexture("Interface\\addons\\Leatrix_Plus\\assets\\ROTATING-MINIMAPARROW")
+            end);
+        end
+
+        -- Setup events when option is clicked and on startup (if option is enabled)
+        LeaPlusCB["HideMiniPOIArrows"]:HookScript("OnClick", SetupPOI)
 
 
 
@@ -16107,6 +16129,7 @@ local function eventHandler(self, event, arg1, arg2, ...)
             LeaPlusLC:LoadVarChk("HideMiniMapButton", "On")                -- Hide the world map button
             LeaPlusLC:LoadVarChk("HideMiniTracking", "Off")                -- Hide the tracking button
             LeaPlusLC:LoadVarChk("HideMiniCalendar", "Off")                -- Hide the tracking button
+            LeaPlusLC:LoadVarChk("HideMiniPOIArrows", "Off")                -- Hide the tracking button
             LeaPlusLC:LoadVarNum("MinimapScale", 1, 1, 4)                -- Minimap scale slider
             LeaPlusLC:LoadVarNum("MinimapSize", 140, 140, 560)            -- Minimap size slider
             LeaPlusLC:LoadVarNum("MiniClusterScale", 1, 1, 2)            -- Minimap cluster scale
@@ -16552,6 +16575,7 @@ local function eventHandler(self, event, arg1, arg2, ...)
         LeaPlusDB["HideMiniMapButton"] = LeaPlusLC["HideMiniMapButton"]
         LeaPlusDB["HideMiniTracking"] = LeaPlusLC["HideMiniTracking"]
         LeaPlusDB["HideMiniCalendar"] = LeaPlusLC["HideMiniCalendar"]
+        LeaPlusDB["HideMiniPOIArrows"] = LeaPlusLC["HideMiniPOIArrows"]
         LeaPlusDB["MinimapScale"] = LeaPlusLC["MinimapScale"]
         LeaPlusDB["MinimapSize"] = LeaPlusLC["MinimapSize"]
         LeaPlusDB["MiniClusterScale"] = LeaPlusLC["MiniClusterScale"]
@@ -18975,6 +18999,7 @@ function LeaPlusLC:SlashFunc(str)
             LeaPlusDB["HideMiniMapButton"] = "On"            -- Hide world map button
             LeaPlusDB["HideMiniTracking"] = "On"            -- Hide tracking button
             LeaPlusDB["HideMiniCalendar"] = "On"            -- Hide tracking button
+            LeaPlusDB["HideMiniPOIArrows"] = "On"            -- Hide tracking button
             LeaPlusDB["MinimapA"] = "TOPRIGHT"                -- Minimap anchor
             LeaPlusDB["MinimapR"] = "TOPRIGHT"                -- Minimap relative
             LeaPlusDB["MinimapX"] = 0                        -- Minimap X

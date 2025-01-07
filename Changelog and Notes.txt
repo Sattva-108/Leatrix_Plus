@@ -1,11 +1,6 @@
 
 
 --------------------------------------------------------------------------------
--- Backport to-do before release:
---------------------------------------------------------------------------------
-
-
---------------------------------------------------------------------------------
 -- What needs to be tested:
 --------------------------------------------------------------------------------
 
@@ -25,14 +20,38 @@ ShowFlightPaths			 - Will StopLandingEvent work correctly on summon, BG/arena ac
 
 Manage Debuffs  - Test IT in fight.
 
+--------------------------------------------------------------------------------
+-- What i plan to do in near future list from easy to hard
+--------------------------------------------------------------------------------
+
+Minimap - Hide POI ARROWS Tweak.
+
+Minimap - show time by user option.
+
+MinimapButton			 - Add functions to alt-click and other clicks on button (prio - error text togggle)
+
+Minimap - MailIcon - Move - Create Dropdown with anchor.
+
+Auto-Spirit Res.		 - Add function to auto ressurect once interracted with Spirit Healer
+
+MinimapEnhance			 - Add Timer module, just like ShaguTweaks.
+
+ManageBuff               - Fix the weapon enhancements not scale correct!
+
+Faster Loot				 - Make the config option to change size of error frame with test messages
+
+World Map				 - Reveal Map
+
+Ready Timer				 - for RDF/BG/ Arena
+
+Action Bar				 - Make buttons full red if out of range (instead of blizzard red text only)
+
+MinimapEnhance			 - Replace non-standard buttons option! Aka those that don't use LibDBIcon, or may be just set size of them ?
 
 --------------------------------------------------------------------------------
 -- Stuff to-do:
 --------------------------------------------------------------------------------
 
-Arena queue timer
-
-Minimap - MailIcon - Move - Create Dropdown with anchor.
 
 Manage Debuffs - make it somehow to be movable even if there are no debuffs shown.
 
@@ -40,42 +59,31 @@ Media                    - Need to fix Movies, to be playable.
 
 Chat History             - (needs fixing) make sure it can be working with more than 128 lines correctly.
 
-Minimap - Hide POI ARROWS Tweak.
-
-Recent Chat - Need Escape key to close it.
-
-MinimapEnhance - Option to hide calendar. How to make it so user still can open it? Add to tracking dropdown?
-
-MinimapEnhance			 - Replace non-standard buttons option! Aka those that don't use LibDBIcon, or may be just set size of them ?
-
-MinimapButton			 - Add functions to alt-click and other clicks on button
-
-MinimapEnhance			 - Add Timer module, just like ShaguTweaks.
-
-CombineAddonButtons		 - Make it change position from left to right if minimap is on left side of screen.
-
 CombineAddonButtons      - Make the toggle-mode button, that appears on frame TOPRIGHT hover to change the mode of frame
                           (Modes: 1 - Always Shown, 2 - Shown only on Minimap or this frame HOVER)
 
-HideMiniButtons			 - Make a copy edit box with  a link to "guide" for Frame Stack 
-
 MinimapEnhance			 - MinimapNoScale and MinimapSize options needs fixing. For now moved them 10000px out of the GUI.
-
-Minimap					 - Hide Minimap POI Arrow option.
-
-RecentChatWindow 		 - Ctrl-click on tab should be toggling the window..
 
 HideErrorMessages		 - Add locales for "Requires", for herbalism,mining,lockpicking skill requirements.
 
-HideErrorMessages		 - Make option to reduce Error Messages to 1 line. With option to make them fade faster.
-
 RestoreChatHistory		 - Fix Channel colors.
 
-RecentChatWindow		 - Need to add mouse scrolling.
+RecentChatWindow		 - Need to fix channel colors.
 
-RecentChatWindow		 - Need to fix channel colors. 
+AutomateQuests - Improve Quest Accept conditions (aka skip welcome window and block shared aka escort quests)
+
+Chat - Copy chat links
+
+NPCLink - need to retrieve mob id by mouseover tooltip
+
+AutoGossip - Add https://wowhead.com/wotlk/search?q=Surristrasz to ignore the dialog auto-confirm.
 
 
+--------------------------------------------------------------------------------
+-- Not sure if need to do yet:
+--------------------------------------------------------------------------------
+
+HideMiniButtons			 - Make a copy edit box with  a link to "guide" for Frame Stack
 
 AutoGossip				 - Add user defined NPCID to automate gossipX (any option)
 
@@ -83,51 +91,17 @@ AutoGossip				 - Add ability to automate gossip cycles. (if after first gossip n
 
 AutoGossip				 - Need to make user option to automate inn / trainer .
 
-Minimap enhance			 - Add NPC specific tracking icons on minimap. 
-
-Ready Timer				 - for RDF/BG
+Minimap enhance			 - Add NPC specific tracking icons on minimap.
 
 Automation				 - Remove transforms ( Jack-o'-Lantern, Hallowed Wand, Witch, Turkey and Spraybot transformations? etc. )
 
 Interraction bindings	 - Add Quest / Vendor Bindings ( e.g. keyboard keys for Inkeepeer: 1 - Set Home, 2 - Vendor; )
 
-World Map				 - Reveal Map								
-
-Action Bar				 - Make buttons full red if out of range (instead of blizzard red text only)
-
-Auto-Spirit Res.		 - Add function to auto ressurect once interracted with Spirit Healer
-
-Error Frame				 - Allow some error texts like mining, herbing
-
-Error Frame				 - Allow only one line of error text option
-
 Tooltip					 - If player has tooltip hidden in combat, make an option to toggle tooltip if "Alt" key is hold.
-
-Faster Loot				 - Make the config options (disable sound, change sound, error filter, smaller error frame, faster fading - make all this optional)
-
-AutoSellJunk			 - Make user able to shift click the item to add to "keep list"
-
-AutoSellJunk			 - Make user be able to alt-ctrl (or other bind) click on an item in bag to sell the item on next vendor visit.
-
-AutoSellJunk			 - The editbox must be scrollable.
 
 HideChatButtons			 - Add Configuration to enable certain chat buttons.
 
-ManageBuff               - Add Debuffs mover. Currently only moving Buffs, but not Debuffs.
-
 GUI 					 - FIX the width for long strings https://cdn.discordapp.com/attachments/766767499987386402/1119067878885437531/wow_otLn4jPKyo.jpg
-
-Move Objectives          - aka Quest Tracker
-
-
---------------------------------------------------------------------------------
--- Not sure if need to do yet:
---------------------------------------------------------------------------------
-
-
-AutomateQuests - Improve Quest Accept conditions (aka skip welcome window and block shared aka escort quests)
-
-Chat - Copy chat links
 
 Tooltip - Add a number of skill requirement to the tooltip to gather herb,mine node, when mouseovering it.
 
@@ -137,19 +111,17 @@ Minimap - Tracking button animation fade-in-out.
 
 Minimap - distance of buttons OnEnter alpha trigger user option?
 
-Minimap - show time by user option.
+
 
 Minimap - add alt+shift click to reset position of minimap.
 
 EnhanceDressup - Make clicks, wheel, to rotate, pan, zoom.
 
-Chat - Alt-Click in chat to invite.
-
 AutomateGossip - Give options to enable hearthstone/ trainer automation
 
 DurabilityStatus - change color of button based on total durability status.
 
-RecentChat - Clear Chat Button.
+CopyChat - Clear Chat Button.
 
 BagSearch - add highlight item.
 
@@ -163,8 +135,6 @@ BagSearch - add button with menu to highlight certain item categories: herb, que
 
 BagSearch - add slash commands.
 
-QueueTimer - add LFG timer.
-
 QueueTimer - add user option to disable sound.
 
 Core - Fix ToggleZygor function 
@@ -173,7 +143,7 @@ BagSearch - if item is clicked then remove focus from search
 
 FasterLoot - add "lightweight" version of faster loot, in case someone doesn't want fastest version or it doesnt work properly on his server.
 
-NPCLink - need to retrieve mob id by mouseover tooltip
+
 
 A feature that would automatically show you the location of the nearest flight master.
 A feature that would automatically show you the location of the nearest mailbox.
@@ -184,9 +154,6 @@ Show best gold value for quest reward.
 
 Open all bag user config option at merchant.
 
-AutoGossip - Add https://wowhead.com/wotlk/search?q=Surristrasz to ignore the dialog auto-confirm.
-
-MediaPlayer - resolve videos issue, they are not playing.
 
 UnitFrames - make them movable with Shift+Ctrl held.
 
@@ -198,14 +165,9 @@ Hide Error text, permit user to enter partial to not un-hide some error text.
      -(For example arena ready crystal red error shows how many players ready.)
      - You are in shapeshift,
 
---------------------------------------------------------------------------------
----- Things to include in presentation
---------------------------------------------------------------------------------
 
-- Tab to confirm auction
+AutoSellJunk			 - Make user able to shift click the item to add to "keep list"
 
-- Flight Paths
+AutoSellJunk			 - Make user be able to alt-ctrl (or other bind) click on an item in bag to sell the item on next vendor visit.
 
-- Square Minimap with Combine Addon Buttons
-
-- Copy text from tab (make sure to show that Ctrl modifier needed)
+AutoSellJunk			 - The editbox must be scrollable.
