@@ -24,8 +24,6 @@ Manage Debuffs  - Test IT in fight.
 -- What i plan to do in near future list from easy to hard
 --------------------------------------------------------------------------------
 
-Minimap - Hide POI ARROWS Tweak.
-
 Minimap - show time by user option.
 
 MinimapButton			 - Add functions to alt-click and other clicks on button (prio - error text togggle)

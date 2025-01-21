@@ -6013,6 +6013,7 @@ function LeaPlusLC:Player()
                         Minimap:HookScript("OnUpdate", function(self, elapsed)
                             local numChildren = Minimap:GetNumChildren()
                             local mouseOverChild = false
+                            local mouseOverMinimap = Minimap:IsMouseOver() -- Check if the mouse is over the minimap
                             for i = 1, numChildren do
                                 local child = select(i, Minimap:GetChildren())
                                 if child and child:IsObjectType("Button") then
@@ -6031,10 +6032,11 @@ function LeaPlusLC:Player()
                                 end
                             end
 
-                            if not mouseOverChild then
-                                HideMinimapButtons()
-                            else
+                            -- If the mouse is over either the minimap or a child, show the buttons
+                            if mouseOverMinimap or mouseOverChild then
                                 ShowMinimapButtons()
+                            else
+                                HideMinimapButtons()
                             end
                         end)
                     end
@@ -6465,8 +6467,9 @@ function LeaPlusLC:Player()
             end)
         end
 
+
+        -- Hide POI arrows
         local function SetupPOI()
-            -- Hide POI arrows
             if LeaPlusLC["HideMiniPOIArrows"] == "On" then
                 Minimap:SetStaticPOIArrowTexture("Interface\\addons\\Leatrix_Plus\\assets\\ROTATING-MINIMAPARROW")
             else
