@@ -683,7 +683,6 @@ function LeaPlusLC:ReloadCheck()
             or (LeaPlusLC["RestoreChatMessages"] ~= LeaPlusDB["RestoreChatMessages"])    -- Restore chat messages
 
             -- Text
-            or (LeaPlusLC["HideErrorMessages"] ~= LeaPlusDB["HideErrorMessages"])        -- Hide error messages
             or (LeaPlusLC["NoHitIndicators"] ~= LeaPlusDB["NoHitIndicators"])        -- Hide portrait text
             or (LeaPlusLC["HideZoneText"] ~= LeaPlusDB["HideZoneText"])            -- Hide zone text
             or (LeaPlusLC["HideKeybindText"] ~= LeaPlusDB["HideKeybindText"])        -- Hide keybind text
@@ -3865,14 +3864,14 @@ function LeaPlusLC:Isolated()
     --	Hide error messages
     ----------------------------------------------------------------------
 
-    if LeaPlusLC["HideErrorMessages"] == "On" then
 
-        --	Error message events
-        local OrigErrHandler = UIErrorsFrame:GetScript('OnEvent')
-        UIErrorsFrame:SetScript('OnEvent', function(self, event, err, ...)
-            if event == "UI_ERROR_MESSAGE" then
-                -- Hide error messages
-                if LeaPlusLC["ShowErrorsFlag"] == 1 then
+    -- Error message events
+    local OrigErrHandler = UIErrorsFrame:GetScript('OnEvent')
+    local function UpdateErrorMessageVisibility()
+        if LeaPlusLC["HideErrorMessages"] == "On" and LeaPlusLC["ShowErrorsFlag"] == 1 then
+            UIErrorsFrame:SetScript('OnEvent', function(self, event, err, ...)
+                if event == "UI_ERROR_MESSAGE" then
+                    -- Hide error messages for specific conditions
                     if err == ERR_INV_FULL or
                             err == ERR_QUEST_LOG_FULL or
                             err == ERR_RAID_GROUP_ONLY or
@@ -3888,20 +3887,28 @@ function LeaPlusLC:Isolated()
                             string.match(err, "afford") or
                             string.match(err, "shapeshift") or
                             string.match(err, "disarm")
-
                     then
                         return OrigErrHandler(self, event, err, ...)
                     end
-                else
+                elseif event == 'UI_INFO_MESSAGE' then
+                    -- Show information messages
                     return OrigErrHandler(self, event, err, ...)
                 end
-            elseif event == 'UI_INFO_MESSAGE' then
-                -- Show information messages
-                return OrigErrHandler(self, event, err, ...)
-            end
-        end)
-
+            end)
+        else
+            UIErrorsFrame:SetScript('OnEvent', OrigErrHandler)
+        end
     end
+
+    -- Hook the checkbox click to toggle visibility
+    LeaPlusCB["HideErrorMessages"]:HookScript("OnClick", function(self)
+        LeaPlusLC["ShowErrorsFlag"] = self:GetChecked() and 1 or 0
+        UpdateErrorMessageVisibility()  -- Update the error message visibility state
+    end)
+
+    -- Initial check to set the correct visibility on load
+    UpdateErrorMessageVisibility()
+
 
     -- Release memory
     LeaPlusLC.Isolated = nil
@@ -19547,7 +19554,7 @@ LeaPlusLC:CfgBtn("FilterChatMessagesBtn", LeaPlusCB["FilterChatMessages"])
 pg = "Page4";
 
 LeaPlusLC:MakeTx(LeaPlusLC[pg], "Visibility", 146, -72);
-LeaPlusLC:MakeCB(LeaPlusLC[pg], "HideErrorMessages", "Hide error messages", 146, -92, true, "If checked, most error messages (such as 'Not enough rage') will not be shown.  Some important errors are excluded.|n|nIf you have the minimap button enabled, you can hold down the alt key and click it to toggle error messages without affecting this setting.")
+LeaPlusLC:MakeCB(LeaPlusLC[pg], "HideErrorMessages", "Hide error messages", 146, -92, false, "If checked, most error messages (such as 'Not enough rage') will not be shown.  Some important errors are excluded.|n|nIf you have the minimap button enabled, you can hold down the alt key and click it to toggle error messages without affecting this setting.")
 LeaPlusLC:MakeCB(LeaPlusLC[pg], "NoHitIndicators", "Hide portrait numbers", 146, -112, true, "If checked, damage and healing numbers in the player and pet portrait frames will be hidden.")
 LeaPlusLC:MakeCB(LeaPlusLC[pg], "HideZoneText", "Hide zone text", 146, -132, true, "If checked, zone text will not be shown (eg. 'Ironforge').")
 LeaPlusLC:MakeCB(LeaPlusLC[pg], "HideKeybindText", "Hide keybind text", 146, -152, true, "If checked, keybind text will not be shown on action buttons.")
