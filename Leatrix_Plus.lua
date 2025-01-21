@@ -4537,6 +4537,7 @@ function LeaPlusLC:Player()
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniTracking", "Hide the tracking button", 16, -152, true, "If checked, the tracking button will be hidden. Right-click on the minimap to show tracking menu.")
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniCalendar", "Hide calendar button.", 226, -92, true, "If checked, the calendar button will be hidden. Shift+Middle-click on the minimap to show calendar frame.")
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniPOIArrows", "Hide POI arrows.", 226, -112, false, "If checked, the POI arrows (those on the edges of minimap) will be hidden.")
+        LeaPlusLC:MakeCB(SideMinimap, "ClockMouseover", "Show Clock on Mouseover", 226, -132, false, "If checked, clock will be shown on mouseover.")
         LeaPlusLC:MakeCB(SideMinimap, "HideMiniAddonButtons", "Hide addon buttons", 16, -172, true, "If checked, addon buttons will be hidden while the pointer is not over the minimap.")
 
         LeaPlusLC:MakeCB(SideMinimap, "SquareMinimap", "Square minimap", 16, -212, true, "If checked, the minimap shape will be square.")
@@ -6234,6 +6235,15 @@ function LeaPlusLC:Player()
         -- Style and position the clock
         ----------------------------------------------------------------------
 
+        local function initialClockSetup()
+            -- Set initial visibility based on ClockMouseover
+            if LeaPlusLC["ClockMouseover"] == "On" then
+                TimeManagerClockButton:SetAlpha(0) -- Hidden by default for mouseover
+            else
+                TimeManagerClockButton:SetAlpha(1) -- Visible by default
+            end
+        end
+
         -- Function to style and position the clock
         local function SetMiniClock(firstRun)
             if IsAddOnLoaded("Blizzard_TimeManager") then
@@ -6255,6 +6265,8 @@ function LeaPlusLC:Player()
                     TimeManagerFrame:ClearAllPoints()
                     TimeManagerFrame:SetPoint("TOP", Minimap, "BOTTOM", 0, 0)
                 end
+
+                initialClockSetup()
             end
         end
 
@@ -6267,10 +6279,46 @@ function LeaPlusLC:Player()
             waitFrame:SetScript("OnEvent", function(self, event, arg1)
                 if arg1 == "Blizzard_TimeManager" then
                     SetMiniClock(true)
+                    -- Ensure the clock remains visible when the mouse is over it
+                    TimeManagerClockButton:HookScript("OnEnter", function()
+                        if IsAddOnLoaded("Blizzard_TimeManager") then
+                            if LeaPlusLC["ClockMouseover"] == "On" then
+                                TimeManagerClockButton:SetAlpha(1)
+                            end
+                        end
+                    end)
+
+                    TimeManagerClockButton:HookScript("OnLeave", function()
+                        if IsAddOnLoaded("Blizzard_TimeManager") then
+                            if LeaPlusLC["ClockMouseover"] == "On" then
+                                TimeManagerClockButton:SetAlpha(0)
+                            end
+                        end
+                    end)
                     waitFrame:UnregisterAllEvents()
                 end
             end)
         end
+
+        -- Show clock on mouseover if ClockMouseover is enabled
+        Minimap:HookScript("OnEnter", function()
+            if IsAddOnLoaded("Blizzard_TimeManager") then
+                if LeaPlusLC["ClockMouseover"] == "On" then
+                    TimeManagerClockButton:SetAlpha(1)
+                end
+            end
+        end)
+
+        -- Hide clock on mouse leave if ClockMouseover is enabled
+        Minimap:HookScript("OnLeave", function()
+            if IsAddOnLoaded("Blizzard_TimeManager") then
+                if LeaPlusLC["ClockMouseover"] == "On" then
+                    TimeManagerClockButton:SetAlpha(0)
+                end
+            end
+        end)
+
+        LeaPlusCB["ClockMouseover"]:HookScript("OnClick", initialClockSetup)
 
         ----------------------------------------------------------------------
         -- Enable mousewheel zoom
@@ -16133,6 +16181,7 @@ local function eventHandler(self, event, arg1, arg2, ...)
             LeaPlusLC:LoadVarChk("HideMiniTracking", "Off")                -- Hide the tracking button
             LeaPlusLC:LoadVarChk("HideMiniCalendar", "Off")                -- Hide the tracking button
             LeaPlusLC:LoadVarChk("HideMiniPOIArrows", "Off")                -- Hide the tracking button
+            LeaPlusLC:LoadVarChk("ClockMouseover", "Off")                -- Hide the tracking button
             LeaPlusLC:LoadVarNum("MinimapScale", 1, 1, 4)                -- Minimap scale slider
             LeaPlusLC:LoadVarNum("MinimapSize", 140, 140, 560)            -- Minimap size slider
             LeaPlusLC:LoadVarNum("MiniClusterScale", 1, 1, 2)            -- Minimap cluster scale
@@ -16579,6 +16628,7 @@ local function eventHandler(self, event, arg1, arg2, ...)
         LeaPlusDB["HideMiniTracking"] = LeaPlusLC["HideMiniTracking"]
         LeaPlusDB["HideMiniCalendar"] = LeaPlusLC["HideMiniCalendar"]
         LeaPlusDB["HideMiniPOIArrows"] = LeaPlusLC["HideMiniPOIArrows"]
+        LeaPlusDB["ClockMouseover"] = LeaPlusLC["ClockMouseover"]
         LeaPlusDB["MinimapScale"] = LeaPlusLC["MinimapScale"]
         LeaPlusDB["MinimapSize"] = LeaPlusLC["MinimapSize"]
         LeaPlusDB["MiniClusterScale"] = LeaPlusLC["MiniClusterScale"]
@@ -19003,6 +19053,7 @@ function LeaPlusLC:SlashFunc(str)
             LeaPlusDB["HideMiniTracking"] = "On"            -- Hide tracking button
             LeaPlusDB["HideMiniCalendar"] = "On"            -- Hide tracking button
             LeaPlusDB["HideMiniPOIArrows"] = "On"            -- Hide tracking button
+            LeaPlusDB["ClockMouseover"] = "On"            -- Hide tracking button
             LeaPlusDB["MinimapA"] = "TOPRIGHT"                -- Minimap anchor
             LeaPlusDB["MinimapR"] = "TOPRIGHT"                -- Minimap relative
             LeaPlusDB["MinimapX"] = 0                        -- Minimap X
