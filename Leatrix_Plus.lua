@@ -5954,8 +5954,18 @@ function LeaPlusLC:Player()
                             "poiWorldMapPOIFrame",
                             "WorldMapPOIFrame",
                             "QuestMapPOI",
-                            "pfMiniMapPin"
+                            "pfMiniMapPin",
+                            -- Add TimeManagerClockButton based on ClockMouseover option
+                            LeaPlusLC["ClockMouseover"] == "Off" and "TimeManagerClockButton" or nil
                         }
+
+                        -- Remove nil values from the keepVisible table
+                        for i = #keepVisible, 1, -1 do
+                            if not keepVisible[i] then
+                                table.remove(keepVisible, i)
+                            end
+                        end
+
                         if searchStr == "" then
                             -- Set alpha of all buttons to 0 if MiniExcludeList is empty
                             for _, button in pairs(minimapButtons) do
