@@ -5828,6 +5828,37 @@ function LeaPlusLC:Player()
             -- Call UpdateMailIconPosition on startup to set the initial position
             UpdateMailIconPosition()
 
+            -- Add a dropdown menu for LFG button position with no "Default" position, only custom ones
+            LeaPlusLC:CreateDropDown("MiniMapLFGIconPos", "LFG Icon Position", SquareMapPanel, 146, "TOPLEFT", 16, -172,
+                    {L["Top Left"], L["Top Right"], L["Bottom Left"], L["Bottom Right"]}, "Set the position of the minimap LFG icon.")
+
+            -- Function to update LFG button position based on the dropdown selection
+            local function UpdateLFGIconPosition()
+                local lfgIcon = MiniMapLFGFrame
+                if lfgIcon then
+                    lfgIcon:ClearAllPoints()
+
+                    -- Apply custom positions inside the minimap with a slight outset from the edges
+                    if LeaPlusLC["MiniMapLFGIconPos"] == 1 then -- Top Left
+                        lfgIcon:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 5, -5)  -- Slightly inset
+                    elseif LeaPlusLC["MiniMapLFGIconPos"] == 2 then -- Top Right
+                        lfgIcon:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", -5, -5)  -- Slightly inset
+                    elseif LeaPlusLC["MiniMapLFGIconPos"] == 3 then -- Bottom Left
+                        lfgIcon:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 5, 5)  -- Slightly inset
+                    elseif LeaPlusLC["MiniMapLFGIconPos"] == 4 then -- Bottom Right
+                        lfgIcon:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", -5, 25)  -- Slightly inset
+                    end
+                end
+            end
+
+            -- Call UpdateLFGIconPosition when the dropdown value changes
+            LeaPlusCB["ListFrameMiniMapLFGIconPos"]:HookScript("OnHide", function()
+                UpdateLFGIconPosition()
+            end)
+
+            -- Call UpdateLFGIconPosition on startup to set the initial position
+            UpdateLFGIconPosition()
+
             -- Help button hidden (or you can add specific help for this panel)
             SquareMapPanel.h:Hide()
 
@@ -5845,6 +5876,12 @@ function LeaPlusLC:Player()
                 -- Refresh dropdown
                 LeaPlusCB["ListFrameMiniMapMailIconPos"]:Hide()
                 UpdateMailIconPosition()
+                -- Reset LFG position to top-left slightly inset
+                LeaPlusLC["MiniMapLFGIconPos"] = 4  -- Set default position to Top Left
+
+                -- Refresh dropdown
+                LeaPlusCB["ListFrameMiniMapLFGIconPos"]:Hide()
+                UpdateLFGIconPosition()
 
                 -- Refresh the configuration panel
                 SquareMapPanel:Hide()
@@ -16314,6 +16351,7 @@ local function eventHandler(self, event, arg1, arg2, ...)
             LeaPlusLC:LoadVarNum("TipOffsetY", 94, -5000, 5000)            -- Tooltip Y offset
             LeaPlusLC:LoadVarNum("TooltipAnchorMenu", 1, 1, 5)            -- Tooltip anchor menu
             LeaPlusLC:LoadVarNum("MiniMapMailIconPos", 1, 1, 4)            -- Tooltip anchor menu
+            LeaPlusLC:LoadVarNum("MiniMapLFGIconPos", 1, 1, 4)            -- Tooltip anchor menu
             LeaPlusLC:LoadVarNum("TipCursorX", 0, -128, 128)            -- Tooltip cursor X offset
             LeaPlusLC:LoadVarNum("TipCursorY", 0, -128, 128)            -- Tooltip cursor Y offset
 
@@ -16762,6 +16800,7 @@ local function eventHandler(self, event, arg1, arg2, ...)
         LeaPlusDB["TipOffsetY"] = LeaPlusLC["TipOffsetY"]
         LeaPlusDB["TooltipAnchorMenu"] = LeaPlusLC["TooltipAnchorMenu"]
         LeaPlusDB["MiniMapMailIconPos"] = LeaPlusLC["MiniMapMailIconPos"]
+        LeaPlusDB["MiniMapLFGIconPos"] = LeaPlusLC["MiniMapLFGIconPos"]
         LeaPlusDB["TipCursorX"] = LeaPlusLC["TipCursorX"]
         LeaPlusDB["TipCursorY"] = LeaPlusLC["TipCursorY"]
 
@@ -19175,6 +19214,7 @@ function LeaPlusLC:SlashFunc(str)
             LeaPlusDB["LeaPlusTipSize"] = 1.25                -- Tooltip scale slider
             LeaPlusDB["TooltipAnchorMenu"] = 2                -- Tooltip anchor
             LeaPlusDB["MiniMapMailIconPos"] = 1                -- Tooltip anchor
+            LeaPlusDB["MiniMapLFGIconPos"] = 4                -- Tooltip anchor
             LeaPlusDB["TipCursorX"] = 0                        -- X offset
             LeaPlusDB["TipCursorY"] = 0                        -- Y offset
             LeaPlusDB["EnhanceDressup"] = "On"                -- Enhance dressup
