@@ -5859,6 +5859,38 @@ function LeaPlusLC:Player()
             -- Call UpdateLFGIconPosition on startup to set the initial position
             UpdateLFGIconPosition()
 
+
+            -- Add a dropdown menu for Battlefield icon position
+            LeaPlusLC:CreateDropDown("MiniMapBattlefieldIconPos", "Battlefield Icon Position", SquareMapPanel, 146, "TOPLEFT", 16, -232, {L["Top Left"], L["Top Right"], L["Bottom Left"], L["Bottom Right"]}, "Set the position of the minimap battlefield icon.")
+
+            -- Function to update Battlefield icon position based on the dropdown selection
+            local function UpdateBattlefieldIconPosition()
+                local battlefieldIcon = MiniMapBattlefieldFrame
+                if battlefieldIcon then
+                    battlefieldIcon:ClearAllPoints()
+
+                    -- Apply custom positions inside the minimap with a slight outset from the edges
+                    if LeaPlusLC["MiniMapBattlefieldIconPos"] == 1 then -- Top Left
+                        battlefieldIcon:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 5, -5)  -- Slightly inset
+                    elseif LeaPlusLC["MiniMapBattlefieldIconPos"] == 2 then -- Top Right
+                        battlefieldIcon:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", -5, -5)  -- Slightly inset
+                    elseif LeaPlusLC["MiniMapBattlefieldIconPos"] == 3 then -- Bottom Left
+                        battlefieldIcon:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 5, 5)  -- Slightly inset
+                    elseif LeaPlusLC["MiniMapBattlefieldIconPos"] == 4 then -- Bottom Right
+                        battlefieldIcon:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", -5, 25)  -- Slightly inset
+                    end
+                end
+            end
+
+            -- Call UpdateBattlefieldIconPosition when the dropdown value changes
+            LeaPlusCB["ListFrameMiniMapBattlefieldIconPos"]:HookScript("OnHide", function()
+                UpdateBattlefieldIconPosition()
+            end)
+
+            -- Call UpdateBattlefieldIconPosition on startup to set the initial position
+            UpdateBattlefieldIconPosition()
+
+
             -- Help button hidden (or you can add specific help for this panel)
             SquareMapPanel.h:Hide()
 
@@ -5873,15 +5905,16 @@ function LeaPlusLC:Player()
             SquareMapPanel.r:SetScript("OnClick", function()
                 -- Reset your Square Minimap settings to default values here
                 LeaPlusLC["MiniMapMailIconPos"] = 1
-                -- Refresh dropdown
+                LeaPlusLC["MiniMapLFGIconPos"] = 3
+                LeaPlusLC["MiniMapBattlefieldIconPos"] = 1
+
+                -- Refresh dropdowns
                 LeaPlusCB["ListFrameMiniMapMailIconPos"]:Hide()
                 UpdateMailIconPosition()
-                -- Reset LFG position to top-left slightly inset
-                LeaPlusLC["MiniMapLFGIconPos"] = 4  -- Set default position to Top Left
-
-                -- Refresh dropdown
                 LeaPlusCB["ListFrameMiniMapLFGIconPos"]:Hide()
                 UpdateLFGIconPosition()
+                LeaPlusCB["ListFrameMiniMapBattlefieldIconPos"]:Hide()
+                UpdateBattlefieldIconPosition()
 
                 -- Refresh the configuration panel
                 SquareMapPanel:Hide()
@@ -16351,7 +16384,8 @@ local function eventHandler(self, event, arg1, arg2, ...)
             LeaPlusLC:LoadVarNum("TipOffsetY", 94, -5000, 5000)            -- Tooltip Y offset
             LeaPlusLC:LoadVarNum("TooltipAnchorMenu", 1, 1, 5)            -- Tooltip anchor menu
             LeaPlusLC:LoadVarNum("MiniMapMailIconPos", 1, 1, 4)            -- Tooltip anchor menu
-            LeaPlusLC:LoadVarNum("MiniMapLFGIconPos", 1, 1, 4)            -- Tooltip anchor menu
+            LeaPlusLC:LoadVarNum("MiniMapLFGIconPos", 3, 1, 4)            -- Tooltip anchor menu
+            LeaPlusLC:LoadVarNum("MiniMapBattlefieldIconPos", 1, 1, 4)            -- Tooltip anchor menu
             LeaPlusLC:LoadVarNum("TipCursorX", 0, -128, 128)            -- Tooltip cursor X offset
             LeaPlusLC:LoadVarNum("TipCursorY", 0, -128, 128)            -- Tooltip cursor Y offset
 
@@ -16801,6 +16835,7 @@ local function eventHandler(self, event, arg1, arg2, ...)
         LeaPlusDB["TooltipAnchorMenu"] = LeaPlusLC["TooltipAnchorMenu"]
         LeaPlusDB["MiniMapMailIconPos"] = LeaPlusLC["MiniMapMailIconPos"]
         LeaPlusDB["MiniMapLFGIconPos"] = LeaPlusLC["MiniMapLFGIconPos"]
+        LeaPlusDB["MiniMapBattlefieldIconPos"] = LeaPlusLC["MiniMapBattlefieldIconPos"]
         LeaPlusDB["TipCursorX"] = LeaPlusLC["TipCursorX"]
         LeaPlusDB["TipCursorY"] = LeaPlusLC["TipCursorY"]
 
@@ -19215,6 +19250,7 @@ function LeaPlusLC:SlashFunc(str)
             LeaPlusDB["TooltipAnchorMenu"] = 2                -- Tooltip anchor
             LeaPlusDB["MiniMapMailIconPos"] = 1                -- Tooltip anchor
             LeaPlusDB["MiniMapLFGIconPos"] = 4                -- Tooltip anchor
+            LeaPlusDB["MiniMapBattlefieldIconPos"] = 2                -- Tooltip anchor
             LeaPlusDB["TipCursorX"] = 0                        -- X offset
             LeaPlusDB["TipCursorY"] = 0                        -- Y offset
             LeaPlusDB["EnhanceDressup"] = "On"                -- Enhance dressup
