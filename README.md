@@ -21,3 +21,4 @@
 2. Note that some options will require a reload to take effect. You will see the `"Reload"` button glowing if you need to reload, simply click it.
 3. Minimap Button `Click` to open configuration menu
 4. Minimap Button `Shift-Click` to reload user interface
+5. Minimap Button `Alt-Click` to toggle error messages visibility
