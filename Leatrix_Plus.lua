@@ -6107,6 +6107,38 @@
                                 end
                             end
                         end
+                        -- Set hover scripts for all buttons
+                        local function SetupButtonHoverScripts()
+                            for _, button in pairs(minimapButtons) do
+                                if button then
+                                    button:HookScript("OnEnter", function()
+                                        -- Show all buttons when hovering over one
+                                        for _, btn in pairs(minimapButtons) do
+                                            btn:SetAlpha(1)
+                                        end
+                                    end)
+                                    button:HookScript("OnLeave", function()
+                                        -- Hide buttons if mouse is not over minimap or any button
+                                        if not Minimap:IsMouseOver() then
+                                            local mouseOverAny = false
+                                            for _, btn in pairs(minimapButtons) do
+                                                if btn:IsMouseOver() then
+                                                    mouseOverAny = true
+                                                    break
+                                                end
+                                            end
+                                            if not mouseOverAny then
+                                                for _, btn in pairs(minimapButtons) do
+                                                    btn:SetAlpha(0)
+                                                end
+                                            end
+                                        end
+                                    end)
+                                end
+                            end
+                        end
+
+
 
                         local function HideMinimapButtons()
                             local searchStr = LeaPlusDB["MiniExcludeList"]
@@ -6230,6 +6262,7 @@
                         -- Finally, we create a timer that will capture new minimap children every 0.5 seconds.
                         LibCompat.NewTicker(1, function()
                             GetMinimapChildren()
+                            SetupButtonHoverScripts() -- Apply hover scripts to each button
                         end)
 
                         -- We set up the minimap to respond to mouse events.
@@ -6244,7 +6277,7 @@
                                 ticks = ticks + 1 -- increment the tick counter
                                 -- print("tick #".. ticks)
                                 HideMinimapButtons()
-                                if ticks >= 10 then
+                                if ticks >= 4 then
                                     -- stop after 6 seconds have passed (20 ticks * 0.3 seconds per tick)
                                     LibCompat.CancelTimer(ticker) -- stop the timer
                                 end

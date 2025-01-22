@@ -26,8 +26,6 @@ Manage Debuffs  - Test IT in fight.
 
 Auto-Spirit Res.		 - Add function to auto ressurect once interracted with Spirit Healer
 
-MinimapEnhance			 - Add Timer module, just like ShaguTweaks.
-
 ManageBuff               - Fix the weapon enhancements not scale correct!
 
 Faster Loot				 - Make the config option to change size of error frame with test messages
@@ -163,3 +161,5 @@ AutoSellJunk			 - Make user able to shift click the item to add to "keep list"
 AutoSellJunk			 - Make user be able to alt-ctrl (or other bind) click on an item in bag to sell the item on next vendor visit.
 
 AutoSellJunk			 - The editbox must be scrollable.
+
+MinimapEnhance			 - Add Timer module, just like ShaguTweaks.
