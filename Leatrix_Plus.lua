@@ -3867,8 +3867,8 @@ function LeaPlusLC:Isolated()
 
     -- Error message events
     local OrigErrHandler = UIErrorsFrame:GetScript('OnEvent')
-    local function UpdateErrorMessageVisibility()
-        if LeaPlusLC["HideErrorMessages"] == "On" and LeaPlusLC["ShowErrorsFlag"] == 1 then
+    function LeaPlusLC:UpdateErrorMessageVisibility()
+        if LeaPlusLC["HideErrorMessages"] == "On" then
             UIErrorsFrame:SetScript('OnEvent', function(self, event, err, ...)
                 if event == "UI_ERROR_MESSAGE" then
                     -- Hide error messages for specific conditions
@@ -3902,12 +3902,11 @@ function LeaPlusLC:Isolated()
 
     -- Hook the checkbox click to toggle visibility
     LeaPlusCB["HideErrorMessages"]:HookScript("OnClick", function(self)
-        LeaPlusLC["ShowErrorsFlag"] = self:GetChecked() and 1 or 0
-        UpdateErrorMessageVisibility()  -- Update the error message visibility state
+        LeaPlusLC:UpdateErrorMessageVisibility()  -- Update the error message visibility state
     end)
 
     -- Initial check to set the correct visibility on load
-    UpdateErrorMessageVisibility()
+    LeaPlusLC:UpdateErrorMessageVisibility()
 
 
     -- Release memory
@@ -11119,7 +11118,7 @@ function LeaPlusLC:Player()
                 return
             end
 
-            if arg1 == "LeftButton" then
+            if arg1 == "LeftButton" and not IsAltKeyDown() then
                 -- No modifier key toggles the options panel
                 if LeaPlusLC:IsPlusShowing() then
                     LeaPlusLC:HideFrames()
@@ -11130,9 +11129,26 @@ function LeaPlusLC:Player()
                 end
                 LeaPlusLC["Page" .. LeaPlusLC["LeaStartPage"]]:Show()
             end
-            if arg1 == "RightButton" then
+            if arg1 == "RightButton" and not IsAltKeyDown() then
                 ReloadUI();
             end
+
+            -- Add ALT-click functionality here
+            if (arg1 == "LeftButton" or arg1 == "RightButton") and IsAltKeyDown() then
+                if LeaPlusLC["HideErrorMessages"] == "On" then
+                    LeaPlusLC["HideErrorMessages"] = "Off"
+                    ActionStatus_DisplayMessage(L["Error messages will be shown"], true)
+                else
+                    LeaPlusLC["HideErrorMessages"] = "On"
+                    ActionStatus_DisplayMessage(L["Error messages will be hidden"], true)
+                end
+                -- Update the visibility based on the new setting
+                LeaPlusLC:UpdateErrorMessageVisibility()
+
+                -- Update the checkbox state in the options panel
+                LeaPlusCB["HideErrorMessages"]:SetChecked(LeaPlusLC["HideErrorMessages"] == "On")
+            end
+
 
         end
 
@@ -11151,6 +11167,13 @@ function LeaPlusLC:Player()
                 tooltip:AddLine("Leatrix Plus")
                 tooltip:AddLine("|cffeda55fClick|r |cff99ff00to open Leatrix Plus options.|r")
                 tooltip:AddLine("|cffeda55fRight-Click|r |cff99ff00to reload the user interface.|r")
+
+                -- Toggle error message line color based on HideErrorMessages state
+                if LeaPlusLC["HideErrorMessages"] == "On" then
+                    tooltip:AddLine("|cffcc3333Alt-Click|r |cff99ff00to toggle error messages.|r")  -- Red color if On
+                else
+                    tooltip:AddLine("|cffeda55fAlt-Click|r |cff99ff00to toggle error messages.|r")  -- Default color if Off
+                end
             end,
         })
 
