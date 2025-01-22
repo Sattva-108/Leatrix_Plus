@@ -4549,6 +4549,8 @@ function LeaPlusLC:Player()
         LeaPlusLC:MakeCB(SideMinimap, "SquareMinimap", "Square minimap", 16, -212, true, "If checked, the minimap shape will be square.")
         LeaPlusLC:MakeCB(SideMinimap, "ShowWhoPinged", "Show who pinged", 16, -232, false, "If checked, when someone pings the minimap, their name will be shown.  This does not apply to your pings.")
 
+        LeaPlusLC:CfgBtn("ModSquareMap", LeaPlusCB["SquareMinimap"])
+
         -- Add excluded button
         local MiniExcludedButton = LeaPlusLC:CreateButton("MiniExcludedButton", SideMinimap, "Buttons", "TOPLEFT", 16, -72, 0, 25, true, "Click to toggle the addon buttons editor.")
         LeaPlusCB["MiniExcludedButton"]:ClearAllPoints()
@@ -5791,6 +5793,47 @@ function LeaPlusLC:Player()
 
             -- Refresh buttons
             LibCompat.After(0.1, SetButtonRad)
+
+            --------------------------------------------------------------------------------
+            ---- Create the configuration panel for Square Minimap
+            --------------------------------------------------------------------------------
+
+            local SquareMapPanel = LeaPlusLC:CreatePanel("Square Minimap", "SquareMapPanel")
+
+            -- Add a setting to adjust border thickness
+            LeaPlusLC:MakeTx(SquareMapPanel, "Border Thickness", 16, -72)
+            LeaPlusLC:MakeSL(SquareMapPanel, "SquareMapBorderThickness", "Drag to adjust the border thickness.", 0, 10, 1, 16, -92, "%.0f")
+
+            -- Help button hidden (or you can add specific help for this panel)
+            SquareMapPanel.h:Hide()
+
+            -- Back button handler
+            SquareMapPanel.b:SetScript("OnClick", function()
+                SquareMapPanel:Hide()
+                LeaPlusGlobalPanel_SideMinimap:Show()
+                return
+            end)
+
+            -- Reset button handler
+            SquareMapPanel.r:SetScript("OnClick", function()
+                -- Reset your Square Minimap settings to default values here
+                LeaPlusLC["SquareMapBorderThickness"] = 1 -- Example default value
+
+                -- Refresh the configuration panel
+                SquareMapPanel:Hide()
+                SquareMapPanel:Show()
+            end)
+
+            -- Set the OnClick script for the configuration button
+            LeaPlusCB["ModSquareMap"]:SetScript("OnClick", function()
+                if IsShiftKeyDown() and IsControlKeyDown() then
+                    -- Preset profile
+                    LeaPlusLC["SquareMapBorderThickness"] = 1 -- Example preset
+                else
+                    SquareMapPanel:Show()
+                    LeaPlusGlobalPanel_SideMinimap:Hide()
+                end
+            end)
 
         else
 
