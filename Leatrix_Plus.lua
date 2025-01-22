@@ -4549,7 +4549,17 @@ function LeaPlusLC:Player()
         LeaPlusLC:MakeCB(SideMinimap, "SquareMinimap", "Square minimap", 16, -212, true, "If checked, the minimap shape will be square.")
         LeaPlusLC:MakeCB(SideMinimap, "ShowWhoPinged", "Show who pinged", 16, -232, false, "If checked, when someone pings the minimap, their name will be shown.  This does not apply to your pings.")
 
-        LeaPlusLC:CfgBtn("ModSquareMap", LeaPlusCB["SquareMinimap"])
+        LeaPlusLC:CfgBtn("ModSquareMapBtn", LeaPlusCB["SquareMinimap"])
+
+        -- Set dim on square minimap configuration button
+        local function SetDimSquareMinimapButton()
+            if LeaPlusLC["SquareMinimap"] == "On" then
+                LeaPlusLC:LockItem(LeaPlusCB["ModSquareMapBtn"], false)
+            else
+                LeaPlusLC:LockItem(LeaPlusCB["ModSquareMapBtn"], true)
+            end
+        end
+        SetDimSquareMinimapButton()
 
         -- Add excluded button
         local MiniExcludedButton = LeaPlusLC:CreateButton("MiniExcludedButton", SideMinimap, "Buttons", "TOPLEFT", 16, -72, 0, 25, true, "Click to toggle the addon buttons editor.")
@@ -5922,7 +5932,7 @@ function LeaPlusLC:Player()
             end)
 
             -- Set the OnClick script for the configuration button
-            LeaPlusCB["ModSquareMap"]:SetScript("OnClick", function()
+            LeaPlusCB["ModSquareMapBtn"]:SetScript("OnClick", function()
                 if IsShiftKeyDown() and IsControlKeyDown() then
                     -- Preset profile (if you have any presets for this panel)
                     LeaPlusLC["MiniMapMailIconPos"] = 1
@@ -15040,7 +15050,7 @@ function LeaPlusLC:Player()
     -- Show first run message
     if not LeaPlusDB["FirstRunMessageSeen"] then
         LibCompat.After(1, function()
-            LeaPlusLC:Print(L["Enter"] .. " |cff00ff00" .. "/run leaplus()" .. "|r " .. L["or click the minimap button to open Leatrix Plus."])
+            LeaPlusLC:Print(L["Enter"] .. " |cff00ff00" .. "/ltp" .. "|r " .. L["or click the minimap button to open Leatrix Plus."])
             LeaPlusDB["FirstRunMessageSeen"] = true
         end)
     end
