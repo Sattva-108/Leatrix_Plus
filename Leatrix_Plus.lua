@@ -5800,9 +5800,33 @@ function LeaPlusLC:Player()
 
             local SquareMapPanel = LeaPlusLC:CreatePanel("Square Minimap", "SquareMapPanel")
 
-            -- Add a setting to adjust border thickness
-            LeaPlusLC:MakeTx(SquareMapPanel, "Border Thickness", 16, -72)
-            LeaPlusLC:MakeSL(SquareMapPanel, "SquareMapBorderThickness", "Drag to adjust the border thickness.", 0, 10, 1, 16, -92, "%.0f")
+            -- Add a dropdown menu for mail icon position
+            LeaPlusLC:CreateDropDown("MiniMapMailIconPos", "Mail Icon Position", SquareMapPanel, 146, "TOPLEFT", 16, -112, {L["Top Left"], L["Top Right"], L["Bottom Left"], L["Bottom Right"]}, "Set the position of the minimap mail icon.")
+
+            -- Function to update mail icon position based on the dropdown selection
+            local function UpdateMailIconPosition()
+                local mailIcon = MiniMapMailFrame
+                if mailIcon then
+                    mailIcon:ClearAllPoints()
+                    if LeaPlusLC["MiniMapMailIconPos"] == 1 then -- Top Left
+                        mailIcon:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -19, 14)
+                    elseif LeaPlusLC["MiniMapMailIconPos"] == 2 then -- Top Right
+                        mailIcon:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 19, 14)
+                    elseif LeaPlusLC["MiniMapMailIconPos"] == 3 then -- Bottom Left
+                        mailIcon:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", -19, -14)
+                    elseif LeaPlusLC["MiniMapMailIconPos"] == 4 then -- Bottom Right
+                        mailIcon:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 19, -14)
+                    end
+                end
+            end
+
+            -- Call UpdateMailIconPosition when the dropdown value changes
+            LeaPlusCB["ListFrameMiniMapMailIconPos"]:HookScript("OnHide", function()
+                UpdateMailIconPosition()
+            end)
+
+            -- Call UpdateMailIconPosition on startup to set the initial position
+            UpdateMailIconPosition()
 
             -- Help button hidden (or you can add specific help for this panel)
             SquareMapPanel.h:Hide()
@@ -5817,7 +5841,10 @@ function LeaPlusLC:Player()
             -- Reset button handler
             SquareMapPanel.r:SetScript("OnClick", function()
                 -- Reset your Square Minimap settings to default values here
-                LeaPlusLC["SquareMapBorderThickness"] = 1 -- Example default value
+                LeaPlusLC["MiniMapMailIconPos"] = 1
+                -- Refresh dropdown
+                LeaPlusCB["ListFrameMiniMapMailIconPos"]:Hide()
+                UpdateMailIconPosition()
 
                 -- Refresh the configuration panel
                 SquareMapPanel:Hide()
@@ -5827,8 +5854,8 @@ function LeaPlusLC:Player()
             -- Set the OnClick script for the configuration button
             LeaPlusCB["ModSquareMap"]:SetScript("OnClick", function()
                 if IsShiftKeyDown() and IsControlKeyDown() then
-                    -- Preset profile
-                    LeaPlusLC["SquareMapBorderThickness"] = 1 -- Example preset
+                    -- Preset profile (if you have any presets for this panel)
+                    LeaPlusLC["MiniMapMailIconPos"] = 1
                 else
                     SquareMapPanel:Show()
                     LeaPlusGlobalPanel_SideMinimap:Hide()
@@ -16286,6 +16313,7 @@ local function eventHandler(self, event, arg1, arg2, ...)
             LeaPlusLC:LoadVarNum("TipOffsetX", -13, -5000, 5000)        -- Tooltip X offset
             LeaPlusLC:LoadVarNum("TipOffsetY", 94, -5000, 5000)            -- Tooltip Y offset
             LeaPlusLC:LoadVarNum("TooltipAnchorMenu", 1, 1, 5)            -- Tooltip anchor menu
+            LeaPlusLC:LoadVarNum("MiniMapMailIconPos", 1, 1, 4)            -- Tooltip anchor menu
             LeaPlusLC:LoadVarNum("TipCursorX", 0, -128, 128)            -- Tooltip cursor X offset
             LeaPlusLC:LoadVarNum("TipCursorY", 0, -128, 128)            -- Tooltip cursor Y offset
 
@@ -16733,6 +16761,7 @@ local function eventHandler(self, event, arg1, arg2, ...)
         LeaPlusDB["TipOffsetX"] = LeaPlusLC["TipOffsetX"]
         LeaPlusDB["TipOffsetY"] = LeaPlusLC["TipOffsetY"]
         LeaPlusDB["TooltipAnchorMenu"] = LeaPlusLC["TooltipAnchorMenu"]
+        LeaPlusDB["MiniMapMailIconPos"] = LeaPlusLC["MiniMapMailIconPos"]
         LeaPlusDB["TipCursorX"] = LeaPlusLC["TipCursorX"]
         LeaPlusDB["TipCursorY"] = LeaPlusLC["TipCursorY"]
 
@@ -19145,6 +19174,7 @@ function LeaPlusLC:SlashFunc(str)
             LeaPlusDB["TipModEnable"] = "On"                -- Enhance tooltip
             LeaPlusDB["LeaPlusTipSize"] = 1.25                -- Tooltip scale slider
             LeaPlusDB["TooltipAnchorMenu"] = 2                -- Tooltip anchor
+            LeaPlusDB["MiniMapMailIconPos"] = 1                -- Tooltip anchor
             LeaPlusDB["TipCursorX"] = 0                        -- X offset
             LeaPlusDB["TipCursorY"] = 0                        -- Y offset
             LeaPlusDB["EnhanceDressup"] = "On"                -- Enhance dressup
