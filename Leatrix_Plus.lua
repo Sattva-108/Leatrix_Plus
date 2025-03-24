@@ -12213,6 +12213,28 @@
             end
             _G.TargetFrame_SetLocked = function()
             end
+            -- **Modify PlayerFrame_AnimateOut to be visually static but still trigger updates**
+            local original_PlayerFrame_AnimateOut = _G.PlayerFrame_AnimateOut
+            _G.PlayerFrame_AnimateOut = function(self)
+                print("PlayerFrame_AnimateOut modified to be static by Leatrix Plus") -- Optional debug print
+                -- Define a static animation position function (always returns current position)
+                local function StaticAnimPos(self, fraction)
+                    local point, parent, relative, xoff, yoff = PlayerFrame:GetPoint()
+                    return point, parent, relative, xoff, yoff -- Always return current position
+                end
+
+                -- Create a modified animation table using the original, but with static position
+                local StaticPlayerFrameAnimTable = {
+                    totalTime = PlayerFrameAnimTable.totalTime, -- Use original duration
+                    updateFunc = PlayerFrameAnimTable.updateFunc, -- Use original update function
+                    getPosFunc = StaticAnimPos,                 -- Use our STATIC position function
+                }
+
+                self.inSeat = false;
+                self.animFinished = false;
+                self.inSequence = true;
+                SetUpAnimation(PlayerFrame, StaticPlayerFrameAnimTable, PlayerFrame_AnimFinished, false) -- Use STATIC animation table
+            end
 
             -- Create frame table (used for local traversal)
             local FrameTable = { DragPlayerFrame = PlayerFrame, DragTargetFrame = TargetFrame }
