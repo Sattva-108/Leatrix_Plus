@@ -12213,28 +12213,41 @@
             end
             _G.TargetFrame_SetLocked = function()
             end
-            -- **Modify PlayerFrame_AnimateOut to be visually static but still trigger updates**
-            local original_PlayerFrame_AnimateOut = _G.PlayerFrame_AnimateOut
-            _G.PlayerFrame_AnimateOut = function(self)
-                print("PlayerFrame_AnimateOut modified to be static by Leatrix Plus") -- Optional debug print
-                -- Define a static animation position function (always returns current position)
-                local function StaticAnimPos(self, fraction)
-                    local point, parent, relative, xoff, yoff = PlayerFrame:GetPoint()
-                    return point, parent, relative, xoff, yoff -- Always return current position
+
+            -- Prevent Blizzard from resetting the PlayerFrame position
+            _G.PlayerFrame_ResetUserPlacedPosition = function() end
+            _G.PlayerFrame_SetLocked = function() end
+
+            -- Function to restore the PlayerFrame position
+            local function RestorePlayerFramePosition()
+                local vf = PlayerFrame:GetName()
+                if LeaPlusDB["Frames"] and LeaPlusDB["Frames"][vf] then
+                    local db = LeaPlusDB["Frames"][vf]
+                    if db["Point"] and db["Relative"] and db["XOffset"] and db["YOffset"] then
+                        PlayerFrame:ClearAllPoints()
+                        PlayerFrame:SetPoint(db["Point"], UIParent, db["Relative"], db["XOffset"], db["YOffset"])
+                    end
                 end
-
-                -- Create a modified animation table using the original, but with static position
-                local StaticPlayerFrameAnimTable = {
-                    totalTime = PlayerFrameAnimTable.totalTime, -- Use original duration
-                    updateFunc = PlayerFrameAnimTable.updateFunc, -- Use original update function
-                    getPosFunc = StaticAnimPos,                 -- Use our STATIC position function
-                }
-
-                self.inSeat = false;
-                self.animFinished = false;
-                self.inSequence = true;
-                SetUpAnimation(PlayerFrame, StaticPlayerFrameAnimTable, PlayerFrame_AnimFinished, false) -- Use STATIC animation table
             end
+
+            -- Event handler function
+            local function LeaPlus_VehicleFix(self, event, unit)
+                if event == "PLAYER_ENTERING_WORLD" then
+                    -- Delay 1.5s for entering world
+                    LibCompat.After(1.5, RestorePlayerFramePosition)
+                elseif unit == "player" then
+                    -- Delay 0.3s for vehicle events
+                    LibCompat.After(0.3, RestorePlayerFramePosition)
+                end
+            end
+
+            -- Create a frame to listen for events
+            local LeaPlusVehicleFrame = CreateFrame("Frame")
+            LeaPlusVehicleFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+            LeaPlusVehicleFrame:RegisterEvent("UNIT_ENTERED_VEHICLE")
+            LeaPlusVehicleFrame:RegisterEvent("UNIT_EXITED_VEHICLE")
+            LeaPlusVehicleFrame:SetScript("OnEvent", LeaPlus_VehicleFix)
+
 
             -- Create frame table (used for local traversal)
             local FrameTable = { DragPlayerFrame = PlayerFrame, DragTargetFrame = TargetFrame }
