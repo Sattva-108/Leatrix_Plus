@@ -12214,25 +12214,6 @@
             _G.TargetFrame_SetLocked = function()
             end
 
-            -- Disable Blizzard animation functions
-            function PlayerFrame_AnimateOut(self)
-                -- Instantly update art without animation
-                PlayerFrame_UpdateArt(self)
-            end
-
-            function PlayerFrame_AnimFinished(self)
-                -- No need for animation sequences, update instantly
-                PlayerFrame_UpdateArt(self)
-            end
-
-            function PlayerFrame_UpdateArt(self)
-                if UnitHasVehicleUI("player") then
-                    PlayerFrame_ToVehicleArt(self, UnitVehicleSkin("player"))
-                else
-                    PlayerFrame_ToPlayerArt(self)
-                end
-            end
-
 
 
             -- Create frame table (used for local traversal)
@@ -12601,6 +12582,56 @@
                     end
                 end
             end)
+            --Fix the blizzard bug with animating
+            -- the PlayerFrame when entering / leavling Vehicle.
+            -- This versions taints on some server, but is much more perfect.
+            -- See below this for actual no-taint code.
+
+            -- Disable Blizzard animation functions
+            function PlayerFrame_AnimateOut(self)
+                -- Instantly update art without animation
+                PlayerFrame_UpdateArt(self)
+            end
+
+            function PlayerFrame_AnimFinished(self)
+                -- No need for animation sequences, update instantly
+                PlayerFrame_UpdateArt(self)
+            end
+
+            function PlayerFrame_UpdateArt(self)
+                if UnitHasVehicleUI("player") then
+                    PlayerFrame_ToVehicleArt(self, UnitVehicleSkin("player"))
+                else
+                    PlayerFrame_ToPlayerArt(self)
+                end
+            end
+
+            --Fix for the blizzard bug with animating
+            -- the PlayerFrame when entering / leavling Vehicle.
+            -- This versions doesn't taint, but is NOT perfect.
+            -- See above for perfect but tainted code.
+
+            --do
+            --    local function FixPlayerFrame()
+            --        PlayerFrame:ClearAllPoints()
+            --        PlayerFrame:SetPoint(LeaPlusDB["Frames"]["PlayerFrame"]["Point"], UIParent, LeaPlusDB["Frames"]["PlayerFrame"]["Relative"], LeaPlusDB["Frames"]["PlayerFrame"]["XOffset"], LeaPlusDB["Frames"]["PlayerFrame"]["YOffset"])
+            --    end
+            --
+            --    local bugFrame = CreateFrame("FRAME")
+            --
+            --    bugFrame:SetScript("OnEvent", function()
+            --        FixPlayerFrame()
+            --        bugFrame:UnregisterEvent("PLAYER_REGEN_ENABLED")
+            --    end)
+            --
+            --    hooksecurefunc("PlayerFrame_SequenceFinished", function()
+            --        if UnitAffectingCombat("player") then
+            --            bugFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+            --        else
+            --            FixPlayerFrame()
+            --        end
+            --    end)
+            --end
 
         end
 
