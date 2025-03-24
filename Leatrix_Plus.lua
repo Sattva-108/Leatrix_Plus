@@ -12214,39 +12214,80 @@
             _G.TargetFrame_SetLocked = function()
             end
 
-            -- Prevent Blizzard from resetting the PlayerFrame position
-            _G.PlayerFrame_ResetUserPlacedPosition = function() end
-            _G.PlayerFrame_SetLocked = function() end
+            -- Disable Blizzard animation functions
+            function PlayerFrame_AnimateOut(self)
+                -- Instantly update art without animation
+                PlayerFrame_UpdateArt(self)
+            end
 
-            -- Function to restore the PlayerFrame position
-            local function RestorePlayerFramePosition()
-                local vf = PlayerFrame:GetName()
-                if LeaPlusDB["Frames"] and LeaPlusDB["Frames"][vf] then
-                    local db = LeaPlusDB["Frames"][vf]
-                    if db["Point"] and db["Relative"] and db["XOffset"] and db["YOffset"] then
-                        PlayerFrame:ClearAllPoints()
-                        PlayerFrame:SetPoint(db["Point"], UIParent, db["Relative"], db["XOffset"], db["YOffset"])
-                    end
+            function PlayerFrame_AnimFinished(self)
+                -- No need for animation sequences, update instantly
+                PlayerFrame_UpdateArt(self)
+            end
+
+            function PlayerFrame_UpdateArt(self)
+                if UnitHasVehicleUI("player") then
+                    PlayerFrame_ToVehicleArt(self, UnitVehicleSkin("player"))
+                else
+                    PlayerFrame_ToPlayerArt(self)
                 end
             end
 
-            -- Event handler function
-            local function LeaPlus_VehicleFix(self, event, unit)
-                if event == "PLAYER_ENTERING_WORLD" then
-                    -- Delay 1.5s for entering world
-                    LibCompat.After(1.5, RestorePlayerFramePosition)
-                elseif unit == "player" then
-                    -- Delay 0.3s for vehicle events
-                    LibCompat.After(0.3, RestorePlayerFramePosition)
-                end
+            function PlayerFrame_ToVehicleArt(self, vehicleType)
+                PlayerFrame.state = "vehicle"
+
+                UnitFrame_SetUnit(self, "vehicle", PlayerFrameHealthBar, PlayerFrameManaBar)
+                UnitFrame_SetUnit(PetFrame, "player", PetFrameHealthBar, PetFrameManaBar)
+                PetFrame_Update(PetFrame)
+                PlayerFrame_Update()
+                BuffFrame_Update()
+                ComboFrame_Update()
+
+                PlayerFrameTexture:Hide()
+                PlayerFrameVehicleTexture:SetTexture(
+                        vehicleType == "Natural" and "Interface\\Vehicles\\UI-Vehicle-Frame-Organic" or "Interface\\Vehicles\\UI-Vehicle-Frame"
+                )
+                PlayerFrameVehicleTexture:Show()
+
+                PlayerFrameHealthBar:SetWidth(100)
+                PlayerFrameHealthBar:SetPoint("TOPLEFT", 119, -41)
+                PlayerFrameManaBar:SetWidth(100)
+                PlayerFrameManaBar:SetPoint("TOPLEFT", 119, -52)
+
+                PlayerName:SetPoint("CENTER", 50, 23)
+                PlayerLeaderIcon:SetPoint("TOPLEFT", 40, -12)
+                PlayerMasterIcon:SetPoint("TOPLEFT", 86, 0)
+                PlayerFrameGroupIndicator:SetPoint("BOTTOMLEFT", PlayerFrame, "TOPLEFT", 97, -13)
+                PlayerFrameBackground:SetWidth(114)
+                PlayerLevelText:Hide()
             end
 
-            -- Create a frame to listen for events
-            local LeaPlusVehicleFrame = CreateFrame("Frame")
-            LeaPlusVehicleFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-            LeaPlusVehicleFrame:RegisterEvent("UNIT_ENTERED_VEHICLE")
-            LeaPlusVehicleFrame:RegisterEvent("UNIT_EXITED_VEHICLE")
-            LeaPlusVehicleFrame:SetScript("OnEvent", LeaPlus_VehicleFix)
+            function PlayerFrame_ToPlayerArt(self)
+                PlayerFrame.state = "player"
+
+                UnitFrame_SetUnit(self, "player", PlayerFrameHealthBar, PlayerFrameManaBar)
+                UnitFrame_SetUnit(PetFrame, "pet", PetFrameHealthBar, PetFrameManaBar)
+                PetFrame_Update(PetFrame)
+                PlayerFrame_Update()
+                BuffFrame_Update()
+                ComboFrame_Update()
+
+                PlayerFrameTexture:Show()
+                PlayerFrameVehicleTexture:Hide()
+
+                PlayerFrameHealthBar:SetWidth(119)
+                PlayerFrameHealthBar:SetPoint("TOPLEFT", 106, -41)
+                PlayerFrameManaBar:SetWidth(119)
+                PlayerFrameManaBar:SetPoint("TOPLEFT", 106, -52)
+
+                PlayerName:SetPoint("CENTER", 50, 19)
+                PlayerLeaderIcon:SetPoint("TOPLEFT", 40, -12)
+                PlayerMasterIcon:SetPoint("TOPLEFT", 80, -10)
+                PlayerFrameGroupIndicator:SetPoint("BOTTOMLEFT", PlayerFrame, "TOPLEFT", 97, -20)
+                PlayerFrameBackground:SetWidth(119)
+                PlayerLevelText:Show()
+            end
+
 
 
             -- Create frame table (used for local traversal)
