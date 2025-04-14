@@ -1,49 +1,59 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-<ScrollFrame name="Leatrix_InputScrollFrameTemplate" virtual="true">
-			<KeyValues>
-				<KeyValue key="maxLetters" value="0" type="number"/>
+    <ScrollFrame name="Leatrix_InputScrollFrameTemplate" virtual="true">
+        <KeyValues>
+            <KeyValue key="maxLetters" value="0" type="number"/>
 
-			</KeyValues>
-			<Layers>
-				<Layer level="OVERLAY">
-					<FontString inherits="GameFontDisableLarge" parentKey="CharCount">
-						<Anchors>
-							<Anchor point="BOTTOMRIGHT" x="-6" y="0"/>
-						</Anchors>
-					</FontString>
-				</Layer>
-			</Layers>
-			<Scripts>
-				<OnLoad function="InputScrollFrame_OnLoad"/>
-				<OnMouseDown function="InputScrollFrame_OnMouseDown"/>
-			</Scripts>
-			<ScrollChild>
-				<EditBox parentKey="EditBox" multiLine="true" countInvisibleLetters="true" autoFocus="false">
-					<Size x="1" y="1"/>
-					<Anchors>
-						<Anchor point="TOPLEFT"/>
-					</Anchors>
-					<Layers>
-						<Layer level="BORDER">
-							<FontString parentKey="Instructions" inherits="GameFontNormalSmall" justifyH="LEFT" justifyV="TOP">
-								<Anchors>
-									<Anchor point="TOPLEFT" x="0" y="0"/>
-								</Anchors>
-								<Color r="0.35" g="0.35" b="0.35"/>
-							</FontString>
-						</Layer>
-					</Layers>
-					<Scripts>
-						<OnTabPressed function="InputScrollFrame_OnTabPressed"/>
-						<OnTextChanged function="InputScrollFrame_OnTextChanged"/>
-						<OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
-						<OnUpdate function="InputScrollFrame_OnUpdate"/>
-						<OnEscapePressed function="InputScrollFrame_OnEscapePressed"/>
-					</Scripts>
-					<FontString inherits="GameFontHighlightSmall"/>
-				</EditBox>
-			</ScrollChild>
-		</ScrollFrame>
+        </KeyValues>
+        <Frames>
+            <Slider name="$parentScrollBar" inherits="UIPanelScrollBarTemplate" parentKey="ScrollBar" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="6" y="-16"/>
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="6" y="16"/>
+                </Anchors>
+            </Slider>
+        </Frames>
+
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString inherits="GameFontDisableLarge" parentKey="CharCount">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" x="-6" y="0"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad function="InputScrollFrame_OnLoad"/>
+            <OnMouseDown function="InputScrollFrame_OnMouseDown"/>
+        </Scripts>
+        <ScrollChild>
+            <EditBox parentKey="EditBox" multiLine="true" countInvisibleLetters="true" autoFocus="false">
+                <Size x="1" y="1"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="BORDER">
+                        <FontString parentKey="Instructions" inherits="GameFontNormalSmall" justifyH="LEFT"
+                                    justifyV="TOP">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="0" y="0"/>
+                            </Anchors>
+                            <Color r="0.35" g="0.35" b="0.35"/>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnTabPressed function="InputScrollFrame_OnTabPressed"/>
+                    <OnTextChanged function="InputScrollFrame_OnTextChanged"/>
+                    <OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
+                    <OnUpdate function="InputScrollFrame_OnUpdate"/>
+                    <OnEscapePressed function="InputScrollFrame_OnEscapePressed"/>
+                </Scripts>
+                <FontString inherits="GameFontHighlightSmall"/>
+            </EditBox>
+        </ScrollChild>
+    </ScrollFrame>
 </Ui>

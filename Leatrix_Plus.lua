@@ -13258,7 +13258,8 @@
 
 
             -- Create title bar
-            local titleFrame = CreateFrame("ScrollFrame", nil, editFrame, "Leatrix_InputScrollFrameTemplate")
+            local titleFrame = CreateFrame("ScrollFrame", "LeatrixTitleFrame", editFrame, "Leatrix_InputScrollFrameTemplate")
+            if titleFrame.CharCount then titleFrame.CharCount:Hide() end
             titleFrame:ClearAllPoints()
             titleFrame:SetPoint("TOP", 0, 40)
             titleFrame:SetSize(600, 36)
@@ -13337,6 +13338,11 @@
             scrollFrame:SetPoint("TOPLEFT", editFrame, 26, -36)
             scrollFrame:SetPoint("BOTTOMRIGHT", editFrame, "BOTTOMRIGHT", -34, 8)
             scrollFrame:EnableMouseWheel(true)
+
+            -- Create CharCount font string to avoid lua error for it not existing on WoW Sirus
+            scrollFrame.CharCount = scrollFrame:CreateFontString(nil, "OVERLAY", "GameFontDisableLarge")
+            scrollFrame.CharCount:Hide()
+
 
             -- Set the existing edit box as the scroll child
             scrollFrame:SetScrollChild(editBox)
