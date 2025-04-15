@@ -13259,6 +13259,7 @@
 
             -- Create title bar
             local titleFrame = CreateFrame("ScrollFrame", "LeatrixTitleFrame", editFrame, "Leatrix_InputScrollFrameTemplate")
+            if titleFrame.EditBox then titleFrame.EditBox:Disable() end
             if titleFrame.CharCount then titleFrame.CharCount:Hide() end
             titleFrame:ClearAllPoints()
             titleFrame:SetPoint("TOP", 0, 40)
