@@ -3859,7 +3859,6 @@
             for i = 1, 50 do
                 if _G["ChatFrame" .. i] and _G["ChatFrame" .. i]:GetMaxLines() ~= 4096 then
                     _G["ChatFrame" .. i]:SetMaxLines(4096);
-                    _G["ChatFrame" .. i]:SetMaxLines(4096);
                 end
             end
             -- Process temporary chat frames
@@ -4405,7 +4404,7 @@
                                     LeaPlusDB["ChatHistory" .. i] = {}
                                     local chtfrm = _G["ChatFrame" .. i]
                                     local NumMsg = chtfrm:GetNumMessages()
-                                    local MaxMsg = chtfrm:GetMaxLines()
+                                    local MaxMsg = 499
                                     local StartMsg = 1
                                     if NumMsg > MaxMsg then
                                         StartMsg = NumMsg - MaxMsg + 1
@@ -13230,7 +13229,6 @@
         -- Recent chat window
         ----------------------------------------------------------------------
 
-        -- Recent chat window
         if LeaPlusLC["RecentChatWindow"] == "On" and not LeaLockList["RecentChatWindow"] then
 
             -- only initialize once
@@ -13368,31 +13366,49 @@
                 ----------------------------------------
                 -- 4) Populate on Ctrl+Click tabs    --
                 ----------------------------------------
-                local function ShowChatbox(chtfrm)
+
+                -- Map message-IDs back to ChatType strings
+                local chatTypeIndexToName = {}
+                for chatType in pairs(ChatTypeInfo) do
+                    chatTypeIndexToName[ GetChatTypeIndex(chatType) ] = chatType
+                end
+
+                local function ShowChatbox(chatFrame)
                     edit:ClearFocus()
                     edit:SetText("")
 
-                    local num     = chtfrm:GetNumMessages()
+                    local num = chatFrame:GetNumMessages()
                     if num == 0 then return end
 
-                    local maxHist = chtfrm:GetMaxLines() or 4096
-                    local start   = (num > maxHist) and (num - maxHist + 1) or 1
-                    local count   = 0
+                    -- choose your start… (e.g. oldest N lines)
+                    local start = 1
 
+                    local count = 0
                     for i = start, num do
-                        local msg = select(1, chtfrm:GetMessageInfo(i))
+                        local msg, _, lineID = chatFrame:GetMessageInfo(i)
                         if msg then
-                            -- strip textures/atlases as before
+                            -- 1) strip icon/atlas tags however you like
                             msg = gsub(msg, "|T.-|t", "")
                             msg = gsub(msg, "|A.-|a", "")
-                            edit:Insert(msg .. "\n")
+
+                            -- 2) pick up the right color
+                            local info = ChatTypeInfo[ chatTypeIndexToName[lineID] ]
+                            local r,g,b = info and info.r, info.g, info.b or 1,1,1
+
+                            -- 3) wrap in hex
+                            local hex = format("|cff%02x%02x%02x", r*255, g*255, b*255)
+                            msg = hex .. msg .. "|r"
+
+                            -- 4) insert into copy window
+                            edit:Insert(msg)
+                            edit:Insert("\n")
                             count = count + 1
                         end
                     end
 
                     title.count:SetText("Messages: "..count)
                     ResizeEdit(count)
-                    scroll:SetVerticalScroll(0)
+                    scroll:SetVerticalScroll(scroll:GetVerticalScrollRange())
                     frame:Show()
                 end
 
@@ -13421,8 +13437,6 @@
                 LeaPlusLC.RecentChatEdit   = edit
             end
         end
-
-
 
         ----------------------------------------------------------------------
         -- Show cooldowns
