@@ -13255,6 +13255,73 @@
             })
             editFrame:SetBackdropColor(0.00, 0.00, 0.0, 0.6) -- set transparency
 
+            local hyperlinkTypes = {
+                ["item"] = true,
+                ["spell"] = true,
+                ["unit"] = true,
+                ["quest"] = true,
+                ["enchant"] = true,
+                ["achievement"] = true,
+                ["instancelock"] = true,
+                ["talent"] = true,
+                ["glyph"] = true
+            }
+
+            local function HookMyScroll(frame)
+                frame:EnableMouseWheel(true)
+                frame:SetScript("OnMouseWheel", function(self, delta)
+                    if delta > 0 then
+                        if IsShiftKeyDown() then self:ScrollToTop()
+                        elseif IsAltKeyDown()  then self:PageUp()
+                        else for i=1,3 do self:ScrollUp() end end
+                    else
+                        if IsShiftKeyDown() then self:ScrollToBottom()
+                        elseif IsAltKeyDown()  then self:PageDown()
+                        else for i=1,3 do self:ScrollDown() end end
+                    end
+                end)
+            end
+
+            -- after creating `editFrame` above:
+            HookMyScroll(LeatrixEditFrame)
+
+
+            local function PrintURL(url)
+                return "|cFFFFFFFF[|Hurl:"..url.."|h"..url.."|h]|r "
+            end
+
+            local tempURLs, tempURLsCount = {}, 0
+            local function ReplaceURL(msg)
+                msg = gsub(msg, "([A-z][A-z0-9+%.%-]+://%S+)", function(u)
+                    tempURLsCount = tempURLsCount + 1
+                    local tag = "|Hurl:"..tempURLsCount.."|h"
+                    tempURLs[tag] = PrintURL(u)
+                    return tag
+                end)
+                msg = gsub(msg, "(|Hurl:%d+|h)", tempURLs)
+                wipe(tempURLs); tempURLsCount = 0
+                return msg
+            end
+
+            ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", function(_,_,msg,...)
+                return false, ReplaceURL(msg), ...
+            end)
+            -- repeat for PARTY, GUILD, etc.
+
+            local function OnLinkEnter(frame, link)
+                local tok = link:match("^([^:]+)")
+                if tok == "url" or hyperlinkTypes[tok] then
+                    GameTooltip:SetOwner(frame, "ANCHOR_CURSOR")
+                    GameTooltip:SetHyperlink(link)
+                    GameTooltip:Show()
+                end
+            end
+            for i = 1, NUM_CHAT_WINDOWS do
+                local f = _G["ChatFrame"..i]
+                f:HookScript("OnHyperlinkEnter", OnLinkEnter)
+                f:HookScript("OnHyperlinkLeave", GameTooltip_Hide)
+            end
+
 
 
             -- Create title bar
