@@ -13373,33 +13373,30 @@
                     chatTypeIndexToName[ GetChatTypeIndex(chatType) ] = chatType
                 end
 
+                -- live-grab & colourize routine
                 local function ShowChatbox(chatFrame)
                     edit:ClearFocus()
                     edit:SetText("")
-
                     local num = chatFrame:GetNumMessages()
                     if num == 0 then return end
 
-                    -- choose your start… (e.g. oldest N lines)
-                    local start = 1
-
+                    local start = 1      -- or picked offset
                     local count = 0
                     for i = start, num do
                         local msg, _, lineID = chatFrame:GetMessageInfo(i)
                         if msg then
-                            -- 1) strip icon/atlas tags however you like
+                            -- strip icons/atlases
                             msg = gsub(msg, "|T.-|t", "")
                             msg = gsub(msg, "|A.-|a", "")
 
-                            -- 2) pick up the right color
+                            -- pick up the right color
                             local info = ChatTypeInfo[ chatTypeIndexToName[lineID] ]
-                            local r,g,b = info and info.r, info.g, info.b or 1,1,1
+                            local r,g,b = (info and info.r) or 1, (info and info.g) or 1, (info and info.b) or 1
 
-                            -- 3) wrap in hex
+                            -- wrap in hex + reset
                             local hex = format("|cff%02x%02x%02x", r*255, g*255, b*255)
-                            msg = hex .. msg .. "|r"
+                            msg = hex .. msg:gsub("|r","|r"..hex) .. "|r"
 
-                            -- 4) insert into copy window
                             edit:Insert(msg)
                             edit:Insert("\n")
                             count = count + 1
@@ -13408,6 +13405,7 @@
 
                     title.count:SetText("Messages: "..count)
                     ResizeEdit(count)
+                    -- scroll to bottom
                     scroll:SetVerticalScroll(scroll:GetVerticalScrollRange())
                     frame:Show()
                 end
