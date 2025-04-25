@@ -4364,94 +4364,88 @@
 
         if LeaPlusLC["RestoreChatMessages"] == "On" and not LeaLockList["RestoreChatMessages"] then
 
-            -- ----------------------------------------------------------------
-            -- shared helpers --------------------------------------------------
-            -------------------------------------------------------------------
-            -- chat-type index ➜ token   (same table ShowChatbox builds)
+            -- ===== helpers ==================================================
             local chatTypeIndexToName = {}
             for t in pairs(ChatTypeInfo) do
                 chatTypeIndexToName[ GetChatTypeIndex(t) ] = t
             end
 
-            -- strip any icons and wrap the whole line in the right colour
             local function CleanAndColour(msg, lineID)
-                msg = gsub(msg, "|T.-|t", "")       -- remove |Ttexture|t
-                msg = gsub(msg, "|A.-|a", "")       -- remove |Aatlas|a
-
-                local info          = ChatTypeInfo[ chatTypeIndexToName[lineID] ]
-                local r, g, b       = (info and info.r) or 1,
-                (info and info.g) or 1,
-                (info and info.b) or 1
-                local hex           = format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
-                return hex .. msg:gsub("|r", "|r" .. hex) .. "|r"
+                msg = gsub(msg, "|T.-|t", "")         -- strip textures
+                msg = gsub(msg, "|A.-|a", "")         -- strip atlases
+                local inf = ChatTypeInfo[ chatTypeIndexToName[lineID] ]
+                local r, g, b = (inf and inf.r) or 1, (inf and inf.g) or 1, (inf and inf.b) or 1
+                local hex     = format("|cff%02x%02x%02x", r*255, g*255, b*255)
+                return hex .. msg:gsub("|r", "|r"..hex) .. "|r"
             end
 
-            local function FCF_IsChatWindowIndexActive(idx)
+            local function WindowActive(idx)
                 local shown = select(7, FCF_GetChatWindowInfo(idx))
                 if shown then return true end
-                local cf = _G["ChatFrame" .. idx]
-                return (cf and cf.isDocked)
+                local f = _G["ChatFrame"..idx]
+                return (f and f.isDocked)
             end
 
-            ------------------------------------------------------------------
-            -- SAVE on PLAYER_LOGOUT  ----------------------------------------
-            ------------------------------------------------------------------
+            -- ===== SAVE on logout ===========================================
             local saver = CreateFrame("Frame")
             saver:RegisterEvent("PLAYER_LOGOUT")
             saver:SetScript("OnEvent", function()
                 local name, realm = LibCompat.UnitFullName("player")
-                realm = realm or GetRealmName()  ;  if not name then return end
+                realm = realm or GetRealmName() ; if not name then return end
 
                 LeaPlusDB["ChatHistoryName"] = name .. "-" .. realm
                 LeaPlusDB["ChatHistoryTime"] = time()
 
                 for i = 1, 50 do
-                    if i ~= 2 and _G["ChatFrame" .. i] and FCF_IsChatWindowIndexActive(i) then
-                        local cf, num = _G["ChatFrame" .. i], _G["ChatFrame" .. i]:GetNumMessages()
-                        local first   = (num > 499) and (num - 499 + 1) or 1
-                        LeaPlusDB["ChatHistory" .. i] = {}
+                    if i ~= 2 and _G["ChatFrame"..i] and WindowActive(i) then
+                        local cf, num  = _G["ChatFrame"..i], _G["ChatFrame"..i]:GetNumMessages()
+                        local first    = (num > 499) and (num - 499 + 1) or 1
+                        LeaPlusDB["ChatHistory"..i] = {}
 
                         for n = first, num do
                             local txt, _, lineID = cf:GetMessageInfo(n)
-                            if txt then
-                                tinsert(LeaPlusDB["ChatHistory" .. i], CleanAndColour(txt, lineID))
+                            if txt and not txt:find(L["Restored"], 1, true) then
+                                tinsert(LeaPlusDB["ChatHistory"..i], CleanAndColour(txt, lineID))
                             end
                         end
                     end
                 end
             end)
 
-            ------------------------------------------------------------------
-            -- RESTORE once UI is ready  (no LOGIN listener needed) ----------
-            ------------------------------------------------------------------
-            local function RestoreHistory()
-                local name, realm = LibCompat.UnitFullName("player")
-                realm = realm or GetRealmName()
-                if not (name and realm) then return end
-
-                if not LeaPlusDB["ChatHistoryName"] or not LeaPlusDB["ChatHistoryTime"] then return end
-                if time() - LeaPlusDB["ChatHistoryTime"] > 10 then return end	-- only for quick /reloads
+            -- ===== RESTORE once UI is up ====================================
+            local function Restore()
+                if not (LeaPlusDB["ChatHistoryTime"] and LeaPlusDB["ChatHistoryName"]) then return end
+                if time() - LeaPlusDB["ChatHistoryTime"] > 10 then return end
 
                 for i = 1, 50 do
-                    if i ~= 2 and _G["ChatFrame" .. i] and FCF_IsChatWindowIndexActive(i) then
-                        local cf       = _G["ChatFrame" .. i]
+                    if i ~= 2 and _G["ChatFrame"..i] and WindowActive(i) then
+                        local cf = _G["ChatFrame"..i]
                         cf:Clear()
-
                         local restored = 0
-                        for _, line in ipairs(LeaPlusDB["ChatHistory" .. i] or {}) do
+
+                        for _, line in ipairs(LeaPlusDB["ChatHistory"..i] or {}) do
                             cf:AddMessage(line)
                             restored = restored + 1
                         end
 
                         if restored > 0 then
-                            cf:AddMessage(format("|cffffd800" .. L["Restored"] .. " %d " .. L["messages"] .. "|r", restored))
+                            cf:AddMessage(format("|cffffd800%s %d %s|r",
+                                    L["Restored"], restored, L["message from previous session"]))
                         end
                     end
                 end
             end
+            LibCompat.After(1, Restore)
 
-            -- Run restore once, one second after addon load (chat frames are ready)
-            LibCompat.After(1, RestoreHistory)
+            -- ===== OPTION OFF – wipe stored history =============================
+        else
+            LeaPlusDB["ChatHistoryName"] = nil
+            LeaPlusDB["ChatHistoryTime"] = nil
+            for i = 1, 50 do
+                LeaPlusDB["ChatHistory"..i]       = nil
+                LeaPlusDB["ChatTemp"..i]          = nil
+                LeaPlusDB["ChatHistory"..i.."Count"] = nil
+            end
         end
 
         ----------------------------------------------------------------------
