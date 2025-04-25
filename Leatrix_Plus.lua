@@ -3859,6 +3859,7 @@
             for i = 1, 50 do
                 if _G["ChatFrame" .. i] and _G["ChatFrame" .. i]:GetMaxLines() ~= 4096 then
                     _G["ChatFrame" .. i]:SetMaxLines(4096);
+                    _G["ChatFrame" .. i]:SetMaxLines(4096);
                 end
             end
             -- Process temporary chat frames
@@ -13228,19 +13229,25 @@
         -- Recent chat window
         ----------------------------------------------------------------------
 
-        -- Replace your old RecentChatWindow block with this:
+        -- Recent chat window
         if LeaPlusLC["RecentChatWindow"] == "On" and not LeaLockList["RecentChatWindow"] then
 
-            -- initialize only once
+            -- only initialize once
             if not LeaPlusLC._RecentChatInit then
                 LeaPlusLC._RecentChatInit = true
 
-                -- 1) Main frame (keeps Leatrix look)
+                ----------------------------------------
+                -- 1) Main frame (Leatrix look)      --
+                ----------------------------------------
                 local frame = CreateFrame("Frame", "LeaPlusRecentChatFrame", UIParent)
                 frame:Hide()
                 frame:SetSize(600, LeaPlusLC["RecentChatSize"])
                 frame:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 130)
-                frame:SetFrameStrata("DIALOG")
+                frame:SetFrameStrata("HIGH")
+                frame:EnableMouse(true)
+                frame:SetResizable(true)
+                frame:SetMinResize(600, 50)
+                frame:SetMaxResize(600, 680)
                 frame:SetBackdrop({
                     bgFile   = "Interface\\BUTTONS\\WHITE8X8",
                     edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -13249,103 +13256,166 @@
                 })
                 frame:SetBackdropColor(0, 0, 0, 0.6)
 
-                -- 2) Scroll frame using stock template
+                ----------------------------------------
+                -- 2) Title bar (drag/resize/close) --
+                ----------------------------------------
+                local title = CreateFrame("Frame", nil, frame)
+                title:SetSize(600, 36)
+                title:SetPoint("TOP", frame, "TOP", 0, 40)
+                title:SetFrameStrata("MEDIUM")
+                title:EnableMouse(true)
+                title:SetMovable(true)
+                title:SetBackdrop(frame:GetBackdrop())
+                title:SetBackdropColor(0, 0, 0, 0.6)
+
+                -- message count
+                title.count = title:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+                title.count:SetPoint("LEFT", 9, 0)
+                title.count:SetFont(title.count:GetFont(), 16)
+                title.count:SetText("Messages: 0")
+
+                -- drag-to-size & close hint
+                title.hint = title:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+                title.hint:SetPoint("RIGHT", -9, 0)
+                title.hint:SetFont(title.hint:GetFont(), 16)
+                title.hint:SetText(L["Drag to size"] .. " | " .. L["Right-click to close"])
+                title.hint:SetWidth(600 - title.count:GetStringWidth() - 30)
+                title.hint:SetJustifyH("RIGHT")
+
+                -- drag, resize and close handlers
+                title:HookScript("OnMouseDown", function(self, btn)
+                    if btn == "LeftButton" then
+                        frame:StartSizing("TOP")
+                    elseif btn == "RightButton" then
+                        frame:Hide()
+                    end
+                end)
+                title:HookScript("OnMouseUp", function(self, btn)
+                    if btn == "LeftButton" then
+                        frame:StopMovingOrSizing()
+                        LeaPlusLC["RecentChatSize"] = frame:GetHeight()
+                    elseif btn == "MiddleButton" then
+                        LeaPlusLC["RecentChatSize"] = 170
+                        frame:SetSize(600, 170)
+                        frame:ClearAllPoints()
+                        frame:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 130)
+                    end
+                end)
+
+                ----------------------------------------
+                -- 3) ScrollFrame + EditBox (ElvUI)  --
+                ----------------------------------------
                 local scroll = CreateFrame("ScrollFrame", "LeaPlusRecentChatScroll", frame, "UIPanelScrollFrameTemplate")
-                scroll:SetAllPoints(frame)
+                scroll:SetPoint("TOPLEFT",    frame, "TOPLEFT",    26, -36)
+                scroll:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -34, 8)
+
                 local sb = scroll.ScrollBar
                 sb:ClearAllPoints()
                 sb:SetPoint("TOPLEFT",  scroll, "TOPRIGHT", 3, -16)
                 sb:SetPoint("BOTTOMLEFT", scroll, "BOTTOMRIGHT", 3, 16)
 
-                -- 3) True multi-line EditBox child (parented to scroll)
                 local edit = CreateFrame("EditBox", "LeaPlusRecentChatEditBox", scroll)
-                edit:SetMultiLine(true)
                 edit:SetFontObject(ChatFontNormal)
-                edit:SetMaxLetters(99999)
+                edit:SetMultiLine(true)
+                edit:SetMaxLetters(0)
                 edit:SetAutoFocus(false)
-                edit:SetWidth(scroll:GetWidth())
+                edit:EnableMouse(true)
+                edit:EnableMouseWheel(true)
                 edit:SetPoint("TOPLEFT", scroll, "TOPLEFT", 0, 0)
-                edit:SetPoint("BOTTOMRIGHT", scroll, "BOTTOMRIGHT", 0, 0)
+                edit:SetWidth(scroll:GetWidth())
                 scroll:SetScrollChild(edit)
 
-                -- 4) Auto-scroll to bottom on new text
-                edit:SetScript("OnTextChanged", function(self, userInput)
-                    if not userInput then
-                        scroll:SetVerticalScroll(scroll:GetVerticalScrollRange())
-                    end
-                end)
+                -- helper to close
+                local function Close()
+                    edit:ClearFocus()
+                    edit:SetText("")
+                    frame:Hide()
+                end
 
-                -- 5) Close on Escape
-                edit:SetScript("OnEscapePressed", function() frame:Hide() end)
+                -- right-click to close on all areas
+                frame:HookScript("OnMouseDown", function(_, btn) if btn == "RightButton" then Close() end end)
+                scroll:HookScript("OnMouseDown", function(_,btn)  if btn == "RightButton" then Close() end end)
+                edit:HookScript("OnMouseDown", function(_, btn)  if btn == "RightButton" then Close() end end)
+                edit:SetScript("OnEscapePressed", Close)
 
-                -- 6) Mouse-wheel: Shift=top/bottom, Alt=page, otherwise small step
-                scroll:EnableMouseWheel(true)
+                -- dynamically resize edit-box height
+                local function ResizeEdit(count)
+                    local _, size = edit:GetFont()
+                    local needed = count * (size + 2)
+                    edit:SetHeight(math.max(needed, scroll:GetHeight()))
+                end
+
+                -- scroll with mouse-wheel
                 scroll:SetScript("OnMouseWheel", function(self, delta)
-                    local curr = self:GetVerticalScroll()
-                    local max  = self:GetVerticalScrollRange()
-                    local h    = self:GetHeight()
-                    local step = 20
+                    local cur = self:GetVerticalScroll()
+                    local max = self:GetVerticalScrollRange()
+                    local h   = self:GetHeight()
+                    local step= 20
                     if delta > 0 then
-                        if IsShiftKeyDown() then
-                            curr = 0
-                        elseif IsAltKeyDown() then
-                            curr = curr - h
-                        else
-                            curr = curr - step
-                        end
+                        cur = IsShiftKeyDown() and    0
+                                or IsAltKeyDown()   and cur - h
+                                or cur - step
                     else
-                        if IsShiftKeyDown() then
-                            curr = max
-                        elseif IsAltKeyDown() then
-                            curr = curr + h
-                        else
-                            curr = curr + step
-                        end
+                        cur = IsShiftKeyDown() and    max
+                                or IsAltKeyDown()   and cur + h
+                                or cur + step
                     end
-                    if curr < 0 then curr = 0 elseif curr > max then curr = max end
-                    self:SetVerticalScroll(curr)
+                    if cur < 0 then cur = 0 elseif cur > max then cur = max end
+                    self:SetVerticalScroll(cur)
                 end)
 
-                -- 7) Helper to gather all lines from a ChatFrame
-                local function GatherLines(chatFrame)
-                    local t = {}
-                    local n = 0
-                    for i = 1, chatFrame:GetNumMessages() do
+                ----------------------------------------
+                -- 4) Populate on Ctrl+Click tabs    --
+                ----------------------------------------
+                local function ShowChatbox(chatFrame)
+                    edit:ClearFocus()
+                    edit:SetText("")
+                    local num = chatFrame:GetNumMessages()
+                    if num == 0 then return end
+                    local start = (num > 128) and (num - 127) or 1
+                    local cnt = 0
+                    for i = start, num do
                         local msg = select(1, chatFrame:GetMessageInfo(i))
                         if msg then
-                            n = n + 1
-                            t[n] = msg
+                            msg = gsub(msg, "|T.-|t", "") -- strip textures
+                            msg = gsub(msg, "|A.-|a", "") -- strip atlases
+                            edit:Insert(msg)
+                            edit:Insert("\n")
+                            cnt = cnt + 1
                         end
                     end
-                    return t, n
+                    title.count:SetText("Messages: " .. cnt)
+                    ResizeEdit(cnt)
+                    scroll:SetVerticalScroll(0)  -- show oldest at top
+                    frame:Show()
                 end
 
-                -- 8) Ctrl+Left-click on any ChatFrameXTab toggles & fills the window
-                for i = 1, NUM_CHAT_WINDOWS do
-                    local tab = _G["ChatFrame"..i.."Tab"]
+                -- hook each tab with its own index
+                for id = 1, NUM_CHAT_WINDOWS do
+                    local tab = _G["ChatFrame"..id.."Tab"]
                     if tab then
-                        tab:HookScript("OnMouseUp", function(self, btn)
-                            if btn == "LeftButton" and IsControlKeyDown() then
-                                if frame:IsShown() then
-                                    frame:Hide()
-                                else
-                                    local chat = _G["ChatFrame"..i]
-                                    local lines, count = GatherLines(chat)
-                                    edit:SetText(table.concat(lines, "\n", 1, count))
-                                    scroll:SetVerticalScroll(scroll:GetVerticalScrollRange())
-                                    frame:Show()
+                        tab:HookScript("OnMouseUp", (function(idx)
+                            return function(self, btn)
+                                if btn == "LeftButton" and IsControlKeyDown() then
+                                    if frame:IsShown() then
+                                        Close()
+                                    else
+                                        ShowChatbox(_G["ChatFrame"..idx])
+                                    end
                                 end
                             end
-                        end)
+                        end)(id))
                     end
                 end
 
-                -- store references if needed elsewhere
+                -- store refs if needed
                 LeaPlusLC.RecentChatFrame  = frame
+                LeaPlusLC.RecentChatTitle  = title
                 LeaPlusLC.RecentChatScroll = scroll
                 LeaPlusLC.RecentChatEdit   = edit
             end
         end
+
 
 
         ----------------------------------------------------------------------
