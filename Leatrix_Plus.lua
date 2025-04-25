@@ -4405,9 +4405,10 @@
                                     LeaPlusDB["ChatHistory" .. i] = {}
                                     local chtfrm = _G["ChatFrame" .. i]
                                     local NumMsg = chtfrm:GetNumMessages()
+                                    local MaxMsg = chtfrm:GetMaxLines()
                                     local StartMsg = 1
-                                    if NumMsg > 128 then
-                                        StartMsg = NumMsg - 127
+                                    if NumMsg > MaxMsg then
+                                        StartMsg = NumMsg - MaxMsg + 1
                                     end
                                     -- print(NumMsg)
                                     for iMsg = StartMsg, NumMsg do
@@ -13367,26 +13368,31 @@
                 ----------------------------------------
                 -- 4) Populate on Ctrl+Click tabs    --
                 ----------------------------------------
-                local function ShowChatbox(chatFrame)
+                local function ShowChatbox(chtfrm)
                     edit:ClearFocus()
                     edit:SetText("")
-                    local num = chatFrame:GetNumMessages()
+
+                    local num     = chtfrm:GetNumMessages()
                     if num == 0 then return end
-                    local start = (num > 128) and (num - 127) or 1
-                    local cnt = 0
+
+                    local maxHist = chtfrm:GetMaxLines() or 4096
+                    local start   = (num > maxHist) and (num - maxHist + 1) or 1
+                    local count   = 0
+
                     for i = start, num do
-                        local msg = select(1, chatFrame:GetMessageInfo(i))
+                        local msg = select(1, chtfrm:GetMessageInfo(i))
                         if msg then
-                            msg = gsub(msg, "|T.-|t", "") -- strip textures
-                            msg = gsub(msg, "|A.-|a", "") -- strip atlases
-                            edit:Insert(msg)
-                            edit:Insert("\n")
-                            cnt = cnt + 1
+                            -- strip textures/atlases as before
+                            msg = gsub(msg, "|T.-|t", "")
+                            msg = gsub(msg, "|A.-|a", "")
+                            edit:Insert(msg .. "\n")
+                            count = count + 1
                         end
                     end
-                    title.count:SetText("Messages: " .. cnt)
-                    ResizeEdit(cnt)
-                    scroll:SetVerticalScroll(0)  -- show oldest at top
+
+                    title.count:SetText("Messages: "..count)
+                    ResizeEdit(count)
+                    scroll:SetVerticalScroll(0)
                     frame:Show()
                 end
 
