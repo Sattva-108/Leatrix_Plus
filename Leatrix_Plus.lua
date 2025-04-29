@@ -9045,17 +9045,16 @@
         ----------------------------------------------------------------------
 
         if LeaPlusLC["AltClickInv"] == "On" then
-            local originSetItemRef = SetItemRef;
-            local function HandleAltClick(link, text, button)
-                local linkType, playerName = strsplit(":", link);
-                if linkType == "player" and IsAltKeyDown()
-                then
-                    return InviteUnit(playerName)
-                else
-                    return originSetItemRef(link, text, button)
+            local originSetItemRef = SetItemRef
+            SetItemRef = function(link, text, button, chatFrame)
+                local linkType, playerName = strsplit(":", link)
+                if linkType == "player" and IsAltKeyDown() then
+                    InviteUnit(playerName)
+                    return  -- Prevent Blizzard from opening whisper
                 end
+                -- Otherwise do original Blizzard behavior
+                originSetItemRef(link, text, button, chatFrame)
             end
-            SetItemRef = HandleAltClick;
         end
 
         ----------------------------------------------------------------------
