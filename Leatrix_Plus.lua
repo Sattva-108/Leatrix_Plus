@@ -13242,7 +13242,8 @@
                 scroll:SetPoint("TOPLEFT",    frame, "TOPLEFT",    26, -36)
                 scroll:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -34, 8)
 
-                local sb = scroll.ScrollBar
+
+                local sb = scroll.ScrollBar or LeaPlusRecentChatScrollScrollBar
                 sb:ClearAllPoints()
                 sb:SetPoint("TOPLEFT",  scroll, "TOPRIGHT", 3, -16)
                 sb:SetPoint("BOTTOMLEFT", scroll, "BOTTOMRIGHT", 3, 16)
