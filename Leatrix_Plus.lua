@@ -13315,30 +13315,26 @@ function LeaPlusLC:Player()
                 local num = chatFrame:GetNumMessages()
                 if num == 0 then return end
 
-                local start = 1      -- or picked offset
+                local lines = {}
                 local count = 0
-                for i = start, num do
+                for i = 1, num do
                     local msg, _, lineID = chatFrame:GetMessageInfo(i)
                     if msg then
-                        -- strip icons/atlases
                         msg = gsub(msg, "|T.-|t", "")
                         msg = gsub(msg, "|A.-|a", "")
 
-                        -- pick up the right color
                         local info = ChatTypeInfo[ chatTypeIndexToName[lineID] ]
                         local r,g,b = (info and info.r) or 1, (info and info.g) or 1, (info and info.b) or 1
-
-                        -- wrap in hex + reset
                         local hex = format("|cff%02x%02x%02x", r*255, g*255, b*255)
                         msg = hex .. msg:gsub("|r","|r"..hex) .. "|r"
 
-                        edit:Insert(msg)
-                        edit:Insert("\n")
+                        table.insert(lines, msg)
                         count = count + 1
                     end
                 end
 
                 title.count:SetText("Messages: "..count)
+                edit:SetText(table.concat(lines, "\n"))
                 ResizeEdit(count)
 
                 local function ScrollToBottomReliable(scroll, edit, maxAttempts)
@@ -13361,9 +13357,6 @@ function LeaPlusLC:Player()
                 end
 
                 ScrollToBottomReliable(scroll, edit)
-
-
-
                 frame:Show()
             end
 
