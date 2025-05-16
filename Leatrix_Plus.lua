@@ -13283,22 +13283,49 @@ function LeaPlusLC:Player()
             end
 
             -- scroll with mouse-wheel
+            -- scroll with mouse-wheel
             scroll:SetScript("OnMouseWheel", function(self, delta)
-                local cur = self:GetVerticalScroll()
-                local max = self:GetVerticalScrollRange()
-                local h   = self:GetHeight()
-                local step= 20
-                if delta > 0 then
-                    cur = IsShiftKeyDown() and    0
-                            or IsAltKeyDown()   and cur - h
-                            or cur - step
-                else
-                    cur = IsShiftKeyDown() and    max
-                            or IsAltKeyDown()   and cur + h
-                            or cur + step
+                local currentEdit = LeaPlusLC.RecentChatEdit -- self is the scroll frame
+
+                local maxScrollRange = self:GetVerticalScrollRange()
+
+                -- If there's nothing to scroll (content fits within view), do nothing.
+                if not maxScrollRange or maxScrollRange <= 0 then
+                    return
                 end
-                if cur < 0 then cur = 0 elseif cur > max then cur = max end
-                self:SetVerticalScroll(cur)
+
+                local currentScroll = self:GetVerticalScroll()
+                local viewHeight = self:GetHeight() -- The visible height of the scroll area
+
+                local stepAmount
+                if IsAltKeyDown() then
+                    -- Alt + Wheel: Page up/down
+                    stepAmount = viewHeight
+                else
+                    -- Normal Wheel: Scroll by a few lines
+                    local fontHeight = 14 -- Default reasonable font height
+                    if currentEdit and currentEdit:IsShown() then
+                        local _, fh = currentEdit:GetFont()
+                        if fh and fh > 0 then
+                            fontHeight = fh
+                        end
+                    end
+                    local linesToScroll = 3 -- Scroll 3 lines per tick
+                    stepAmount = fontHeight * linesToScroll
+                end
+
+                local newScrollPosition
+                if delta > 0 then -- Scrolling up (wheel moved away from user)
+                    newScrollPosition = IsShiftKeyDown() and 0 or (currentScroll - stepAmount)
+                else -- Scrolling down (wheel moved towards user)
+                    newScrollPosition = IsShiftKeyDown() and maxScrollRange or (currentScroll + stepAmount)
+                end
+
+                -- Clamp the new scroll position to be within the valid range [0, maxScrollRange]
+                newScrollPosition = math.max(0, newScrollPosition)
+                newScrollPosition = math.min(newScrollPosition, maxScrollRange)
+
+                self:SetVerticalScroll(newScrollPosition)
             end)
 
             ----------------------------------------
