@@ -13259,6 +13259,46 @@ function LeaPlusLC:Player()
             edit:SetWidth(scroll:GetWidth())
             scroll:SetScrollChild(edit)
 
+            -- Add this once when creating the editbox/scroll frame
+
+            edit:HookScript("OnCursorChanged", function(self)
+                if not IsMouseButtonDown("LeftButton") and not IsMouseButtonDown("RightButton") then
+                    LibCompat.After(0.02, function()
+                        local fontHeight = select(2, edit:GetFont()) or 14
+                        local cursorPos = edit:GetCursorPosition()
+                        local text = edit:GetText()
+                        local n = 0
+                        for i = 1, cursorPos do
+                            if text:sub(i,i) == "\n" then n = n + 1 end
+                        end
+                        local line = n + 1
+
+                        -- Count total lines in editbox
+                        local totalLines = 1
+                        for _ in text:gmatch("\n") do totalLines = totalLines + 1 end
+
+                        local scrollMax = scroll:GetVerticalScrollRange()
+
+                        -- If we're на последней строке — всегда вниз
+                        if line == totalLines then
+                            scroll:SetVerticalScroll(scrollMax)
+                        else
+                            local scrollMin = scroll:GetVerticalScroll()
+                            local scrollHeight = scroll:GetHeight()
+                            local minLine = math.floor(scrollMin / fontHeight + 1.5)
+                            local maxLine = math.floor((scrollMin + scrollHeight) / fontHeight + 0.5)
+                            if line < minLine then
+                                scroll:SetVerticalScroll((line - 1) * fontHeight)
+                            elseif line > maxLine then
+                                scroll:SetVerticalScroll(math.max(0, (line - math.floor(scrollHeight / fontHeight)) * fontHeight))
+                            end
+                        end
+                    end)
+                end
+            end)
+
+
+
             -- helper to close
             local function Close()
                 edit:ClearFocus()
