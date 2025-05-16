@@ -13340,10 +13340,30 @@ function LeaPlusLC:Player()
 
                 title.count:SetText("Messages: "..count)
                 ResizeEdit(count)
-                LibCompat.After(0.1, function()
-                    -- scroll to bottom
-                    scroll:SetVerticalScroll(scroll:GetVerticalScrollRange())
-                end)
+
+                local function ScrollToBottomReliable(scroll, edit, maxAttempts)
+                    maxAttempts = maxAttempts or 20
+                    local lastHeight = 0
+                    local attempts = 0
+
+                    local function tryScroll()
+                        attempts = attempts + 1
+                        local curHeight = edit:GetHeight()
+                        if curHeight ~= lastHeight and attempts < maxAttempts then
+                            lastHeight = curHeight
+                            LibCompat.After(0.02, tryScroll)
+                        else
+                            scroll:SetVerticalScroll(scroll:GetVerticalScrollRange())
+                        end
+                    end
+
+                    tryScroll()
+                end
+
+                ScrollToBottomReliable(scroll, edit)
+
+
+
                 frame:Show()
             end
 
