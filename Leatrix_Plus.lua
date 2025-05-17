@@ -15175,6 +15175,8 @@ function LeaPlusLC:RunOnce()
         -- Create tables for list data and zone listing
         local ListData, playlist = {}, {}
         local scrollFrame, willPlay, musicHandle, ZonePage, LastPlayed, LastFolder, TempFolder, HeadingOfClickedTrack, LastMusicHandle
+        -- place with the other locals near willPlay, musicHandle
+        local PrevMusicCVar = nil        -- stores user-setting for Sound_EnableMusic
         local numButtons = 15
         local uframe = CreateFrame("FRAME")
 
@@ -15381,102 +15383,88 @@ function LeaPlusLC:RunOnce()
         stopBtn:Hide();
         stopBtn:Show()
         LeaPlusLC:LockItem(stopBtn, true)
+        -- REPLACEMENT: Stop-button handler (stopBtn:SetScript("OnClick", ...))
         stopBtn:SetScript("OnClick", function()
-            Sound_GameSystem_RestartSoundSystem()
-            if musicHandle then
-                StopSound(musicHandle)
-                musicHandle = nil
-                -- Hide highlight bars
-                LastPlayed = ""
-                LastFolder = ""
-                UpdateList()
+            StopMusic()
+            if PrevMusicCVar == "0" then
+                SetCVar("Sound_EnableMusic", "0")
             end
-            -- Cancel sound file music timer
+            PrevMusicCVar = nil
+
+
+            -- clear UI state
+            LastPlayed, LastFolder = "", ""
+            UpdateList()
+
             if LeaPlusLC.TrackTimer then
                 LeaPlusLC.TrackTimer:Cancel()
             end
-            -- Lock button and unregister next track events
+            isPlayingTrack = 0
             LeaPlusLC:LockItem(stopBtn, true)
-            uframe:UnregisterEvent("SOUNDKIT_FINISHED")
             uframe:UnregisterEvent("LOADING_SCREEN_DISABLED")
         end)
+
 
         -- Store currently playing track number
         local tracknumber = 1
         local isPlayingTrack = 0
 
         -- Function to play a track and show the static highlight bar
+        -- REPLACEMENT: PlayTrack()          (overwrite the whole current definition)
         local function PlayTrack()
-            -- Play tracks
-            -- if musicHandle then StopSound(musicHandle) end
-            if isPlayingTrack == 1 then
-                Sound_GameSystem_RestartSoundSystem()
-            end
-            -- Sound_GameSystem_RestartSoundSystem()
-            local file, soundID, trackTime
-            if strfind(playlist[tracknumber], "#") then
-                if strfind(playlist[tracknumber], ".mp3") then
-                    -- Music file with track time
-                    file, trackTime = playlist[tracknumber]:match("([^,]+)%#([^,]+)")
-                    local cleanFile = file:gsub("(|C%a%a%a%a%a%a%a%a)[^|]*(|r)", "") -- Remove color tags
-                    if strfind(file, "cinematics/") then
-                        cleanFile = "interface/" .. cleanFile
-                    elseif strfind(file, "cinematicvoices/") or strfind(file, "ambience/") or strfind(file, "spells/") then
-                        cleanFile = "sound/" .. cleanFile
-                    else
-                        cleanFile = "sound/music/" .. cleanFile
-                    end
-                    willPlay, musicHandle = PlaySoundFile(cleanFile, "Master", false, true)
-                    isPlayingTrack = 1
+
+            -- stop anything already playing
+            StopMusic()
+
+            local file, trackTime
+            if playlist[tracknumber] and strfind(playlist[tracknumber], "#") then
+                -- mp3 entry with explicit length
+                file, trackTime = playlist[tracknumber]:match("([^,]+)%#([^,]+)")
+                local cleanFile = file:gsub("(|C%a%a%a%a%a%a%a%a)[^|]*(|r)", "")   -- strip colour codes
+                if strfind(file, "cinematics/") then
+                    cleanFile = "interface/" .. cleanFile
+                elseif strfind(file, "cinematicvoices/") or strfind(file, "ambience/") or strfind(file, "spells/") then
+                    cleanFile = "sound/" .. cleanFile
                 else
-                    -- Sound kit without track time
-                    file, soundID = playlist[tracknumber]:match("([^,]+)%#([^,]+)")
-                    willPlay, musicHandle = PlaySound(soundID, "Master", false, true)
-                    isPlayingTrack = 1
+                    cleanFile = "sound/music/" .. cleanFile
                 end
+                PlayMusic(cleanFile)
+                isPlayingTrack = 1
             end
-            -- Cancel existing music timer for a sound file
+
+            -- cancel any previous timer and create a new one for this track
             if LeaPlusLC.TrackTimer then
                 LeaPlusLC.TrackTimer:Cancel()
             end
-            if strfind(playlist[tracknumber], "#") then
-                if strfind(playlist[tracknumber], ".mp3") then
-                    -- Track is a sound file with track time so create track timer
-                    LeaPlusLC.TrackTimer = LibCompat.NewTimer(trackTime + 1, function()
-                        if musicHandle then
-                            StopSound(musicHandle)
-                        end
-                        if tracknumber == #playlist then
-                            -- Playlist is at the end, restart from first track
-                            tracknumber = 1
-                        end
-                        PlayTrack()
-                        isPlayingTrack = 1
-                    end)
-                end
+            if trackTime then
+                LeaPlusLC.TrackTimer = LibCompat.NewTimer(trackTime + 1, function()
+                    StopMusic()
+                    if tracknumber == #playlist then
+                        tracknumber = 1
+                    end
+                    PlayTrack()
+                    isPlayingTrack = 1
+                end)
             end
-            -- Store its handle for later use
-            LastMusicHandle = musicHandle
+
             LastPlayed = playlist[tracknumber]
             tracknumber = tracknumber + 1
-            -- Show static highlight bar
+
+            -- static highlight
             for index = 1, numButtons do
                 local button = scrollFrame.buttons[index]
-                local item = button:GetText()
-                if item then
-                    if strfind(item, "#") then
-                        local item, void = item:match("([^,]+)%#([^,]+)")
-                        if item then
-                            if item == file and LastFolder == TempFolder then
-                                button.s:Show()
-                            else
-                                button.s:Hide()
-                            end
-                        end
+                local item   = button:GetText()
+                if item and strfind(item, "#") then
+                    local itm = item:match("([^,]+)%#")
+                    if itm == file and LastFolder == TempFolder then
+                        button.s:Show()
+                    else
+                        button.s:Hide()
                     end
                 end
             end
         end
+
 
         -- Create editbox for search
         local sBox = LeaPlusLC:CreateEditBox("MusicSearchBox", LeaPlusLC["Page9"], 78, 10, "TOPLEFT", 150, -260, "MusicSearchBox", "MusicSearchBox")
@@ -15726,14 +15714,19 @@ function LeaPlusLC:RunOnce()
                         ShowRandomList()
                         return
                     elseif strfind(item, "#") then
-                        -- Enable sound if required
+                        -- Enable all sound if the user had it off
                         if GetCVar("Sound_EnableAllSound") == "0" then
                             SetCVar("Sound_EnableAllSound", "1")
                         end
-                        -- Disable music if it's currently enabled
-                        if GetCVar("Sound_EnableMusic") == "1" then
-                            SetCVar("Sound_EnableMusic", "0")
+                        -- remember user music CVar and ensure music channel is on for PlayMusic()
+                        if not PrevMusicCVar then
+                            PrevMusicCVar = GetCVar("Sound_EnableMusic")
                         end
+                        if GetCVar("Sound_EnableMusic") == "0" then
+                            SetCVar("Sound_EnableMusic", "1")
+                        end
+
+
                         -- Add all tracks to playlist
                         wipe(playlist)
                         local StartItem = 0
@@ -15862,16 +15855,14 @@ function LeaPlusLC:RunOnce()
         LeaPlusLC["Page9"]:RegisterEvent("PLAYER_LOGOUT")
         LeaPlusLC["Page9"]:RegisterEvent("UI_SCALE_CHANGED")
         LeaPlusLC["Page9"]:SetScript("OnEvent", function(self, event)
+            -- REPLACEMENT: PLAYER_LOGOUT part of Page9:SetScript("OnEvent", ...)
             if event == "PLAYER_LOGOUT" then
-                -- Stop playing at reload or logout
-                if isPlayingTrack == 1 then
-                    Sound_GameSystem_RestartSoundSystem()
+                StopMusic()
+                if PrevMusicCVar == "0" then
+                    SetCVar("Sound_EnableMusic", "0")
                 end
-                if musicHandle then
-                    StopSound(musicHandle)
-                end
+                PrevMusicCVar = nil
             elseif event == "UI_SCALE_CHANGED" then
-                -- Refresh list
                 UpdateList()
             end
         end)
