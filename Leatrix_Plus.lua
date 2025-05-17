@@ -15601,25 +15601,33 @@ function LeaPlusLC:RunOnce()
             ListData[3] = "|cffffd800"
             ListData[4] = "|cffffd800" .. L["Selection of music tracks"] -- Must be lower case |c
             -- Populate list data until it contains desired number of tracks
-            while #ListData < 50 do
+            local attempt = 0
+            while #ListData < 50 and attempt < 2000 do
+                attempt = attempt + 1
                 -- Get random category
                 local rCategory = GetRandomArgument(L["Zones"], L["Dungeons"], L["Various"])
                 -- Get random zone within category
                 local rZone = random(1, #ZoneList[rCategory])
                 -- Get random track within zone
                 local rTrack = ZoneList[rCategory][rZone].tracks[random(1, #ZoneList[rCategory][rZone].tracks)]
-                -- Insert track into ListData if it's not a duplicate or on the banned list
-                if rTrack and rTrack ~= "" and strfind(rTrack, "#") and not tContains(ListData, "|Cffffffaa" .. ZoneList[rCategory][rZone].zone .. " |r" .. rTrack) then
-                    if not tContains(randomBannedList, L[ZoneList[rCategory][rZone].zone]) and not tContains(randomBannedList, rTrack) then
-                        tinsert(ListData, "|Cffffffaa" .. ZoneList[rCategory][rZone].zone .. " |r" .. rTrack)
+                -- Only allow tracks that are real mp3 (exclude SoundKit/non-file)
+                if rTrack and rTrack ~= "" and strfind(rTrack, "#") and strfind(rTrack:lower(), ".mp3") then
+                    local zoneLabel = "|Cffffffaa" .. ZoneList[rCategory][rZone].zone .. " |r" .. rTrack
+                    if not tContains(ListData, zoneLabel) and not tContains(randomBannedList, L[ZoneList[rCategory][rZone].zone]) and not tContains(randomBannedList, rTrack) then
+                        tinsert(ListData, zoneLabel)
                     end
                 end
+            end
+            -- If nothing found, show hint
+            if #ListData <= 4 then
+                tinsert(ListData, "|cff999999(No playable music tracks in random pool)|r")
             end
             -- Refresh the track listing
             UpdateList()
             -- Set track listing to top
             scrollFrame:SetVerticalScroll(0)
         end
+
 
         -- Show random track listing on startup when random button is clicked
         for q, w in pairs(ZoneList) do
