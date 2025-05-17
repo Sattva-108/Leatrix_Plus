@@ -15490,6 +15490,16 @@ function LeaPlusLC:RunOnce()
                 end)
             end
         end
+        -- После всех SetPoint/SetSize для sBox:
+        for i = 1, sBox:GetNumRegions() do
+            local region = select(i, sBox:GetRegions())
+            if region and region.GetTexture and type(region:GetTexture()) == "string" then
+                local tex = region:GetTexture()
+                if tex and tex:find("Common%-Input%-Border") and region.GetName and region:GetName() == "UIParentMiddle" then
+                    region:Hide()
+                end
+            end
+        end
 
         -- Function to show search results
         local function ShowSearchResults()
