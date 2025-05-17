@@ -13167,6 +13167,7 @@ function LeaPlusLC:Player()
 
         -- only initialize once
         if not LeaPlusLC._RecentChatInit then
+            local Close
             LeaPlusLC._RecentChatInit = true
 
             ----------------------------------------
@@ -13249,7 +13250,6 @@ function LeaPlusLC:Player()
 
             -- Forward declare Close, ShowChatbox, ResizeEdit, ScrollToBottomReliable if needed, or define before use.
             -- Close function needs to be defined before it's used by title bar, frame, scroll, and later editbox.
-            local Close
             local ShowChatbox
             local ResizeEdit
             local ScrollToBottomReliable
