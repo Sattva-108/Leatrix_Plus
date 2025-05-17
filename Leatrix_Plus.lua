@@ -13167,7 +13167,6 @@ function LeaPlusLC:Player()
 
         -- only initialize once
         if not LeaPlusLC._RecentChatInit then
-            local Close
             LeaPlusLC._RecentChatInit = true
 
             ----------------------------------------
@@ -13189,6 +13188,35 @@ function LeaPlusLC:Player()
                 edgeSize = 16, insets = { left=4, right=4, top=4, bottom=4 },
             })
             frame:SetBackdropColor(0, 0, 0, 0.6)
+
+            -- ADDITION 1: Add to UISpecialFrames for ESC key functionality
+            -- This allows the ESC key to close the window if it doesn't have a more specific target.
+            if _G.UISpecialFrames then -- Ensure the table exists (it always should in WoW client)
+                tinsert(_G.UISpecialFrames, "LeaPlusRecentChatFrame")
+            end
+
+            -- ADDITION 2: Define centralized cleanup logic for when the frame is hidden
+            local function PerformRecentChatFrameCleanup()
+                local editorToClose = LeaPlusLC.RecentChatEdit
+                if editorToClose then
+                    if editorToClose:IsShown() and editorToClose:HasFocus() then
+                        editorToClose:ClearFocus()
+                    end
+                    editorToClose:SetText("")
+                    editorToClose:Hide() -- Hide the editbox itself
+
+                    -- Unset as scroll child if it is
+                    if LeaPlusLC.RecentChatScroll and LeaPlusLC.RecentChatScroll:GetScrollChild() == editorToClose then
+                        LeaPlusLC.RecentChatScroll:SetScrollChild(nil)
+                    end
+                end
+                LeaPlusLC.RecentChatEdit = nil -- Clear the reference
+            end
+
+            -- ADDITION 3: Set the OnHide script for the main frame
+            -- This will be called whenever frame:Hide() is executed,
+            -- either by our Close() function or by the system (e.g., ESC key).
+            frame:SetScript("OnHide", PerformRecentChatFrameCleanup)
 
             ----------------------------------------
             -- 2) Title bar (drag/resize/close) --
@@ -13216,12 +13244,26 @@ function LeaPlusLC:Player()
             title.hint:SetWidth(600 - title.count:GetStringWidth() - 30)
             title.hint:SetJustifyH("RIGHT")
 
-            -- drag, resize and close handlers
+            -- Forward declare Close, ShowChatbox, ResizeEdit, ScrollToBottomReliable
+            local Close
+            local ShowChatbox
+            local ResizeEdit
+            local ScrollToBottomReliable
+
+            -- MODIFICATION 1: Simplify the Close function
+            -- The actual cleanup is now handled by the frame's OnHide script (PerformRecentChatFrameCleanup)
+            Close = function()
+                if frame:IsShown() then
+                    frame:Hide() -- This will trigger the OnHide script
+                end
+            end
+
+            -- drag, resize and close handlers for the title bar
             title:HookScript("OnMouseDown", function(self, btn)
                 if btn == "LeftButton" then
                     frame:StartSizing("TOP")
                 elseif btn == "RightButton" then
-                    Close() -- Call the new Close function
+                    Close() -- Call the modified Close function
                 end
             end)
             title:HookScript("OnMouseUp", function(self, btn)
@@ -13248,27 +13290,6 @@ function LeaPlusLC:Player()
             sb:SetPoint("TOPLEFT",  scroll, "TOPRIGHT", 3, -16)
             sb:SetPoint("BOTTOMLEFT", scroll, "BOTTOMRIGHT", 3, 16)
 
-            -- Forward declare Close, ShowChatbox, ResizeEdit, ScrollToBottomReliable if needed, or define before use.
-            -- Close function needs to be defined before it's used by title bar, frame, scroll, and later editbox.
-            local ShowChatbox
-            local ResizeEdit
-            local ScrollToBottomReliable
-
-            -- helper to close
-            Close = function()
-                local editorToClose = LeaPlusLC.RecentChatEdit
-                if editorToClose then
-                    editorToClose:ClearFocus()
-                    editorToClose:SetText("")
-                    editorToClose:Hide()
-                    if LeaPlusLC.RecentChatScroll and LeaPlusLC.RecentChatScroll:GetScrollChild() == editorToClose then
-                        LeaPlusLC.RecentChatScroll:SetScrollChild(nil)
-                    end
-                end
-                LeaPlusLC.RecentChatEdit = nil
-                frame:Hide()
-            end
-
             -- right-click to close on all areas (frame and scroll are static)
             frame:HookScript("OnMouseDown", function(_, btn) if btn == "RightButton" then Close() end end)
             scroll:HookScript("OnMouseDown", function(_,btn)  if btn == "RightButton" then Close() end end)
@@ -13279,60 +13300,42 @@ function LeaPlusLC:Player()
                 if not currentEdit then return end
                 local _, size = currentEdit:GetFont()
                 local needed = count * (size + 2)
-                currentEdit:SetHeight(math.max(needed, scroll:GetHeight())) -- scroll is LeaPlusLC.RecentChatScroll
+                currentEdit:SetHeight(math.max(needed, scroll:GetHeight()))
             end
 
-            -- scroll with mouse-wheel
-            -- scroll with mouse-wheel
+            -- scroll with mouse-wheel (existing logic seems fine)
             scroll:SetScript("OnMouseWheel", function(self, delta)
-                local currentEdit = LeaPlusLC.RecentChatEdit -- self is the scroll frame
-
+                local currentEdit = LeaPlusLC.RecentChatEdit
                 local maxScrollRange = self:GetVerticalScrollRange()
-
-                -- If there's nothing to scroll (content fits within view), do nothing.
-                if not maxScrollRange or maxScrollRange <= 0 then
-                    return
-                end
-
+                if not maxScrollRange or maxScrollRange <= 0 then return end
                 local currentScroll = self:GetVerticalScroll()
-                local viewHeight = self:GetHeight() -- The visible height of the scroll area
-
+                local viewHeight = self:GetHeight()
                 local stepAmount
                 if IsAltKeyDown() then
-                    -- Alt + Wheel: Page up/down
                     stepAmount = viewHeight
                 else
-                    -- Normal Wheel: Scroll by a few lines
-                    local fontHeight = 14 -- Default reasonable font height
+                    local fontHeight = 14
                     if currentEdit and currentEdit:IsShown() then
                         local _, fh = currentEdit:GetFont()
-                        if fh and fh > 0 then
-                            fontHeight = fh
-                        end
+                        if fh and fh > 0 then fontHeight = fh end
                     end
-                    local linesToScroll = 3 -- Scroll 3 lines per tick
+                    local linesToScroll = 3
                     stepAmount = fontHeight * linesToScroll
                 end
-
                 local newScrollPosition
-                if delta > 0 then -- Scrolling up (wheel moved away from user)
+                if delta > 0 then
                     newScrollPosition = IsShiftKeyDown() and 0 or (currentScroll - stepAmount)
-                else -- Scrolling down (wheel moved towards user)
+                else
                     newScrollPosition = IsShiftKeyDown() and maxScrollRange or (currentScroll + stepAmount)
                 end
-
-                -- Clamp the new scroll position to be within the valid range [0, maxScrollRange]
                 newScrollPosition = math.max(0, newScrollPosition)
                 newScrollPosition = math.min(newScrollPosition, maxScrollRange)
-
                 self:SetVerticalScroll(newScrollPosition)
             end)
 
             ----------------------------------------
             -- 4) Populate on Ctrl+Click tabs    --
             ----------------------------------------
-
-            -- Map message-IDs back to ChatType strings
             local chatTypeIndexToName = {}
             for chatType in pairs(ChatTypeInfo) do
                 chatTypeIndexToName[ GetChatTypeIndex(chatType) ] = chatType
@@ -13342,16 +13345,15 @@ function LeaPlusLC:Player()
                 maxAttempts = maxAttempts or 20
                 local lastHeight = 0
                 local attempts = 0
-
                 local function tryScroll()
                     attempts = attempts + 1
-                    if not editInstance or not editInstance:IsShown() then return end -- Guard for edit instance
+                    if not editInstance or not editInstance:IsShown() then return end
                     local curHeight = editInstance:GetHeight()
                     if curHeight ~= lastHeight and attempts < maxAttempts then
                         lastHeight = curHeight
                         LibCompat.After(0.02, tryScroll)
                     else
-                        if scrollInstance and scrollInstance:IsShown() then -- Guard for scroll instance
+                        if scrollInstance and scrollInstance:IsShown() then
                             scrollInstance:SetVerticalScroll(scrollInstance:GetVerticalScrollRange())
                         end
                     end
@@ -13359,10 +13361,23 @@ function LeaPlusLC:Player()
                 tryScroll()
             end
 
-            -- live-grab & colourize routine
             ShowChatbox = function(chatFrame)
-                -- Create EditBox dynamically
-                local edit = CreateFrame("EditBox", nil, scroll) -- Anonymous, child of 'scroll'
+                -- OPTIONAL BUT RECOMMENDED: Clean up previous edit box if one exists
+                if LeaPlusLC.RecentChatEdit then
+                    -- Perform a light cleanup; full cleanup is via OnHide if frame closes.
+                    -- This handles the case where the frame remains open but content changes.
+                    local oldEdit = LeaPlusLC.RecentChatEdit
+                    oldEdit:Hide()
+                    oldEdit:SetText("")
+                    if LeaPlusLC.RecentChatScroll and LeaPlusLC.RecentChatScroll:GetScrollChild() == oldEdit then
+                        LeaPlusLC.RecentChatScroll:SetScrollChild(nil)
+                    end
+                    -- oldEdit will be garbage collected if it has no other references/parentage issues
+                end
+                LeaPlusLC.RecentChatEdit = nil -- Ensure it's nil before creating a new one
+
+
+                local edit = CreateFrame("EditBox", nil, scroll)
                 edit:SetFontObject(ChatFontNormal)
                 edit:SetMultiLine(true)
                 edit:SetMaxLetters(0)
@@ -13372,31 +13387,21 @@ function LeaPlusLC:Player()
                 edit:SetPoint("TOPLEFT", scroll, "TOPLEFT", 0, 0)
                 edit:SetWidth(scroll:GetWidth())
                 scroll:SetScrollChild(edit)
-                LeaPlusLC.RecentChatEdit = edit -- Store reference to the new edit box
+                LeaPlusLC.RecentChatEdit = edit
 
-                -- Hook scripts for the new EditBox
                 edit:HookScript("OnCursorChanged", function(self_hooked_edit)
                     if not IsMouseButtonDown("LeftButton") and not IsMouseButtonDown("RightButton") then
                         LibCompat.After(0.02, function()
                             local currentEdit = LeaPlusLC.RecentChatEdit
-                            local currentScroll = LeaPlusLC.RecentChatScroll -- or simply 'scroll' from ShowChatbox's closure
-
+                            local currentScroll = LeaPlusLC.RecentChatScroll
                             if not currentEdit or not currentEdit:IsShown() or currentEdit ~= self_hooked_edit then return end
-
                             local fontHeight = select(2, currentEdit:GetFont()) or 14
                             local cursorPos = currentEdit:GetCursorPosition()
                             local text = currentEdit:GetText()
-                            local n = 0
-                            for i = 1, cursorPos do
-                                if text:sub(i,i) == "\n" then n = n + 1 end
-                            end
+                            local n = 0; for i = 1, cursorPos do if text:sub(i,i) == "\n" then n = n + 1 end end
                             local line = n + 1
-
-                            local totalLines = 1
-                            for _ in text:gmatch("\n") do totalLines = totalLines + 1 end
-
+                            local totalLines = 1; for _ in text:gmatch("\n") do totalLines = totalLines + 1 end
                             local scrollMax = currentScroll:GetVerticalScrollRange()
-
                             if line == totalLines then
                                 currentScroll:SetVerticalScroll(scrollMax)
                             else
@@ -13404,10 +13409,8 @@ function LeaPlusLC:Player()
                                 local scrollHeight = currentScroll:GetHeight()
                                 local minLine = math.floor(scrollMin / fontHeight + 1.5)
                                 local maxLine = math.floor((scrollMin + scrollHeight) / fontHeight + 0.5)
-                                if line < minLine then
-                                    currentScroll:SetVerticalScroll((line - 1) * fontHeight)
-                                elseif line > maxLine then
-                                    currentScroll:SetVerticalScroll(math.max(0, (line - math.floor(scrollHeight / fontHeight)) * fontHeight))
+                                if line < minLine then currentScroll:SetVerticalScroll((line - 1) * fontHeight)
+                                elseif line > maxLine then currentScroll:SetVerticalScroll(math.max(0, (line - math.floor(scrollHeight / fontHeight)) * fontHeight))
                                 end
                             end
                         end)
@@ -13415,48 +13418,29 @@ function LeaPlusLC:Player()
                 end)
 
                 edit:HookScript("OnMouseDown", function(_, btn) if btn == "RightButton" then Close() end end)
-                edit:SetScript("OnEscapePressed", Close)
+                edit:SetScript("OnEscapePressed", Close) -- This is important for when editbox has focus
 
-                -- Populate content
                 edit:ClearFocus()
                 edit:SetText("")
                 local num = chatFrame:GetNumMessages()
 
                 if num == 0 then
                     title.count:SetText("Messages: 0")
-                    ResizeEdit(0) -- Resize the newly created edit box
-                    -- Original code returned, frame:Show() wasn't called.
-                    -- To keep behavior, we might need to decide if frame shows for 0 messages.
-                    -- For now, let's allow the frame to show with an empty edit box if called.
-                    -- If original return is desired: frame:Show() should be conditional or this `if num==0` block should also return.
-                    -- Keeping original behavior of not showing frame on 0 messages means the `return` needs to stay
-                    -- and `frame:Show()` is skipped.
-                    -- For this implementation, if ShowChatbox is called, we show the frame.
-                    -- If you want to hide it for 0 messages, add `Close()` here or just `return` before `frame:Show()`.
-                    -- Let's stick to the original return if num == 0 to minimize behavioral change beyond editbox lifecycle.
-                    -- However, the editbox IS created.
-                    if num == 0 then
-                        -- If we return here, frame:Show() is not called. The created editbox is stored.
-                        -- This is fine, it will be cleaned up/replaced by next Close/ShowChatbox.
-                        frame:Show() -- Ensure frame is shown even if empty, then ResizeEdit takes effect
-                        return
-                    end
+                    ResizeEdit(0)
+                    frame:Show() -- Ensure frame is shown even if empty
+                    return
                 end
 
-
-                local lines = {}
-                local count = 0
+                local lines, count = {}, 0
                 for i = 1, num do
                     local msg, _, lineID = chatFrame:GetMessageInfo(i)
                     if msg then
                         msg = gsub(msg, "|T.-|t", "")
                         msg = gsub(msg, "|A.-|a", "")
-
                         local info = ChatTypeInfo[ chatTypeIndexToName[lineID] ]
                         local r,g,b = (info and info.r) or 1, (info and info.g) or 1, (info and info.b) or 1
                         local hex = format("|cff%02x%02x%02x", r*255, g*255, b*255)
                         msg = hex .. msg:gsub("|r","|r"..hex) .. "|r"
-
                         table.insert(lines, msg)
                         count = count + 1
                     end
@@ -13465,21 +13449,22 @@ function LeaPlusLC:Player()
                 title.count:SetText("Messages: "..count)
                 edit:SetText(table.concat(lines, "\n"))
                 ResizeEdit(count)
-
-                ScrollToBottomReliable(scroll, edit, 20) -- Pass current scroll and new edit
+                ScrollToBottomReliable(scroll, edit, 20)
                 frame:Show()
             end
 
-            -- hook each tab with its own index
             for id = 1, NUM_CHAT_WINDOWS do
                 local tab = _G["ChatFrame"..id.."Tab"]
                 if tab then
                     tab:HookScript("OnMouseUp", (function(idx)
                         return function(self, btn)
                             if btn == "LeftButton" and IsControlKeyDown() then
-                                if frame:IsShown() and LeaPlusLC.RecentChatEdit then -- Check if our specific window is shown
+                                -- If the same frame is already shown, toggle it off.
+                                -- Otherwise, show new content or first content.
+                                if frame:IsShown() and LeaPlusLC.RecentChatEdit and LeaPlusLC.CurrentRecentChatSource == _G["ChatFrame"..idx] then
                                     Close()
                                 else
+                                    LeaPlusLC.CurrentRecentChatSource = _G["ChatFrame"..idx] -- Track source
                                     ShowChatbox(_G["ChatFrame"..idx])
                                 end
                             end
@@ -13488,11 +13473,11 @@ function LeaPlusLC:Player()
                 end
             end
 
-            -- store refs if needed
             LeaPlusLC.RecentChatFrame  = frame
             LeaPlusLC.RecentChatTitle  = title
             LeaPlusLC.RecentChatScroll = scroll
             -- LeaPlusLC.RecentChatEdit is now set dynamically in ShowChatbox
+            -- LeaPlusLC.CurrentRecentChatSource is a new helper variable to track the source for toggling
         end
     end
 
