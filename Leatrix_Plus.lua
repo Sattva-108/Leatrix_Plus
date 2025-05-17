@@ -15597,6 +15597,41 @@ function LeaPlusLC:RunOnce()
             ShowSearchResults()
         end)
 
+        -- 1. После создания и позиционирования sBox (editbox поиска):
+
+        local clearBtn = CreateFrame("Button", nil, sBox)
+        clearBtn:SetSize(18, 18)
+        clearBtn:SetPoint("LEFT", sBox, "RIGHT", 0, 0)
+        clearBtn:SetNormalTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+        clearBtn:SetHighlightTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Highlight")
+        clearBtn:SetPushedTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Down")
+        clearBtn:Hide() -- по умолчанию скрыта
+
+        -- 2. Скрипт клика: очищает и сбрасывает поиск
+        clearBtn:SetScript("OnClick", function()
+            sBox:SetText("")
+            -- Вызываем вашу функцию сброса поиска (замени на актуальную)
+            ShowSearchResults("")
+            clearBtn:Hide()
+        end)
+
+        -- 3. Показывать X только если не пусто:
+        sBox:HookScript("OnTextChanged", function(self)
+            if self:GetText() and self:GetText() ~= "" then
+                clearBtn:Show()
+            else
+                clearBtn:Hide()
+            end
+        end)
+
+        -- 4. Также скрывать X при OnEditFocusLost (необязательно, но для стиля):
+        sBox:HookScript("OnEditFocusLost", function(self)
+            if self:GetText() == "" then
+                clearBtn:Hide()
+            end
+        end)
+
+
         -- Function to show random track listing
         local function ShowRandomList()
             -- If random track is currently playing, stop playback since random track list will be changed
