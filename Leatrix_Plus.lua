@@ -15466,87 +15466,146 @@ function LeaPlusLC:RunOnce()
         end
 
 
-        -- Create editbox for search
-        local sBox = LeaPlusLC:CreateEditBox("MusicSearchBox", LeaPlusLC["Page9"], 78, 10, "TOPLEFT", 150, -260, "MusicSearchBox", "MusicSearchBox")
+        -- Forward declare functions that might be called by sBox scripts but defined later
+        local ShowSearchResults
+
+        local sBox = CreateFrame("EditBox", "LeaPlusMusicSearchBox", LeaPlusLC["Page9"], "InputBoxTemplate")
+        LeaPlusCB["MusicSearchBox"] = sBox -- Store it if needed by other parts of LeaPlus
+        sBox:SetPoint("TOPLEFT", 140, -260) -- Your original X, Y. Anchor to LeaPlusLC["Page9"]
+        sBox:SetSize(90, 24)               -- Adjusted Width, Height (unitscan standard)
+        sBox:SetFontObject("GameFontNormalLarge") -- unitscan uses this
+        sBox:SetTextColor(1.0, 1.0, 1.0, 1)
+        sBox:SetAutoFocus(false)
         sBox:SetMaxLetters(50)
+        sBox:DisableDrawLayer("BACKGROUND")
 
-        -- Position search button above editbox
-        conbtn[L["Search"]]:ClearAllPoints()
-        conbtn[L["Search"]]:SetPoint("BOTTOMLEFT", sBox, "TOPLEFT", -4, 0)
+        sBox.searchIcon = sBox:CreateTexture(nil, "OVERLAY")
+        sBox.searchIcon:SetTexture("Interface\\Common\\UI-Searchbox-Icon")
+        sBox.searchIcon:SetVertexColor(0.6, 0.6, 0.6)
+        sBox.searchIcon:SetSize(14, 14)
+        sBox.searchIcon:SetPoint("LEFT", sBox, "LEFT", 2, 0)
 
-        -- Set initial search data
-        for q, w in pairs(ZoneList) do
-            if conbtn[w] then
-                conbtn[w]:HookScript("OnClick", function()
-                    if w == L["Search"] then
-                        ListData[1] = "|cffffd800" .. L["Search"]
-                        if #ListData == 1 then
-                            ListData[2] = "|cffffffaa{" .. L["enter zone or track name"] .. "}"
-                        end
-                        UpdateList()
-                    else
-                        sBox:ClearFocus()
-                    end
-                end)
+        sBox.clearButton = CreateFrame("Button", nil, sBox)
+        sBox.clearButton:SetSize(20, 20)
+        sBox.clearButton:SetPoint("RIGHT", sBox, "RIGHT", -2, 0)
+        sBox.clearButton.texture = sBox.clearButton:CreateTexture(nil, "ARTWORK")
+        sBox.clearButton.texture:SetTexture("Interface\\FriendsFrame\\ClearBroadcastIcon")
+        sBox.clearButton.texture:SetSize(17, 17)
+        sBox.clearButton.texture:SetPoint("CENTER", 0, 0)
+        sBox.clearButton:SetAlpha(0.5)
+        sBox.clearButton:SetScript("OnEnter", function(self) self:SetAlpha(1.0) end)
+        sBox.clearButton:SetScript("OnLeave", function(self) self:SetAlpha(0.5) end)
+        sBox.clearButton:SetScript("OnMouseDown", function(self) if self:IsEnabled() then self.texture:SetPoint("CENTER", 1, -1) end end)
+        sBox.clearButton:SetScript("OnMouseUp", function(self) self.texture:SetPoint("CENTER", 0, 0) end)
+        sBox.clearButton:Hide()
+        -- OnClick for clearButton will be set after ShowSearchResults is defined
+
+        -- Define standard and focused left insets
+        local searchIconWidth = 14 -- Width of your search icon
+        local searchIconPadding = 2 -- Padding next to the icon
+        local clearButtonWidth = 17 -- Width of your clear button texture
+        local clearButtonPadding = 2 -- Padding next to the clear button
+        local defaultLeftInset = searchIconPadding + searchIconWidth + searchIconPadding -- For when icon is visible
+        local focusedLeftInset = searchIconPadding -- Minimal padding when icon is hidden
+
+        sBox:SetTextInsets(defaultLeftInset, clearButtonPadding + clearButtonWidth + clearButtonPadding, 2, 2) -- Initial insets
+
+        sBox:SetScript("OnEditFocusGained", function(self)
+            if self.searchIcon then
+                self.searchIcon:Hide()
+                self:SetTextInsets(focusedLeftInset, clearButtonPadding + clearButtonWidth + clearButtonPadding, 2, 2) -- Reduce left inset
             end
+            -- Clear button visibility is handled by OnTextChanged
+        end)
+
+        sBox:SetScript("OnEditFocusLost", function(self)
+            if self:GetText() == "" then
+                if self.searchIcon then
+                    self.searchIcon:SetVertexColor(0.6, 0.6, 0.6)
+                    self.searchIcon:Show()
+                    self:SetTextInsets(defaultLeftInset, clearButtonPadding + clearButtonWidth + clearButtonPadding, 2, 2) -- Restore left inset
+                end
+                if self.clearButton then self.clearButton:Hide() end
+            else
+                if self.searchIcon then
+                    self.searchIcon:Hide()
+                    self:SetTextInsets(focusedLeftInset, clearButtonPadding + clearButtonWidth + clearButtonPadding, 2, 2) -- Keep reduced inset if text present
+                end
+                if self.clearButton then self.clearButton:Show() end
+            end
+        end)
+
+        -- Position search button above editbox (Your existing logic)
+        if conbtn and L and conbtn[L["Search"]] then -- Ensure conbtn and L are in scope
+            conbtn[L["Search"]]:ClearAllPoints()
+            conbtn[L["Search"]]:SetPoint("BOTTOMLEFT", sBox, "TOPLEFT", -4, 0)
+        else
+            -- print("DEBUG: conbtn or L not available for search button positioning")
         end
-        -- После всех SetPoint/SetSize для sBox:
-        for i = 1, sBox:GetNumRegions() do
-            local region = select(i, sBox:GetRegions())
-            if region and region.GetTexture and type(region:GetTexture()) == "string" then
-                local tex = region:GetTexture()
-                if tex and tex:find("Common%-Input%-Border") and region.GetName and region:GetName() == "UIParentMiddle" then
-                    region:Hide()
+
+        -- Set initial search data (Your existing logic)
+        if conbtn and ZoneList and L and ListData and UpdateList then -- Ensure dependencies are in scope
+            for q, w in pairs(ZoneList) do
+                if conbtn[w] then
+                    conbtn[w]:HookScript("OnClick", function()
+                        if w == L["Search"] then
+                            ListData[1] = "|cffffd800" .. L["Search"]
+                            if #ListData == 1 then
+                                ListData[2] = "|cffffffaa{" .. L["enter zone or track name"] .. "}"
+                            end
+                            if UpdateList then UpdateList() end
+                        else
+                            sBox:ClearFocus()
+                        end
+                    end)
                 end
             end
+        else
+            -- print("DEBUG: Dependencies for conbtn HookScript not available")
         end
 
-        -- Function to show search results
-        local function ShowSearchResults()
-            -- Get unescaped editbox text
-            local searchText = gsub(strlower(sBox:GetText()), '([' .. ("%^$().[]*+-?"):gsub("(.)", "%%%1") .. '])', "%%%1")
-            -- Wipe the track listing
+
+        -- Function to show search results (Ensure this is defined now, or was forward declared)
+        ShowSearchResults = function(optionalSearchText)
+            local searchTextToUse = optionalSearchText
+            if searchTextToUse == nil then
+                searchTextToUse = sBox:GetText()
+            end
+            local searchText = gsub(strlower(searchTextToUse), '([' .. ("%^$().[]*+-?"):gsub("(.)", "%%%1") .. '])', "%%%1")
             wipe(ListData)
-            -- Set the track list heading
             ListData[1] = "|cffffd800" .. L["Search"]
-            -- Show the subheading only if no search results are being shown
             if searchText == "" then
                 ListData[2] = "|cffffffaa{" .. L["enter zone or track name"] .. "}"
             else
                 ListData[2] = ""
             end
-            -- Traverse music listing and populate ListData
             if searchText ~= "" then
                 local word1, word2, word3, word4, word5 = strsplit(" ", (strtrim(searchText):gsub("%s+", " ")))
                 RunScript('LeaPlusGlobalHash = {}')
                 local hash = LeaPlusGlobalHash
                 local trackCount = 0
-                for i, e in pairs(ZoneList) do
-                    if ZoneList[e] then
-                        for a, b in pairs(ZoneList[e]) do
-                            if b.tracks then
-                                for k, v in pairs(b.tracks) do
-                                    if (strfind(v, "#") or strfind(v, "|r")) and (strfind(strlower(v), word1) or strfind(strlower(b.zone), word1) or strfind(strlower(b.category), word1)) then
-                                        if not word2 or word2 ~= "" and (strfind(strlower(v), word2) or strfind(strlower(b.zone), word2) or strfind(strlower(b.category), word2)) then
-                                            if not word3 or word3 ~= "" and (strfind(strlower(v), word3) or strfind(strlower(b.zone), word3) or strfind(strlower(b.category), word3)) then
-                                                if not word4 or word4 ~= "" and (strfind(strlower(v), word4) or strfind(strlower(b.zone), word4) or strfind(strlower(b.category), word4)) then
-                                                    if not word5 or word5 ~= "" and (strfind(strlower(v), word5) or strfind(strlower(b.zone), word5) or strfind(strlower(b.category), word5)) then
-                                                        -- Show category
-                                                        if not hash[b.category] then
+                for i_zone_list, e_zone_list_val in pairs(ZoneList) do -- Renamed i,e
+                    if ZoneList[e_zone_list_val] then
+                        for a_zone_entry, b_zone_entry_val in pairs(ZoneList[e_zone_list_val]) do -- Renamed a,b
+                            if b_zone_entry_val.tracks then
+                                for k_track, v_track in pairs(b_zone_entry_val.tracks) do
+                                    if (strfind(v_track, "#") or strfind(v_track, "|r")) and (strfind(strlower(v_track), word1) or strfind(strlower(b_zone_entry_val.zone), word1) or strfind(strlower(b_zone_entry_val.category), word1)) then
+                                        if not word2 or word2 ~= "" and (strfind(strlower(v_track), word2) or strfind(strlower(b_zone_entry_val.zone), word2) or strfind(strlower(b_zone_entry_val.category), word2)) then
+                                            if not word3 or word3 ~= "" and (strfind(strlower(v_track), word3) or strfind(strlower(b_zone_entry_val.zone), word3) or strfind(strlower(b_zone_entry_val.category), word3)) then
+                                                if not word4 or word4 ~= "" and (strfind(strlower(v_track), word4) or strfind(strlower(b_zone_entry_val.zone), word4) or strfind(strlower(b_zone_entry_val.category), word4)) then
+                                                    if not word5 or word5 ~= "" and (strfind(strlower(v_track), word5) or strfind(strlower(b_zone_entry_val.zone), word5) or strfind(strlower(b_zone_entry_val.category), word5)) then
+                                                        if not hash[b_zone_entry_val.category] then
                                                             tinsert(ListData, "|cffffffff")
-                                                            if b.category == e then
-                                                                -- No category so just show ZoneList entry (such as Various)
-                                                                tinsert(ListData, "|cffffd800" .. e)
+                                                            if b_zone_entry_val.category == e_zone_list_val then
+                                                                tinsert(ListData, "|cffffd800" .. e_zone_list_val)
                                                             else
-                                                                -- Category exists so show that
-                                                                tinsert(ListData, "|cffffd800" .. e .. ": " .. b.category)
+                                                                tinsert(ListData, "|cffffd800" .. e_zone_list_val .. ": " .. b_zone_entry_val.category)
                                                             end
-                                                            hash[b.category] = true
+                                                            hash[b_zone_entry_val.category] = true
                                                         end
-                                                        -- Show track
-                                                        tinsert(ListData, "|Cffffffaa" .. b.zone .. " |r" .. v)
+                                                        tinsert(ListData, "|Cffffffaa" .. b_zone_entry_val.zone .. " |r" .. v_track)
                                                         trackCount = trackCount + 1
-                                                        hash[v] = true
+                                                        hash[v_track] = true
                                                     end
                                                 end
                                             end
@@ -15557,79 +15616,75 @@ function LeaPlusLC:RunOnce()
                         end
                     end
                 end
-
-                -- Set results tag
                 if trackCount == 1 then
                     ListData[2] = "|cffffffaa{" .. trackCount .. " " .. L["result"] .. "}"
                 else
                     ListData[2] = "|cffffffaa{" .. trackCount .. " " .. L["results"] .. "}"
                 end
             end
-            -- Refresh the track listing
-            UpdateList()
-            -- Set track listing to top
-            scrollFrame:SetVerticalScroll(0)
+            if UpdateList then UpdateList() end
+            if scrollFrame then scrollFrame:SetVerticalScroll(0) end
         end
 
-        -- Populate ListData when editbox is changed by user
-        sBox:HookScript("OnTextChanged", function(self, userInput)
-            if userInput then
-                -- Show search page
-                conbtn[L["Search"]]:Click()
-                -- If search results are currently playing, stop playback since search results will be changed
-                if LastFolder == L["Search"] then
-                    stopBtn:Click()
+        -- Now that ShowSearchResults is defined, set the scripts for sBox that use it.
+        sBox:SetScript("OnTextChanged", function(self_sBox, userInput)
+            local text = self_sBox:GetText()
+            local hasFocus = self_sBox:HasFocus()
+
+            -- Icon and Clear Button Visibility Logic
+            if not text or text:trim() == "" then
+                if self_sBox.clearButton then self_sBox.clearButton:Hide() end
+                if self_sBox.searchIcon then
+                    self_sBox.searchIcon:Show()
+                    if not hasFocus then
+                        self_sBox:SetTextInsets(defaultLeftInset, clearButtonPadding + clearButtonWidth + clearButtonPadding, 2, 2)
+                    end
                 end
-                -- Show search results
-                ShowSearchResults()
-            end
-        end)
-
-        -- Populate ListData when editbox enter key is pressed
-        sBox:HookScript("OnEnterPressed", function()
-            -- Show search page
-            conbtn[L["Search"]]:Click()
-            -- If search results are currently playing, stop playback since search results will be changed
-            if LastFolder == L["Search"] then
-                stopBtn:Click()
-            end
-            -- Show search results
-            ShowSearchResults()
-        end)
-
-        -- 1. После создания и позиционирования sBox (editbox поиска):
-
-        local clearBtn = CreateFrame("Button", nil, sBox)
-        clearBtn:SetSize(18, 18)
-        clearBtn:SetPoint("LEFT", sBox, "RIGHT", 0, 0)
-        clearBtn:SetNormalTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
-        clearBtn:SetHighlightTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Highlight")
-        clearBtn:SetPushedTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Down")
-        clearBtn:Hide() -- по умолчанию скрыта
-
-        -- 2. Скрипт клика: очищает и сбрасывает поиск
-        clearBtn:SetScript("OnClick", function()
-            sBox:SetText("")
-            -- Вызываем вашу функцию сброса поиска (замени на актуальную)
-            ShowSearchResults("")
-            clearBtn:Hide()
-        end)
-
-        -- 3. Показывать X только если не пусто:
-        sBox:HookScript("OnTextChanged", function(self)
-            if self:GetText() and self:GetText() ~= "" then
-                clearBtn:Show()
             else
-                clearBtn:Hide()
+                if self_sBox.clearButton then self_sBox.clearButton:Show() end
+                if self_sBox.searchIcon then
+                    self_sBox.searchIcon:Hide()
+                    if not hasFocus then
+                        self_sBox:SetTextInsets(focusedLeftInset, clearButtonPadding + clearButtonWidth + clearButtonPadding, 2, 2)
+                    end
+                end
+            end
+
+            -- Music Search Logic (from your original OnTextChanged hook)
+            if userInput then
+                if conbtn and L and conbtn[L["Search"]] and conbtn[L["Search"]].Click then conbtn[L["Search"]]:Click() end
+                if LastFolder == L["Search"] and stopBtn and stopBtn.Click then stopBtn:Click() end
+                ShowSearchResults() -- This now calls the fully defined function
             end
         end)
 
-        -- 4. Также скрывать X при OnEditFocusLost (необязательно, но для стиля):
-        sBox:HookScript("OnEditFocusLost", function(self)
-            if self:GetText() == "" then
-                clearBtn:Hide()
-            end
+        -- OnEnterPressed (from your original OnEnterPressed hook)
+        sBox:SetScript("OnEnterPressed", function(self_sBox)
+            if conbtn and L and conbtn[L["Search"]] and conbtn[L["Search"]].Click then conbtn[L["Search"]]:Click() end
+            if LastFolder == L["Search"] and stopBtn and stopBtn.Click then stopBtn:Click() end
+            ShowSearchResults()
+            self_sBox:ClearFocus()
         end)
+
+        -- Combined Clear Logic
+        local function clearAndResetMusicSearch(self_sBox)
+            self_sBox:SetText("") -- Triggers OnTextChanged
+            ShowSearchResults("") -- Explicitly reset results
+            self_sBox:ClearFocus() -- Triggers OnEditFocusLost
+        end
+
+        if sBox.clearButton then
+            sBox.clearButton:SetScript("OnClick", function()
+                clearAndResetMusicSearch(sBox)
+            end)
+        end
+
+        sBox:SetScript("OnEscapePressed", function(self_sBox)
+            clearAndResetMusicSearch(self_sBox)
+        end)
+
+        -- Initial state update for icons AND INSETS
+        sBox:GetScript("OnEditFocusLost")(sBox) -- This will set icons and insets based on current text (likely empty at this stage)
 
 
         -- Function to show random track listing
