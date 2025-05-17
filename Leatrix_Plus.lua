@@ -15467,7 +15467,7 @@ function LeaPlusLC:RunOnce()
 
 
         -- Create editbox for search
-        local sBox = LeaPlusLC:CreateEditBox("MusicSearchBox", LeaPlusLC["Page9"], 78, 10, "TOPLEFT", 150, -260, "MusicSearchBox", "MusicSearchBox")
+        local sBox = LeaPlusLC:CreateEditBox("MusicSearchBox", LeaPlusLC["Page9"], 90, 8, "TOPLEFT", 140, -260, "MusicSearchBox", "MusicSearchBox", true)
         sBox:SetMaxLetters(50)
 
         -- Position search button above editbox
@@ -17519,8 +17519,7 @@ function LeaPlusLC:MakeCB(parent, field, caption, x, y, reload, tip, extratip)
 end
 
 -- Create an editbox (uses standard template)
-function LeaPlusLC:CreateEditBox(frame, parent, width, maxchars, anchor, x, y, tab, shifttab)
-
+function LeaPlusLC:CreateEditBox(frame, parent, width, maxchars, anchor, x, y, tab, shifttab, isSearchBox)
     -- Create editbox
     local eb = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
     LeaPlusCB[frame] = eb
@@ -17535,15 +17534,54 @@ function LeaPlusLC:CreateEditBox(frame, parent, width, maxchars, anchor, x, y, t
     eb:SetScript("OnEnterPressed", eb.ClearFocus)
     eb:DisableDrawLayer("BACKGROUND")
 
-    -- Add editbox border and backdrop
-    eb.f = CreateFrame("FRAME", nil, eb)
-    eb.f:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = false, tileSize = 16, edgeSize = 16, insets = { left = 5, right = 5, top = 5, bottom = 5 } })
-    eb.f:SetPoint("LEFT", -6, 0)
-    eb.f:SetWidth(eb:GetWidth() + 6)
-    eb.f:SetHeight(eb:GetHeight())
-    eb.f:SetBackdropColor(1.0, 1.0, 1.0, 0.3)
+    if not isSearchBox then
+        -- Стандартная рамка для обычного editbox
+        eb.f = CreateFrame("FRAME", nil, eb)
+        eb.f:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = false, tileSize = 16, edgeSize = 16, insets = { left = 5, right = 5, top = 5, bottom = 5 } })
+        eb.f:SetPoint("LEFT", -6, 0)
+        eb.f:SetWidth(eb:GetWidth() + 6)
+        eb.f:SetHeight(eb:GetHeight())
+        eb.f:SetBackdropColor(1.0, 1.0, 1.0, 0.3)
+    else
+        -- Custom styling for searchbox
+        -- Custom black background
+        local bg = eb:CreateTexture(nil, "BACKGROUND")
+        bg:SetAllPoints()
+        bg:SetTexture("Interface\\ChatFrame\\ChatFrameBackground")
+        bg:SetVertexColor(0, 0, 0, 1)
 
-    -- Move onto next editbox when tab key is pressed
+        -- Custom gray border
+        local border = eb:CreateTexture(nil, "BORDER")
+        border:SetPoint("TOPLEFT", -1, 1)
+        border:SetPoint("BOTTOMRIGHT", 1, -1)
+        border:SetTexture("Interface\\ChatFrame\\ChatFrameBackground")
+        border:SetVertexColor(0.6, 0.6, 0.6, 0.1)
+
+        -- Hide Blizzard's default borders
+        for i = 1, eb:GetNumRegions() do
+            local region = select(i, eb:GetRegions())
+            if region and region.GetTexture and type(region:GetTexture()) == "string" then
+                local tex = region:GetTexture()
+                if tex and tex:find("Common%-Input%-Border") then
+                    region:Hide()
+                end
+            end
+        end
+
+        -- Search icon on the left
+        local searchIcon = eb:CreateTexture(nil, "ARTWORK")
+        searchIcon:SetSize(16, 16)
+        searchIcon:SetPoint("LEFT", eb, "LEFT", 0, -1)
+        searchIcon:SetTexture("Interface\\Common\\UI-Searchbox-Icon")
+
+        -- Indent text
+        eb:SetTextInsets(20, 5, 0, 0)
+        eb:SetFont("Fonts\\FRIZQT__.TTF", 12)
+        eb:SetTextColor(1, 1, 1, 1)
+    end
+
+
+    -- TAB-переходы
     eb:SetScript("OnTabPressed", function(self)
         self:ClearFocus()
         if IsShiftKeyDown() then
@@ -17554,8 +17592,8 @@ function LeaPlusLC:CreateEditBox(frame, parent, width, maxchars, anchor, x, y, t
     end)
 
     return eb
-
 end
+
 
 --===== Bottom left button web link =====--
 
