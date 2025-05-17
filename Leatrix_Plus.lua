@@ -13364,14 +13364,18 @@ function LeaPlusLC:Player()
             ShowChatbox = function(chatFrame)
                 -- OPTIONAL BUT RECOMMENDED: Clean up previous edit box if one exists
                 if LeaPlusLC.RecentChatEdit then
+                    -- Perform a light cleanup; full cleanup is via OnHide if frame closes.
+                    -- This handles the case where the frame remains open but content changes.
                     local oldEdit = LeaPlusLC.RecentChatEdit
                     oldEdit:Hide()
                     oldEdit:SetText("")
                     if LeaPlusLC.RecentChatScroll and LeaPlusLC.RecentChatScroll:GetScrollChild() == oldEdit then
                         LeaPlusLC.RecentChatScroll:SetScrollChild(nil)
                     end
+                    -- oldEdit will be garbage collected if it has no other references/parentage issues
                 end
                 LeaPlusLC.RecentChatEdit = nil -- Ensure it's nil before creating a new one
+
 
                 local edit = CreateFrame("EditBox", nil, scroll)
                 edit:SetFontObject(ChatFontNormal)
@@ -13414,7 +13418,7 @@ function LeaPlusLC:Player()
                 end)
 
                 edit:HookScript("OnMouseDown", function(_, btn) if btn == "RightButton" then Close() end end)
-                edit:SetScript("OnEscapePressed", Close)
+                edit:SetScript("OnEscapePressed", Close) -- This is important for when editbox has focus
 
                 edit:ClearFocus()
                 edit:SetText("")
@@ -13423,81 +13427,30 @@ function LeaPlusLC:Player()
                 if num == 0 then
                     title.count:SetText("Messages: 0")
                     ResizeEdit(0)
-                    frame:Show()
+                    frame:Show() -- Ensure frame is shown even if empty
                     return
                 end
 
                 local lines, count = {}, 0
-
-                -- Helper function for Raid Icons
-                local function formatRaidIcon(iconIDStr)
-                    local iconID = tonumber(iconIDStr)
-                    if iconID then
-                        local iconName = _G["RAID_TARGET_" .. iconID]
-                        if iconName then
-                            return "{" .. string.lower(iconName) .. "}" -- Use string.lower
-                        end
-                    end
-                    return ""
-                end
-
                 for i = 1, num do
-                    local msg, _, lineID, _, _, _, _, _, _, _, _, guid = chatFrame:GetMessageInfo(i)
-
-                    if msg and type(msg) == "string" and msg ~= "" then
-                        -- print("Original Msg:", i, msg) -- DEBUG
-
-                        -- Step 1: Handle Raid Icons
-                        msg = string.gsub(msg, "|TInterface\\TargetingFrame\\UI%-RaidTargetingIcon_(%d+):[0-9:]-|t", formatRaidIcon)
-                        -- More robust alternative for raid icons:
-                        -- msg = string.gsub(msg, "|TInterface\\TargetingFrame\\UI%-RaidTargetingIcon_(%d+):.-|t", formatRaidIcon)
-
-                        -- Step 2: Handle general |T...|t textures
-                        msg = string.gsub(msg, "|T[^|]+|t", " ")
-
-                        -- Step 3: Handle Hyperlinks |Htype:data|hVISIBLE_TEXT|h
-                        msg = string.gsub(msg, "|H[^|]+|h([^|]+)|h", "%1")
-
-                        -- Step 4: Leatrix's existing |A...|a stripping
-                        msg = string.gsub(msg, "|A[^|]+|a", "")
-
-                        -- Step 5: Clean up whitespace
-                        msg = string.gsub(msg, "^%s*(.-)%s*$", "%1") -- Standard Lua trim
-                        msg = string.gsub(msg, "%s%s+", " ")      -- Replace multiple spaces with a single space
-
-                        -- print("Cleaned Msg:", i, msg) -- DEBUG
-
-                        if msg ~= "" then
-                            local chatTypeInfo = ChatTypeInfo[chatTypeIndexToName[lineID]]
-                            local r, g, b
-                            if chatTypeInfo then
-                                r, g, b = chatTypeInfo.r, chatTypeInfo.g, chatTypeInfo.b
-                            else
-                                r, g, b = 1, 1, 1
-                            end
-                            local hexColor = string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
-                            msg = hexColor .. string.gsub(msg, "|r", "|r" .. hexColor) .. "|r"
-
-                            table.insert(lines, msg)
-                            count = count + 1
-                            -- else
-                            -- print("Msg became empty after cleaning:", i, "Original was:", chatFrame:GetMessageInfo(i)) -- DEBUG
-                        end
+                    local msg, _, lineID = chatFrame:GetMessageInfo(i)
+                    if msg then
+                        msg = gsub(msg, "|T.-|t", "")
+                        msg = gsub(msg, "|A.-|a", "")
+                        local info = ChatTypeInfo[ chatTypeIndexToName[lineID] ]
+                        local r,g,b = (info and info.r) or 1, (info and info.g) or 1, (info and info.b) or 1
+                        local hex = format("|cff%02x%02x%02x", r*255, g*255, b*255)
+                        msg = hex .. msg:gsub("|r","|r"..hex) .. "|r"
+                        table.insert(lines, msg)
+                        count = count + 1
                     end
                 end
 
-                if count > 0 then
-                    title.count:SetText("Messages: " .. count)
-                    edit:SetText(table.concat(lines, "\n"))
-                    ResizeEdit(count)
-                    ScrollToBottomReliable(scroll, edit, 20)
-                    frame:Show()
-                else
-                    title.count:SetText("Messages: 0 (filtered)")
-                    edit:SetText(L["No messages to display or all were filtered out."])
-                    ResizeEdit(1)
-                    frame:Show()
-                end
+                title.count:SetText("Messages: "..count)
+                edit:SetText(table.concat(lines, "\n"))
+                ResizeEdit(count)
+                ScrollToBottomReliable(scroll, edit, 20)
+                frame:Show()
             end
 
             for id = 1, NUM_CHAT_WINDOWS do
