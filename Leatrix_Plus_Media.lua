@@ -712,16 +712,57 @@
 	-- Movies
 	----------------------------------------------------------------------
 
-	-- Movies
-	Zn(L["Movies"], L["Movies"], "|cffffd800" .. L["Movies"], {""})
-	Zn(L["Movies"], L["Movies"], L["World of Warcraft"]							, {	"|cffffd800" .. L["Movies"] .. ": " .. L["World of Warcraft"], prefol, L["Ten Years of Warcraft"] .. " |r(1)", L["World of Warcraft"] .. " |r(2)",})
-	Zn(L["Movies"], L["Movies"], L["The Burning Crusade"]						, {	"|cffffd800" .. L["Movies"] .. ": " .. L["The Burning Crusade"], prefol, L["The Burning Crusade"] .. " |r(27)",})
-	Zn(L["Movies"], L["Movies"], L["Wrath of the Lich King"], {	"|cffffd800" .. L["Movies"] .. ": " .. L["Wrath of the Lich King"], prefol,
-		L["Wrath of the Lich King"] .. " |r(18)",
-		L["Battle of Angrathar the Wrathgate"] .. " |r(14)",
-		L["Fall of the Lich King"] .. " |r(16)",
+	-- In your Leatrix_Plus database file (e.g., Leatrix_Plus_DB.lua)
+
+	-- Ensure L is available (Localization table)
+	-- local L = Leatrix_Plus.L or {}; -- Or however your localization is loaded
+
+	-- MOVIE_PATHS contains the specific file paths your addon will use.
+	-- Keys are descriptive and used by the GetMoviePath helper.
+	local MOVIE_PATHS = {
+		WOW_LOGO_800 = "Interface\\Cinematics\\Logo_800",
+		WOW_LOGO_1024 = "Interface\\Cinematics\\Logo_1024",
+		WOW_INTRO_800 = "Interface\\Cinematics\\WOW_Intro_800",
+		WOW_INTRO_1024 = "Interface\\Cinematics\\WOW_Intro_1024",
+		TBC_INTRO_800 = "Interface\\Cinematics\\WOW_Intro_BC_800",
+		TBC_INTRO_1024 = "Interface\\Cinematics\\WOW_Intro_BC_1024",
+		WOTLK_INTRO_800 = "Interface\\Cinematics\\WOW_Intro_LK_800",
+		WOTLK_INTRO_1024 = "Interface\\Cinematics\\WOW_Intro_LK_1024",
+	}
+
+	-- Simplified helper function:
+	-- Tries to get the 1024 resolution path, then falls back to 800, from MOVIE_PATHS.
+	local function GetMoviePath(highResKey, lowResKey)
+		if MOVIE_PATHS[highResKey] then
+			return MOVIE_PATHS[highResKey]
+		elseif MOVIE_PATHS[lowResKey] then
+			return MOVIE_PATHS[lowResKey]
+		end
+		-- Optional: return a specific "not found" key if neither is found,
+		-- or just nil and let the ( ... or "nil_path_..." ) handle it.
+		return nil
+	end
+
+
+	-- Zn calls now use the simpler GetMoviePath function.
+	-- Each movie has one entry, preferring 1024 resolution.
+	Zn(L["Movies"], L["Movies"], L["World of Warcraft"], {
+		"|cffffd800" .. L["Movies"] .. ": " .. L["World of Warcraft"], prefol,
+		L["WoW Cinematic Logo"] .. " |r" .. (GetMoviePath("WOW_LOGO_1024", "WOW_LOGO_800") or "nil_path_logo"),
+		L["World of Warcraft Intro"] .. " |r" .. (GetMoviePath("WOW_INTRO_1024", "WOW_INTRO_800") or "nil_path_wow_intro"),
 	})
 
+	Zn(L["Movies"], L["Movies"], L["The Burning Crusade"], {
+		"|cffffd800" .. L["Movies"] .. ": " .. L["The Burning Crusade"], prefol,
+		L["The Burning Crusade Intro"] .. " |r" .. (GetMoviePath("TBC_INTRO_1024", "TBC_INTRO_800") or "nil_path_tbc_intro"),
+	})
+
+	Zn(L["Movies"], L["Movies"], L["Wrath of the Lich King"], {
+		"|cffffd800" .. L["Movies"] .. ": " .. L["Wrath of the Lich King"], prefol,
+		L["Wrath of the Lich King Intro"] .. " |r" .. (GetMoviePath("WOTLK_INTRO_1024", "WOTLK_INTRO_800") or "nil_path_wotlk_intro"),
+	})
+
+	-- ... (rest of your database definitions for music, etc.)
 	----------------------------------------------------------------------
 	-- End
 	----------------------------------------------------------------------

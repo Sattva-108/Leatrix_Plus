@@ -15908,14 +15908,33 @@ function LeaPlusLC:RunOnce()
                         return
 
                     elseif originalTrackItemFromListData and type(originalTrackItemFromListData) == "string" and strfind(originalTrackItemFromListData, "|r") and not strfind(originalTrackItemFromListData, "#") then
-                        -- Movie
-                        local movieName, movieID = originalTrackItemFromListData:match("([^,]+)%|r([^,]+)")
-                        if movieName and movieID then
-                            movieID = strtrim(movieID, "()")
-                            stopBtn:Click()
-                            print("Movies are not yet supported in 3.3.5 backport.")
+                        -- MOVIE section (Minimal with "Not Found" message)
+                        stopBtn:Click() -- Stop any currently playing music
+
+                        local displayNamePart, identifierPart = originalTrackItemFromListData:match("^(.-)|r(.*)$")
+                        identifierPart = identifierPart and strtrim(identifierPart) or ""
+                        displayNamePart = displayNamePart and strtrim(displayNamePart) or L["Unknown Movie"] -- Get display name for message
+
+                        -- Check if the resolved path is empty or our "nil_path_" placeholder
+                        if identifierPart == "" or string.find(identifierPart, "nil_path_") then
+                            -- Use your addon's standard print function (LeaPlusLC:Print)
+                            -- and try to provide the name of the movie the user clicked on.
+                            LeaPlusLC:Print(string.format(L["Movie not found: %s"], displayNamePart))
+                            return
+                        end
+
+                        local movieVolume = 150 -- Fixed default volume
+
+                        if _G.MovieFrame_PlayMovie and _G.MovieFrame then
+                            _G.MovieFrame_PlayMovie(_G.MovieFrame, identifierPart:gsub("/", "\\"), movieVolume)
+                            -- else
+                            -- If MovieFrame_PlayMovie system itself is missing, playback will silently fail here.
+                            -- This is a more fundamental addon issue than a single missing movie.
+                            -- Optionally, you could add a developer-level print here for debugging if MovieFrame isn't loaded.
+                            -- print("Developer: MovieFrame_PlayMovie or MovieFrame is nil.")
                         end
                         return
+                        -- ... (rest of your OnClick logic for zone navigation, etc.)
                     else
                         -- Zone or other navigation
                         ZonePage = scrollFrame:GetVerticalScroll()
