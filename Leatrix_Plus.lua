@@ -12,6 +12,9 @@
 LibCompat = LibStub:GetLibrary("LibCompat-1.0")
 -- Create global table
 _G.LeaPlusDB = _G.LeaPlusDB or {}
+LeaPlusDB = _G.LeaPlusDB  -- локальный псевдоним
+LeaPlusDB["ListenedTracks"] = LeaPlusDB["ListenedTracks"] or {}
+
 
 -- Create locals
 local LeaPlusLC, LeaPlusCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
@@ -4367,22 +4370,24 @@ function LeaPlusLC:Player()
         -- ===== helpers ==================================================
         local chatTypeIndexToName = {}
         for t in pairs(ChatTypeInfo) do
-            chatTypeIndexToName[ GetChatTypeIndex(t) ] = t
+            chatTypeIndexToName[GetChatTypeIndex(t)] = t
         end
 
         local function CleanAndColour(msg, lineID)
             msg = gsub(msg, "|T.-|t", "")         -- strip textures
             msg = gsub(msg, "|A.-|a", "")         -- strip atlases
-            local inf = ChatTypeInfo[ chatTypeIndexToName[lineID] ]
+            local inf = ChatTypeInfo[chatTypeIndexToName[lineID]]
             local r, g, b = (inf and inf.r) or 1, (inf and inf.g) or 1, (inf and inf.b) or 1
-            local hex     = format("|cff%02x%02x%02x", r*255, g*255, b*255)
-            return hex .. msg:gsub("|r", "|r"..hex) .. "|r"
+            local hex = format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
+            return hex .. msg:gsub("|r", "|r" .. hex) .. "|r"
         end
 
         local function WindowActive(idx)
             local shown = select(7, FCF_GetChatWindowInfo(idx))
-            if shown then return true end
-            local f = _G["ChatFrame"..idx]
+            if shown then
+                return true
+            end
+            local f = _G["ChatFrame" .. idx]
             return (f and f.isDocked)
         end
 
@@ -4391,21 +4396,24 @@ function LeaPlusLC:Player()
         saver:RegisterEvent("PLAYER_LOGOUT")
         saver:SetScript("OnEvent", function()
             local name, realm = LibCompat.UnitFullName("player")
-            realm = realm or GetRealmName() ; if not name then return end
+            realm = realm or GetRealmName();
+            if not name then
+                return
+            end
 
             LeaPlusDB["ChatHistoryName"] = name .. "-" .. realm
             LeaPlusDB["ChatHistoryTime"] = time()
 
             for i = 1, 50 do
-                if i ~= 2 and _G["ChatFrame"..i] and WindowActive(i) then
-                    local cf, num  = _G["ChatFrame"..i], _G["ChatFrame"..i]:GetNumMessages()
-                    local first    = (num > 128) and (num - 128 + 1) or 1
-                    LeaPlusDB["ChatHistory"..i] = {}
+                if i ~= 2 and _G["ChatFrame" .. i] and WindowActive(i) then
+                    local cf, num = _G["ChatFrame" .. i], _G["ChatFrame" .. i]:GetNumMessages()
+                    local first = (num > 128) and (num - 128 + 1) or 1
+                    LeaPlusDB["ChatHistory" .. i] = {}
 
                     for n = first, num do
                         local txt, _, lineID = cf:GetMessageInfo(n)
                         if txt and not txt:find(L["Restored"], 1, true) then
-                            tinsert(LeaPlusDB["ChatHistory"..i], CleanAndColour(txt, lineID))
+                            tinsert(LeaPlusDB["ChatHistory" .. i], CleanAndColour(txt, lineID))
                         end
                     end
                 end
@@ -4414,16 +4422,20 @@ function LeaPlusLC:Player()
 
         -- ===== RESTORE once UI is up ====================================
         local function Restore()
-            if not (LeaPlusDB["ChatHistoryTime"] and LeaPlusDB["ChatHistoryName"]) then return end
-            if time() - LeaPlusDB["ChatHistoryTime"] > 10 then return end
+            if not (LeaPlusDB["ChatHistoryTime"] and LeaPlusDB["ChatHistoryName"]) then
+                return
+            end
+            if time() - LeaPlusDB["ChatHistoryTime"] > 10 then
+                return
+            end
 
             for i = 1, 50 do
-                if i ~= 2 and _G["ChatFrame"..i] and WindowActive(i) then
-                    local cf = _G["ChatFrame"..i]
+                if i ~= 2 and _G["ChatFrame" .. i] and WindowActive(i) then
+                    local cf = _G["ChatFrame" .. i]
                     cf:Clear()
                     local restored = 0
 
-                    for _, line in ipairs(LeaPlusDB["ChatHistory"..i] or {}) do
+                    for _, line in ipairs(LeaPlusDB["ChatHistory" .. i] or {}) do
                         cf:AddMessage(line)
                         restored = restored + 1
                     end
@@ -4442,9 +4454,9 @@ function LeaPlusLC:Player()
         LeaPlusDB["ChatHistoryName"] = nil
         LeaPlusDB["ChatHistoryTime"] = nil
         for i = 1, 50 do
-            LeaPlusDB["ChatHistory"..i]       = nil
-            LeaPlusDB["ChatTemp"..i]          = nil
-            LeaPlusDB["ChatHistory"..i.."Count"] = nil
+            LeaPlusDB["ChatHistory" .. i] = nil
+            LeaPlusDB["ChatTemp" .. i] = nil
+            LeaPlusDB["ChatHistory" .. i .. "Count"] = nil
         end
     end
 
@@ -5759,20 +5771,24 @@ function LeaPlusLC:Player()
             local SquareMapPanel = LeaPlusLC:CreatePanel("Square Minimap", "SquareMapPanel")
 
             -- Add a dropdown menu for mail icon position
-            LeaPlusLC:CreateDropDown("MiniMapMailIconPos", "Mail Icon Position", SquareMapPanel, 146, "TOPLEFT", 16, -112, {L["Top Left"], L["Top Right"], L["Bottom Left"], L["Bottom Right"]}, "Set the position of the minimap mail icon.")
+            LeaPlusLC:CreateDropDown("MiniMapMailIconPos", "Mail Icon Position", SquareMapPanel, 146, "TOPLEFT", 16, -112, { L["Top Left"], L["Top Right"], L["Bottom Left"], L["Bottom Right"] }, "Set the position of the minimap mail icon.")
 
             -- Function to update mail icon position based on the dropdown selection
             local function UpdateMailIconPosition()
                 local mailIcon = MiniMapMailFrame
                 if mailIcon then
                     mailIcon:ClearAllPoints()
-                    if LeaPlusLC["MiniMapMailIconPos"] == 1 then -- Top Left
+                    if LeaPlusLC["MiniMapMailIconPos"] == 1 then
+                        -- Top Left
                         mailIcon:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -19, 14)
-                    elseif LeaPlusLC["MiniMapMailIconPos"] == 2 then -- Top Right
+                    elseif LeaPlusLC["MiniMapMailIconPos"] == 2 then
+                        -- Top Right
                         mailIcon:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", 19, 14)
-                    elseif LeaPlusLC["MiniMapMailIconPos"] == 3 then -- Bottom Left
+                    elseif LeaPlusLC["MiniMapMailIconPos"] == 3 then
+                        -- Bottom Left
                         mailIcon:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", -19, -14)
-                    elseif LeaPlusLC["MiniMapMailIconPos"] == 4 then -- Bottom Right
+                    elseif LeaPlusLC["MiniMapMailIconPos"] == 4 then
+                        -- Bottom Right
                         mailIcon:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 19, -14)
                     end
                 end
@@ -5788,7 +5804,7 @@ function LeaPlusLC:Player()
 
             -- Add a dropdown menu for LFG button position with no "Default" position, only custom ones
             LeaPlusLC:CreateDropDown("MiniMapLFGIconPos", "LFG Icon Position", SquareMapPanel, 146, "TOPLEFT", 16, -172,
-                    {L["Top Left"], L["Top Right"], L["Bottom Left"], L["Bottom Right"]}, "Set the position of the minimap LFG icon.")
+                    { L["Top Left"], L["Top Right"], L["Bottom Left"], L["Bottom Right"] }, "Set the position of the minimap LFG icon.")
 
             -- Function to update LFG button position based on the dropdown selection
             local function UpdateLFGIconPosition()
@@ -5797,13 +5813,17 @@ function LeaPlusLC:Player()
                     lfgIcon:ClearAllPoints()
 
                     -- Apply custom positions inside the minimap with a slight outset from the edges
-                    if LeaPlusLC["MiniMapLFGIconPos"] == 1 then -- Top Left
+                    if LeaPlusLC["MiniMapLFGIconPos"] == 1 then
+                        -- Top Left
                         lfgIcon:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 5, -5)  -- Slightly inset
-                    elseif LeaPlusLC["MiniMapLFGIconPos"] == 2 then -- Top Right
+                    elseif LeaPlusLC["MiniMapLFGIconPos"] == 2 then
+                        -- Top Right
                         lfgIcon:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", -5, -5)  -- Slightly inset
-                    elseif LeaPlusLC["MiniMapLFGIconPos"] == 3 then -- Bottom Left
+                    elseif LeaPlusLC["MiniMapLFGIconPos"] == 3 then
+                        -- Bottom Left
                         lfgIcon:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 5, 5)  -- Slightly inset
-                    elseif LeaPlusLC["MiniMapLFGIconPos"] == 4 then -- Bottom Right
+                    elseif LeaPlusLC["MiniMapLFGIconPos"] == 4 then
+                        -- Bottom Right
                         lfgIcon:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", -5, 25)  -- Slightly inset
                     end
                 end
@@ -5819,7 +5839,7 @@ function LeaPlusLC:Player()
 
 
             -- Add a dropdown menu for Battlefield icon position
-            LeaPlusLC:CreateDropDown("MiniMapBattlefieldIconPos", "Battlefield Icon Position", SquareMapPanel, 146, "TOPLEFT", 16, -232, {L["Top Left"], L["Top Right"], L["Bottom Left"], L["Bottom Right"]}, "Set the position of the minimap battlefield icon.")
+            LeaPlusLC:CreateDropDown("MiniMapBattlefieldIconPos", "Battlefield Icon Position", SquareMapPanel, 146, "TOPLEFT", 16, -232, { L["Top Left"], L["Top Right"], L["Bottom Left"], L["Bottom Right"] }, "Set the position of the minimap battlefield icon.")
 
             -- Function to update Battlefield icon position based on the dropdown selection
             local function UpdateBattlefieldIconPosition()
@@ -5828,13 +5848,17 @@ function LeaPlusLC:Player()
                     battlefieldIcon:ClearAllPoints()
 
                     -- Apply custom positions inside the minimap with a slight outset from the edges
-                    if LeaPlusLC["MiniMapBattlefieldIconPos"] == 1 then -- Top Left
+                    if LeaPlusLC["MiniMapBattlefieldIconPos"] == 1 then
+                        -- Top Left
                         battlefieldIcon:SetPoint("TOPLEFT", Minimap, "TOPLEFT", 5, -5)  -- Slightly inset
-                    elseif LeaPlusLC["MiniMapBattlefieldIconPos"] == 2 then -- Top Right
+                    elseif LeaPlusLC["MiniMapBattlefieldIconPos"] == 2 then
+                        -- Top Right
                         battlefieldIcon:SetPoint("TOPRIGHT", Minimap, "TOPRIGHT", -5, -5)  -- Slightly inset
-                    elseif LeaPlusLC["MiniMapBattlefieldIconPos"] == 3 then -- Bottom Left
+                    elseif LeaPlusLC["MiniMapBattlefieldIconPos"] == 3 then
+                        -- Bottom Left
                         battlefieldIcon:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", 5, 5)  -- Slightly inset
-                    elseif LeaPlusLC["MiniMapBattlefieldIconPos"] == 4 then -- Bottom Right
+                    elseif LeaPlusLC["MiniMapBattlefieldIconPos"] == 4 then
+                        -- Bottom Right
                         battlefieldIcon:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", -5, 25)  -- Slightly inset
                     end
                 end
@@ -6073,8 +6097,6 @@ function LeaPlusLC:Player()
                             end
                         end
                     end
-
-
 
                     local function HideMinimapButtons()
                         local searchStr = LeaPlusDB["MiniExcludeList"]
@@ -6654,7 +6676,8 @@ function LeaPlusLC:Player()
             GameTimeFrame:Hide()
 
             Minimap:HookScript("OnMouseUp", function(self, button)
-                if IsShiftKeyDown() then -- Check if the Shift key is pressed
+                if IsShiftKeyDown() then
+                    -- Check if the Shift key is pressed
                     if button == "MiddleButton" then
                         GameTimeFrame_OnClick(self) -- Trigger the GameTimeFrame function
                     end
@@ -6673,9 +6696,9 @@ function LeaPlusLC:Player()
         end
 
         if LeaPlusLC["HideMiniPOIArrows"] == "On" then
-            local frame=CreateFrame("Frame");
+            local frame = CreateFrame("Frame");
             frame:RegisterEvent("PLAYER_ENTERING_WORLD");
-            frame:SetScript("OnEvent",function(self,event,...)
+            frame:SetScript("OnEvent", function(self, event, ...)
                 -- Put code here
                 Minimap:SetStaticPOIArrowTexture("Interface\\addons\\Leatrix_Plus\\assets\\ROTATING-MINIMAPARROW")
             end);
@@ -6974,7 +6997,6 @@ function LeaPlusLC:Player()
         trackerContainer:ClearAllPoints()
         trackerContainer:SetPoint('CENTER', trackerHolder)
         trackerContainer:SetClampedToScreen(false)
-
 
         local function SetWatchFrameHeight()
             local top = WatchFrame:GetTop() or 0
@@ -13182,16 +13204,17 @@ function LeaPlusLC:Player()
             frame:SetMinResize(600, 50)
             frame:SetMaxResize(600, 680)
             frame:SetBackdrop({
-                bgFile   = "Interface\\BUTTONS\\WHITE8X8",
+                bgFile = "Interface\\BUTTONS\\WHITE8X8",
                 edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-                tile     = true, tileSize = 16,
-                edgeSize = 16, insets = { left=4, right=4, top=4, bottom=4 },
+                tile = true, tileSize = 16,
+                edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 },
             })
             frame:SetBackdropColor(0, 0, 0, 0.6)
 
             -- ADDITION 1: Add to UISpecialFrames for ESC key functionality
             -- This allows the ESC key to close the window if it doesn't have a more specific target.
-            if _G.UISpecialFrames then -- Ensure the table exists (it always should in WoW client)
+            if _G.UISpecialFrames then
+                -- Ensure the table exists (it always should in WoW client)
                 tinsert(_G.UISpecialFrames, "LeaPlusRecentChatFrame")
             end
 
@@ -13282,22 +13305,32 @@ function LeaPlusLC:Player()
             -- 3) ScrollFrame (ElvUI)           --
             ----------------------------------------
             local scroll = CreateFrame("ScrollFrame", "LeaPlusRecentChatScroll", frame, "UIPanelScrollFrameTemplate")
-            scroll:SetPoint("TOPLEFT",    frame, "TOPLEFT",    26, -36)
+            scroll:SetPoint("TOPLEFT", frame, "TOPLEFT", 26, -36)
             scroll:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -34, 8)
 
             local sb = scroll.ScrollBar or LeaPlusRecentChatScrollScrollBar
             sb:ClearAllPoints()
-            sb:SetPoint("TOPLEFT",  scroll, "TOPRIGHT", 3, -16)
+            sb:SetPoint("TOPLEFT", scroll, "TOPRIGHT", 3, -16)
             sb:SetPoint("BOTTOMLEFT", scroll, "BOTTOMRIGHT", 3, 16)
 
             -- right-click to close on all areas (frame and scroll are static)
-            frame:HookScript("OnMouseDown", function(_, btn) if btn == "RightButton" then Close() end end)
-            scroll:HookScript("OnMouseDown", function(_,btn)  if btn == "RightButton" then Close() end end)
+            frame:HookScript("OnMouseDown", function(_, btn)
+                if btn == "RightButton" then
+                    Close()
+                end
+            end)
+            scroll:HookScript("OnMouseDown", function(_, btn)
+                if btn == "RightButton" then
+                    Close()
+                end
+            end)
 
             -- dynamically resize edit-box height
             ResizeEdit = function(count)
                 local currentEdit = LeaPlusLC.RecentChatEdit
-                if not currentEdit then return end
+                if not currentEdit then
+                    return
+                end
                 local _, size = currentEdit:GetFont()
                 local needed = count * (size + 2)
                 currentEdit:SetHeight(math.max(needed, scroll:GetHeight()))
@@ -13307,7 +13340,9 @@ function LeaPlusLC:Player()
             scroll:SetScript("OnMouseWheel", function(self, delta)
                 local currentEdit = LeaPlusLC.RecentChatEdit
                 local maxScrollRange = self:GetVerticalScrollRange()
-                if not maxScrollRange or maxScrollRange <= 0 then return end
+                if not maxScrollRange or maxScrollRange <= 0 then
+                    return
+                end
                 local currentScroll = self:GetVerticalScroll()
                 local viewHeight = self:GetHeight()
                 local stepAmount
@@ -13317,7 +13352,9 @@ function LeaPlusLC:Player()
                     local fontHeight = 14
                     if currentEdit and currentEdit:IsShown() then
                         local _, fh = currentEdit:GetFont()
-                        if fh and fh > 0 then fontHeight = fh end
+                        if fh and fh > 0 then
+                            fontHeight = fh
+                        end
                     end
                     local linesToScroll = 3
                     stepAmount = fontHeight * linesToScroll
@@ -13338,7 +13375,7 @@ function LeaPlusLC:Player()
             ----------------------------------------
             local chatTypeIndexToName = {}
             for chatType in pairs(ChatTypeInfo) do
-                chatTypeIndexToName[ GetChatTypeIndex(chatType) ] = chatType
+                chatTypeIndexToName[GetChatTypeIndex(chatType)] = chatType
             end
 
             ScrollToBottomReliable = function(scrollInstance, editInstance, maxAttempts)
@@ -13347,7 +13384,9 @@ function LeaPlusLC:Player()
                 local attempts = 0
                 local function tryScroll()
                     attempts = attempts + 1
-                    if not editInstance or not editInstance:IsShown() then return end
+                    if not editInstance or not editInstance:IsShown() then
+                        return
+                    end
                     local curHeight = editInstance:GetHeight()
                     if curHeight ~= lastHeight and attempts < maxAttempts then
                         lastHeight = curHeight
@@ -13394,13 +13433,23 @@ function LeaPlusLC:Player()
                         LibCompat.After(0.02, function()
                             local currentEdit = LeaPlusLC.RecentChatEdit
                             local currentScroll = LeaPlusLC.RecentChatScroll
-                            if not currentEdit or not currentEdit:IsShown() or currentEdit ~= self_hooked_edit then return end
+                            if not currentEdit or not currentEdit:IsShown() or currentEdit ~= self_hooked_edit then
+                                return
+                            end
                             local fontHeight = select(2, currentEdit:GetFont()) or 14
                             local cursorPos = currentEdit:GetCursorPosition()
                             local text = currentEdit:GetText()
-                            local n = 0; for i = 1, cursorPos do if text:sub(i,i) == "\n" then n = n + 1 end end
+                            local n = 0;
+                            for i = 1, cursorPos do
+                                if text:sub(i, i) == "\n" then
+                                    n = n + 1
+                                end
+                            end
                             local line = n + 1
-                            local totalLines = 1; for _ in text:gmatch("\n") do totalLines = totalLines + 1 end
+                            local totalLines = 1;
+                            for _ in text:gmatch("\n") do
+                                totalLines = totalLines + 1
+                            end
                             local scrollMax = currentScroll:GetVerticalScrollRange()
                             if line == totalLines then
                                 currentScroll:SetVerticalScroll(scrollMax)
@@ -13409,15 +13458,21 @@ function LeaPlusLC:Player()
                                 local scrollHeight = currentScroll:GetHeight()
                                 local minLine = math.floor(scrollMin / fontHeight + 1.5)
                                 local maxLine = math.floor((scrollMin + scrollHeight) / fontHeight + 0.5)
-                                if line < minLine then currentScroll:SetVerticalScroll((line - 1) * fontHeight)
-                                elseif line > maxLine then currentScroll:SetVerticalScroll(math.max(0, (line - math.floor(scrollHeight / fontHeight)) * fontHeight))
+                                if line < minLine then
+                                    currentScroll:SetVerticalScroll((line - 1) * fontHeight)
+                                elseif line > maxLine then
+                                    currentScroll:SetVerticalScroll(math.max(0, (line - math.floor(scrollHeight / fontHeight)) * fontHeight))
                                 end
                             end
                         end)
                     end
                 end)
 
-                edit:HookScript("OnMouseDown", function(_, btn) if btn == "RightButton" then Close() end end)
+                edit:HookScript("OnMouseDown", function(_, btn)
+                    if btn == "RightButton" then
+                        Close()
+                    end
+                end)
                 edit:SetScript("OnEscapePressed", Close) -- This is important for when editbox has focus
 
                 edit:ClearFocus()
@@ -13437,16 +13492,16 @@ function LeaPlusLC:Player()
                     if msg then
                         msg = gsub(msg, "|T.-|t", "")
                         msg = gsub(msg, "|A.-|a", "")
-                        local info = ChatTypeInfo[ chatTypeIndexToName[lineID] ]
-                        local r,g,b = (info and info.r) or 1, (info and info.g) or 1, (info and info.b) or 1
-                        local hex = format("|cff%02x%02x%02x", r*255, g*255, b*255)
-                        msg = hex .. msg:gsub("|r","|r"..hex) .. "|r"
+                        local info = ChatTypeInfo[chatTypeIndexToName[lineID]]
+                        local r, g, b = (info and info.r) or 1, (info and info.g) or 1, (info and info.b) or 1
+                        local hex = format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
+                        msg = hex .. msg:gsub("|r", "|r" .. hex) .. "|r"
                         table.insert(lines, msg)
                         count = count + 1
                     end
                 end
 
-                title.count:SetText("Messages: "..count)
+                title.count:SetText("Messages: " .. count)
                 edit:SetText(table.concat(lines, "\n"))
                 ResizeEdit(count)
                 ScrollToBottomReliable(scroll, edit, 20)
@@ -13454,18 +13509,18 @@ function LeaPlusLC:Player()
             end
 
             for id = 1, NUM_CHAT_WINDOWS do
-                local tab = _G["ChatFrame"..id.."Tab"]
+                local tab = _G["ChatFrame" .. id .. "Tab"]
                 if tab then
                     tab:HookScript("OnMouseUp", (function(idx)
                         return function(self, btn)
                             if btn == "LeftButton" and IsControlKeyDown() then
                                 -- If the same frame is already shown, toggle it off.
                                 -- Otherwise, show new content or first content.
-                                if frame:IsShown() and LeaPlusLC.RecentChatEdit and LeaPlusLC.CurrentRecentChatSource == _G["ChatFrame"..idx] then
+                                if frame:IsShown() and LeaPlusLC.RecentChatEdit and LeaPlusLC.CurrentRecentChatSource == _G["ChatFrame" .. idx] then
                                     Close()
                                 else
-                                    LeaPlusLC.CurrentRecentChatSource = _G["ChatFrame"..idx] -- Track source
-                                    ShowChatbox(_G["ChatFrame"..idx])
+                                    LeaPlusLC.CurrentRecentChatSource = _G["ChatFrame" .. idx] -- Track source
+                                    ShowChatbox(_G["ChatFrame" .. idx])
                                 end
                             end
                         end
@@ -13473,8 +13528,8 @@ function LeaPlusLC:Player()
                 end
             end
 
-            LeaPlusLC.RecentChatFrame  = frame
-            LeaPlusLC.RecentChatTitle  = title
+            LeaPlusLC.RecentChatFrame = frame
+            LeaPlusLC.RecentChatTitle = title
             LeaPlusLC.RecentChatScroll = scroll
             -- LeaPlusLC.RecentChatEdit is now set dynamically in ShowChatbox
             -- LeaPlusLC.CurrentRecentChatSource is a new helper variable to track the source for toggling
@@ -15171,6 +15226,15 @@ function LeaPlusLC:RunOnce()
     ----------------------------------------------------------------------
 
     function LeaPlusLC:MediaFunc()
+
+        local trackStartTime = 0
+
+        local function GetTrackIDFromPath(path)
+            local filename = path:match("([^/]+)$")
+            local basename = filename and filename:match("([^.]+)")
+            return basename or filename
+        end
+
         -- Helper function for shortening paths in debug prints
         local function getShortDisplayPathForDebug(fullPathString)
             -- Ensure it's a string before trying string operations
@@ -15190,7 +15254,8 @@ function LeaPlusLC:RunOnce()
 
             -- Check for color code prefix like "|CffffffaaZone Name |rActualPath"
             local p, t = fullPathString:match("^(.-|r)(.*)$")
-            if p and t and t ~= "" then -- Ensure both parts were captured and 't' (the path part) is not empty
+            if p and t and t ~= "" then
+                -- Ensure both parts were captured and 't' (the path part) is not empty
                 prefix = p
                 contentToShorten = t
             end
@@ -15231,7 +15296,8 @@ function LeaPlusLC:RunOnce()
                     if type(rawItem) == "table" and rawItem.zone then
                         displayText = rawItem.zone
                     elseif type(rawItem) == "string" then
-                        if strfind(rawItem, "#") then -- It's a track string
+                        if strfind(rawItem, "#") then
+                            -- It's a track string
                             local prefix = ""
                             local trackPathWithDuration = rawItem
                             local p, t = rawItem:match("^(.-|r)(.*)$")
@@ -15285,7 +15351,9 @@ function LeaPlusLC:RunOnce()
                         end
 
                         local bWidth = button:GetFontString():GetStringWidth() or 0
-                        if bWidth > 290 then bWidth = 290 end
+                        if bWidth > 290 then
+                            bWidth = 290
+                        end
                         button:SetHitRectInsets(0, 454 - bWidth, 0, 0)
                         button:SetPushedTextOffset(0, 0)
                         button:GetFontString():SetWidth(290)
@@ -15423,6 +15491,23 @@ function LeaPlusLC:RunOnce()
             end
         end
 
+        local function MarkCurrentTrackListened()
+            if LastFolder == L["Random"] and LastPlayed and trackStartTime and trackStartTime > 0 then
+                print("last folder ok")
+                local elapsed = GetTime() - trackStartTime
+                if elapsed >= 30 then
+                    print("time ok (" .. math.floor(elapsed) .. "s)")
+                    local id = GetTrackIDFromPath(LastPlayed)
+                    if id and id ~= "" then
+                        print("id ok")
+                        LeaPlusDB["ListenedTracks"][id] = true
+                        LeaPlusLC:Print("Added track to listened: " .. id)
+                    end
+                end
+            end
+        end
+
+
         -- Create scroll bar
         scrollFrame = CreateFrame("ScrollFrame", "LeaPlusScrollFrame", LeaPlusLC["Page9"], "FauxScrollFrameTemplate")
         scrollFrame:SetPoint("TOPLEFT", 0, -32)
@@ -15439,6 +15524,8 @@ function LeaPlusLC:RunOnce()
         LeaPlusLC:LockItem(stopBtn, true)
         -- REPLACEMENT: Stop-button handler (stopBtn:SetScript("OnClick", ...))
         stopBtn:SetScript("OnClick", function()
+            MarkCurrentTrackListened()
+            trackStartTime = 0
             StopMusic()
             if PrevMusicCVar == "0" then
                 SetCVar("Sound_EnableMusic", "0")
@@ -15465,14 +15552,15 @@ function LeaPlusLC:RunOnce()
 
         -- Function to play a track and show the static highlight bar
         local function PlayTrack()
-            -- stop anything already playing
+            -- Зафиксировать предыдущий трек, если слушали >=30 сек
+            MarkCurrentTrackListened()
+            -- Остановить текущее воспроизведение (если было)
             StopMusic()
 
             local file, trackTime
-            local currentPlaylistItem = playlist[tracknumber] -- Get the item that is about to play
+            local currentPlaylistItem = playlist[tracknumber]
 
             if currentPlaylistItem and strfind(currentPlaylistItem, "#") then
-                -- mp3 entry with explicit length
                 file, trackTime = currentPlaylistItem:match("([^,]+)%#([^,]+)")
                 local cleanFile = file:gsub("(|C%a%a%a%a%a%a%a%a)[^|]*(|r)", "")
                 if strfind(file, "cinematics/") then
@@ -15482,39 +15570,42 @@ function LeaPlusLC:RunOnce()
                 else
                     cleanFile = "sound/music/" .. cleanFile
                 end
+
+                -- Новый трек: сохраняем время старта
+                trackStartTime = GetTime()
                 PlayMusic(cleanFile)
                 isPlayingTrack = 1
             else
-                -- If track is invalid or not found
+                -- Нет валидного трека
                 isPlayingTrack = 0
-                LastPlayed = "" -- Clear LastPlayed if nothing is actually playing
+                trackStartTime = nil
+                LastPlayed = ""
                 if LeaPlusLC.TrackTimer then
                     LeaPlusLC.TrackTimer:Cancel()
                 end
-                UpdateList() -- Refresh list to show no track is playing/highlighted
-                return -- Exit if no valid track to play
+                UpdateList()
+                return
             end
 
+            -- Обновить таймер окончания предыдущего трека
             if LeaPlusLC.TrackTimer then
                 LeaPlusLC.TrackTimer:Cancel()
             end
             if trackTime then
                 LeaPlusLC.TrackTimer = LibCompat.NewTimer(trackTime + 1, function()
+                    -- По окончании: фиксируем текущий трек и переходим к следующему
+                    MarkCurrentTrackListened()
                     StopMusic()
-                    if tracknumber > #playlist then -- If it was incremented beyond the end
+                    if tracknumber > #playlist then
                         tracknumber = 1
                     end
-                    PlayTrack() -- This will play playlist[tracknumber]
+                    PlayTrack()
                 end)
             end
 
-            LastPlayed = currentPlaylistItem -- Set LastPlayed to the track that just started playing
-
-            -- Advance tracknumber for the *next* time PlayTrack is called (e.g., by timer or next click)
+            -- Обновить статус
+            LastPlayed = currentPlaylistItem
             tracknumber = tracknumber + 1
-
-            -- Remove the visual update loop from here
-            -- Instead, call your new UpdateList function
             UpdateList()
         end
 
@@ -15538,7 +15629,8 @@ function LeaPlusLC:RunOnce()
         local clearButton = CreateFrame("Button", nil, sBox)
         clearButton:SetSize(14, 14) -- As per your snippet
         clearButton:SetNormalTexture("Interface\\FriendsFrame\\ClearBroadcastIcon")
-        if clearButton:GetNormalTexture() then -- Good practice to check if texture was set
+        if clearButton:GetNormalTexture() then
+            -- Good practice to check if texture was set
             clearButton:GetNormalTexture():SetTexCoord(0, 1, 0, 1) -- Ensure full texture is shown
             clearButton:GetNormalTexture():SetVertexColor(1.0, 0.82, 0.0, 0.6) -- As per your snippet (60% alpha white)
         end
@@ -15719,6 +15811,7 @@ function LeaPlusLC:RunOnce()
             end
         end)
 
+
         -- Function to show random track listing
         local function ShowRandomList()
             -- If random track is currently playing, stop playback since random track list will be changed
@@ -15744,15 +15837,26 @@ function LeaPlusLC:RunOnce()
                 local rTrack = ZoneList[rCategory][rZone].tracks[random(1, #ZoneList[rCategory][rZone].tracks)]
                 -- Only allow tracks that are real mp3 (exclude SoundKit/non-file)
                 if rTrack and rTrack ~= "" and strfind(rTrack, "#") and strfind(rTrack:lower(), ".mp3") then
-                    local zoneLabel = "|Cffffffaa" .. ZoneList[rCategory][rZone].zone .. " |r" .. rTrack
-                    if not tContains(ListData, zoneLabel) and not tContains(randomBannedList, L[ZoneList[rCategory][rZone].zone]) and not tContains(randomBannedList, rTrack) then
-                        tinsert(ListData, zoneLabel)
+                    local trackID = GetTrackIDFromPath(rTrack)
+                    -- гарантируем, что подтаблица существует (на всякий случай)
+                    if not LeaPlusDB["ListenedTracks"] then
+                        LeaPlusDB["ListenedTracks"] = {}
+                    end
+                    -- база инициализирована заранее, используем квадратные скобки
+                    if not LeaPlusDB["ListenedTracks"][trackID] then
+                        local zoneLabel = "|Cffffffaa" .. ZoneList[rCategory][rZone].zone .. " |r" .. rTrack
+                        if not tContains(ListData, zoneLabel)
+                                and not tContains(randomBannedList, L[ZoneList[rCategory][rZone].zone])
+                                and not tContains(randomBannedList, rTrack)
+                        then
+                            tinsert(ListData, zoneLabel)
+                        end
                     end
                 end
             end
             -- If nothing found, show hint
             if #ListData <= 4 then
-                tinsert(ListData, "|cff999999(No playable music tracks in random pool)|r")
+                tinsert(ListData, "|cff999999(You have listened it all!)|r")
             end
             -- Refresh the track listing
             UpdateList()
@@ -15853,9 +15957,15 @@ function LeaPlusLC:RunOnce()
                         return
                     elseif originalTrackItemFromListData and type(originalTrackItemFromListData) == "string" and strfind(originalTrackItemFromListData, "#") then
                         -- Playable track
-                        if GetCVar("Sound_EnableAllSound") == "0" then SetCVar("Sound_EnableAllSound", "1") end
-                        if not PrevMusicCVar then PrevMusicCVar = GetCVar("Sound_EnableMusic") end
-                        if GetCVar("Sound_EnableMusic") == "0" then SetCVar("Sound_EnableMusic", "1") end
+                        if GetCVar("Sound_EnableAllSound") == "0" then
+                            SetCVar("Sound_EnableAllSound", "1")
+                        end
+                        if not PrevMusicCVar then
+                            PrevMusicCVar = GetCVar("Sound_EnableMusic")
+                        end
+                        if GetCVar("Sound_EnableMusic") == "0" then
+                            SetCVar("Sound_EnableMusic", "1")
+                        end
 
                         wipe(playlist)
                         local listDataIndexForClickedItem = 0
@@ -15894,8 +16004,12 @@ function LeaPlusLC:RunOnce()
                         end
 
                         LeaPlusLC:LockItem(stopBtn, false)
-                        if ListData[1] == "|cffffd800" .. L["Random"] then TempFolder = L["Random"] end
-                        if ListData[1] == "|cffffd800" .. L["Search"] then TempFolder = L["Search"] end
+                        if ListData[1] == "|cffffd800" .. L["Random"] then
+                            TempFolder = L["Random"]
+                        end
+                        if ListData[1] == "|cffffd800" .. L["Search"] then
+                            TempFolder = L["Search"]
+                        end
 
                         tracknumber = 1
                         LastPlayed = playlist[1]
@@ -15961,7 +16075,9 @@ function LeaPlusLC:RunOnce()
                                         end
                                     end
                                 end
-                                if foundZone then break end
+                                if foundZone then
+                                    break
+                                end
                             end
                         end
                         return
@@ -16006,6 +16122,7 @@ function LeaPlusLC:RunOnce()
         LeaPlusLC["Page9"]:SetScript("OnEvent", function(self, event)
             -- REPLACEMENT: PLAYER_LOGOUT part of Page9:SetScript("OnEvent", ...)
             if event == "PLAYER_LOGOUT" then
+                MarkCurrentTrackListened()
                 StopMusic()
                 if PrevMusicCVar == "0" then
                     SetCVar("Sound_EnableMusic", "0")
@@ -17657,13 +17774,16 @@ function LeaPlusLC:CreateEditBox(frame, parent, width, height, anchor, x, y, tab
         midRegion:SetPoint("RIGHT", rightRegion, "LEFT", 0, 0)
     end
 
-
     eb:SetScript("OnTabPressed", function(self)
         self:ClearFocus()
         if IsShiftKeyDown() then
-            if shifttab and LeaPlusCB[shifttab] then LeaPlusCB[shifttab]:SetFocus() end
+            if shifttab and LeaPlusCB[shifttab] then
+                LeaPlusCB[shifttab]:SetFocus()
+            end
         else
-            if tab and LeaPlusCB[tab] then LeaPlusCB[tab]:SetFocus() end
+            if tab and LeaPlusCB[tab] then
+                LeaPlusCB[tab]:SetFocus()
+            end
         end
     end)
     return eb
