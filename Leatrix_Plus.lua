@@ -15187,55 +15187,58 @@ function LeaPlusLC:RunOnce()
         local ZoneList = Leatrix_Plus["ZoneList"]
 
         -- Show relevant list items
+        -- Replace your UpdateList entirely with this:
         local function UpdateList()
             FauxScrollFrame_Update(scrollFrame, #ListData, numButtons, 16)
             for index = 1, numButtons do
                 local offset = index + FauxScrollFrame_GetOffset(scrollFrame)
                 local button = scrollFrame.buttons[index]
                 button.index = offset
+
                 if offset <= #ListData then
-                    -- Show zone listing or track listing
-                    button:SetText(ListData[offset].zone or ListData[offset])
-                    -- Set width of highlight texture
+                    local text = ListData[offset].zone or ListData[offset]
+
+                    -- Set the text and immediately reset its color to white:
+                    button:SetText(text)
+                    button:GetFontString():SetTextColor(1.0, 1.0, 1.0)
+
+                    -- highlight‐texture sizing
                     if button:GetTextWidth() > 290 then
                         button.t:SetSize(290, 16)
                     else
                         button.t:SetSize(button:GetTextWidth(), 16)
                     end
-                    -- Show the button
+
                     button:Show()
-                    -- Hide highlight bar texture by default
                     button.s:Hide()
-                    -- Hide highlight bar if the button is a heading
-                    if strfind(button:GetText(), "|c") then
+
+                    if strfind(text, "|c") then
                         button.t:Hide()
                     end
-                    -- Show last played track highlight bar texture
-                    if LastPlayed == button:GetText() then
-                        local HeadingOfCurrentFolder = ListData[1]
-                        if HeadingOfCurrentFolder == HeadingOfClickedTrack then
-                            button.s:Show()
-                        end
+
+                    -- only show the highlight bar—and recolor—if this really is the current track in the current folder:
+                    if LastPlayed == text and ListData[1] == HeadingOfClickedTrack then
+                        button.s:Show()
+                        button:GetFontString():SetTextColor(1.0, 0.82, 0.0)
                     end
-                    -- Show last played folder highlight bar texture
-                    if LastFolder == button:GetText() then
+
+                    -- still keep your “last‐folder” bar logic unchanged:
+                    if LastFolder == text then
                         button.s:Show()
                     end
-                    -- Set width of highlight bar
+
+                    -- resize the bar again (you already had this)
                     if button:GetTextWidth() > 290 then
                         button.s:SetSize(290, 16)
                     else
                         button.s:SetSize(button:GetTextWidth(), 16)
                     end
-                    -- Limit click to label width
+
+                    -- your hit‐rect, wrap, etc. all unchanged:
                     local bWidth = button:GetFontString():GetStringWidth() or 0
-                    if bWidth > 290 then
-                        bWidth = 290
-                    end
+                    if bWidth > 290 then bWidth = 290 end
                     button:SetHitRectInsets(0, 454 - bWidth, 0, 0)
-                    -- Disable label click movement
                     button:SetPushedTextOffset(0, 0)
-                    -- Disable word wrap and set width
                     button:GetFontString():SetWidth(290)
                     button:GetFontString():SetWordWrap(false)
                 else
@@ -15243,9 +15246,8 @@ function LeaPlusLC:RunOnce()
                 end
             end
         end
-
-        -- Give function file level scope (it's used in SetPlusScale to set the highlight bar scale)
         LeaPlusLC.UpdateList = UpdateList
+
 
         -- Right-button click to go back
         local function BackClick()
@@ -15412,17 +15414,17 @@ function LeaPlusLC:RunOnce()
         local isPlayingTrack = 0
 
         -- Function to play a track and show the static highlight bar
-        -- REPLACEMENT: PlayTrack()          (overwrite the whole current definition)
         local function PlayTrack()
-
             -- stop anything already playing
             StopMusic()
 
             local file, trackTime
-            if playlist[tracknumber] and strfind(playlist[tracknumber], "#") then
+            local currentPlaylistItem = playlist[tracknumber] -- Get the item that is about to play
+
+            if currentPlaylistItem and strfind(currentPlaylistItem, "#") then
                 -- mp3 entry with explicit length
-                file, trackTime = playlist[tracknumber]:match("([^,]+)%#([^,]+)")
-                local cleanFile = file:gsub("(|C%a%a%a%a%a%a%a%a)[^|]*(|r)", "")   -- strip colour codes
+                file, trackTime = currentPlaylistItem:match("([^,]+)%#([^,]+)")
+                local cleanFile = file:gsub("(|C%a%a%a%a%a%a%a%a)[^|]*(|r)", "")
                 if strfind(file, "cinematics/") then
                     cleanFile = "interface/" .. cleanFile
                 elseif strfind(file, "cinematicvoices/") or strfind(file, "ambience/") or strfind(file, "spells/") then
@@ -15432,40 +15434,40 @@ function LeaPlusLC:RunOnce()
                 end
                 PlayMusic(cleanFile)
                 isPlayingTrack = 1
+            else
+                -- If track is invalid or not found
+                isPlayingTrack = 0
+                LastPlayed = "" -- Clear LastPlayed if nothing is actually playing
+                if LeaPlusLC.TrackTimer then
+                    LeaPlusLC.TrackTimer:Cancel()
+                end
+                UpdateList() -- Refresh list to show no track is playing/highlighted
+                return -- Exit if no valid track to play
             end
 
-            -- cancel any previous timer and create a new one for this track
             if LeaPlusLC.TrackTimer then
                 LeaPlusLC.TrackTimer:Cancel()
             end
             if trackTime then
                 LeaPlusLC.TrackTimer = LibCompat.NewTimer(trackTime + 1, function()
                     StopMusic()
-                    if tracknumber == #playlist then
+                    if tracknumber > #playlist then -- If it was incremented beyond the end
                         tracknumber = 1
                     end
-                    PlayTrack()
-                    isPlayingTrack = 1
+                    PlayTrack() -- This will play playlist[tracknumber]
                 end)
             end
 
-            LastPlayed = playlist[tracknumber]
+            LastPlayed = currentPlaylistItem -- Set LastPlayed to the track that just started playing
+
+            -- Advance tracknumber for the *next* time PlayTrack is called (e.g., by timer or next click)
             tracknumber = tracknumber + 1
 
-            -- static highlight
-            for index = 1, numButtons do
-                local button = scrollFrame.buttons[index]
-                local item   = button:GetText()
-                if item and strfind(item, "#") then
-                    local itm = item:match("([^,]+)%#")
-                    if itm == file and LastFolder == TempFolder then
-                        button.s:Show()
-                    else
-                        button.s:Hide()
-                    end
-                end
-            end
+            -- Remove the visual update loop from here
+            -- Instead, call your new UpdateList function
+            UpdateList()
         end
+
 
 
         -- Create editbox for search
