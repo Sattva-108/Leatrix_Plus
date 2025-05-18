@@ -15171,6 +15171,35 @@ function LeaPlusLC:RunOnce()
     ----------------------------------------------------------------------
 
     function LeaPlusLC:MediaFunc()
+        -- Helper function for shortening paths in debug prints
+        local function getShortDisplayPathForDebug(fullPathString)
+            -- Ensure it's a string before trying string operations
+            if type(fullPathString) ~= "string" then
+                return tostring(fullPathString) -- Convert non-strings to string for printing
+            end
+
+            -- Only attempt to shorten if it looks like a track path we expect to shorten
+            -- (e.g., contains a # for duration or .mp3, and likely a / for a path)
+            if not (strfind(fullPathString, "#") and strfind(fullPathString, "/")) and
+                    not (string.lower(fullPathString):find(".mp3") and strfind(fullPathString, "/")) then
+                return fullPathString -- Return as is if it doesn't look like a full path to shorten
+            end
+
+            local prefix = ""
+            local contentToShorten = fullPathString
+
+            -- Check for color code prefix like "|CffffffaaZone Name |rActualPath"
+            local p, t = fullPathString:match("^(.-|r)(.*)$")
+            if p and t and t ~= "" then -- Ensure both parts were captured and 't' (the path part) is not empty
+                prefix = p
+                contentToShorten = t
+            end
+
+            -- Remove path, keep filename.mp3#duration (or whatever is after the last /)
+            local filenamePart = contentToShorten:gsub(".*/", "")
+
+            return prefix .. filenamePart
+        end
 
         -- Create tables for list data and zone listing
         local ListData, playlist = {}, {}
@@ -15187,7 +15216,6 @@ function LeaPlusLC:RunOnce()
         local ZoneList = Leatrix_Plus["ZoneList"]
 
         -- Show relevant list items
-        -- Replace your UpdateList entirely with this:
         local function UpdateList()
             FauxScrollFrame_Update(scrollFrame, #ListData, numButtons, 16)
             for index = 1, numButtons do
@@ -15196,57 +15224,79 @@ function LeaPlusLC:RunOnce()
                 button.index = offset
 
                 if offset <= #ListData then
-                    local text = ListData[offset].zone or ListData[offset]
+                    local rawItem = ListData[offset]
+                    local displayText = ""
+                    local itemIsValid = true
 
-                    -- Set the text and immediately reset its color to white:
-                    button:SetText(text)
-                    button:GetFontString():SetTextColor(1.0, 1.0, 1.0)
+                    if type(rawItem) == "table" and rawItem.zone then
+                        displayText = rawItem.zone
+                    elseif type(rawItem) == "string" then
+                        if strfind(rawItem, "#") then -- It's a track string
+                            local prefix = ""
+                            local trackPathWithDuration = rawItem
+                            local p, t = rawItem:match("^(.-|r)(.*)$")
+                            if p and t and t ~= "" then
+                                prefix = p
+                                trackPathWithDuration = t
+                            end
 
-                    -- highlight‐texture sizing
-                    if button:GetTextWidth() > 290 then
-                        button.t:SetSize(290, 16)
+                            local filenameWithExtensionAndDuration = trackPathWithDuration:gsub(".*/", "")
+                            local filenameOnly = filenameWithExtensionAndDuration:match("([^%.#]+)") -- Get text before first . or #
+                            displayText = prefix .. (filenameOnly or filenameWithExtensionAndDuration) -- Fallback if no . or #
+                        else
+                            displayText = rawItem -- Headings or simple zone names
+                        end
                     else
-                        button.t:SetSize(button:GetTextWidth(), 16)
+                        button:Hide()
+                        itemIsValid = false
                     end
 
-                    button:Show()
-                    button.s:Hide()
+                    if itemIsValid then
+                        button:SetText(displayText)
+                        button:GetFontString():SetTextColor(1.0, 1.0, 1.0)
 
-                    if strfind(text, "|c") then
-                        button.t:Hide()
+                        local currentTextWidth = button:GetTextWidth()
+                        if currentTextWidth > 290 then
+                            button.t:SetSize(290, 16)
+                        else
+                            button.t:SetSize(currentTextWidth, 16)
+                        end
+
+                        button:Show()
+                        button.s:Hide()
+
+                        if strfind(displayText, "|c") then
+                            button.t:Hide()
+                        end
+
+                        if LastPlayed == rawItem and ListData[1] == HeadingOfClickedTrack then
+                            button.s:Show()
+                            button:GetFontString():SetTextColor(1.0, 0.82, 0.0)
+                        end
+
+                        if LastFolder == displayText then
+                            button.s:Show()
+                        end
+
+                        if currentTextWidth > 290 then
+                            button.s:SetSize(290, 16)
+                        else
+                            button.s:SetSize(currentTextWidth, 16)
+                        end
+
+                        local bWidth = button:GetFontString():GetStringWidth() or 0
+                        if bWidth > 290 then bWidth = 290 end
+                        button:SetHitRectInsets(0, 454 - bWidth, 0, 0)
+                        button:SetPushedTextOffset(0, 0)
+                        button:GetFontString():SetWidth(290)
+                        button:GetFontString():SetWordWrap(false)
                     end
-
-                    -- only show the highlight bar—and recolor—if this really is the current track in the current folder:
-                    if LastPlayed == text and ListData[1] == HeadingOfClickedTrack then
-                        button.s:Show()
-                        button:GetFontString():SetTextColor(1.0, 0.82, 0.0)
-                    end
-
-                    -- still keep your “last‐folder” bar logic unchanged:
-                    if LastFolder == text then
-                        button.s:Show()
-                    end
-
-                    -- resize the bar again (you already had this)
-                    if button:GetTextWidth() > 290 then
-                        button.s:SetSize(290, 16)
-                    else
-                        button.s:SetSize(button:GetTextWidth(), 16)
-                    end
-
-                    -- your hit‐rect, wrap, etc. all unchanged:
-                    local bWidth = button:GetFontString():GetStringWidth() or 0
-                    if bWidth > 290 then bWidth = 290 end
-                    button:SetHitRectInsets(0, 454 - bWidth, 0, 0)
-                    button:SetPushedTextOffset(0, 0)
-                    button:GetFontString():SetWidth(290)
-                    button:GetFontString():SetWordWrap(false)
                 else
                     button:Hide()
                 end
             end
         end
-        LeaPlusLC.UpdateList = UpdateList
+        LeaPlusLC.UpdateList = UpdateList -- Assuming this is where you assign it globally if needed
 
 
         -- Right-button click to go back
@@ -15790,127 +15840,117 @@ function LeaPlusLC:RunOnce()
             -- Click handler for track, zone and back button
             button:SetScript("OnClick", function(self, btn)
                 if btn == "LeftButton" then
-                    -- Remove focus from search box
                     sBox:ClearFocus()
-                    -- Get clicked track text
-                    local item = self:GetText()
-                    -- Do nothing if its a blank line or informational heading
-                    if not item or strfind(item, "|c") then
+                    local displayedItemText = self:GetText()
+                    local originalTrackItemFromListData = ListData[self.index]
+
+                    if not displayedItemText or strfind(displayedItemText, "|c") then
                         return
                     end
-                    if item == "|Cffffffaa{" .. L["click here for new selection"] .. "}" then
-                        -- must be capital |C
-                        -- Create new random track listing
+
+                    if displayedItemText == "|Cffffffaa{" .. L["click here for new selection"] .. "}" then
                         ShowRandomList()
                         return
-                    elseif strfind(item, "#") then
-                        -- Enable all sound if the user had it off
-                        if GetCVar("Sound_EnableAllSound") == "0" then
-                            SetCVar("Sound_EnableAllSound", "1")
-                        end
-                        -- remember user music CVar and ensure music channel is on for PlayMusic()
-                        if not PrevMusicCVar then
-                            PrevMusicCVar = GetCVar("Sound_EnableMusic")
-                        end
-                        if GetCVar("Sound_EnableMusic") == "0" then
-                            SetCVar("Sound_EnableMusic", "1")
-                        end
+                    elseif originalTrackItemFromListData and type(originalTrackItemFromListData) == "string" and strfind(originalTrackItemFromListData, "#") then
+                        -- Playable track
+                        if GetCVar("Sound_EnableAllSound") == "0" then SetCVar("Sound_EnableAllSound", "1") end
+                        if not PrevMusicCVar then PrevMusicCVar = GetCVar("Sound_EnableMusic") end
+                        if GetCVar("Sound_EnableMusic") == "0" then SetCVar("Sound_EnableMusic", "1") end
 
-
-                        -- Add all tracks to playlist
                         wipe(playlist)
-                        local StartItem = 0
-                        -- Get item clicked row number
-                        for index = 1, #ListData do
-                            local item = ListData[index]
-                            if self:GetText() == item then
-                                StartItem = index
+                        local listDataIndexForClickedItem = 0
+                        for i = 1, #ListData do
+                            if ListData[i] == originalTrackItemFromListData then
+                                listDataIndexForClickedItem = i
+                                break
                             end
                         end
-                        -- Add all items from clicked item onwards to playlist
-                        for index = StartItem, #ListData do
-                            local item = ListData[index]
-                            if item then
-                                if strfind(item, "#") then
+
+                        if listDataIndexForClickedItem == 0 then
+                            if originalTrackItemFromListData then
+                                tinsert(playlist, originalTrackItemFromListData)
+                            else
+                                LeaPlusLC:Print("Error: Cannot determine track to play.")
+                                return
+                            end
+                        else
+                            for i = listDataIndexForClickedItem, #ListData do
+                                local item = ListData[i]
+                                if item and type(item) == "string" and strfind(item, "#") then
+                                    tinsert(playlist, item)
+                                end
+                            end
+                            for i = 1, listDataIndexForClickedItem - 1 do
+                                local item = ListData[i]
+                                if item and type(item) == "string" and strfind(item, "#") then
                                     tinsert(playlist, item)
                                 end
                             end
                         end
-                        -- Add all items up to clicked item to playlist
-                        for index = 1, StartItem do
-                            local item = ListData[index]
-                            if item then
-                                if strfind(item, "#") then
-                                    tinsert(playlist, item)
-                                end
-                            end
+
+                        if #playlist == 0 then
+                            LeaPlusLC:Print("Error: Playlist is empty.")
+                            return
                         end
-                        -- Enable the stop button
+
                         LeaPlusLC:LockItem(stopBtn, false)
-                        -- Set Temp Folder to Random if track is in Random
-                        if ListData[1] == "|cffffd800" .. L["Random"] then
-                            TempFolder = L["Random"]
-                        end
-                        -- Set Temp Folder to Search if track is in Search
-                        if ListData[1] == "|cffffd800" .. L["Search"] then
-                            TempFolder = L["Search"]
-                        end
-                        -- Store information about the track we are about to play
+                        if ListData[1] == "|cffffd800" .. L["Random"] then TempFolder = L["Random"] end
+                        if ListData[1] == "|cffffd800" .. L["Search"] then TempFolder = L["Search"] end
+
                         tracknumber = 1
-                        LastPlayed = item
+                        LastPlayed = playlist[1]
                         LastFolder = TempFolder
                         HeadingOfClickedTrack = ListData[1]
-                        -- Play first track
+
                         PlayTrack()
-                        -- Play subsequent tracks
                         uframe:RegisterEvent("SOUNDKIT_FINISHED")
                         uframe:RegisterEvent("LOADING_SCREEN_DISABLED")
                         return
-                    elseif strfind(item, "|r") then
-                        --print(item)
-                        -- A movie was clicked
-                        local movieName, movieID = item:match("([^,]+)%|r([^,]+)")
-                        --print(movieName)
-                        movieID = strtrim(movieID, "()")
-                        --if IsMoviePlayable(movieID) then
-                        stopBtn:Click()
-                        --MovieFrame_PlayMovie(MovieFrame, movieName)
-                        --FIXME
-                        --_G["MovieFrame"]:StartMovie(movieName,100); MovieFrame:Show()
-                        print("Movies are not yet supported in 3.3.5 backport.")
-                        --else
-                        --	LeaPlusLC:Print("Movie not playable.")
-                        --end
+
+                    elseif originalTrackItemFromListData and type(originalTrackItemFromListData) == "string" and strfind(originalTrackItemFromListData, "|r") and not strfind(originalTrackItemFromListData, "#") then
+                        -- Movie
+                        local movieName, movieID = originalTrackItemFromListData:match("([^,]+)%|r([^,]+)")
+                        if movieName and movieID then
+                            movieID = strtrim(movieID, "()")
+                            stopBtn:Click()
+                            print("Movies are not yet supported in 3.3.5 backport.")
+                        end
                         return
                     else
-                        -- A zone was clicked so show track listing
+                        -- Zone or other navigation
                         ZonePage = scrollFrame:GetVerticalScroll()
-                        -- Find the track listing for the clicked zone
-                        for q, w in pairs(ZoneList) do
-                            for k, v in pairs(ZoneList[w]) do
-                                if item == v.zone then
-                                    -- Show track listing
-                                    TempFolder = item
-                                    LeaPlusDB["MusicZone"] = item
-                                    ListData = v.tracks
-                                    UpdateList()
-                                    -- Hide hover highlight if track under pointer is a heading
-                                    if strfind(scrollFrame.buttons[i]:GetText(), "|c") then
-                                        scrollFrame.buttons[i].t:Hide()
+                        local clickedZoneName = ""
+                        if type(originalTrackItemFromListData) == "table" and originalTrackItemFromListData.zone then
+                            clickedZoneName = originalTrackItemFromListData.zone
+                        elseif type(originalTrackItemFromListData) == "string" and not strfind(originalTrackItemFromListData, "|c") then
+                            clickedZoneName = originalTrackItemFromListData
+                        end
+
+                        if clickedZoneName ~= "" then
+                            local foundZone = false
+                            for q_cat_key, w_category_list in pairs(ZoneList) do
+                                if ZoneList[w_category_list] then
+                                    for k_zone_idx, v_zone_entry in pairs(ZoneList[w_category_list]) do
+                                        if v_zone_entry.zone == clickedZoneName then
+                                            TempFolder = v_zone_entry.zone
+                                            LeaPlusDB["MusicZone"] = v_zone_entry.zone
+                                            ListData = v_zone_entry.tracks
+                                            UpdateList()
+                                            scrollFrame:SetVerticalScroll(0)
+                                            foundZone = true
+                                            break
+                                        end
                                     end
-                                    -- Show top of track list
-                                    scrollFrame:SetVerticalScroll(0)
-                                    return
                                 end
+                                if foundZone then break end
                             end
                         end
+                        return
                     end
                 elseif btn == "RightButton" then
-                    -- Back button was clicked
                     BackClick()
                 end
             end)
-
         end
 
         -- Right-click to go back (from anywhere on the main content area of the panel)
