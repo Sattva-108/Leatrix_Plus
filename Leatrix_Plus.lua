@@ -4100,7 +4100,7 @@ function LeaPlusLC:Player()
     --	MuteCustomSoundsPlayButton:ClearAllPoints()
     --	MuteCustomSoundsPlayButton:SetPoint("RIGHT", MuteCustomSoundsStopButton, "LEFT", -10, 0)
     --
-    --	local MuteCustomSoundsSoundBox = LeaPlusLC:CreateEditBox("MuteCustomSoundsSoundBox", eb, 80, 8, "TOPRIGHT", -10, 20, "PlaySoundBox", "PlaySoundBox")
+    --	local MuteCustomSoundsSoundBox = LeaPlusLC:CreateEditBox("MuteCustomSoundsSoundBox", eb, 80, 24, "TOPRIGHT", -10, 20, "PlaySoundBox", "PlaySoundBox", 8)
     --	MuteCustomSoundsSoundBox:SetNumeric(true)
     --	MuteCustomSoundsSoundBox:ClearAllPoints()
     --	MuteCustomSoundsSoundBox:SetPoint("RIGHT", MuteCustomSoundsPlayButton, "LEFT", -10, 0)
@@ -13642,7 +13642,7 @@ function LeaPlusLC:Player()
     -- 	local function MakeSpellEB(num, x, y, tab, shifttab)
 
     -- 		-- Create editbox for spell ID
-    --         SpellEB[num] = LeaPlusLC:CreateEditBox("Spell" .. num, CooldownPanel, 70, 6, "TOPLEFT", x, y - 20, "Spell" .. tab, "Spell" .. shifttab)
+    --         SpellEB[num] = LeaPlusLC:CreateEditBox("Spell" .. num, CooldownPanel, 70, 24, "TOPLEFT", x, y - 20, "Spell" .. tab, "Spell" .. shifttab, 6)
     -- 		SpellEB[num]:SetNumeric(true)
 
     -- 		-- Set initial value (for current spec)
@@ -15330,6 +15330,8 @@ function LeaPlusLC:RunOnce()
             if title == L["Zones"] then
                 -- Set first button position
                 conbtn[title]:SetPoint("TOPLEFT", LeaPlusLC["Page9"], "TOPLEFT", 145, -70)
+            elseif title == L["Search"] then
+                --conbtn[title].f:SetFontObject("GameFontHighlight")
             elseif anchor then
                 -- Set subsequent button positions
                 conbtn[title]:SetPoint("TOPLEFT", conbtn[anchor], "BOTTOMLEFT", 0, 0)
@@ -15379,7 +15381,7 @@ function LeaPlusLC:RunOnce()
         end)
 
         -- Add stop button
-        local stopBtn = LeaPlusLC:CreateButton("StopMusicBtn", LeaPlusLC["Page9"], "Stop", "TOPLEFT", 146, -292, 0, 25, true, "")
+        local stopBtn = LeaPlusLC:CreateButton("StopMusicBtn", LeaPlusLC["Page9"], "Stop", "TOPLEFT", 135, -292, 0, 25, true, "")
         stopBtn:Hide();
         stopBtn:Show()
         LeaPlusLC:LockItem(stopBtn, true)
@@ -15467,12 +15469,76 @@ function LeaPlusLC:RunOnce()
 
 
         -- Create editbox for search
-        local sBox = LeaPlusLC:CreateEditBox("MusicSearchBox", LeaPlusLC["Page9"], 78, 10, "TOPLEFT", 150, -260, "MusicSearchBox", "MusicSearchBox")
+        local sBox = LeaPlusLC:CreateEditBox("MusicSearchBox", LeaPlusLC["Page9"], 100, 24, "TOPLEFT", 135, -260, "MusicSearchBox", "MusicSearchBox", 50)
         sBox:SetMaxLetters(50)
+        sBox:SetTextInsets(6, 12, 0, 0) -- (left, right, top, bottom)
+        sBox:SetBackdropBorderColor(1.0, 0.82, 0.0, 0.4)
+
+
+        -- Add search icon (left inside the box)
+        local searchIcon = sBox:CreateTexture(nil, "ARTWORK")
+        searchIcon:SetTexture("Interface\\COMMON\\UI-Searchbox-Icon")  -- Blizzard лупа (или подставь свою)
+        searchIcon:SetSize(14, 14)
+        searchIcon:SetPoint("LEFT", sBox, "LEFT", 5, -2)
+        searchIcon:SetVertexColor(1.0, 0.82, 0.0, 0.6)
+
+        -- Add clear button (right inside the box - minimal version)
+        local clearButton = CreateFrame("Button", nil, sBox)
+        clearButton:SetSize(14, 14) -- As per your snippet
+        clearButton:SetNormalTexture("Interface\\FriendsFrame\\ClearBroadcastIcon")
+        if clearButton:GetNormalTexture() then -- Good practice to check if texture was set
+            clearButton:GetNormalTexture():SetTexCoord(0, 1, 0, 1) -- Ensure full texture is shown
+            clearButton:GetNormalTexture():SetVertexColor(1.0, 0.82, 0.0, 0.6) -- As per your snippet (60% alpha white)
+        end
+
+        -- Optional: Add a subtle highlight on hover for better UX
+        clearButton:SetHighlightTexture("Interface\\FriendsFrame\\ClearBroadcastIcon")
+        if clearButton:GetHighlightTexture() then
+            clearButton:GetHighlightTexture():SetTexCoord(0, 1, 0, 1)
+            clearButton:GetHighlightTexture():SetVertexColor(1, 1, 1, 0.9) -- Brighter on hover
+        end
+
+        clearButton:SetPoint("RIGHT", sBox, "RIGHT", -2, -0.5) -- Adjusted offset slightly for 14px button within a 20px inset area
+        clearButton:Hide()
+
+        -- Store original point details for pushed effect
+        local originalPointAnchor = "RIGHT"
+        local originalRelativeFrame = sBox
+        local originalRelativePoint = "RIGHT"
+        local originalOffsetX = -5
+        local originalOffsetY = 0
+
+        clearButton:SetScript("OnClick", function(self)
+            sBox:SetText("")
+            clearButton:Hide()
+            searchIcon:Show()
+        end)
+        -- Implement pushed effect by adjusting the existing SetPoint
+        clearButton:SetScript("OnMouseDown", function(self)
+            if self:IsEnabled() then
+                self:ClearAllPoints() -- Important before setting a new point
+                self:SetPoint(originalPointAnchor, originalRelativeFrame, originalRelativePoint, originalOffsetX + 1, originalOffsetY - 1)
+            end
+        end)
+
+        clearButton:SetScript("OnMouseUp", function(self)
+            self:ClearAllPoints() -- Important before setting a new point
+            self:SetPoint(originalPointAnchor, originalRelativeFrame, originalRelativePoint, originalOffsetX, originalOffsetY)
+        end)
+
+        -- Update icons on text changed
+        sBox:SetScript("OnTextChanged", function(self)
+            if self:GetText() ~= "" then
+                clearButton:Show()
+            else
+                clearButton:Hide()
+            end
+        end)
+
 
         -- Position search button above editbox
         conbtn[L["Search"]]:ClearAllPoints()
-        conbtn[L["Search"]]:SetPoint("BOTTOMLEFT", sBox, "TOPLEFT", -4, 0)
+        conbtn[L["Search"]]:SetPoint("BOTTOMLEFT", sBox, "TOPLEFT", 1, 5)
 
         -- Set initial search data
         for q, w in pairs(ZoneList) do
@@ -15488,16 +15554,6 @@ function LeaPlusLC:RunOnce()
                         sBox:ClearFocus()
                     end
                 end)
-            end
-        end
-        -- После всех SetPoint/SetSize для sBox:
-        for i = 1, sBox:GetNumRegions() do
-            local region = select(i, sBox:GetRegions())
-            if region and region.GetTexture and type(region:GetTexture()) == "string" then
-                local tex = region:GetTexture()
-                if tex and tex:find("Common%-Input%-Border") and region.GetName and region:GetName() == "UIParentMiddle" then
-                    region:Hide()
-                end
             end
         end
 
@@ -15597,40 +15653,19 @@ function LeaPlusLC:RunOnce()
             ShowSearchResults()
         end)
 
-        -- 1. После создания и позиционирования sBox (editbox поиска):
-
-        local clearBtn = CreateFrame("Button", nil, sBox)
-        clearBtn:SetSize(18, 18)
-        clearBtn:SetPoint("LEFT", sBox, "RIGHT", 0, 0)
-        clearBtn:SetNormalTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
-        clearBtn:SetHighlightTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Highlight")
-        clearBtn:SetPushedTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Down")
-        clearBtn:Hide() -- по умолчанию скрыта
-
-        -- 2. Скрипт клика: очищает и сбрасывает поиск
-        clearBtn:SetScript("OnClick", function()
-            sBox:SetText("")
-            -- Вызываем вашу функцию сброса поиска (замени на актуальную)
-            ShowSearchResults("")
-            clearBtn:Hide()
-        end)
-
-        -- 3. Показывать X только если не пусто:
-        sBox:HookScript("OnTextChanged", function(self)
-            if self:GetText() and self:GetText() ~= "" then
-                clearBtn:Show()
-            else
-                clearBtn:Hide()
-            end
+        -- 4. Также скрывать X при OnEditFocusLost (необязательно, но для стиля):
+        sBox:HookScript("OnEditFocusGained", function(self)
+            searchIcon:Hide()
+            clearButton:Show()
         end)
 
         -- 4. Также скрывать X при OnEditFocusLost (необязательно, но для стиля):
         sBox:HookScript("OnEditFocusLost", function(self)
             if self:GetText() == "" then
-                clearBtn:Hide()
+                searchIcon:Show()
+                clearButton:Hide()
             end
         end)
-
 
         -- Function to show random track listing
         local function ShowRandomList()
@@ -16036,7 +16071,7 @@ function LeaPlusLC:RunOnce()
     LeaPlusLC:MakeCB(InvPanel, "InviteFriendsOnly", "Restrict to friends", 16, -92, false, "If checked, group invites will only be sent to friends.|n|nIf unchecked, group invites will be sent to everyone.")
 
     LeaPlusLC:MakeTx(InvPanel, "Keyword", 356, -72)
-    local KeyBox = LeaPlusLC:CreateEditBox("KeyBox", InvPanel, 140, 10, "TOPLEFT", 356, -92, "KeyBox", "KeyBox")
+    local KeyBox = LeaPlusLC:CreateEditBox("KeyBox", InvPanel, 140, 24, "TOPLEFT", 356, -92, "KeyBox", "KeyBox", 10)
 
     -- Function to show the keyword in the option tooltip
     local function SetKeywordTip()
@@ -17519,42 +17554,58 @@ function LeaPlusLC:MakeCB(parent, field, caption, x, y, reload, tip, extratip)
 end
 
 -- Create an editbox (uses standard template)
-function LeaPlusLC:CreateEditBox(frame, parent, width, maxchars, anchor, x, y, tab, shifttab)
-
-    -- Create editbox
-    local eb = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
+function LeaPlusLC:CreateEditBox(frame, parent, width, height, anchor, x, y, tab, shifttab, maxchars)
+    local eb = CreateFrame("EditBox", nil, parent)
+    eb:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        edgeSize = 12,
+        insets = { left = 4, right = 4, top = 4, bottom = 4 }
+    })
+    eb:SetBackdropColor(0, 0, 0, 0.5)
+    eb:SetTextInsets(6, 6, 0, 0)  -- ← отступы внутри поля
     LeaPlusCB[frame] = eb
     eb:SetPoint(anchor, x, y)
     eb:SetWidth(width)
-    eb:SetHeight(24)
+    eb:SetHeight(height)
     eb:SetFontObject("GameFontNormal")
-    eb:SetTextColor(1.0, 1.0, 1.0)
+    eb:SetTextColor(1, 1, 1)
     eb:SetAutoFocus(false)
     eb:SetMaxLetters(maxchars)
     eb:SetScript("OnEscapePressed", eb.ClearFocus)
     eb:SetScript("OnEnterPressed", eb.ClearFocus)
-    eb:DisableDrawLayer("BACKGROUND")
 
-    -- Add editbox border and backdrop
-    eb.f = CreateFrame("FRAME", nil, eb)
-    eb.f:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = false, tileSize = 16, edgeSize = 16, insets = { left = 5, right = 5, top = 5, bottom = 5 } })
-    eb.f:SetPoint("LEFT", -6, 0)
-    eb.f:SetWidth(eb:GetWidth() + 6)
-    eb.f:SetHeight(eb:GetHeight())
-    eb.f:SetBackdropColor(1.0, 1.0, 1.0, 0.3)
+    local leftRegion, midRegion, rightRegion
 
-    -- Move onto next editbox when tab key is pressed
+    for i = 1, eb:GetNumRegions() do
+        local region = select(i, eb:GetRegions())
+        if region and region.GetName then
+            if region:GetName() == "UIParentLeft" then
+                leftRegion = region
+            elseif region:GetName() == "UIParentRight" then
+                rightRegion = region
+            elseif region:GetName() == "UIParentMiddle" then
+                midRegion = region
+            end
+        end
+    end
+
+    if leftRegion and midRegion and rightRegion then
+        midRegion:ClearAllPoints()
+        midRegion:SetPoint("LEFT", leftRegion, "RIGHT", 0, 0)
+        midRegion:SetPoint("RIGHT", rightRegion, "LEFT", 0, 0)
+    end
+
+
     eb:SetScript("OnTabPressed", function(self)
         self:ClearFocus()
         if IsShiftKeyDown() then
-            LeaPlusCB[shifttab]:SetFocus()
+            if shifttab and LeaPlusCB[shifttab] then LeaPlusCB[shifttab]:SetFocus() end
         else
-            LeaPlusCB[tab]:SetFocus()
+            if tab and LeaPlusCB[tab] then LeaPlusCB[tab]:SetFocus() end
         end
     end)
-
     return eb
-
 end
 
 --===== Bottom left button web link =====--
@@ -19021,7 +19072,7 @@ function LeaPlusLC:SlashFunc(str)
                 LeaPlusLC:CreateBar("MutePanelMainTexture", frame, 294, 86, "TOPRIGHT", 0.7, 0.7, 0.7, 0.7, "Interface\\DressUpFrame\\DressUpBackground-NightElf1")
                 -- Panel contents
                 LeaPlusLC:MakeTx(frame, "Sound Limit", 16, -12)
-                local endBox = LeaPlusLC:CreateEditBox("SoundEndBox", frame, 116, 10, "TOPLEFT", 16, -32, "SoundEndBox", "SoundEndBox")
+                local endBox = LeaPlusLC:CreateEditBox("SoundEndBox", frame, 116, 24, "TOPLEFT", 16, -32, "SoundEndBox", "SoundEndBox", 10)
                 endBox:SetText(3000000)
                 endBox:SetScript("OnMouseWheel", function(self, delta)
                     local endSound = tonumber(endBox:GetText())
