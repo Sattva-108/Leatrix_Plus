@@ -16031,6 +16031,12 @@ function LeaPlusLC:RunOnce()
                 local currentText = self:GetText() -- Text without engine color codes
                 local originalData = ListData[self.index] -- Raw data with our color codes
 
+                -- NEW: Check for the specific table-based headers that should not have hover
+                if type(originalData) == "table" and originalData.tracks and #originalData.tracks == 1 and originalData.tracks[1] == "" then
+                    self.t:Hide() -- Ensure hover is hidden for these specific headers
+                    return -- Don't process further hover logic for these headers
+                end
+
                 local isResetButton = false
                 if originalData and type(originalData) == "string" then
                     -- Check if this is the reset button by its specific color code and structure
@@ -16039,11 +16045,11 @@ function LeaPlusLC:RunOnce()
                     end
                 end
 
-                -- Determine if it's a header (more robustly)
-                local isHeader = false
+                -- Determine if it's a string header (more robustly)
+                local isStringHeader = false
                 if originalData and type(originalData) == "string" then
                     if string.match(originalData, "^|cffffd800") then -- Typical yellow header
-                        isHeader = true
+                        isStringHeader = true
                     end
                 end
 
@@ -16051,16 +16057,15 @@ function LeaPlusLC:RunOnce()
                 if isResetButton then
                     -- Always show hover for the reset button
                     self.t:Show()
-                elseif originalData and type(originalData) == "string" and not isHeader then
+                elseif originalData and type(originalData) == "string" and not isStringHeader then
                     -- For other strings that are not headers (e.g., tracks, movies, simple zone names for nav)
-                    -- The 'currentText' check might be redundant if originalData string check is good enough
-                    -- and we assume non-color-coded originalData items are hoverable.
                     self.t:Show()
                 elseif originalData and type(originalData) == "table" and originalData.zone then
                     -- For zone navigation items (which are tables), always show hover
+                    -- This will be caught by the new check above if it's one of the {""} tracklist headers
                     self.t:Show()
                 end
-                -- Lines that are headers (and not the reset button) will not show the 't' hover.
+                -- Lines that are string headers (and not the reset button) will not show the 't' hover.
             end)
 
             button:SetScript("OnLeave", function(self)
@@ -16069,13 +16074,21 @@ function LeaPlusLC:RunOnce()
 
 
             -- Click handler for track, zone and back button
-            -- Click handler for track, zone and back button
             button:SetScript("OnClick", function(self, btn)
                 if btn == "LeftButton" then
                     sBox:ClearFocus()
                     local originalTrackItemFromListData = ListData[self.index] -- This is the raw data from ListData
 
-                    -- 1. HIGHEST PRIORITY: Check for "{click here for new selection}"
+                    -- NEW: HIGHEST PRIORITY (after reset/random selection): Check for specific table-based headers
+                    -- These headers are tables with a tracklist of {""}
+                    if type(originalTrackItemFromListData) == "table" and
+                            originalTrackItemFromListData.tracks and
+                            #originalTrackItemFromListData.tracks == 1 and
+                            originalTrackItemFromListData.tracks[1] == "" then
+                        return -- Do nothing, make these headers unclickable
+                    end
+
+                    -- 1. PRIORITY: Check for "{click here for new selection}"
                     if originalTrackItemFromListData == "|Cffffffaa{" .. L["click here for new selection"] .. "}" then
                         ShowRandomList()
                         return
@@ -16101,7 +16114,7 @@ function LeaPlusLC:RunOnce()
                         return -- Do nothing for these lines
                     end
 
-                    -- 4. If it's a header (usually starts with a color code in original data) and not handled above, do nothing.
+                    -- 4. If it's a STRING header (usually starts with a color code in original data) and not handled above, do nothing.
                     if not originalTrackItemFromListData or
                             (type(originalTrackItemFromListData) == "string" and
                                     (string.match(originalTrackItemFromListData, "^|cffffd800") ) and -- Main yellow headers
@@ -16202,6 +16215,7 @@ function LeaPlusLC:RunOnce()
                         return
                     else
                         -- 7. Zone or other navigation (simple string or table with .zone)
+                        -- This will now only be reached if it's NOT one of the special table-based headers
                         ZonePage = scrollFrame:GetVerticalScroll()
                         local clickedZoneName = ""
 
