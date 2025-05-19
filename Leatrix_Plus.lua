@@ -178,7 +178,7 @@ function LeaPlusLC:ShowSystemEditBox(word, focuschat)
         eFrame.x:SetText(L["Right-click to close"])
         eFrame.x:SetPoint("TOPRIGHT", eFrame, "TOPRIGHT", -12, -82)
         -- Create editbox
-        eFrame.b = CreateFrame("EditBox", nil, eFrame, "InputBoxTemplate")
+        eFrame.b = CreateFrame("EditBox", "LeatrixSystemEditBox", eFrame, "InputBoxTemplate")
         eFrame.b:ClearAllPoints()
         eFrame.b:SetPoint("TOPLEFT", eFrame, "TOPLEFT", 16, -12)
         eFrame.b:SetSize(672, 24)
@@ -17893,7 +17893,7 @@ end
 
 -- Create an editbox (uses standard template)
 function LeaPlusLC:CreateEditBox(frame, parent, width, height, anchor, x, y, tab, shifttab, maxchars)
-    local eb = CreateFrame("EditBox", "123", parent)
+    local eb = CreateFrame("EditBox", nil, parent)
     eb:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -17936,10 +17936,7 @@ function LeaPlusLC:CreateEditBox(frame, parent, width, height, anchor, x, y, tab
             midRegion:SetPoint("RIGHT", rightRegion, "LEFT", 0, 0)
         end
     end
-    FixBugMiddleTexture()
-
-    eb:HookScript("OnHide", FixBugMiddleTexture)
-
+    --FixBugMiddleTexture()
 
     eb:SetScript("OnTabPressed", function(self)
         self:ClearFocus()
