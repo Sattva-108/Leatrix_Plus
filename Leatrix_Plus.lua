@@ -15441,7 +15441,7 @@ function LeaPlusLC:RunOnce()
         -- Create a table for each button
         local conbtn = {}
         -- Initialize the table for all keys that will be used.
-        local allButtonTitles = {L["Zones"], L["Dungeons"], L["Various"], L["Movies"], L["NEW"], L["Random"], L["Search"]}
+        local allButtonTitles = {L["Zones"], L["Dungeons"], L["Various"], L["Movies"], L["New Tracks"], L["Random"], L["Search"]}
         for _, title in ipairs(allButtonTitles) do
             conbtn[title] = {} -- Ensure an entry exists for each planned button
         end
@@ -15488,14 +15488,14 @@ function LeaPlusLC:RunOnce()
         -- Anchor "NEW" to "Movies" with an additional Y offset for the gap.
         -- The MakeButtonNow function doesn't directly support adding an extra Y offset
         -- when an anchor is provided. We'll adjust the SetPoint call *after* MakeButtonNow.
-        MakeButtonNow(L["NEW"], L["Movies"]) -- Anchor to Movies first
-        if conbtn[L["NEW"]] and conbtn[L["Movies"]] then
-            conbtn[L["NEW"]]:ClearAllPoints() -- Clear previous SetPoint from MakeButtonNow
-            conbtn[L["NEW"]]:SetPoint("TOPLEFT", conbtn[L["Movies"]], "BOTTOMLEFT", 0, -20) -- 20px down
+        MakeButtonNow(L["New Tracks"], L["Movies"]) -- Anchor to Movies first
+        if conbtn[L["New Tracks"]] and conbtn[L["Movies"]] then
+            conbtn[L["New Tracks"]]:ClearAllPoints() -- Clear previous SetPoint from MakeButtonNow
+            conbtn[L["New Tracks"]]:SetPoint("TOPLEFT", conbtn[L["Movies"]], "BOTTOMLEFT", 0, -20) -- 20px down
         end
 
         -- Anchor "Random" to "NEW" (standard stacking, no extra gap needed here unless desired)
-        MakeButtonNow(L["Random"], L["NEW"])
+        MakeButtonNow(L["Random"], L["New Tracks"])
 
         -- Create Search button object, it will be positioned later
         MakeButtonNow(L["Search"])
@@ -15526,7 +15526,7 @@ function LeaPlusLC:RunOnce()
 
                     if actualTitle == L["Random"] then TempFolder = L["Random"]
                     elseif actualTitle == L["Search"] then TempFolder = L["Search"]
-                    elseif actualTitle == L["NEW"] then TempFolder = L["NEW"]
+                    elseif actualTitle == L["New Tracks"] then TempFolder = L["New Tracks"]
                     end
 
                     if ZoneList[actualTitle] then
@@ -15540,12 +15540,12 @@ function LeaPlusLC:RunOnce()
                             ListData[2] = "|cffffffaa{" .. L["enter zone or track name"] .. "}"
                         end
                         UpdateList()
-                    elseif actualTitle == L["NEW"] then
-                        if ZoneList[L["NEW"]] then
-                            ListData = ZoneList[L["NEW"]]
+                    elseif actualTitle == L["New Tracks"] then
+                        if ZoneList[L["New Tracks"]] then
+                            ListData = ZoneList[L["New Tracks"]]
                         else
                             wipe(ListData)
-                            ListData[1] = "|cffffd800" .. L["NEW"]
+                            ListData[1] = "|cffffd800" .. L["New Tracks"]
                             ListData[2] = "|cffffffaa{Content for NEW category}"
                         end
                         UpdateList()
@@ -15888,7 +15888,7 @@ function LeaPlusLC:RunOnce()
             local targetMusicTracks = 45
 
             local categoriesForRandom = {}
-            for _, catKey in ipairs({L["Zones"], L["Dungeons"], L["Various"], L["NEW"]}) do
+            for _, catKey in ipairs({L["Zones"], L["Dungeons"], L["Various"], L["New Tracks"]}) do
                 if not tContains(randomBannedList, catKey) then
                     tinsert(categoriesForRandom, catKey)
                 end

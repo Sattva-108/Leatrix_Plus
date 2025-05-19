@@ -5928,9 +5928,9 @@ end
 if GameLocale == "ruRU" then
     L = L or {}
     -- Main Category for Newly Added Tracks
-    L["NEW"] = "Новое"
+    L["New Tracks"] = "Новое"
 
-    -- Sub-Categories / Grouping Names for L["NEW"]
+    -- Sub-Categories / Grouping Names for L["New Tracks"]
     -- These keys now match the 3rd argument of the transformed Zn() calls
     L["AQ (Interior)"]                        = "Ан'Кираж (Внутри)"
     L["Argent Tourney (Events)"]               = "Серебряный Турнир (События)"
@@ -5988,9 +5988,9 @@ end
 if GameLocale == "deDE" then
     L = L or {}
     -- Main Category for Newly Added Tracks
-    L["NEW"] = "Neu"
+    L["New Tracks"] = "Neu"
 
-    -- Sub-Categories / Grouping Names for L["NEW"]
+    -- Sub-Categories / Grouping Names for L["New Tracks"]
     L["AQ (Interior)"]                        = "AQ (Innenbereich)"
     L["Argent Tourney (Events)"]               = "Argentumturnier (Events)"
     L["Azuremyst (Exodar)"]                    = "Azurmythos (Exodar)"
@@ -6034,9 +6034,9 @@ end
 if GameLocale == "frFR" then
     L = L or {}
     -- Main Category for Newly Added Tracks
-    L["NEW"] = "Nouveau"
+    L["New Tracks"] = "Nouveau"
 
-    -- Sub-Categories / Grouping Names for L["NEW"]
+    -- Sub-Categories / Grouping Names for L["New Tracks"]
     L["AQ (Interior)"]                        = "AQ (Intérieur)"
     L["Argent Tourney (Events)"]               = "Tournoi d'Argent (Événements)"
     L["Azuremyst (Exodar)"]                    = "Île de Brume-azur (Exodar)"
@@ -6080,9 +6080,9 @@ end
 if GameLocale == "esES" or GameLocale == "esMX" then
     L = L or {}
     -- Main Category for Newly Added Tracks
-    L["NEW"] = "Nuevo"
+    L["New Tracks"] = "Nuevo"
 
-    -- Sub-Categories / Grouping Names for L["NEW"]
+    -- Sub-Categories / Grouping Names for L["New Tracks"]
     L["AQ (Interior)"]                        = "AQ (Interior)"
     L["Argent Tourney (Events)"]               = "Torneo Argenta (Eventos)"
     L["Azuremyst (Exodar)"]                    = "Isla Bruma Azur (Exodar)"
@@ -6126,9 +6126,9 @@ end
 if GameLocale == "koKR" then
     L = L or {}
     -- Main Category for Newly Added Tracks
-    L["NEW"] = "신규"
+    L["New Tracks"] = "신규"
 
-    -- Sub-Categories / Grouping Names for L["NEW"]
+    -- Sub-Categories / Grouping Names for L["New Tracks"]
     L["AQ (Interior)"]                        = "안퀴라즈 (내부)"
     L["Argent Tourney (Events)"]               = "은빛십자군 마상시합 (이벤트)"
     L["Azuremyst (Exodar)"]                    = "하늘안개 섬 (엑소다르)"
@@ -6172,9 +6172,9 @@ end
 if GameLocale == "zhCN" then
     L = L or {}
     -- Main Category for Newly Added Tracks
-    L["NEW"] = "新增"
+    L["New Tracks"] = "新增"
 
-    -- Sub-Categories / Grouping Names for L["NEW"]
+    -- Sub-Categories / Grouping Names for L["New Tracks"]
     L["AQ (Interior)"]                        = "安其拉 (内部)"
     L["Argent Tourney (Events)"]               = "银色锦标赛 (事件)"
     L["Azuremyst (Exodar)"]                    = "秘蓝岛 (埃索达)"
@@ -6218,9 +6218,9 @@ end
 if GameLocale == "zhTW" then
     L = L or {}
     -- Main Category for Newly Added Tracks
-    L["NEW"] = "新增"
+    L["New Tracks"] = "新增"
 
-    -- Sub-Categories / Grouping Names for L["NEW"]
+    -- Sub-Categories / Grouping Names for L["New Tracks"]
     L["AQ (Interior)"]                        = "安其拉 (內部)"
     L["Argent Tourney (Events)"]               = "銀白聯賽 (事件)"
     L["Azuremyst (Exodar)"]                    = "藍謎島 (埃索達)"
