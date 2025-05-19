@@ -15438,65 +15438,121 @@ function LeaPlusLC:RunOnce()
         end
 
         -- Create a table for each button
+        -- Create a table for each button
         local conbtn = {}
-        for q, w in pairs(ZoneList) do -- Ensure ZoneList is the one that includes L["NEW"]
-            conbtn[q] = {}
+        -- Initialize the table for all keys that will be used.
+        local allButtonTitles = {L["Zones"], L["Dungeons"], L["Various"], L["Movies"], L["NEW"], L["Random"], L["Search"]}
+        for _, title in ipairs(allButtonTitles) do
+            conbtn[title] = {} -- Ensure an entry exists for each planned button
         end
 
         -- Create buttons
-        local function MakeButtonNow(title, anchor)
-            conbtn[title], conbtn[title].s = MakeButton(title, height) -- Assuming 'height' is defined or correctly scoped
+        -- The 'height' variable was likely a placeholder for y-offset in the original MakeButton.
+        -- We'll manage y-offsets more directly or rely on anchoring.
+        local initial_y_offset_for_makebutton = -70 -- Default starting Y for the first button if not anchored.
+        -- This matches the original L["Zones"] Y position.
+
+        local function MakeButtonNow(title, anchor, explicitY)
+            -- Pass an appropriate y_offset to MakeButton.
+            -- If 'anchor' is nil and 'explicitY' is nil, it uses 'initial_y_offset_for_makebutton'.
+            -- If 'anchor' is provided, 'explicitY' is usually ignored by MakeButton's SetPoint logic.
+            -- If 'anchor' is nil and 'explicitY' IS provided, MakeButton should use 'explicitY'.
+            local y_for_makebutton = explicitY or (anchor and 0 or initial_y_offset_for_makebutton)
+            -- The '0' if anchored is arbitrary as SetPoint takes over.
+
+            conbtn[title], conbtn[title].s = MakeButton(title, y_for_makebutton) -- MakeButton expects a 'y' argument.
             conbtn[title]:ClearAllPoints()
-            if title == L["Zones"] then
-                -- Set first button position
-                conbtn[title]:SetPoint("TOPLEFT", LeaPlusLC["Page9"], "TOPLEFT", 145, -70)
-            elseif title == L["Search"] then
-                -- conbtn[title].f:SetFontObject("GameFontHighlight") -- Original comment
-            elseif anchor then
-                -- Set subsequent button positions
+
+            if anchor and conbtn[anchor] and conbtn[anchor].SetPoint then -- Ensure anchor is valid
                 conbtn[title]:SetPoint("TOPLEFT", conbtn[anchor], "BOTTOMLEFT", 0, 0)
-                conbtn[title].f:SetText(L[title]) -- Make sure L[title] resolves correctly for "NEW"
+            elseif title == L["Zones"] then
+                conbtn[title]:SetPoint("TOPLEFT", LeaPlusLC["Page9"], "TOPLEFT", 145, -70)
+            elseif explicitY then -- If an explicit Y was given and no anchor, position it directly
+                conbtn[title]:SetPoint("TOPLEFT", LeaPlusLC["Page9"], "TOPLEFT", 145, explicitY)
+            end
+            -- Ensure text is set by MakeButton or here if needed
+            if L[title] then
+                conbtn[title].f:SetText(L[title])
             end
         end
 
-
+        -- Main Categories at the top
         MakeButtonNow(L["Zones"])
         MakeButtonNow(L["Dungeons"], L["Zones"])
         MakeButtonNow(L["Various"], L["Dungeons"])
-        MakeButtonNow(L["NEW"], L["Various"])      -- <<< ADDED L["NEW"] HERE
-        MakeButtonNow(L["Movies"], L["NEW"])       -- Anchor Movies to L["NEW"]
-        MakeButtonNow(L["Random"], L["Movies"])
-        MakeButtonNow(L["Search"])                 -- Search is positioned later near its editbox
+        MakeButtonNow(L["Movies"], L["Various"]) -- Movies now anchored to Various
 
-        -- Show button highlight for clicked button
-        for q, w in pairs(ZoneList) do
-            if type(w) == "string" and conbtn[w] then -- This 'w' will be L["Zones"], L["Dungeons"], L["Various"], L["NEW"], etc.
-                conbtn[w]:HookScript("OnClick", function()
-                    -- Hide all button highlights
-                    for k, v in pairs(ZoneList) do
-                        if type(v) == "string" and conbtn[v] then
-                            conbtn[v].s:Hide()
+        -- "Special" Categories directly below "Movies" with a gap
+        -- We don't need bottomMostButtonY anymore for this approach.
+
+        -- Anchor "NEW" to "Movies" with an additional Y offset for the gap.
+        -- The MakeButtonNow function doesn't directly support adding an extra Y offset
+        -- when an anchor is provided. We'll adjust the SetPoint call *after* MakeButtonNow.
+        MakeButtonNow(L["NEW"], L["Movies"]) -- Anchor to Movies first
+        if conbtn[L["NEW"]] and conbtn[L["Movies"]] then
+            conbtn[L["NEW"]]:ClearAllPoints() -- Clear previous SetPoint from MakeButtonNow
+            conbtn[L["NEW"]]:SetPoint("TOPLEFT", conbtn[L["Movies"]], "BOTTOMLEFT", 0, -20) -- 20px down
+        end
+
+        -- Anchor "Random" to "NEW" (standard stacking, no extra gap needed here unless desired)
+        MakeButtonNow(L["Random"], L["NEW"])
+
+        -- Create Search button object, it will be positioned later
+        MakeButtonNow(L["Search"])
+        if conbtn[L["Search"]] and conbtn[L["Search"]].ClearAllPoints then
+            conbtn[L["Search"]]:ClearAllPoints()
+            conbtn[L["Search"]]:SetPoint("BOTTOMLEFT", sBox, "TOPLEFT", 1, 5)
+        end
+
+        -- Show button highlight for clicked button (this logic remains the same)
+        -- ... (the rest of your loop for HookScript OnClick remains as it was in the previous correct version) ...
+        for _, titleKey in ipairs(allButtonTitles) do
+            local actualTitle = L[titleKey] or titleKey -- Get localized title or use key if not found
+            if conbtn[actualTitle] and conbtn[actualTitle].HookScript then
+                conbtn[actualTitle]:HookScript("OnClick", function()
+                    for _, otherTitleKey in ipairs(allButtonTitles) do
+                        local otherActualTitle = L[otherTitleKey] or otherTitleKey
+                        if conbtn[otherActualTitle] and conbtn[otherActualTitle].s then
+                            conbtn[otherActualTitle].s:Hide()
                         end
                     end
-                    -- Show clicked button highlight
-                    conbtn[w].s:Show()
-                    LeaPlusDB["MusicContinent"] = w -- This will correctly save L["NEW"] (or its value)
+                    if conbtn[actualTitle] and conbtn[actualTitle].s then
+                        conbtn[actualTitle].s:Show()
+                    end
+
+                    LeaPlusDB["MusicContinent"] = actualTitle -- Save the actual displayed/localized title
+
                     scrollFrame:SetVerticalScroll(0)
-                    -- Set TempFolder for listings without folders
-                    if w == L["Random"] then
-                        TempFolder = L["Random"]
+
+                    if actualTitle == L["Random"] then TempFolder = L["Random"]
+                    elseif actualTitle == L["Search"] then TempFolder = L["Search"]
+                    elseif actualTitle == L["NEW"] then TempFolder = L["NEW"]
                     end
-                    if w == L["Search"] then
-                        TempFolder = L["Search"]
+
+                    if ZoneList[actualTitle] then
+                        ListData = ZoneList[actualTitle]
+                        UpdateList()
+                    elseif actualTitle == L["Random"] then
+                        ShowRandomList()
+                    elseif actualTitle == L["Search"] then
+                        ListData[1] = "|cffffd800" .. L["Search"]
+                        if #ListData <=1 or (#ListData == 1 and ListData[1] == ("|cffffd800" .. L["Search"])) then
+                            ListData[2] = "|cffffffaa{" .. L["enter zone or track name"] .. "}"
+                        end
+                        UpdateList()
+                    elseif actualTitle == L["NEW"] then
+                        if ZoneList[L["NEW"]] then
+                            ListData = ZoneList[L["NEW"]]
+                        else
+                            wipe(ListData)
+                            ListData[1] = "|cffffd800" .. L["NEW"]
+                            ListData[2] = "|cffffffaa{Content for NEW category}"
+                        end
+                        UpdateList()
                     end
-                    -- If you wanted specific TempFolder behavior for L["NEW"] (though unlikely needed here)
-                    -- if w == L["NEW"] then
-                    --     TempFolder = L["NEW"] -- Or some other default if it doesn't have subfolders initially
-                    -- end
                 end)
             end
         end
-
 
         local function MarkCurrentTrackListened()
             if LastFolder == L["Random"] and LastPlayed and trackStartTime and trackStartTime > 0 then
