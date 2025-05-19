@@ -15578,11 +15578,30 @@ function LeaPlusLC:RunOnce()
         end)
 
         -- Add stop button
-        local stopBtn = LeaPlusLC:CreateButton("StopMusicBtn", LeaPlusLC["Page9"], "Stop", "TOPLEFT", 135, -292, 0, 25, true, "")
-        stopBtn:Hide();
+        local stopBtn = LeaPlusLC:CreateButton("StopMusicBtn", LeaPlusLC["Page9"], "Stop", "TOPLEFT", 0, 0, 0, 25, true, "") -- MODIFIED: Temp position for CreateButton
+
+        -- START OF ADDED/MODIFIED REPOSITIONING LOGIC
+        if stopBtn and conbtn[L["Random"]] then
+            stopBtn:ClearAllPoints()
+            -- Anchor stopBtn's TOPLEFT to conbtn[L["Random"]]'s BOTTOMLEFT.
+            -- X offset 0 to align vertically with L["Random"].
+            -- Y offset -5 for a small gap below L["Random"]. You can adjust -5 as needed.
+            stopBtn:SetPoint("TOPLEFT", conbtn[L["Random"]], "BOTTOMLEFT", 0, -5)
+        else
+            -- Fallback: If L["Random"] button isn't found for some reason, or stopBtn failed to create.
+            if stopBtn then
+                stopBtn:ClearAllPoints()
+                stopBtn:SetPoint("TOPLEFT", LeaPlusLC["Page9"], "TOPLEFT", 135, -292) -- Original explicit position as a fallback
+            end
+            if not conbtn[L["Random"]] then
+                print("Leatrix Plus MediaFunc Warning: Random button (conbtn[L[\"Random\"]]) not found for positioning stopBtn.")
+            end
+        end
+        -- END OF ADDED/MODIFIED REPOSITIONING LOGIC
+
+        stopBtn:Hide(); -- This line and below are kept from the original block
         stopBtn:Show()
         LeaPlusLC:LockItem(stopBtn, true)
-        -- REPLACEMENT: Stop-button handler (stopBtn:SetScript("OnClick", ...))
         stopBtn:SetScript("OnClick", function()
             MarkCurrentTrackListened()
             trackStartTime = 0
@@ -15592,8 +15611,6 @@ function LeaPlusLC:RunOnce()
             end
             PrevMusicCVar = nil
 
-
-            -- clear UI state
             LastPlayed, LastFolder = "", ""
             UpdateList()
 
