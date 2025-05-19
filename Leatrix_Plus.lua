@@ -15439,36 +15439,38 @@ function LeaPlusLC:RunOnce()
 
         -- Create a table for each button
         local conbtn = {}
-        for q, w in pairs(ZoneList) do
+        for q, w in pairs(ZoneList) do -- Ensure ZoneList is the one that includes L["NEW"]
             conbtn[q] = {}
         end
 
         -- Create buttons
         local function MakeButtonNow(title, anchor)
-            conbtn[title], conbtn[title].s = MakeButton(title, height)
+            conbtn[title], conbtn[title].s = MakeButton(title, height) -- Assuming 'height' is defined or correctly scoped
             conbtn[title]:ClearAllPoints()
             if title == L["Zones"] then
                 -- Set first button position
                 conbtn[title]:SetPoint("TOPLEFT", LeaPlusLC["Page9"], "TOPLEFT", 145, -70)
             elseif title == L["Search"] then
-                --conbtn[title].f:SetFontObject("GameFontHighlight")
+                -- conbtn[title].f:SetFontObject("GameFontHighlight") -- Original comment
             elseif anchor then
                 -- Set subsequent button positions
                 conbtn[title]:SetPoint("TOPLEFT", conbtn[anchor], "BOTTOMLEFT", 0, 0)
-                conbtn[title].f:SetText(L[title])
+                conbtn[title].f:SetText(L[title]) -- Make sure L[title] resolves correctly for "NEW"
             end
         end
+
 
         MakeButtonNow(L["Zones"])
         MakeButtonNow(L["Dungeons"], L["Zones"])
         MakeButtonNow(L["Various"], L["Dungeons"])
-        MakeButtonNow(L["Movies"], L["Various"])
+        MakeButtonNow(L["NEW"], L["Various"])      -- <<< ADDED L["NEW"] HERE
+        MakeButtonNow(L["Movies"], L["NEW"])       -- Anchor Movies to L["NEW"]
         MakeButtonNow(L["Random"], L["Movies"])
-        MakeButtonNow(L["Search"]) -- Positioned when search editbox is created
+        MakeButtonNow(L["Search"])                 -- Search is positioned later near its editbox
 
         -- Show button highlight for clicked button
         for q, w in pairs(ZoneList) do
-            if type(w) == "string" and conbtn[w] then
+            if type(w) == "string" and conbtn[w] then -- This 'w' will be L["Zones"], L["Dungeons"], L["Various"], L["NEW"], etc.
                 conbtn[w]:HookScript("OnClick", function()
                     -- Hide all button highlights
                     for k, v in pairs(ZoneList) do
@@ -15478,7 +15480,7 @@ function LeaPlusLC:RunOnce()
                     end
                     -- Show clicked button highlight
                     conbtn[w].s:Show()
-                    LeaPlusDB["MusicContinent"] = w
+                    LeaPlusDB["MusicContinent"] = w -- This will correctly save L["NEW"] (or its value)
                     scrollFrame:SetVerticalScroll(0)
                     -- Set TempFolder for listings without folders
                     if w == L["Random"] then
@@ -15487,9 +15489,14 @@ function LeaPlusLC:RunOnce()
                     if w == L["Search"] then
                         TempFolder = L["Search"]
                     end
+                    -- If you wanted specific TempFolder behavior for L["NEW"] (though unlikely needed here)
+                    -- if w == L["NEW"] then
+                    --     TempFolder = L["NEW"] -- Or some other default if it doesn't have subfolders initially
+                    -- end
                 end)
             end
         end
+
 
         local function MarkCurrentTrackListened()
             if LastFolder == L["Random"] and LastPlayed and trackStartTime and trackStartTime > 0 then
@@ -15822,52 +15829,69 @@ function LeaPlusLC:RunOnce()
             ListData[2] = "|Cffffffaa{" .. L["click here for new selection"] .. "}" -- Must be capital |C
             ListData[3] = "|cffffd800"
             ListData[4] = "|cffffd800" .. L["Selection of music tracks"] -- Must be lower case |c
+
             -- Populate list data until it contains desired number of tracks
             local attempt = 0
             -- локальный set, чтобы за один проход random не добавлял один и тот же trackID снова
             local randHash = {}
-            while #ListData < 50 and attempt < 2000 do
+
+            -- Create a list of categories that can be picked for random, including L["NEW"]
+            local categoriesForRandom = {}
+            -- Ensure L["NEW"] is included here if you want it in random selections.
+            -- randomBannedList is still respected if you decide to use it later.
+            for _, catKey in ipairs({L["Zones"], L["Dungeons"], L["Various"], L["NEW"]}) do
+                if not tContains(randomBannedList, catKey) then
+                    tinsert(categoriesForRandom, catKey)
+                end
+            end
+
+            while #ListData < 50 and attempt < 2000 do -- Assuming target of 50 random tracks (minus headers)
                 attempt = attempt + 1
-                -- Get random category
-                local rCategory = GetRandomArgument(L["Zones"], L["Dungeons"], L["Various"])
-                -- Get random zone within category
-                local rZone = random(1, #ZoneList[rCategory])
-                -- Get random track within zone
-                local rTrack = ZoneList[rCategory][rZone].tracks[random(1, #ZoneList[rCategory][rZone].tracks)]
 
+                if #categoriesForRandom == 0 then break end -- Safety break if no categories are eligible
+                local rCategory = categoriesForRandom[random(1, #categoriesForRandom)]
 
-                -- гарантируем, что подтаблица существует
-                LeaPlusDB["ListenedTracks"] = LeaPlusDB["ListenedTracks"] or {}
+                if ZoneList[rCategory] and #ZoneList[rCategory] > 0 then -- Check if category has content
+                    -- Get random zone/sub-category within rCategory
+                    local rZoneIndex = random(1, #ZoneList[rCategory])
+                    local rZoneEntry = ZoneList[rCategory][rZoneIndex]
 
-                if rTrack and rTrack ~= "" and strfind(rTrack, "#") and strfind(rTrack:lower(), ".mp3") then
-                    local trackID = GetTrackIDFromPath(rTrack)
-
-                    -- пропускаем, если уже слушали или уже попал в текущий random
-                    if not LeaPlusDB["ListenedTracks"][trackID] and not randHash[trackID] then
-                        local zoneLabel = "|Cffffffaa" .. ZoneList[rCategory][rZone].zone .. " |r" .. rTrack
-                        if not tContains(randomBannedList, L[ZoneList[rCategory][rZone].zone])
-                                and not tContains(randomBannedList, rTrack)
-                        then
-                            if not tContains(ListData, zoneLabel) then
-                                tinsert(ListData, zoneLabel)
-                                randHash[trackID] = true -- фиксируем, чтобы не повторить в этой же подборке
+                    if rZoneEntry and rZoneEntry.tracks and #rZoneEntry.tracks > 0 then
+                        -- Filter to get only actual playable tracks from the sub-category's tracklist
+                        local actualTracks = {}
+                        for _, trackItem in ipairs(rZoneEntry.tracks) do
+                            if type(trackItem) == "string" and strfind(trackItem, "#") and strfind(trackItem:lower(), ".mp3") then
+                                tinsert(actualTracks, trackItem)
                             end
                         end
-                    else
-                        ---- Печать причины пропуска
-                        --if LeaPlusDB["ListenedTracks"][trackID] then
-                        --    print("skipped (already listened):", trackID)
-                        --elseif randHash[trackID] then
-                        --    print("skipped (already added in this random):", trackID)
-                        --end
+
+                        if #actualTracks > 0 then
+                            local rTrack = actualTracks[random(1, #actualTracks)]
+
+                            -- гарантируем, что подтаблица существует
+                            LeaPlusDB["ListenedTracks"] = LeaPlusDB["ListenedTracks"] or {}
+
+                            if rTrack and rTrack ~= "" then
+                                local trackID = GetTrackIDFromPath(rTrack)
+
+                                -- пропускаем, если уже слушали или уже попал в текущий random
+                                if not LeaPlusDB["ListenedTracks"][trackID] and not randHash[trackID] then
+                                    local zoneLabel = "|Cffffffaa" .. (rZoneEntry.zone or "Unknown Zone") .. " |r" .. rTrack
+
+                                    if not tContains(ListData, zoneLabel) then
+                                        tinsert(ListData, zoneLabel)
+                                        randHash[trackID] = true -- фиксируем, чтобы не повторить в этой же подборке
+                                    end
+                                end
+                            end
+                        end
                     end
                 end
             end
             -- If nothing found, show hint
-            if #ListData <= 4 then
-                tinsert(ListData, "|cff999999(You have listened it all!)|r")
+            if #ListData <= 4 then -- Accounts for the 4 header/info lines
+                tinsert(ListData, "|cff999999(You have listened to all available tracks or no unlistened tracks were found!)|r")
             end
-            print("Final random count:", #ListData - 4)  -- вычитаем заголовки
             -- Refresh the track listing
             UpdateList()
             -- Set track listing to top

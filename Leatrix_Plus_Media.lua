@@ -10,7 +10,7 @@
 	local prefol = "|cffffffaa{" .. L["right-click to go back"] .. "}"
 
 	-- Create a table for each heading
-	ZoneList = {L["Zones"], L["Dungeons"], L["Various"], L["Random"], L["Search"], L["Movies"]}
+	ZoneList = {L["Zones"], L["Dungeons"], L["Various"], L["NEW"], L["Random"], L["Search"], L["Movies"]} -- Added L["NEW"]
 	for k, v in ipairs(ZoneList) do
 		ZoneList[v] = {}
 	end
@@ -183,6 +183,469 @@
 	Zn(L["Various"], L["Various"], L["Main Titles"]							, {"|cffffd800" .. L["Various"] .. ": " .. L["Main Titles"], prefol, "gluescreenmusic/wow_main_theme.mp3#161", "gluescreenmusic/bc_main_theme.mp3#226", "gluescreenmusic/wotlk_main_title.mp3#544"})
 	Zn(L["Various"], L["Various"], L["Musical Moments"]						, {"|cffffd800" .. L["Various"] .. ": " .. L["Musical Moments"], prefol, "|cffffd800", "|cffffd800" .. L["Angelic"], "musical moments/angelic/angelic01.mp3#48", "|cffffd800", "|cffffd800" .. L["Battle"], "musical moments/battle/battle01.mp3#48", "musical moments/battle/battle02.mp3#62", "musical moments/battle/battle03.mp3#27", "musical moments/battle/battle04.mp3#36", "musical moments/battle/battle05.mp3#44", "musical moments/battle/battle06.mp3#62", "|cffffd800", "|cffffd800" .. L["Gloomy"], "musical moments/gloomy/gloomy01.mp3#36", "musical moments/gloomy/gloomy02.mp3#39", "|cffffd800", "|cffffd800" .. L["Haunted"], "musical moments/haunted/haunted01.mp3#62", "musical moments/haunted/haunted02.mp3#60", "|cffffd800", "|cffffd800" .. L["Magic"], "musical moments/magic/magic01-moment.mp3#64", "|cffffd800", "|cffffd800" .. L["Mystery"], "musical moments/mystery/mystery01-zone.mp3#60", "musical moments/mystery/mystery02-zone.mp3#53", "musical moments/mystery/mystery03-zone.mp3#61", "musical moments/mystery/mystery04-zone.mp3#64", "musical moments/mystery/mystery05-zone.mp3#82", "musical moments/mystery/mystery06-zone.mp3#65", "musical moments/mystery/mystery07-zone.mp3#83", "musical moments/mystery/mystery08-zone.mp3#83", "musical moments/mystery/mystery09-zone.mp3#82", "musical moments/mystery/mystery10-zone.mp3#62", "|cffffd800", "|cffffd800" .. L["Sacred"], "musical moments/sacred/sacred01.mp3#16", "musical moments/sacred/sacred02.mp3#19", "|cffffd800", "|cffffd800" .. L["Spooky"], "musical moments/spooky/spooky01-moment.mp3#25", "|cffffd800", "|cffffd800" .. L["Swamp"], "musical moments/swamp/swamp01.mp3#34", "|cffffd800", "|cffffd800" .. L["Various"], "musical moments/mystery/ahnqirajintro1.mp3#144", "musical moments/zulgurubvoodoo.mp3#84"})
 	Zn(L["Various"], L["Various"], L["Narration"]							, {"|cffffd800" .. L["Various"] .. ": " .. L["Narration"], prefol, "cinematicvoices/dwarfnarration.mp3#62", "cinematicvoices/gnomenarration.mp3#78", "cinematicvoices/humannarration.mp3#88", "cinematicvoices/nightelfnarration.mp3#108", "cinematicvoices/orcnarration.mp3#72", "cinematicvoices/taurennarration.mp3#75", "cinematicvoices/trollnarration.mp3#64", "cinematicvoices/undeadnarration.mp3#104", "cinematicvoices/bloodelfnarration.mp3#83", "cinematicvoices/draeneinarration.mp3#74"})
+
+
+	----------------------------------------------------------------------
+	-- NEW Tracks
+	----------------------------------------------------------------------
+	-- No specific sub-category, tracks will be listed under broader groups if needed for organization,
+	-- or you can create more descriptive L[] keys for the 'zone' parameter in Zn.
+	-- For now, I'll use the existing L[] keys that were previously under "Found in EMP".
+
+	Zn(L["NEW"], L["NEW"], "|cffffd800" .. L["NEW"], {""}) -- Main header for the NEW category
+
+	Zn(L["NEW"], L["NEW"], L["Ahn'Qiraj (Interior)"], { -- Using existing L[] key, implicitly under L["NEW"] now
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Ahn'Qiraj (Interior)"], prefol,
+		"zonemusic/ahnqiraj/ahnqirajinterior1.mp3#52",
+		"zonemusic/ahnqiraj/ahnqirajinterior2.mp3#81",
+		"zonemusic/ahnqiraj/ahnqirajinterior3.mp3#67",
+		"zonemusic/ahnqiraj/ahnqirajinteriorintromain.mp3#69",
+		"zonemusic/ahnqiraj/ahnqirajinteriorcenterroom1.mp3#69",
+		"zonemusic/ahnqiraj/ahnqirajkingroom.mp3#73",
+		"zonemusic/ahnqiraj/ahnqirajtriangleroom1.mp3#23",
+		"zonemusic/ahnqiraj/ahnqirajtriangleroom2.mp3#17",
+		"zonemusic/ahnqiraj/ahnqirajtriangleroom3.mp3#15",
+		"zonemusic/ahnqiraj/ahnqirajtriangleroom4.mp3#19",
+		"zonemusic/ahnqiraj/ahnqirajtriangleroom5.mp3#31",
+		"zonemusic/ahnqiraj/ahnqirajtriangleroom6.mp3#20",
+		"zonemusic/ahnqiraj/ahnqirajtriangleroom7.mp3#17",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Argent Tournament (Events)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Argent Tournament (Events)"], prefol,
+		"zonemusic/argenttournament/at_heraldevent.mp3#13",
+		"zonemusic/argenttournament/at_joustevent.mp3#123",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Azuremyst Isle (Exodar City)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Azuremyst Isle (Exodar City)"], prefol,
+		"zonemusic/azuremyst/ai_exodarwalkuni01.mp3#109",
+		"zonemusic/azuremyst/ai_exodarwalkuni02.mp3#107",
+		"zonemusic/azuremyst/ai_exodarwalkuni03.mp3#93",
+		"zonemusic/azuremyst/av_draeneiwalkuni01.mp3#206",
+		"zonemusic/azuremyst/av_draeneiwalkuni02.mp3#124",
+		"zonemusic/azuremyst/av_draeneiwalkuni03r.mp3#188",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Black Temple (Additional)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Black Temple (Additional)"], prefol,
+		"zonemusic/blacktemple/bt_arrivalwalkhero01.mp3#164",
+		"zonemusic/blacktemple/bt_arrivalwalkuni04.mp3#64",
+		"zonemusic/blacktemple/bt_illidariwalkhero09.mp3#74",
+		"zonemusic/blacktemple/bt_illidariwalkuni04.mp3#91",
+		"zonemusic/blacktemple/bt_illidariwalkuni05.mp3#90",
+		"zonemusic/blacktemple/bt_illidariwalkuni10.mp3#75",
+		"zonemusic/blacktemple/bt_illidariwalkuni11.mp3#35",
+		"zonemusic/blacktemple/bt_karaborwalkuni01.mp3#106",
+		"zonemusic/blacktemple/bt_karaborwalkuni02.mp3#88",
+		"zonemusic/blacktemple/bt_karaborwalkuni03.mp3#57",
+		"zonemusic/blacktemple/bt_karaborwalkuni04.mp3#126",
+		"zonemusic/blacktemple/bt_preludeevent01.mp3#253",
+		"zonemusic/blacktemple/bt_reliquarywalkhero01.mp3#112",
+		"zonemusic/blacktemple/bt_reliquarywalkuni02.mp3#66",
+		"zonemusic/blacktemple/bt_reliquarywalkuni03.mp3#79",
+		"zonemusic/blacktemple/bt_reliquarywalkuni04.mp3#63",
+		"zonemusic/blacktemple/bt_reliquarywalkuni05.mp3#75",
+		"zonemusic/blacktemple/bt_reliquarywalkuni06.mp3#125",
+		"zonemusic/blacktemple/bt_reliquarywalkuni07.mp3#64",
+		"zonemusic/blacktemple/bt_reliquarywalkuni08.mp3#88",
+		"zonemusic/blacktemple/bt_sanctuarywalkhero01.mp3#131",
+		"zonemusic/blacktemple/bt_sanctuarywalkuni04.mp3#65",
+		"zonemusic/blacktemple/bt_sanctuarywalkuni05.mp3#56",
+		"zonemusic/blacktemple/bt_sanctuarywalkuni06.mp3#58",
+		"zonemusic/blacktemple/bt_sanctuarywalkuni07.mp3#64",
+		"zonemusic/blacktemple/bt_sanctuarywalkuni08.mp3#57",
+		"zonemusic/blacktemple/bt_stormwalkhero02.mp3#73",
+		"zonemusic/blacktemple/bt_stormwalkuni01.mp3#67",
+		"zonemusic/blacktemple/bt_stormwalkuni03.mp3#32",
+		"zonemusic/blacktemple/bt_stormwalkuni04.mp3#48",
+		"zonemusic/blacktemple/bt_summitwalkuni01.mp3#59",
+		"zonemusic/blacktemple/bt_summitwalkuni02.mp3#69",
+		"zonemusic/blacktemple/bt_summitwalkuni03.mp3#41",
+		"zonemusic/blacktemple/bt_summitwalkuni04.mp3#114",
+		"zonemusic/blacktemple/bt_summitwalkuni05.mp3#51",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Blade's Edge Mountains (Ogres)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Blade's Edge Mountains (Ogres)"], prefol,
+		"zonemusic/bladesedge/bl_ogrewalkuni01.mp3#75",
+		"zonemusic/bladesedge/bl_ogrewalkuni02.mp3#110",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Bloodmyst Isle (Naga Intro)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Bloodmyst Isle (Naga Intro)"], prefol,
+		"zonemusic/bloodmyst/bi_nagaintro01.mp3#31",
+		"zonemusic/bloodmyst/bi_nagaintro01r.mp3#25",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Borean Tundra (Riplash Intro)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Borean Tundra (Riplash Intro)"], prefol,
+		"zonemusic/boreantundra/bo_riplash_intro01.mp3#153",
+		"zonemusic/boreantundra/bo_riplash_intro02.mp3#177",
+		"zonemusic/boreantundra/bo_tusk_indule_day01.mp3#129",
+		"zonemusic/boreantundra/bo_tusk_indule_day02.mp3#62",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Caverns of Time (Additional)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Caverns of Time (Additional)"], prefol,
+		"zonemusic/cavernsoftime/ct_hyjalextwalk9uni.mp3#73",
+		"zonemusic/cavernsoftime/ct_morassportalintro01.mp3#28",
+		"zonemusic/cavernsoftime/ct_hyjalextwalk7uni.mp3#66",
+		"zonemusic/cavernsoftime/ct_hyjalextwalk8uni.mp3#70",
+		"zonemusic/cavernsoftime/ct_brazensflightintrouni.mp3#93",
+		"zonemusic/cavernsoftime/ct_cavernswalk1uni.mp3#112",
+		"zonemusic/cavernsoftime/ct_cavernswalk2uni.mp3#120",
+		"zonemusic/cavernsoftime/ct_cavernswalk3uni.mp3#169",
+		"zonemusic/cavernsoftime/ct_cavernswalk4uni.mp3#130",
+		"zonemusic/cavernsoftime/ct_cavernswalk5uni.mp3#151",
+		"zonemusic/cavernsoftime/ct_cavernswalk6uni.mp3#161",
+		"zonemusic/cavernsoftime/ct_cavernswalk7uni.mp3#178",
+		"zonemusic/cavernsoftime/ct_cavernswalk8uni.mp3#140",
+		"zonemusic/cavernsoftime/ct_cavernswalk9uni.mp3#161",
+		"zonemusic/cavernsoftime/ct_durnholdecellarwalk1uni.mp3#104",
+		"zonemusic/cavernsoftime/ct_durnholdecellarwalk2uni.mp3#59",
+		"zonemusic/cavernsoftime/ct_durnholdecellarwalk3uni.mp3#66",
+		"zonemusic/cavernsoftime/ct_durnholdekeepextwalk2uni.mp3#66",
+		"zonemusic/cavernsoftime/ct_durnholdekeepextwalk3uni.mp3#70",
+		"zonemusic/cavernsoftime/ct_durnholdekeepextwalk4uni.mp3#58",
+		"zonemusic/cavernsoftime/ct_durnholdekeepextwalk5uni.mp3#93",
+		"zonemusic/cavernsoftime/ct_durnholdekeepextwalk6uni.mp3#60",
+		"zonemusic/cavernsoftime/ct_durnholdekeepintwalk2uni.mp3#123",
+		"zonemusic/cavernsoftime/ct_durnholdekeepintwalk3uni.mp3#73",
+		"zonemusic/cavernsoftime/ct_escapedurnintrouni.mp3#112",
+		"zonemusic/cavernsoftime/ct_tarrenmillextwalk1uni.mp3#78",
+		"zonemusic/cavernsoftime/ct_tarrenmillextwalk2uni.mp3#66",
+		"zonemusic/cavernsoftime/ct_thrallescapeintrouni.mp3#45",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Darnassus (Druid Grove)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Darnassus (Druid Grove)"], prefol,
+		"citymusic/darnassus/druid grove.mp3#45",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Dragonblight (Intro)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Dragonblight (Intro)"], prefol,
+		"zonemusic/dragonblight/db_generalintro_01.mp3#92",
+		"zonemusic/dragonblight/db_tusk_indule_day01.mp3#129",
+		"zonemusic/dragonblight/db_tusk_indule_day02.mp3#62",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Ebon Hold"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Ebon Hold"], prefol,
+		"zonemusic/ebon hold/eh_assaultuni01.mp3#65",
+		"zonemusic/ebon hold/eh_assaultuni02.mp3#70",
+		"zonemusic/ebon hold/eh_assaultuni03.mp3#65",
+		"zonemusic/ebon hold/eh_assaultuni04.mp3#67",
+		"zonemusic/ebon hold/eh_assaultuni05.mp3#117",
+		"zonemusic/ebon hold/eh_assaultuni06.mp3#93",
+		"zonemusic/ebon hold/eh_assaultuni07.mp3#96",
+		"zonemusic/ebon hold/eh_generalwalkuni01.mp3#82",
+		"zonemusic/ebon hold/eh_generalwalkuni02.mp3#78",
+		"zonemusic/ebon hold/eh_generalwalkuni03.mp3#82",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Eversong Woods (Scenic & Scorched)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Eversong Woods (Scenic & Scorched)"], prefol,
+		"zonemusic/eversong/es_scenicintronight01.mp3#97",
+		"zonemusic/eversong/es_scortchedwalkday01.mp3#116",
+		"zonemusic/eversong/es_scortchedwalkday02.mp3#103",
+		"zonemusic/eversong/es_scortchedwalknight01.mp3#69",
+		"zonemusic/eversong/es_scortchedwalknight02.mp3#61",
+		"zonemusic/eversong/es_silvermoonwalknight03.mp3#80",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Ghostlands (Scenic)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Ghostlands (Scenic)"], prefol,
+		"zonemusic/ghostlands/gl_scenicwalkuni01.mp3#89",
+		"zonemusic/ghostlands/gl_scenicwalkuni02.mp3#81",
+		"zonemusic/ghostlands/gl_scenicwalkuni03.mp3#78",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["GhostMusic"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["GhostMusic"], prefol,
+		"zonemusic/ghostmusic/ghostmusic03.mp3#62",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Grizzly Hills (Intros)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Grizzly Hills (Intros)"], prefol,
+		"zonemusic/grizzlyhills/gh_intro1uni01.mp3#284",
+		"zonemusic/grizzlyhills/gh_intro2uni01.mp3#149",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Hellfire Peninsula (Additional)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Hellfire Peninsula (Additional)"], prefol,
+		"zonemusic/hellfirepeninsula/bl_he_ogrewalkuni01.mp3#75",
+		"zonemusic/hellfirepeninsula/bl_he_ogrewalkuni02.mp3#110",
+		"zonemusic/hellfirepeninsula/he_armouryintrouni01.mp3#14",
+		"zonemusic/hellfirepeninsula/he_citadeldemonwalkuni01.mp3#53",
+		"zonemusic/hellfirepeninsula/he_citadeldemonwalkuni02.mp3#63",
+		"zonemusic/hellfirepeninsula/he_citadelintrouni01.mp3#19",
+		"zonemusic/hellfirepeninsula/he_pathofgloryintrouni01.mp3#18",
+		"zonemusic/hellfirepeninsula/he_stairsintrouni01.mp3#18",
+		"zonemusic/hellfirepeninsula/he_wistfulintrouni01.mp3#25",
+		"zonemusic/hellfirepeninsula/he_wistfulintrouni02.mp3#17",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Icecrown Glacier (Intros)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Icecrown Glacier (Intros)"], prefol,
+		"zonemusic/icecrownglacier/ic_generalintro_01.mp3#58",
+		"zonemusic/icecrownglacier/ic_generalintro_02.mp3#56",
+		"zonemusic/icecrownglacier/ic_generalintro_03.mp3#57",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Iron Dwarf Themes (Northrend)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Iron Dwarf Themes (Northrend)"], prefol,
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkadark_uni01.mp3#112",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalka_day01.mp3#99",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalka_night01.mp3#99",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkb_day02.mp3#97",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkb_night02.mp3#95",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkb_uni02.mp3#164",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkcdark_uni04.mp3#82",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkc_day03.mp3#42",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkc_night03.mp3#42",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkc_uni03.mp3#42",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkddark_uni05.mp3#69",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkd_day04.mp3#45",
+		"zonemusic/northrend/irondwarf/nr_dwarf_generalwalkd_night04.mp3#45",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Ironforge (Additional)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Ironforge (Additional)"], prefol,
+		"citymusic/ironforge/ironforge walking 01.mp3#123",
+		"citymusic/ironforge/ironforge walking 03 (glenn).mp3#81",
+		"citymusic/ironforge/ironforge walking 04.mp3#70",
+		"citymusic/ironforge/ironforge walking 02.mp3#50",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Musical Moments (Gul'dan & Titans)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Musical Moments (Gul'dan & Titans)"], prefol,
+		"musical moments/guldansentrancetheme.mp3#100",
+		"musical moments/sp_templeofstormsactionuni01.mp3#79",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Nagrand (Diamond Intro)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Nagrand (Diamond Intro)"], prefol,
+		"zonemusic/nagrand/na_diamondintrouni01.mp3#73",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Netherstorm (Mushroom & Netherplant Intros)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Netherstorm (Mushroom & Netherplant Intros)"], prefol,
+		"zonemusic/netherstorm/ns_mushroomintrouni01.mp3#39",
+		"zonemusic/netherstorm/ns_mushroomintrouni02.mp3#33",
+		"zonemusic/netherstorm/ns_mushroomintrouni03.mp3#37",
+		"zonemusic/netherstorm/ns_netherplantintrouni01.mp3#44",
+		"zonemusic/netherstorm/ns_netherplantintrouni02.mp3#51",
+		"zonemusic/netherstorm/ns_netherplantintrouni03.mp3#47",
+		"zonemusic/netherstorm/ns_netherplantintrouni04.mp3#45",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Northrend Transport"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Northrend Transport"], prefol,
+		"zonemusic/northrend/northrendtransport/nr_northrendtransportgeneralday.mp3#152",
+		"zonemusic/northrend/northrendtransport/nr_northrendtransportgeneralnight.mp3#92",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Northrend Orc Themes"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Northrend Orc Themes"], prefol,
+		"zonemusic/northrend/orc/nr_orc_generalwalk_day01.mp3#23",
+		"zonemusic/northrend/orc/nr_orc_generalwalk_day02.mp3#23",
+		"zonemusic/northrend/orc/nr_orc_generalwalk_day03.mp3#23",
+		"zonemusic/northrend/orc/nr_orc_generalwalk_day04.mp3#45",
+		"zonemusic/northrend/orc/nr_orc_generalwalk_night01.mp3#78",
+		"zonemusic/northrend/orc/nr_orc_generalwalk_night02.mp3#80",
+		"zonemusic/northrend/orc/nr_orc_generalwalk_night03.mp3#79",
+		"zonemusic/northrend/orc/nr_orc_general_intro01.mp3#27",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Orgrimmar (Moments)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Orgrimmar (Moments)"], prefol,
+		"citymusic/orgrimmar/orgrimmar01-moment.mp3#69",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Outland General (Action & Corrupt)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Outland General (Action & Corrupt)"], prefol,
+		"zonemusic/outlandgeneral/ol_actionwalkuni01.mp3#80",
+		"zonemusic/outlandgeneral/ol_corrupt01.mp3#61",
+		"zonemusic/outlandgeneral/ol_corrupt02.mp3#62",
+		"zonemusic/outlandgeneral/ol_corrupt03.mp3#74",
+		"zonemusic/outlandgeneral/ol_corrupt04.mp3#71",
+		"zonemusic/outlandgeneral/ol_corrupt05.mp3#72",
+		"zonemusic/outlandgeneral/ol_corrupt06.mp3#74",
+		"zonemusic/outlandgeneral/ol_corrupt07.mp3#52",
+		"zonemusic/outlandgeneral/ol_corruptintro.mp3#75",
+		"zonemusic/outlandgeneral/ol_arakkoaintrouni01.mp3#18",
+		"zonemusic/outlandgeneral/ol_arakkoaintrouni02.mp3#14",
+		"zonemusic/outlandgeneral/ol_burninglegionintrouni01.mp3#16",
+		"zonemusic/outlandgeneral/ol_burninglegionintrouni02.mp3#35",
+		"zonemusic/outlandgeneral/ol_cenarionintrouni01.mp3#44",
+		"zonemusic/outlandgeneral/ol_cenarionintrouni02.mp3#45",
+		"zonemusic/outlandgeneral/ol_cenarionintrouni03.mp3#71",
+		"zonemusic/outlandgeneral/ol_crystalintrouni01.mp3#26",
+		"zonemusic/outlandgeneral/ol_crystalintrouni02.mp3#21",
+		"zonemusic/outlandgeneral/ol_crystalintrouni03.mp3#21",
+		"zonemusic/outlandgeneral/ol_demonintrouni01.mp3#46",
+		"zonemusic/outlandgeneral/ol_felorcintrouni01.mp3#16",
+		"zonemusic/outlandgeneral/ol_felorcintrouni02.mp3#15",
+		"zonemusic/outlandgeneral/ol_hordebasewalkuni01.mp3#40",
+		"zonemusic/outlandgeneral/ol_hordebasewalkuni02.mp3#37",
+		"zonemusic/outlandgeneral/ol_illidansarmyyintrouni01.mp3#35",
+		"zonemusic/outlandgeneral/ol_ogreintrouni01.mp3#28",
+		"zonemusic/outlandgeneral/ol_ogreintrouni02.mp3#25",
+		"zonemusic/outlandgeneral/ol_orcintrouni01.mp3#11",
+		"zonemusic/outlandgeneral/ol_orcintrouni02.mp3#17",
+		"zonemusic/outlandgeneral/ol_orcintrouni03.mp3#11",
+		"zonemusic/outlandgeneral/ol_orcintrouni04.mp3#13",
+		"zonemusic/outlandgeneral/ol_scenicintrouni01.mp3#31",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Sholazar Basin (Lifeblood Cave)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Sholazar Basin (Lifeblood Cave)"], prefol,
+		"zonemusic/sholazarbasin/sb_lifebloodcavewalkuni01.mp3#81",
+		"zonemusic/sholazarbasin/sb_lifebloodcavewalkuni02.mp3#99",
+		"zonemusic/sholazarbasin/sb_lifebloodcavewalkuni03.mp3#99",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Stormwind (High Seas)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Stormwind (High Seas)"], prefol,
+		"citymusic/stormwind/stormwind_highseas-moment.mp3#133",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Sunwell Plateau (Additional)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Sunwell Plateau (Additional)"], prefol,
+		"zonemusic/sunwell/sw_felenergywalkuni01.mp3#126",
+		"zonemusic/sunwell/sw_isledarkwalkuni01.mp3#139",
+		"zonemusic/sunwell/sw_isledarkwalkuni02.mp3#137",
+		"zonemusic/sunwell/sw_isledarkwalkuni03.mp3#126",
+		"zonemusic/sunwell/sw_islelightwalkuni01.mp3#117",
+		"zonemusic/sunwell/sw_islelightwalkuni02.mp3#119",
+		"zonemusic/sunwell/sw_islelightwalkuni03.mp3#90",
+		"zonemusic/sunwell/sw_islemedwalkuni01.mp3#117",
+		"zonemusic/sunwell/sw_islemedwalkuni02.mp3#126",
+		"zonemusic/sunwell/sw_islemedwalkuni03.mp3#88",
+		"zonemusic/sunwell/sw_magistersarrivalwalkuni01.mp3#87",
+		"zonemusic/sunwell/sw_plateausunwellarrivalwalkuni01.mp3#138",
+		"zonemusic/sunwell/sw_queldanaswalkuni01.mp3#108",
+		"zonemusic/sunwell/sw_queldanaswalkuni02.mp3#84",
+		"zonemusic/sunwell/sw_sanctumwalkuni01.mp3#85",
+		"zonemusic/sunwell/sw_sunwellbombingrununi01.mp3#259",
+		"zonemusic/sunwell/sw_sunwellflybyuni01.mp3#57",
+		"zonemusic/sunwell/sw_thewellwalkuni01.mp3#98",
+		"zonemusic/sunwell/sw_thewellwalkuni02.mp3#95",
+		"zonemusic/sunwell/sw_thewellwalkuni03.mp3#95",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Taunka Themes (Northrend)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Taunka Themes (Northrend)"], prefol,
+		"zonemusic/northrend/taunka/nr_taunka_generalwalka_day01.mp3#138",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalka_night01.mp3#141",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalka_uni01.mp3#140",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalkb_day02.mp3#127",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalkb_night02.mp3#127",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalkc_day03.mp3#108",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalkc_night03.mp3#108",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalkd_day04.mp3#70",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalkd_night04.mp3#69",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalkd_uni02.mp3#70",
+		"zonemusic/northrend/taunka/nr_taunka_generalwalke_uni03.mp3#73",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Various Taverns (Retail)"], { -- Renamed to avoid conflict if L["Dwarf Taverns"] etc. are used elsewhere
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Various Taverns (Retail)"], prefol,
+		"zonemusic/taverndwarf/ra_dwarftavern1a.mp3#79",
+		"zonemusic/taverndwarf/ra_dwarftavern1b.mp3#82",
+		"zonemusic/taverndwarf/ra_dwarftavern2a.mp3#86",
+		"zonemusic/taverndwarf/ra_dwarftavern2b.mp3#92",
+		"zonemusic/taverndwarf/ra_dwarftavern3.mp3#102",
+		"zonemusic/tavernhuman/ra_tavern1_revisiteda.mp3#70",
+		"zonemusic/tavernhuman/ra_tavern1_revisitedb.mp3#72",
+		"zonemusic/tavernhuman/ra_humantavern1a.mp3#92",
+		"zonemusic/tavernhuman/ra_humantavern1b.mp3#79",
+		"zonemusic/tavernhuman/ra_humantavern2a.mp3#86",
+		"zonemusic/tavernhuman/ra_humantavern2b.mp3#81",
+		"zonemusic/tavernnightelf/ra_templeofthemoona.mp3#112",
+		"zonemusic/tavernnightelf/ra_templeofthemoonb.mp3#119",
+		"zonemusic/tavernorc/ra_orcrestarea1a.mp3#100",
+		"zonemusic/tavernorc/ra_orcrestarea1b.mp3#91",
+		"zonemusic/tavernorc/ra_orcrestarea2a.mp3#87",
+		"zonemusic/tavernorc/ra_orcrestarea2b.mp3#86",
+		"zonemusic/tavernorc/ra_orcrestarea3a.mp3#86",
+		"zonemusic/tavernorc/ra_orcrestarea3b.mp3#81",
+		"zonemusic/tavernpirate/ra_piratetavern1a.mp3#83",
+		"zonemusic/tavernpirate/ra_piratetavern1b.mp3#81",
+		"zonemusic/tavernpirate/ra_piratetavern2a.mp3#82",
+		"zonemusic/tavernpirate/ra_piratetavern2b.mp3#81",
+		"zonemusic/tavernpirate/ra_piratetavern3a.mp3#88",
+		"zonemusic/tavernpirate/ra_piratetavern3b.mp3#85",
+		"zonemusic/taverntauren/ra_taurenrestarea1a.mp3#89",
+		"zonemusic/taverntauren/ra_taurenrestarea1b.mp3#96",
+		"zonemusic/taverntauren/ra_taurenrestarea2a.mp3#85",
+		"zonemusic/taverntauren/ra_taurenrestarea2b.mp3#80",
+		"zonemusic/taverntauren/ra_taurenrestarea3a.mp3#93",
+		"zonemusic/taverntauren/ra_taurenrestarea3b.mp3#93",
+		"zonemusic/tavernundead/ra_undeadtavern1a.mp3#93",
+		"zonemusic/tavernundead/ra_undeadtavern1b.mp3#87",
+		"zonemusic/tavernundead/ra_undeadtavern2.mp3#124",
+		"zonemusic/tavernundead/ra_undeadtavern3a.mp3#83",
+		"zonemusic/tavernundead/ra_undeadtavern3b.mp3#93",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Tempest Keep (Additional)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Tempest Keep (Additional)"], prefol,
+		"zonemusic/tempestkeep/tk_tempestkeep_amb_22.mp3#34",
+		"zonemusic/tempestkeep/tk_tempestkeep_stg14.mp3#11",
+		"zonemusic/tempestkeep/tk_tempestkeep_stg15.mp3#11",
+		"zonemusic/tempestkeep/tk_tempestkeep_stg16.mp3#11",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Terokkar Forest (Shattrath & Auchindoun)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Terokkar Forest (Shattrath & Auchindoun)"], prefol,
+		"zonemusic/terokkar/tf_auchindounwalkuni01.mp3#120",
+		"zonemusic/terokkar/tf_auchindounwalkuni02.mp3#150",
+		"zonemusic/terokkar/tf_auchindounwalkuni03.mp3#120",
+		"zonemusic/terokkar/tf_shattrathwalkuni01.mp3#137",
+		"zonemusic/terokkar/tf_shattrathwalkuni02.mp3#100",
+		"zonemusic/terokkar/tf_shattrathwalkuni03.mp3#92",
+		"zonemusic/terokkar/tf_shattrathwalkuni04.mp3#82",
+		"zonemusic/terokkar/tf_shattrathwalkuni05.mp3#117",
+		"zonemusic/terokkar/tf_shattrathwalkuni06.mp3#137",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Northrend Troll Themes"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Northrend Troll Themes"], prefol,
+		"zonemusic/northrend/troll/nr_troll_general01.mp3#46",
+		"zonemusic/northrend/troll/nr_troll_general02.mp3#55",
+		"zonemusic/northrend/troll/nr_troll_general03.mp3#38",
+		"zonemusic/northrend/troll/nr_troll_general04.mp3#44",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Violet Hold"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Violet Hold"], prefol,
+		"zonemusic/violethold/vh_generalwalkuni01.mp3#83",
+		"zonemusic/violethold/vh_generalwalkuni02.mp3#83",
+		"zonemusic/violethold/vh_generalwalkuni03.mp3#69",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["World Events (Fire Festival)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["World Events (Fire Festival)"], prefol,
+		"worldevents/alliancefirepole.mp3#68",
+		"worldevents/hordefirepole.mp3#72",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["ZoneMusic (L70ETC)"], { -- Generic folder for misc
+		"|cffffd800" .. L["NEW"] .. ": " .. L["ZoneMusic (L70ETC)"], prefol,
+		"zonemusic/dmf_l70etc01.mp3#282",
+	})
+
+	Zn(L["NEW"], L["NEW"], L["Zul'Aman (Battle & Victory)"], {
+		"|cffffd800" .. L["NEW"] .. ": " .. L["Zul'Aman (Battle & Victory)"], prefol,
+		"zonemusic/zulaman/za_zulaman_btl11.mp3#136",
+		"zonemusic/zulaman/za_zulaman_btl12.mp3#117",
+		"zonemusic/zulaman/za_zulaman_btl13.mp3#40",
+		"zonemusic/zulaman/za_zulaman_btl14.mp3#92",
+		"zonemusic/zulaman/za_zulaman_btl15.mp3#79",
+		"zonemusic/zulaman/za_zulaman_vct10.mp3#80",
+	})
 
 	----------------------------------------------------------------------
 	-- Movies
