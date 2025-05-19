@@ -15400,7 +15400,7 @@ function LeaPlusLC:RunOnce()
             mbtn.t:SetTexture(0.3, 0.3, 0.00, 0.8)
             mbtn.t:SetAlpha(0.7)
             -- MODIFICATION START for mbtn.t
-            mbtn.t:SetPoint("TOPLEFT", mbtn, "TOPLEFT", 0, 0)
+            mbtn.t:SetPoint("TOPLEFT", mbtn, "TOPLEFT", -2, 0) -- Extend 2px to the left
             mbtn.t:SetPoint("BOTTOMRIGHT", mbtn, "BOTTOMRIGHT", 10, 0) -- Extend 10px to the right
             -- MODIFICATION END for mbtn.t
             mbtn.t:Hide()
@@ -15410,7 +15410,7 @@ function LeaPlusLC:RunOnce()
             mbtn.s:SetTexture(0.3, 0.3, 0.00, 0.8)
             mbtn.s:SetAlpha(1.0)
             -- MODIFICATION START for mbtn.s
-            mbtn.s:SetPoint("TOPLEFT", mbtn, "TOPLEFT", 0, 0)
+            mbtn.s:SetPoint("TOPLEFT", mbtn, "TOPLEFT", -2, 0) -- Extend 2px to the left
             mbtn.s:SetPoint("BOTTOMRIGHT", mbtn, "BOTTOMRIGHT", 10, 0) -- Extend 10px to the right
             -- MODIFICATION END for mbtn.s
             mbtn.s:Hide()
