@@ -15399,14 +15399,20 @@ function LeaPlusLC:RunOnce()
             mbtn.t = mbtn:CreateTexture(nil, "BACKGROUND")
             mbtn.t:SetTexture(0.3, 0.3, 0.00, 0.8)
             mbtn.t:SetAlpha(0.7)
-            mbtn.t:SetAllPoints()
+            -- MODIFICATION START for mbtn.t
+            mbtn.t:SetPoint("TOPLEFT", mbtn, "TOPLEFT", 0, 0)
+            mbtn.t:SetPoint("BOTTOMRIGHT", mbtn, "BOTTOMRIGHT", 10, 0) -- Extend 10px to the right
+            -- MODIFICATION END for mbtn.t
             mbtn.t:Hide()
 
             -- Create highlight texture
             mbtn.s = mbtn:CreateTexture(nil, "BACKGROUND")
             mbtn.s:SetTexture(0.3, 0.3, 0.00, 0.8)
             mbtn.s:SetAlpha(1.0)
-            mbtn.s:SetAllPoints()
+            -- MODIFICATION START for mbtn.s
+            mbtn.s:SetPoint("TOPLEFT", mbtn, "TOPLEFT", 0, 0)
+            mbtn.s:SetPoint("BOTTOMRIGHT", mbtn, "BOTTOMRIGHT", 10, 0) -- Extend 10px to the right
+            -- MODIFICATION END for mbtn.s
             mbtn.s:Hide()
 
             -- Create fontstring
@@ -15452,6 +15458,7 @@ function LeaPlusLC:RunOnce()
         local initial_y_offset_for_makebutton = -70 -- Default starting Y for the first button if not anchored.
         -- This matches the original L["Zones"] Y position.
 
+
         local function MakeButtonNow(title, anchor, explicitY)
             -- Pass an appropriate y_offset to MakeButton.
             -- If 'anchor' is nil and 'explicitY' is nil, it uses 'initial_y_offset_for_makebutton'.
@@ -15464,7 +15471,7 @@ function LeaPlusLC:RunOnce()
             conbtn[title]:ClearAllPoints()
 
             if anchor and conbtn[anchor] and conbtn[anchor].SetPoint then -- Ensure anchor is valid
-                conbtn[title]:SetPoint("TOPLEFT", conbtn[anchor], "BOTTOMLEFT", 0, 0)
+                conbtn[title]:SetPoint("TOPLEFT", conbtn[anchor], "BOTTOMLEFT", 0, -3)
             elseif title == L["Zones"] then
                 conbtn[title]:SetPoint("TOPLEFT", LeaPlusLC["Page9"], "TOPLEFT", 145, -70)
             elseif explicitY then -- If an explicit Y was given and no anchor, position it directly
@@ -15586,7 +15593,7 @@ function LeaPlusLC:RunOnce()
             -- Anchor stopBtn's TOPLEFT to conbtn[L["Random"]]'s BOTTOMLEFT.
             -- X offset 0 to align vertically with L["Random"].
             -- Y offset -5 for a small gap below L["Random"]. You can adjust -5 as needed.
-            stopBtn:SetPoint("TOPLEFT", conbtn[L["Random"]], "BOTTOMLEFT", 0, -20)
+            stopBtn:SetPoint("TOPLEFT", conbtn[L["Random"]], "BOTTOMLEFT", 0, -23)
         else
             -- Fallback: If L["Random"] button isn't found for some reason, or stopBtn failed to create.
             if stopBtn then
