@@ -642,70 +642,15 @@
 	-- Various
 	----------------------------------------------------------------------
 
-	-- Various
+	-- Various (Updated)
 	Zn(L["Various"], L["Various"], "|cffffd800" .. L["Various"], {""})
-	Zn(L["Various"], L["Various"], L["Battlegrounds"], {"|cffffd800" .. L["Various"] .. ": " .. L["Battlegrounds"], prefol,
-		"zonemusic/pvp/pvp1.mp3#47",
-		"zonemusic/pvp/pvp2.mp3#53",
-		"zonemusic/pvp/pvp3.mp3#40",
-		"zonemusic/pvp/pvp4.mp3#63",
-		"zonemusic/pvp/pvp5.mp3#62",
-		"zonemusic/cursedland/cursedland01.mp3#55",
-		"zonemusic/cursedland/cursedland02.mp3#59",
-		"zonemusic/cursedland/cursedland03.mp3#64",
-		"zonemusic/cursedland/cursedland04.mp3#79",
-		"zonemusic/cursedland/cursedland05.mp3#83",
-		"zonemusic/cursedland/cursedland06.mp3#74",
-		"musical moments/gloomy/gloomy01.mp3#36",
-	}) -- Mystery1:10
-	Zn(L["Various"], L["Various"], L["Cinematics"], {"|cffffd800" .. L["Various"] .. ": " .. L["Cinematics"], prefol,
-		---- World of Warcraft
-		--"|cffffd800", "|cffffd800" .. L["World of Warcraft"],
-		--"cinematics/logo.mp3#27",
-		--"cinematics/wow_intro.mp3#170",
-		---- The Burning Crusade
-		--"|cffffd800", "|cffffd800" .. L["The Burning Crusade"],
-		--"cinematics/wow_intro_bc.mp3#167",
-		---- Wrath of the Lich King
-		--"|cffffd800", "|cffffd800" .. L["Wrath of the Lich King"],
-		--"cinematics/wow_intro_lk.mp3#198",
-		--"cinematics/wow_wrathgate.mp3#265",
-		--"cinematics/wow_fotlk.mp3#231",
-	})
-
-	Zn(L["Various"], L["Various"], L["Credits"], {	"|cffffd800" .. L["Various"] .. ": " .. L["Credits"], prefol,
-		"citymusic/darnassus/darnassus intro.mp3#40",
-		"citymusic/ironforge/ironforge intro.mp3#86",
-		"citymusic/ironforge/tinkertownintro_moment.mp3#52",
-		"citymusic/stormwind/stormwind_intro-moment.mp3#67",
-		"citymusic/orgrimmar/orgrimmar_intro-moment.mp3#40",
-		"citymusic/thunderbluff/thunderbluff intro.mp3#46",
-		"citymusic/undercity/undercityintro-moment.mp3#29",
-		"gluescreenmusic/bccredits_lament_of_the_highborne.mp3#171",
-		"zonemusic/azuremyst/ai_exodarintro01.mp3#83",
-		"zonemusic/eversong/es_silvermoonintro01.mp3#133",
-	})
-	Zn(L["Various"], L["Various"], L["Events"], {	"|cffffd800" .. L["Various"] .. ": " .. L["Events"], prefol,
-		"|cffffd800", "|cffffd800" .. L["Darkmoon Faire"], "worldevents/darkmoonfaire_1.mp3#29", "worldevents/darkmoonfaire_2.mp3#74", "worldevents/darkmoonfaire_3.mp3#59", "worldevents/darkmoonfaire_4.mp3#38",
-	})
-	Zn(L["Various"], L["Various"], L["Main Titles"], {	"|cffffd800" .. L["Various"] .. ": " .. L["Main Titles"], prefol,
-		"gluescreenmusic/wow_main_theme.mp3#161",
-		"gluescreenmusic/bc_main_theme.mp3#227",
-		"gluescreenmusic/wotlk_main_title.mp3#53222",
-	})
-	Zn(L["Various"], L["Various"], L["Musical Moments"], {	"|cffffd800" .. L["Various"] .. ": " .. L["Musical Moments"], prefol,
-		"|cffffd800", "|cffffd800" .. L["Angelic"],	"musical moments/angelic/angelic01.mp3#48",
-		"|cffffd800", "|cffffd800" .. L["Battle"], "musical moments/battle/battle01.mp3#48", "musical moments/battle/battle02.mp3#62", "musical moments/battle/battle03.mp3#27", "musical moments/battle/battle04.mp3#36", "musical moments/battle/battle05.mp3#45", "musical moments/battle/battle06.mp3#62",
-		"|cffffd800", "|cffffd800" .. L["Gloomy"], "musical moments/gloomy/gloomy01.mp3#36", "musical moments/gloomy/gloomy02.mp3#40",
-		"|cffffd800", "|cffffd800" .. L["Haunted"],	"musical moments/haunted/haunted01.mp3#62",	"musical moments/haunted/haunted02.mp3#60",
-		"|cffffd800", "|cffffd800" .. L["Magic"], "musical moments/magic/magic01-moment.mp3#64", -- "musical moments/magic/magic01-zone1.mp3#33", "musical moments/magic/magic01-zone2.mp3#39",
-		"|cffffd800", "|cffffd800" .. L["Mystery"], "musical moments/mystery/mystery01-zone.mp3#61", "musical moments/mystery/mystery02-zone.mp3#54", "musical moments/mystery/mystery03-zone.mp3#61", "musical moments/mystery/mystery04-zone.mp3#64", "musical moments/mystery/mystery05-zone.mp3#82", "musical moments/mystery/mystery06-zone.mp3#65", "musical moments/mystery/mystery07-zone.mp3#83", "musical moments/mystery/mystery08-zone.mp3#83", "musical moments/mystery/mystery09-zone.mp3#82", "musical moments/mystery/mystery10-zone.mp3#62",
-		"|cffffd800", "|cffffd800" .. L["Sacred"], "musical moments/sacred/sacred01.mp3#16", "musical moments/sacred/sacred02.mp3#19",
-		"|cffffd800", "|cffffd800" .. L["Spooky"], "musical moments/spooky/spooky01-moment.mp3#26",
-		"|cffffd800", "|cffffd800" .. L["Swamp"], "musical moments/swamp/swamp01.mp3#35",
-		"|cffffd800", "|cffffd800" .. L["Various"], "musical moments/mystery/ahnqirajintro1.mp3#144", "musical moments/zulgurubvoodoo.mp3#85",
-	})
-	Zn(L["Various"], L["Various"], L["Narration"]								, {	"|cffffd800" .. L["Various"] .. ": " .. L["Narration"], prefol, "cinematicvoices/dwarfnarration.mp3#62", "cinematicvoices/gnomenarration.mp3#78", "cinematicvoices/humannarration.mp3#88", "cinematicvoices/nightelfnarration.mp3#108", "cinematicvoices/orcnarration.mp3#72", "cinematicvoices/taurennarration.mp3#75", "cinematicvoices/trollnarration.mp3#64", "cinematicvoices/undeadnarration.mp3#104", "cinematicvoices/bloodelfnarration.mp3#83", "cinematicvoices/draeneinarration.mp3#74",})
+	Zn(L["Various"], L["Various"], L["Battlegrounds"]						, {"|cffffd800" .. L["Various"] .. ": " .. L["Battlegrounds"], prefol, "zonemusic/pvp/pvp1.mp3#47", "zonemusic/pvp/pvp2.mp3#52", "zonemusic/pvp/pvp3.mp3#40", "zonemusic/pvp/pvp4.mp3#63", "zonemusic/pvp/pvp5.mp3#61", "zonemusic/cursedland/cursedland01.mp3#54", "zonemusic/cursedland/cursedland02.mp3#58", "zonemusic/cursedland/cursedland03.mp3#64", "zonemusic/cursedland/cursedland04.mp3#79", "zonemusic/cursedland/cursedland05.mp3#82", "zonemusic/cursedland/cursedland06.mp3#74", "musical moments/gloomy/gloomy01.mp3#36"}) -- Mystery1:10
+	Zn(L["Various"], L["Various"], L["Cinematics"]							, {"|cffffd800" .. L["Various"] .. ": " .. L["Cinematics"], prefol})
+	Zn(L["Various"], L["Various"], L["Credits"]								, {"|cffffd800" .. L["Various"] .. ": " .. L["Credits"], prefol, "citymusic/darnassus/darnassus intro.mp3#40", "citymusic/ironforge/ironforge intro.mp3#86", "citymusic/ironforge/tinkertownintro_moment.mp3#52", "citymusic/stormwind/stormwind_intro-moment.mp3#66", "citymusic/orgrimmar/orgrimmar_intro-moment.mp3#40", "citymusic/thunderbluff/thunderbluff intro.mp3#46", "citymusic/undercity/undercityintro-moment.mp3#28", "gluescreenmusic/bccredits_lament_of_the_highborne.mp3#171", "zonemusic/azuremyst/ai_exodarintro01.mp3#82", "zonemusic/eversong/es_silvermoonintro01.mp3#132"})
+	Zn(L["Various"], L["Various"], L["Events"]								, {"|cffffd800" .. L["Various"] .. ": " .. L["Events"], prefol, "|cffffd800", "|cffffd800" .. L["Darkmoon Faire"], "worldevents/darkmoonfaire_1.mp3#28", "worldevents/darkmoonfaire_2.mp3#74", "worldevents/darkmoonfaire_3.mp3#58", "worldevents/darkmoonfaire_4.mp3#37"})
+	Zn(L["Various"], L["Various"], L["Main Titles"]							, {"|cffffd800" .. L["Various"] .. ": " .. L["Main Titles"], prefol, "gluescreenmusic/wow_main_theme.mp3#161", "gluescreenmusic/bc_main_theme.mp3#226", "gluescreenmusic/wotlk_main_title.mp3#544"})
+	Zn(L["Various"], L["Various"], L["Musical Moments"]						, {"|cffffd800" .. L["Various"] .. ": " .. L["Musical Moments"], prefol, "|cffffd800", "|cffffd800" .. L["Angelic"], "musical moments/angelic/angelic01.mp3#48", "|cffffd800", "|cffffd800" .. L["Battle"], "musical moments/battle/battle01.mp3#48", "musical moments/battle/battle02.mp3#62", "musical moments/battle/battle03.mp3#27", "musical moments/battle/battle04.mp3#36", "musical moments/battle/battle05.mp3#44", "musical moments/battle/battle06.mp3#62", "|cffffd800", "|cffffd800" .. L["Gloomy"], "musical moments/gloomy/gloomy01.mp3#36", "musical moments/gloomy/gloomy02.mp3#39", "|cffffd800", "|cffffd800" .. L["Haunted"], "musical moments/haunted/haunted01.mp3#62", "musical moments/haunted/haunted02.mp3#60", "|cffffd800", "|cffffd800" .. L["Magic"], "musical moments/magic/magic01-moment.mp3#64", "|cffffd800", "|cffffd800" .. L["Mystery"], "musical moments/mystery/mystery01-zone.mp3#60", "musical moments/mystery/mystery02-zone.mp3#53", "musical moments/mystery/mystery03-zone.mp3#61", "musical moments/mystery/mystery04-zone.mp3#64", "musical moments/mystery/mystery05-zone.mp3#82", "musical moments/mystery/mystery06-zone.mp3#65", "musical moments/mystery/mystery07-zone.mp3#83", "musical moments/mystery/mystery08-zone.mp3#83", "musical moments/mystery/mystery09-zone.mp3#82", "musical moments/mystery/mystery10-zone.mp3#62", "|cffffd800", "|cffffd800" .. L["Sacred"], "musical moments/sacred/sacred01.mp3#16", "musical moments/sacred/sacred02.mp3#19", "|cffffd800", "|cffffd800" .. L["Spooky"], "musical moments/spooky/spooky01-moment.mp3#25", "|cffffd800", "|cffffd800" .. L["Swamp"], "musical moments/swamp/swamp01.mp3#34", "|cffffd800", "|cffffd800" .. L["Various"], "musical moments/mystery/ahnqirajintro1.mp3#144", "musical moments/zulgurubvoodoo.mp3#84"})
+	Zn(L["Various"], L["Various"], L["Narration"]							, {"|cffffd800" .. L["Various"] .. ": " .. L["Narration"], prefol, "cinematicvoices/dwarfnarration.mp3#62", "cinematicvoices/gnomenarration.mp3#78", "cinematicvoices/humannarration.mp3#88", "cinematicvoices/nightelfnarration.mp3#108", "cinematicvoices/orcnarration.mp3#72", "cinematicvoices/taurennarration.mp3#75", "cinematicvoices/trollnarration.mp3#64", "cinematicvoices/undeadnarration.mp3#104", "cinematicvoices/bloodelfnarration.mp3#83", "cinematicvoices/draeneinarration.mp3#74"})
 
 	----------------------------------------------------------------------
 	-- Movies
