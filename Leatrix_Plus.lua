@@ -17893,7 +17893,7 @@ end
 
 -- Create an editbox (uses standard template)
 function LeaPlusLC:CreateEditBox(frame, parent, width, height, anchor, x, y, tab, shifttab, maxchars)
-    local eb = CreateFrame("EditBox", nil, parent)
+    local eb = CreateFrame("EditBox", "123", parent)
     eb:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -17913,26 +17913,33 @@ function LeaPlusLC:CreateEditBox(frame, parent, width, height, anchor, x, y, tab
     eb:SetScript("OnEscapePressed", eb.ClearFocus)
     eb:SetScript("OnEnterPressed", eb.ClearFocus)
 
-    local leftRegion, midRegion, rightRegion
 
-    for i = 1, eb:GetNumRegions() do
-        local region = select(i, eb:GetRegions())
-        if region and region.GetName then
-            if region:GetName() == "UIParentLeft" then
-                leftRegion = region
-            elseif region:GetName() == "UIParentRight" then
-                rightRegion = region
-            elseif region:GetName() == "UIParentMiddle" then
-                midRegion = region
+    local function FixBugMiddleTexture()
+        local leftRegion, midRegion, rightRegion
+
+        for i = 1, eb:GetNumRegions() do
+            local region = select(i, eb:GetRegions())
+            if region and region.GetName then
+                if region:GetName() == "UIParentLeft" then
+                    leftRegion = region
+                elseif region:GetName() == "UIParentRight" then
+                    rightRegion = region
+                elseif region:GetName() == "UIParentMiddle" then
+                    midRegion = region
+                end
             end
         end
-    end
 
-    if leftRegion and midRegion and rightRegion then
-        midRegion:ClearAllPoints()
-        midRegion:SetPoint("LEFT", leftRegion, "RIGHT", 0, 0)
-        midRegion:SetPoint("RIGHT", rightRegion, "LEFT", 0, 0)
+        if leftRegion and midRegion and rightRegion then
+            midRegion:ClearAllPoints()
+            midRegion:SetPoint("LEFT", leftRegion, "RIGHT", 0, 0)
+            midRegion:SetPoint("RIGHT", rightRegion, "LEFT", 0, 0)
+        end
     end
+    FixBugMiddleTexture()
+
+    eb:HookScript("OnHide", FixBugMiddleTexture)
+
 
     eb:SetScript("OnTabPressed", function(self)
         self:ClearFocus()
