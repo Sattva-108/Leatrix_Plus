@@ -6261,4 +6261,38 @@ if GameLocale == "zhTW" then
     L["Zul'Aman (Battle/Victory)"]                    = "祖阿曼 (戰鬥/勝利)"
 end
 
+if GameLocale == "ruRU" then
+    L["Reset listened history and play new random"] = "Сброс истории, новые случайные"
+    L["Few new random tracks remaining, or all listened."] = "Мало новых треков / все прослушаны."
+    L["No unlistened tracks found for random selection."] = "Нет треков для случайного выбора."
 
+elseif GameLocale == "deDE" then
+    L["Reset listened history and play new random"] = "Verlauf zurücksetzen, neu zufällig"
+    L["Few new random tracks remaining, or all listened."] = "Wenige neue Titel / alle gehört."
+    L["No unlistened tracks found for random selection."] = "Keine Titel für Zufallsauswahl."
+
+elseif GameLocale == "frFR" then
+    L["Reset listened history and play new random"] = "Réinit. historique, nouveaux aléatoires"
+    L["Few new random tracks remaining, or all listened."] = "Peu de titres neufs / tous écoutés."
+    L["No unlistened tracks found for random selection."] = "Aucun titre pour sélect. aléatoire."
+
+elseif GameLocale == "esES" or GameLocale == "esMX" then
+    L["Reset listened history and play new random"] = "Restablecer hist., nuevos aleatorios"
+    L["Few new random tracks remaining, or all listened."] = "Pocas pistas nuevas / todas oídas."
+    L["No unlistened tracks found for random selection."] = "No hay pistas para selección aleat."
+
+elseif GameLocale == "koKR" then
+    L["Reset listened history and play new random"] = "기록 초기화, 새 무작위 곡"
+    L["Few new random tracks remaining, or all listened."] = "새 곡 거의 없음 / 모두 들음."
+    L["No unlistened tracks found for random selection."] = "무작위 선택 곡 없음."
+
+elseif GameLocale == "zhCN" then -- Simplified Chinese
+    L["Reset listened history and play new random"] = "重置历史, 新随机曲"
+    L["Few new random tracks remaining, or all listened."] = "新曲目少 / 或已全听。"
+    L["No unlistened tracks found for random selection."] = "无未听曲目供随机选择。"
+
+elseif GameLocale == "zhTW" then -- Traditional Chinese
+    L["Reset listened history and play new random"] = "重設歷史, 新隨機曲"
+    L["Few new random tracks remaining, or all listened."] = "新曲目少 / 或已全聽。"
+    L["No unlistened tracks found for random selection."] = "無未聽曲目供隨機選擇。"
+end
