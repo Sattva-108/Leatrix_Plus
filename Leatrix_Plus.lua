@@ -15817,21 +15817,20 @@ function LeaPlusLC:RunOnce()
 
 
         -- Function to show random track listing
+
         local function ShowRandomList()
-            -- If random track is currently playing, stop playback since random track list will be changed
             if LastFolder == L["Random"] then
                 stopBtn:Click()
             end
-            -- Wipe the track listing for random
-            wipe(ListData)
-            -- Set the track list heading
-            ListData[1] = "|cffffd800" .. L["Random"]
-            ListData[2] = "|Cffffffaa{" .. L["click here for new selection"] .. "}" -- Must be capital |C
-            ListData[3] = "|cffffd800"
-            ListData[4] = "|cffffd800" .. L["Selection of music tracks"] -- Must be lower case |c
+            wipe(ListData) -- Start with a clean ListData
 
+            -- --- Stage 1: Find available random tracks ---
             local attempt = 0
             local randHash = {}
+            local actualTracksFoundInThisPass = 0
+            local tempFoundTracks = {} -- Store found tracks temporarily
+            local targetMusicTracks = 45
+
             local categoriesForRandom = {}
             for _, catKey in ipairs({L["Zones"], L["Dungeons"], L["Various"], L["NEW"]}) do
                 if not tContains(randomBannedList, catKey) then
@@ -15839,7 +15838,7 @@ function LeaPlusLC:RunOnce()
                 end
             end
 
-            while #ListData < 50 and attempt < 2000 do
+            while #tempFoundTracks < targetMusicTracks and attempt < 2000 do
                 attempt = attempt + 1
                 if #categoriesForRandom == 0 then break end
                 local rCategory = categoriesForRandom[random(1, #categoriesForRandom)]
@@ -15849,24 +15848,23 @@ function LeaPlusLC:RunOnce()
                     local rZoneEntry = ZoneList[rCategory][rZoneIndex]
 
                     if rZoneEntry and rZoneEntry.tracks and #rZoneEntry.tracks > 0 then
-                        local actualTracks = {}
+                        local playableTracksInZone = {}
                         for _, trackItem in ipairs(rZoneEntry.tracks) do
                             if type(trackItem) == "string" and strfind(trackItem, "#") and strfind(trackItem:lower(), ".mp3") then
-                                tinsert(actualTracks, trackItem)
+                                tinsert(playableTracksInZone, trackItem)
                             end
                         end
 
-                        if #actualTracks > 0 then
-                            local rTrack = actualTracks[random(1, #actualTracks)]
+                        if #playableTracksInZone > 0 then
+                            local rTrack = playableTracksInZone[random(1, #playableTracksInZone)]
                             LeaPlusDB["ListenedTracks"] = LeaPlusDB["ListenedTracks"] or {}
                             if rTrack and rTrack ~= "" then
                                 local trackID = GetTrackIDFromPath(rTrack)
                                 if not LeaPlusDB["ListenedTracks"][trackID] and not randHash[trackID] then
                                     local zoneLabel = "|Cffffffaa" .. (rZoneEntry.zone or "Unknown Zone") .. " |r" .. rTrack
-                                    if not tContains(ListData, zoneLabel) then
-                                        tinsert(ListData, zoneLabel)
-                                        randHash[trackID] = true
-                                    end
+                                    tinsert(tempFoundTracks, zoneLabel)
+                                    randHash[trackID] = true
+                                    actualTracksFoundInThisPass = actualTracksFoundInThisPass + 1
                                 end
                             end
                         end
@@ -15874,11 +15872,31 @@ function LeaPlusLC:RunOnce()
                 end
             end
 
-            -- MODIFICATION HERE:
-            if #ListData <= 4 then -- Accounts for the 4 header/info lines
-                tinsert(ListData, "|cff999999(" .. L["You have listened to all available random tracks."] .. ")|r")
-                -- Add the clickable "button" text
+            -- --- Stage 2: Construct ListData with headers and messages ---
+            -- Always add the main headers
+            tinsert(ListData, "|cffffd800" .. L["Random"])
+            tinsert(ListData, "|Cffffffaa{" .. L["click here for new selection"] .. "}")
+
+            local showResetButtonThreshold = 20
+
+            if actualTracksFoundInThisPass < showResetButtonThreshold then
+                -- Less than threshold, show the "few tracks" message and the reset button
+                tinsert(ListData, "|cff999999(" .. L["Few new random tracks remaining, or all listened."] .. ")|r")
                 tinsert(ListData, "|cff00ff00[ " .. L["Reset listened history and play new random"] .. " ]|r")
+            end
+
+            -- Always add the separator and "Selection of music tracks" title AFTER potential reset button
+            tinsert(ListData, "|cffffd800") -- Separator
+            tinsert(ListData, "|cffffd800" .. L["Selection of music tracks"])
+
+            -- Add the found tracks
+            for _, track in ipairs(tempFoundTracks) do
+                tinsert(ListData, track)
+            end
+
+            -- If no actual tracks were added (after all headers and potential reset button)
+            if #tempFoundTracks == 0 then
+                tinsert(ListData, "|cff999999(" .. L["No unlistened tracks found for random selection."] .. ")|r")
             end
 
             UpdateList()
@@ -15910,86 +15928,112 @@ function LeaPlusLC:RunOnce()
             button:SetNormalFontObject("GameFontHighlightLeft")
             button:SetPoint("TOPLEFT", 246, -62 + -(i - 1) * 16 - 8)
 
-            -- Create highlight bar texture
+            -- Create highlight bar texture (for hover)
             button.t = button:CreateTexture(nil, "BACKGROUND")
             button.t:SetPoint("TOPLEFT", button, 0, 0)
             button.t:SetSize(516, 16)
-
-            button.t:SetTexture(0.3, 0.3, 0.0, 0.8)
+            button.t:SetTexture(0.3, 0.3, 0.0, 0.8) -- Original yellow-ish hover
             button.t:SetAlpha(0.7)
             button.t:Hide()
 
-            -- Create last playing highlight bar texture
+            -- Create last playing highlight bar texture (for active track)
             button.s = button:CreateTexture(nil, "BACKGROUND")
             button.s:SetPoint("TOPLEFT", button, 0, 0)
             button.s:SetSize(516, 16)
-
-            button.s:SetVertexColor(0.3, 0.4, 0.00, 0.6)
+            button.s:SetVertexColor(0.3, 0.4, 0.00, 0.6) -- Darker green for active
             button.s:Hide()
-
-            button:SetScript("OnEnter", function()
-                -- Highlight links only
-                if not string.match(button:GetText() or "", "|c") then
-                    button.t:Show()
-                end
-            end)
-
-            button:SetScript("OnLeave", function()
-                button.t:Hide()
-            end)
 
             button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
-            -- Handler for playing next SoundKit track in playlist
-            uframe:SetScript("OnEvent", function(self, event, stoppedHandle)
-                if event == "SOUNDKIT_FINISHED" then
-                    -- Do nothing if stopped sound kit handle doesnt match last played track handle
-                    if LastMusicHandle and LastMusicHandle ~= stoppedHandle then
-                        return
-                    end
-                    -- Reset track number if playlist has reached the end
-                    if tracknumber == #playlist then
-                        tracknumber = 1
-                    end
-                    -- Play next track
-                    PlayTrack()
-                elseif event == "LOADING_SCREEN_DISABLED" then
-                    -- Restart player if it stopped between tracks during loading screen
-                    if playlist and tracknumber and playlist[tracknumber] and not willPlay and not musicHandle then
-                        tracknumber = tracknumber - 1
-                        LibCompat.After(0.1, PlayTrack)
+            -- OnEnter / OnLeave for hover effects
+            button:SetScript("OnEnter", function(self)
+                local currentText = self:GetText() -- Text without engine color codes
+                local originalData = ListData[self.index] -- Raw data with our color codes
+
+                local isResetButton = false
+                if originalData and type(originalData) == "string" then
+                    -- Check if this is the reset button by its specific color code and structure
+                    if string.match(originalData, "^|cff00ff00%[") then -- Starts with green and opening bracket
+                        isResetButton = true
                     end
                 end
+
+                -- Determine if it's a header (more robustly)
+                local isHeader = false
+                if originalData and type(originalData) == "string" then
+                    if string.match(originalData, "^|cffffd800") then -- Typical yellow header
+                        isHeader = true
+                    end
+                end
+
+                -- Apply hover:
+                if isResetButton then
+                    -- Always show hover for the reset button
+                    self.t:Show()
+                elseif originalData and type(originalData) == "string" and not isHeader then
+                    -- For other strings that are not headers (e.g., tracks, movies, simple zone names for nav)
+                    -- The 'currentText' check might be redundant if originalData string check is good enough
+                    -- and we assume non-color-coded originalData items are hoverable.
+                    self.t:Show()
+                elseif originalData and type(originalData) == "table" and originalData.zone then
+                    -- For zone navigation items (which are tables), always show hover
+                    self.t:Show()
+                end
+                -- Lines that are headers (and not the reset button) will not show the 't' hover.
             end)
 
+            button:SetScript("OnLeave", function(self)
+                self.t:Hide()
+            end)
+
+
+            -- Click handler for track, zone and back button
             -- Click handler for track, zone and back button
             button:SetScript("OnClick", function(self, btn)
                 if btn == "LeftButton" then
                     sBox:ClearFocus()
-                    local displayedItemText = self:GetText()
-                    local originalTrackItemFromListData = ListData[self.index]
+                    local originalTrackItemFromListData = ListData[self.index] -- This is the raw data from ListData
 
-                    -- Check if the clicked item is our "Reset" button
-                    if displayedItemText == "[ " .. L["Reset listened history and play new random"] .. " ]" then
-                        LeaPlusDB["ListenedTracks"] = {} -- Wipe the listened tracks history
-                        if LeaPlusLC and LeaPlusLC.Print then -- Ensure Print function is available
-                            LeaPlusLC:Print(L["Listened tracks history reset. Generating new random list."])
-                        else -- Fallback if LeaPlusLC.Print is not defined in this scope for some reason
-                            print(L["Listened tracks history reset. Generating new random list."])
-                        end
-                        ShowRandomList() -- Regenerate and show a new random list
-                        return -- Important: stop further processing for this click
-                    end
-
-                    if not displayedItemText or strfind(displayedItemText, "|c") then
-                        return
-                    end
-
-                    if displayedItemText == "|Cffffffaa{" .. L["click here for new selection"] .. "}" then
+                    -- 1. HIGHEST PRIORITY: Check for "{click here for new selection}"
+                    if originalTrackItemFromListData == "|Cffffffaa{" .. L["click here for new selection"] .. "}" then
                         ShowRandomList()
                         return
-                    elseif originalTrackItemFromListData and type(originalTrackItemFromListData) == "string" and strfind(originalTrackItemFromListData, "#") then
-                        -- Playable track
+                    end
+
+                    -- 2. NEXT PRIORITY: Check for the "Reset" button
+                    if originalTrackItemFromListData == "|cff00ff00[ " .. L["Reset listened history and play new random"] .. " ]|r" then
+                        LeaPlusDB["ListenedTracks"] = {}
+                        if LeaPlusLC and LeaPlusLC.Print then
+                            LeaPlusLC:Print(L["Listened tracks history reset. Generating new random list."])
+                        else
+                            print(L["Listened tracks history reset. Generating new random list."])
+                        end
+                        ShowRandomList()
+                        return
+                    end
+
+                    -- 3. NEXT PRIORITY: Check for INFORMATIONAL MESSAGES (non-clickable)
+                    if originalTrackItemFromListData == ("|cff999999(" .. L["Few new random tracks remaining, or all listened."] .. ")|r") or
+                            originalTrackItemFromListData == ("|cff999999(" .. L["No unlistened tracks found for random selection."] .. ")|r") or
+                            originalTrackItemFromListData == ("|cffffffaa{" .. L["enter zone or track name"] .. "}") or
+                            (type(originalTrackItemFromListData) == "string" and (string.match(originalTrackItemFromListData, "^|cffffffaa{.*results}") or string.match(originalTrackItemFromListData, "^|cffffffaa{.*result}"))) then -- Search results count
+                        return -- Do nothing for these lines
+                    end
+
+                    -- 4. If it's a header (usually starts with a color code in original data) and not handled above, do nothing.
+                    if not originalTrackItemFromListData or
+                            (type(originalTrackItemFromListData) == "string" and
+                                    (string.match(originalTrackItemFromListData, "^|cffffd800") ) and -- Main yellow headers
+                                    not strfind(originalTrackItemFromListData, "#") and -- Make sure it's not a track
+                                    not (strfind(originalTrackItemFromListData, "|r") and not strfind(originalTrackItemFromListData, "^|cff999999")) -- Make sure it's not a movie or our grey info messages
+                            ) then
+                        return
+                    end
+
+
+                    -- 5. If it's a PLAYABLE TRACK (contains # for duration)
+                    if originalTrackItemFromListData and type(originalTrackItemFromListData) == "string" and strfind(originalTrackItemFromListData, "#") then
+                        -- Playable track logic...
                         if GetCVar("Sound_EnableAllSound") == "0" then
                             SetCVar("Sound_EnableAllSound", "1")
                         end
@@ -16002,9 +16046,9 @@ function LeaPlusLC:RunOnce()
 
                         wipe(playlist)
                         local listDataIndexForClickedItem = 0
-                        for i = 1, #ListData do
-                            if ListData[i] == originalTrackItemFromListData then
-                                listDataIndexForClickedItem = i
+                        for i_idx = 1, #ListData do
+                            if ListData[i_idx] == originalTrackItemFromListData then
+                                listDataIndexForClickedItem = i_idx
                                 break
                             end
                         end
@@ -16017,14 +16061,14 @@ function LeaPlusLC:RunOnce()
                                 return
                             end
                         else
-                            for i = listDataIndexForClickedItem, #ListData do
-                                local item = ListData[i]
+                            for i_idx = listDataIndexForClickedItem, #ListData do
+                                local item = ListData[i_idx]
                                 if item and type(item) == "string" and strfind(item, "#") then
                                     tinsert(playlist, item)
                                 end
                             end
-                            for i = 1, listDataIndexForClickedItem - 1 do
-                                local item = ListData[i]
+                            for i_idx = 1, listDataIndexForClickedItem - 1 do
+                                local item = ListData[i_idx]
                                 if item and type(item) == "string" and strfind(item, "#") then
                                     tinsert(playlist, item)
                                 end
@@ -16039,9 +16083,14 @@ function LeaPlusLC:RunOnce()
                         LeaPlusLC:LockItem(stopBtn, false)
                         if ListData[1] == "|cffffd800" .. L["Random"] then
                             TempFolder = L["Random"]
-                        end
-                        if ListData[1] == "|cffffd800" .. L["Search"] then
+                        elseif ListData[1] == "|cffffd800" .. L["Search"] then
                             TempFolder = L["Search"]
+                        else
+                            local currentCategoryHeader = ListData[1]
+                            if currentCategoryHeader and type(currentCategoryHeader) == "string" then
+                                local categoryName = currentCategoryHeader:match("|c%x%x%x%x%x%x%x%x(.-):") or currentCategoryHeader:match("|c%x%x%x%x%x%x%x%x(.*)")
+                                if categoryName then TempFolder = strtrim(categoryName) else TempFolder = "Unknown" end
+                            end
                         end
 
                         tracknumber = 1
@@ -16054,53 +16103,42 @@ function LeaPlusLC:RunOnce()
                         uframe:RegisterEvent("LOADING_SCREEN_DISABLED")
                         return
 
+                        -- 6. If it's a MOVIE (contains |r but no #, and not one of our special |r lines already handled)
                     elseif originalTrackItemFromListData and type(originalTrackItemFromListData) == "string" and strfind(originalTrackItemFromListData, "|r") and not strfind(originalTrackItemFromListData, "#") then
-                        -- MOVIE section (Minimal with "Not Found" message)
-                        stopBtn:Click() -- Stop any currently playing music
-
+                        -- MOVIE section
+                        stopBtn:Click()
                         local displayNamePart, identifierPart = originalTrackItemFromListData:match("^(.-)|r(.*)$")
                         identifierPart = identifierPart and strtrim(identifierPart) or ""
-                        displayNamePart = displayNamePart and strtrim(displayNamePart) or L["Unknown Movie"] -- Get display name for message
-
-                        -- Check if the resolved path is empty or our "nil_path_" placeholder
+                        displayNamePart = displayNamePart and strtrim(displayNamePart) or L["Unknown Movie"]
                         if identifierPart == "" or string.find(identifierPart, "nil_path_") then
-                            -- Use your addon's standard print function (LeaPlusLC:Print)
-                            -- and try to provide the name of the movie the user clicked on.
                             LeaPlusLC:Print(string.format(L["Movie not found: %s"], displayNamePart))
                             return
                         end
-
-                        local movieVolume = 150 -- Fixed default volume
-
+                        local movieVolume = 150
                         if _G.MovieFrame_PlayMovie and _G.MovieFrame then
                             _G.MovieFrame_PlayMovie(_G.MovieFrame, identifierPart:gsub("/", "\\"), movieVolume)
-                            -- else
-                            -- If MovieFrame_PlayMovie system itself is missing, playback will silently fail here.
-                            -- This is a more fundamental addon issue than a single missing movie.
-                            -- Optionally, you could add a developer-level print here for debugging if MovieFrame isn't loaded.
-                            -- print("Developer: MovieFrame_PlayMovie or MovieFrame is nil.")
                         end
                         return
-                        -- ... (rest of your OnClick logic for zone navigation, etc.)
                     else
-                        -- Zone or other navigation
+                        -- 7. Zone or other navigation (simple string or table with .zone)
                         ZonePage = scrollFrame:GetVerticalScroll()
                         local clickedZoneName = ""
+
                         if type(originalTrackItemFromListData) == "table" and originalTrackItemFromListData.zone then
                             clickedZoneName = originalTrackItemFromListData.zone
-                        elseif type(originalTrackItemFromListData) == "string" and not strfind(originalTrackItemFromListData, "|c") then
+                        elseif type(originalTrackItemFromListData) == "string" then
                             clickedZoneName = originalTrackItemFromListData
                         end
 
                         if clickedZoneName ~= "" then
                             local foundZone = false
-                            for q_cat_key, w_category_list in pairs(ZoneList) do
-                                if ZoneList[w_category_list] then
-                                    for k_zone_idx, v_zone_entry in pairs(ZoneList[w_category_list]) do
-                                        if v_zone_entry.zone == clickedZoneName then
-                                            TempFolder = v_zone_entry.zone
-                                            LeaPlusDB["MusicZone"] = v_zone_entry.zone
-                                            ListData = v_zone_entry.tracks
+                            for categoryName, categoryContentList in pairs(ZoneList) do
+                                if type(categoryContentList) == "table" then
+                                    for _, zoneEntryInList in ipairs(categoryContentList) do
+                                        if type(zoneEntryInList) == "table" and zoneEntryInList.zone == clickedZoneName then
+                                            TempFolder = zoneEntryInList.zone
+                                            LeaPlusDB["MusicZone"] = zoneEntryInList.zone
+                                            ListData = zoneEntryInList.tracks
                                             UpdateList()
                                             scrollFrame:SetVerticalScroll(0)
                                             foundZone = true
@@ -16108,8 +16146,16 @@ function LeaPlusLC:RunOnce()
                                         end
                                     end
                                 end
-                                if foundZone then
-                                    break
+                                if foundZone then break end
+                            end
+                            if not foundZone then
+                                if ZoneList[clickedZoneName] and type(ZoneList[clickedZoneName]) == "table" then
+                                    TempFolder = clickedZoneName
+                                    LeaPlusDB["MusicContinent"] = clickedZoneName
+                                    ListData = ZoneList[clickedZoneName]
+                                    UpdateList()
+                                    scrollFrame:SetVerticalScroll(0)
+                                    -- foundZone = true -- Not strictly needed here as we'd return anyway
                                 end
                             end
                         end
