@@ -15586,7 +15586,7 @@ function LeaPlusLC:RunOnce()
             -- Anchor stopBtn's TOPLEFT to conbtn[L["Random"]]'s BOTTOMLEFT.
             -- X offset 0 to align vertically with L["Random"].
             -- Y offset -5 for a small gap below L["Random"]. You can adjust -5 as needed.
-            stopBtn:SetPoint("TOPLEFT", conbtn[L["Random"]], "BOTTOMLEFT", 0, -5)
+            stopBtn:SetPoint("TOPLEFT", conbtn[L["Random"]], "BOTTOMLEFT", 0, -20)
         else
             -- Fallback: If L["Random"] button isn't found for some reason, or stopBtn failed to create.
             if stopBtn then
@@ -15689,7 +15689,7 @@ function LeaPlusLC:RunOnce()
 
 
         -- Create editbox for search
-        local sBox = LeaPlusLC:CreateEditBox("MusicSearchBox", LeaPlusLC["Page9"], 100, 24, "TOPLEFT", 135, -260, "MusicSearchBox", "MusicSearchBox", 50)
+        local sBox = LeaPlusLC:CreateEditBox("MusicSearchBox", LeaPlusLC["Page9"], 100, 24, "TOPLEFT", 135, -292, "MusicSearchBox", "MusicSearchBox", 50) -- MODIFIED Y-offset
         sBox:SetMaxLetters(50)
         sBox:SetTextInsets(6, 12, 0, 0) -- (left, right, top, bottom)
         sBox:SetBackdropBorderColor(1.0, 0.82, 0.0, 0.4)
@@ -15733,6 +15733,7 @@ function LeaPlusLC:RunOnce()
             sBox:SetText("")
             clearButton:Hide()
             searchIcon:Show()
+            sBox:ClearFocus()
         end)
         -- Implement pushed effect by adjusting the existing SetPoint
         clearButton:SetScript("OnMouseDown", function(self)
