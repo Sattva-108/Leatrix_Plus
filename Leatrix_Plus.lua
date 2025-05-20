@@ -15699,15 +15699,22 @@ function LeaPlusLC:RunOnce()
                 LeaPlusLC.TrackTimer:Cancel()
             end
             if trackTime then
-                LeaPlusLC.TrackTimer = LibCompat.NewTimer(trackTime + 1, function()
-                    -- Automatic mark track after listened fully
-                    MarkCurrentTrackListened()
-                    StopMusic()
-                    if tracknumber > #playlist then
-                        tracknumber = 1
-                    end
-                    PlayTrack()
-                end)
+                -- Convert trackTime (which is a string) to a number before using it
+                local numericTrackTime = tonumber(trackTime)
+                if numericTrackTime then -- Ensure conversion was successful
+                    LeaPlusLC.TrackTimer = LibCompat.NewTimer(numericTrackTime, function()
+                        -- Automatic mark track after listened fully
+                        MarkCurrentTrackListened()
+                        StopMusic()
+                        if tracknumber > #playlist then
+                            tracknumber = 1
+                        end
+                        PlayTrack()
+                    end)
+                else
+                    -- Handle case where trackTime couldn't be converted (optional, for robustness)
+                    -- LeaPlusLC:Print("Error: Invalid trackTime format for " .. LastPlayed)
+                end
             end
 
             -- Обновить статус
