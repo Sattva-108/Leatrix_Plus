@@ -15564,12 +15564,35 @@ function LeaPlusLC:RunOnce()
         local function MarkCurrentTrackListened()
             if LastFolder == L["Random"] and LastPlayed and trackStartTime and trackStartTime > 0 then
                 local elapsed = GetTime() - trackStartTime
-                if elapsed >= 15 then
-                    local id = GetTrackIDFromPath(LastPlayed)
-                    if id and id ~= "" then
-                        LeaPlusDB["ListenedTracks"][id] = true
-                        --LeaPlusLC:Print("Added track to listened: " .. id)
+                local id = GetTrackIDFromPath(LastPlayed) -- Get ID early
+
+                if not id or id == "" then return end -- No valid ID, nothing to do
+
+                -- Extract total duration of the track
+                local totalDurationStr = string.match(LastPlayed, "#(%d+)")
+                local totalDurationNum
+
+                if totalDurationStr then
+                    totalDurationNum = tonumber(totalDurationStr)
+                end
+
+                local shouldMarkListened = false
+
+                if totalDurationNum and totalDurationNum < 15 then
+                    -- For short tracks: if it has played at all (elapsed > 0, to avoid issues if trackStartTime was just set)
+                    if elapsed > 5 then -- Or a very small threshold like elapsed >= 0.1 if needed
+                        shouldMarkListened = true
                     end
+                else
+                    -- For longer tracks: original 15-second rule
+                    if elapsed >= 15 then
+                        shouldMarkListened = true
+                    end
+                end
+
+                if shouldMarkListened then
+                    LeaPlusDB["ListenedTracks"][id] = true
+                    --LeaPlusLC:Print("Added track to listened: " .. id)
                 end
             end
         end
