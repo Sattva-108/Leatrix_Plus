@@ -8038,24 +8038,36 @@ function LeaPlusLC:Player()
                 editFrame:Hide()
             end
 
-            --local PLAYER_ON_TAXI = false
+            -- Delay a short moment, then start polling taxi state.
             LibCompat.After(0.1, function()
                 local ticker
-                ticker = LibCompat.NewTicker(0.1, function()
+                local seenAirborne = false     -- becomes true the first time UnitOnTaxi() returns true
+                local timeSinceTickerStart = 0 -- Counter for timeout
+                local MAX_WAIT_TIME = 5        -- Max seconds to wait for flight to start
+
+                ticker = LibCompat.NewTicker(0.1, function(self, elapsed)
+                    local tickDuration = elapsed or 0.1
 
                     if UnitOnTaxi("player") then
-                        -- print("ticking")
-                        --PLAYER_ON_TAXI = true
-                        --if PLAYER_ON_TAXI == true then print("register event") end
-                    elseif not UnitOnTaxi("player") then
-                        LibCompat.CancelTimer(ticker) -- stop the timer
-                        --PLAYER_ON_TAXI = false
+                        -- We’re definitely airborne now
+                        seenAirborne = true
+                        return
+                    end
+
+                    if seenAirborne then
+                        -- First false after a true → actual landing
+                        LibCompat.CancelTimer(ticker)
                         Leatrix_HandleFlightLanding()
-                        --print("unregister event")
-                        --if PLAYER_ON_TAXI == false then print("unregister event") else print("event still registered") end
                         if LeaPlusLC.FlightProgressBar then
                             LeaPlusLC.FlightProgressBar:Stop()
                             LeaPlusLC.FlightProgressBar = nil
+                        end
+                    else
+                        -- Still waiting for that first airborne tick
+                        timeSinceTickerStart = timeSinceTickerStart + tickDuration
+                        if timeSinceTickerStart > MAX_WAIT_TIME then
+                            -- Give up if we never saw UnitOnTaxi turn true
+                            LibCompat.CancelTimer(ticker)
                         end
                     end
                 end)
