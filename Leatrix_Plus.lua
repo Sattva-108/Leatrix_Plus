@@ -8038,36 +8038,39 @@ function LeaPlusLC:Player()
                 editFrame:Hide()
             end
 
-            -- Delay a short moment, then start polling taxi state.
+            -- === Unified start/landing watcher ===
+            -- Record the moment TakeTaxiNode was clicked
+            local timeStart = GetTime()
+            -- Delay a moment to let the client register TakeTaxiNode()
             LibCompat.After(0.1, function()
                 local ticker
-                local seenAirborne = false     -- becomes true the first time UnitOnTaxi() returns true
-                local timeSinceTickerStart = 0 -- Counter for timeout
-                local MAX_WAIT_TIME = 5        -- Max seconds to wait for flight to start
+                local seenAirborne = false           -- became true once we detect UnitOnTaxi==true
+                local timeSinceStart = 0             -- accumulates elapsed time
+                local MAX_START_DELAY = 5            -- give up start check after 5s
 
                 ticker = LibCompat.NewTicker(0.1, function(self, elapsed)
-                    local tickDuration = elapsed or 0.1
+                    local dt = elapsed or 0.1
+                    timeSinceStart = timeSinceStart + dt
 
+                    -- 1) If we never got airborne within MAX_START_DELAY → cancel watcher
+                    if not seenAirborne and timeSinceStart > MAX_START_DELAY then
+                        LibCompat.CancelTimer(ticker)
+                        return
+                    end
+
+                    -- 2) Detect actual takeoff
                     if UnitOnTaxi("player") then
-                        -- We’re definitely airborne now
                         seenAirborne = true
                         return
                     end
 
+                    -- 3) After having been airborne, first false → real landing
                     if seenAirborne then
-                        -- First false after a true → actual landing
                         LibCompat.CancelTimer(ticker)
                         Leatrix_HandleFlightLanding()
                         if LeaPlusLC.FlightProgressBar then
                             LeaPlusLC.FlightProgressBar:Stop()
                             LeaPlusLC.FlightProgressBar = nil
-                        end
-                    else
-                        -- Still waiting for that first airborne tick
-                        timeSinceTickerStart = timeSinceTickerStart + tickDuration
-                        if timeSinceTickerStart > MAX_WAIT_TIME then
-                            -- Give up if we never saw UnitOnTaxi turn true
-                            LibCompat.CancelTimer(ticker)
                         end
                     end
                 end)
@@ -8139,25 +8142,25 @@ function LeaPlusLC:Player()
                     --print(debugString)
 
 
-                    -- Handle flight time not correct or flight does not exist in database
-                    local timeStart = GetTime()
-                    LibCompat.After(0.2, function()
-                        if UnitOnTaxi("player") then
-                            -- Player is on a taxi so register when taxi lands
-                            -- flightFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
-                            --if PLAYER_ON_TAXI == true then print("unit is on taxi") else PLAYER_ON_TAXI = false end
-
-                        else
-                            -- Player is not on a taxi so delete the flight progress bar
-                            -- flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
-                            if LeaPlusLC.FlightProgressBar then
-                                LeaPlusLC.FlightProgressBar:Stop()
-                                LeaPlusLC.FlightProgressBar = nil
-                                --PLAYER_ON_TAXI = false
-                            end
-
-                        end
-                    end)
+                    ---- Handle flight time not correct or flight does not exist in database
+                    --local timeStart = GetTime()
+                    --LibCompat.After(0.2, function()
+                    --    if UnitOnTaxi("player") then
+                    --        -- Player is on a taxi so register when taxi lands
+                    --        -- flightFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
+                    --        --if PLAYER_ON_TAXI == true then print("unit is on taxi") else PLAYER_ON_TAXI = false end
+                    --
+                    --    else
+                    --        -- Player is not on a taxi so delete the flight progress bar
+                    --        -- flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
+                    --        if LeaPlusLC.FlightProgressBar then
+                    --            LeaPlusLC.FlightProgressBar:Stop()
+                    --            LeaPlusLC.FlightProgressBar = nil
+                    --            --PLAYER_ON_TAXI = false
+                    --        end
+                    --
+                    --    end
+                    --end)
 
                     function Leatrix_HandleFlightLanding()
                         --print("debug report script fire")
