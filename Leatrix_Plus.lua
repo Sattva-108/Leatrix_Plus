@@ -16742,23 +16742,9 @@ local function eventHandler(self, event, arg1, arg2, ...)
     -- Disable warning for attempting to disenchant items
     if event == "CONFIRM_DISENCHANT_ROLL" then
         ConfirmLootRoll(arg1, arg2)
-        StaticPopup_Hide("CONFIRM_DISENCHANT_ROLL")
+        StaticPopup_Hide("CONFIRM_LOOT_ROLL")
         return
     end
-
-
-        local originalStaticPopupHide = StaticPopup_Hide
-        StaticPopup_Hide = function(which, data)
-            print("DEBUG StaticPopup_Hide called with:", which, data)
-            return originalStaticPopupHide(which, data)
-        end
-
-        local originalStaticPopupShow = StaticPopup_Show
-        StaticPopup_Show = function(which, ...)
-            print("DEBUG StaticPopup_Show called with:", which, ...)
-            return originalStaticPopupShow(which, ...)
-        end
-
 
     function Leatrix_CustomSellCursorItem()
         -- Fetch the mouseovered item
