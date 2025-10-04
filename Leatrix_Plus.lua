@@ -839,13 +839,11 @@ function LeaPlusLC:Live()
         LpEvt:RegisterEvent("LOOT_BIND_CONFIRM")
         LpEvt:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL")
         LpEvt:RegisterEvent("MAIL_LOCK_SEND_ITEMS")
-        LpEvt:RegisterEvent("CONFIRM_DISENCHANT_ROLL")
     else
         LpEvt:UnregisterEvent("CONFIRM_LOOT_ROLL")
         LpEvt:UnregisterEvent("LOOT_BIND_CONFIRM")
         LpEvt:UnregisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL")
         LpEvt:UnregisterEvent("MAIL_LOCK_SEND_ITEMS")
-        LpEvt:UnregisterEvent("CONFIRM_DISENCHANT_ROLL")
     end
 
 end
@@ -2216,19 +2214,17 @@ function LeaPlusLC:Isolated()
                 --===== Disable Auto Loot button in Interface menu and add tooltip to it. =====--
                 -- if aura_env.config["autoLootGlobalEnabled"] then
 
-                InterfaceOptionsControlsPanelAutoLootCorpse:Disable()
+                if InterfaceOptionsControlsPanelAutoLootCorpse then
+                    InterfaceOptionsControlsPanelAutoLootCorpse:Disable()
 
-                local autoLootText = InterfaceOptionsControlsPanelAutoLootCorpseText
-                autoLootText:SetText("Auto Loot option is controlled by Leatrix Plus.")
-                autoLootText:SetAlpha(0.6)
+                    local autoLootText = InterfaceOptionsControlsPanelAutoLootCorpseText
+                    autoLootText:SetText("Auto Loot option is controlled by Leatrix Plus.")
+                    autoLootText:SetAlpha(0.6)
+                end
 
                 -- print("Auto Loot Set")
 
                 -- else
-
-                --     InterfaceOptionsControlsPanelAutoLootCorpse:Enable()
-
-                -- end
 
 
             end
@@ -8040,36 +8036,21 @@ function LeaPlusLC:Player()
                 editFrame:Hide()
             end
 
-            -- === Unified start/landing watcher ===
-            -- Record the moment TakeTaxiNode was clicked
-            local timeStart = GetTime()
-            -- Delay a moment to let the client register TakeTaxiNode()
+            --local PLAYER_ON_TAXI = false
             LibCompat.After(0.1, function()
                 local ticker
-                local seenAirborne = false           -- became true once we detect UnitOnTaxi==true
-                local timeSinceStart = 0             -- accumulates elapsed time
-                local MAX_START_DELAY = 5            -- give up start check after 5s
+                ticker = LibCompat.NewTicker(0.1, function()
 
-                ticker = LibCompat.NewTicker(0.1, function(self, elapsed)
-                    local dt = elapsed or 0.1
-                    timeSinceStart = timeSinceStart + dt
-
-                    -- 1) If we never got airborne within MAX_START_DELAY → cancel watcher
-                    if not seenAirborne and timeSinceStart > MAX_START_DELAY then
-                        LibCompat.CancelTimer(ticker)
-                        return
-                    end
-
-                    -- 2) Detect actual takeoff
                     if UnitOnTaxi("player") then
-                        seenAirborne = true
-                        return
-                    end
-
-                    -- 3) After having been airborne, first false → real landing
-                    if seenAirborne then
-                        LibCompat.CancelTimer(ticker)
+                        -- print("ticking")
+                        --PLAYER_ON_TAXI = true
+                        --if PLAYER_ON_TAXI == true then print("register event") end
+                    elseif not UnitOnTaxi("player") then
+                        LibCompat.CancelTimer(ticker) -- stop the timer
+                        --PLAYER_ON_TAXI = false
                         Leatrix_HandleFlightLanding()
+                        --print("unregister event")
+                        --if PLAYER_ON_TAXI == false then print("unregister event") else print("event still registered") end
                         if LeaPlusLC.FlightProgressBar then
                             LeaPlusLC.FlightProgressBar:Stop()
                             LeaPlusLC.FlightProgressBar = nil
@@ -8144,25 +8125,25 @@ function LeaPlusLC:Player()
                     --print(debugString)
 
 
-                    ---- Handle flight time not correct or flight does not exist in database
-                    --local timeStart = GetTime()
-                    --LibCompat.After(0.2, function()
-                    --    if UnitOnTaxi("player") then
-                    --        -- Player is on a taxi so register when taxi lands
-                    --        -- flightFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
-                    --        --if PLAYER_ON_TAXI == true then print("unit is on taxi") else PLAYER_ON_TAXI = false end
-                    --
-                    --    else
-                    --        -- Player is not on a taxi so delete the flight progress bar
-                    --        -- flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
-                    --        if LeaPlusLC.FlightProgressBar then
-                    --            LeaPlusLC.FlightProgressBar:Stop()
-                    --            LeaPlusLC.FlightProgressBar = nil
-                    --            --PLAYER_ON_TAXI = false
-                    --        end
-                    --
-                    --    end
-                    --end)
+                    -- Handle flight time not correct or flight does not exist in database
+                    local timeStart = GetTime()
+                    LibCompat.After(0.2, function()
+                        if UnitOnTaxi("player") then
+                            -- Player is on a taxi so register when taxi lands
+                            -- flightFrame:RegisterEvent("PLAYER_CONTROL_GAINED")
+                            --if PLAYER_ON_TAXI == true then print("unit is on taxi") else PLAYER_ON_TAXI = false end
+
+                        else
+                            -- Player is not on a taxi so delete the flight progress bar
+                            -- flightFrame:UnregisterEvent("PLAYER_CONTROL_GAINED")
+                            if LeaPlusLC.FlightProgressBar then
+                                LeaPlusLC.FlightProgressBar:Stop()
+                                LeaPlusLC.FlightProgressBar = nil
+                                --PLAYER_ON_TAXI = false
+                            end
+
+                        end
+                    end)
 
                     function Leatrix_HandleFlightLanding()
                         --print("debug report script fire")
@@ -15581,35 +15562,12 @@ function LeaPlusLC:RunOnce()
         local function MarkCurrentTrackListened()
             if LastFolder == L["Random"] and LastPlayed and trackStartTime and trackStartTime > 0 then
                 local elapsed = GetTime() - trackStartTime
-                local id = GetTrackIDFromPath(LastPlayed) -- Get ID early
-
-                if not id or id == "" then return end -- No valid ID, nothing to do
-
-                -- Extract total duration of the track
-                local totalDurationStr = string.match(LastPlayed, "#(%d+)")
-                local totalDurationNum
-
-                if totalDurationStr then
-                    totalDurationNum = tonumber(totalDurationStr)
-                end
-
-                local shouldMarkListened = false
-
-                if totalDurationNum and totalDurationNum < 15 then
-                    -- For short tracks: if it has played at all (elapsed > 0, to avoid issues if trackStartTime was just set)
-                    if elapsed > 5 then -- Or a very small threshold like elapsed >= 0.1 if needed
-                        shouldMarkListened = true
+                if elapsed >= 15 then
+                    local id = GetTrackIDFromPath(LastPlayed)
+                    if id and id ~= "" then
+                        LeaPlusDB["ListenedTracks"][id] = true
+                        --LeaPlusLC:Print("Added track to listened: " .. id)
                     end
-                else
-                    -- For longer tracks: original 15-second rule
-                    if elapsed >= 15 then
-                        shouldMarkListened = true
-                    end
-                end
-
-                if shouldMarkListened then
-                    LeaPlusDB["ListenedTracks"][id] = true
-                    --LeaPlusLC:Print("Added track to listened: " .. id)
                 end
             end
         end
@@ -15716,22 +15674,15 @@ function LeaPlusLC:RunOnce()
                 LeaPlusLC.TrackTimer:Cancel()
             end
             if trackTime then
-                -- Convert trackTime (which is a string) to a number before using it
-                local numericTrackTime = tonumber(trackTime)
-                if numericTrackTime then -- Ensure conversion was successful
-                    LeaPlusLC.TrackTimer = LibCompat.NewTimer(numericTrackTime, function()
-                        -- Automatic mark track after listened fully
-                        MarkCurrentTrackListened()
-                        StopMusic()
-                        if tracknumber > #playlist then
-                            tracknumber = 1
-                        end
-                        PlayTrack()
-                    end)
-                else
-                    -- Handle case where trackTime couldn't be converted (optional, for robustness)
-                    -- LeaPlusLC:Print("Error: Invalid trackTime format for " .. LastPlayed)
-                end
+                LeaPlusLC.TrackTimer = LibCompat.NewTimer(trackTime + 1, function()
+                    -- Automatic mark track after listened fully
+                    MarkCurrentTrackListened()
+                    StopMusic()
+                    if tracknumber > #playlist then
+                        tracknumber = 1
+                    end
+                    PlayTrack()
+                end)
             end
 
             -- Обновить статус
@@ -16736,13 +16687,6 @@ local function eventHandler(self, event, arg1, arg2, ...)
     if event == "LOOT_BIND_CONFIRM" then
         ConfirmLootSlot(arg1, arg2)
         StaticPopup_Hide("LOOT_BIND", ...)
-        return
-    end
-
-    -- Disable warning for attempting to disenchant items
-    if event == "CONFIRM_DISENCHANT_ROLL" then
-        ConfirmLootRoll(arg1, arg2)
-        StaticPopup_Hide("CONFIRM_LOOT_ROLL")
         return
     end
 
