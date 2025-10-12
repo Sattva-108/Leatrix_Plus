@@ -6071,15 +6071,23 @@ function LeaPlusLC:Player()
                     end
                     -- Set hover scripts for all buttons
                     local function SetupButtonHoverScripts()
-                        for _, button in pairs(minimapButtons) do
-                            if button then
-                                button:HookScript("OnEnter", function()
+                        for name, button in pairs(minimapButtons) do
+                            if button and not button.__LeaPlus_HoverHooked then
+                                button.__LeaPlus_HoverHooked = true
+
+                                button:HookScript("OnEnter", function(self)
+                                    if self.__LeaPlus_Entering then return end
+                                    self.__LeaPlus_Entering = true
                                     -- Show all buttons when hovering over one
                                     for _, btn in pairs(minimapButtons) do
-                                        btn:SetAlpha(1)
+                                        if btn then btn:SetAlpha(1) end
                                     end
+                                    self.__LeaPlus_Entering = nil
                                 end)
-                                button:HookScript("OnLeave", function()
+
+                                button:HookScript("OnLeave", function(self)
+                                    if self.__LeaPlus_Leaving then return end
+                                    self.__LeaPlus_Leaving = true
                                     -- Hide buttons if mouse is not over minimap or any button
                                     if not Minimap:IsMouseOver() then
                                         local mouseOverAny = false
@@ -6091,10 +6099,11 @@ function LeaPlusLC:Player()
                                         end
                                         if not mouseOverAny then
                                             for _, btn in pairs(minimapButtons) do
-                                                btn:SetAlpha(0)
+                                                if btn then btn:SetAlpha(0) end
                                             end
                                         end
                                     end
+                                    self.__LeaPlus_Leaving = nil
                                 end)
                             end
                         end
