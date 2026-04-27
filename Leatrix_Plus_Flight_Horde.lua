@@ -2487,6 +2487,9 @@
 				["0.45:0.49:0.48:0.56:0.52:0.62:0.49:0.79:0.57:0.79:0.64:0.81"] = 327, -- Agmar's Hammer, Kor'koron Vanguard, Dalaran, Argent Tournament Grounds, Bouldercrag's Refuge, Ulduar
 				["0.45:0.49:0.49:0.42:0.74:0.29:0.74:0.38"] = 302, -- Agmar's Hammer, Moa'ki, Kamagua, Apothecary Camp
 				["0.45:0.49:0.48:0.56:0.64:0.58:0.69:0.58"] = 215, -- Agmar's Hammer, Kor'koron Vanguard, Ebon Watch, Light's Breach
+				["0.45:0.49:0.54:0.48:0.52:0.62:0.56:0.64"] = 156,-- Agmar's Hammer, The Argent Vanguard with 2 hops
+				["0.45:0.49:0.54:0.48:0.52:0.62:0.62:0.64"] = 177, -- Agmar's Hammer, K3 with 2 hops
+
 
 				-- Horde: Dragonblight: Kor'koron Vanguard
 				["0.48:0.56:0.52:0.62"] = 56, -- Kor'koron Vanguard, Dalaran
