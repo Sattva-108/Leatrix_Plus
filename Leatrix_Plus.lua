@@ -11325,7 +11325,7 @@ function LeaPlusLC:Player()
         local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("Leatrix_Plus", {
             type = "data source",
             text = "Leatrix Plus",
-            icon = "Interface\\addons\\Leatrix_Plus\\assets\\minimapicon.tga",
+            icon = "Interface\\addons\\Leatrix_Plus\\assets\\reportlagicon-movement",
             OnClick = function(self, btn)
                 MiniBtnClickFunc(btn)
             end,
@@ -11348,7 +11348,6 @@ function LeaPlusLC:Player()
 
         local icon = LibStub("LibDBIcon-1.0", true)
         icon:Register("Leatrix_Plus", miniButton, LeaPlusDB)
-
         -- Function to toggle LibDBIcon
         local function SetLibDBIconFunc()
             if LeaPlusLC["ShowMinimapIcon"] == "On" then
