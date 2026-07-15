@@ -2216,11 +2216,13 @@ function LeaPlusLC:Isolated()
                 --===== Disable Auto Loot button in Interface menu and add tooltip to it. =====--
                 -- if aura_env.config["autoLootGlobalEnabled"] then
 
-                InterfaceOptionsControlsPanelAutoLootCorpse:Disable()
+                if InterfaceOptionsControlsPanelAutoLootCorpse then
+                    InterfaceOptionsControlsPanelAutoLootCorpse:Disable()
 
-                local autoLootText = InterfaceOptionsControlsPanelAutoLootCorpseText
-                autoLootText:SetText("Auto Loot option is controlled by Leatrix Plus.")
-                autoLootText:SetAlpha(0.6)
+                    local autoLootText = InterfaceOptionsControlsPanelAutoLootCorpseText
+                    autoLootText:SetText("Auto Loot option is controlled by Leatrix Plus.")
+                    autoLootText:SetAlpha(0.6)
+                end
 
                 -- print("Auto Loot Set")
 
