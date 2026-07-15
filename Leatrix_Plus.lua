@@ -6094,7 +6094,7 @@ function LeaPlusLC:Player()
                                     if not Minimap:IsMouseOver() then
                                         local mouseOverAny = false
                                         for _, btn in pairs(minimapButtons) do
-                                            if btn:IsMouseOver() then
+                                            if btn and btn:IsMouseOver() then
                                                 mouseOverAny = true
                                                 break
                                             end
