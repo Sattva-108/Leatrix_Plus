@@ -11359,6 +11359,17 @@ function LeaPlusLC:Player()
 
         local icon = LibStub("LibDBIcon-1.0", true)
         icon:Register("Leatrix_Plus", miniButton, LeaPlusDB)
+
+        -- Center minimap icon with texcoord offset
+        local btn = _G["LibDBIcon10_Leatrix_Plus"]
+        if btn and btn.icon then
+            local origSetTexCoord = btn.icon.SetTexCoord
+            btn.icon.SetTexCoord = function(self, left, right, top, bottom)
+                origSetTexCoord(self, left + 0.06, right + 0.06, top, bottom)
+            end
+            btn.icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
+        end
+
         -- Function to toggle LibDBIcon
         local function SetLibDBIconFunc()
             if LeaPlusLC["ShowMinimapIcon"] == "On" then
