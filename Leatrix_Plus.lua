@@ -7435,262 +7435,207 @@ function LeaPlusLC:Player()
 
     if LeaPlusLC["ShowReadyTimer"] == "On" then
 
+        local function CreateReadyTimer(anchorFrame)
+
+            local timer = {}
+            local duration = 0
+            local endTime = 0
+            local isRunning = false
+            local isValid
+
+            local timerBar = CreateFrame("StatusBar", nil, anchorFrame)
+            timerBar:SetHeight(5)
+            timerBar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+            timerBar:Hide()
+
+            local timerSpark = timerBar:CreateTexture(nil, "OVERLAY")
+            timerSpark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+            timerSpark:SetSize(18, 18)
+            timerSpark:SetVertexColor(1, 1, 1)
+            timerSpark:SetBlendMode("ADD")
+            timerSpark:Hide()
+
+            local timerText = timerBar:CreateFontString(nil, "ARTWORK")
+            timerText:SetFontObject("GameFontNormalLarge")
+            timerText:SetPoint("TOP", 0, -10)
+
+            local function SetAnchor(newAnchorFrame)
+                anchorFrame = newAnchorFrame
+                timerBar:ClearAllPoints()
+                timerBar:SetParent(anchorFrame)
+                timerBar:SetPoint("TOPLEFT", anchorFrame, "BOTTOMLEFT", 8, 0)
+                timerBar:SetPoint("TOPRIGHT", anchorFrame, "BOTTOMRIGHT", -8, 0)
+            end
+
+            function timer:Stop()
+                isRunning = false
+                duration = 0
+                endTime = 0
+                isValid = nil
+                timerBar:SetScript("OnUpdate", nil)
+                timerBar:Hide()
+                timerSpark:Hide()
+            end
+
+            local function UpdateTimer()
+                local remaining = endTime - GetTime()
+
+                if not isRunning or (isValid and not isValid()) or remaining <= 0 then
+                    timer:Stop()
+                    return
+                end
+
+                timerBar:SetValue(remaining)
+                timerText:SetFormattedText(SecondsToTime(remaining + 0.5))
+
+                if remaining <= 15 then
+                    timerText:SetTextColor(1, 1, 0)
+                    timerBar:SetStatusBarColor(1, 0, 0)
+                else
+                    timerText:SetTextColor(0, 1, 0)
+                    timerBar:SetStatusBarColor(1, 1, 0)
+                end
+
+                timerSpark:Show()
+                timerSpark:ClearAllPoints()
+                timerSpark:SetPoint("CENTER", timerBar, "LEFT", timerBar:GetWidth() / duration * remaining, 0)
+            end
+
+            function timer:Start(newDuration, newAnchorFrame, validator)
+                if not newDuration or newDuration <= 0 then
+                    self:Stop()
+                    return
+                end
+
+                if newAnchorFrame then
+                    SetAnchor(newAnchorFrame)
+                end
+
+                duration = newDuration
+                endTime = GetTime() + duration
+                isRunning = true
+                isValid = validator
+                timerBar:SetMinMaxValues(0, duration)
+                timerBar:SetScript("OnUpdate", UpdateTimer)
+                timerBar:Show()
+                UpdateTimer()
+            end
+
+            function timer:Show()
+                if isRunning then
+                    timerBar:Show()
+                    UpdateTimer()
+                end
+            end
+
+            function timer:Hide()
+                timerBar:Hide()
+            end
+
+            function timer:SetAnchor(newAnchorFrame)
+                SetAnchor(newAnchorFrame)
+            end
+
+            function timer:IsRunning()
+                return isRunning
+            end
+
+            SetAnchor(anchorFrame)
+            return timer
+
+        end
+
         -- Player vs Player
         do
 
-            --===== Status Bar creation =====--
+            local pvpTimer = CreateReadyTimer(UIParent)
+            local activeQueue
+            local invitationEndTime
 
-            local bar = CreateFrame("StatusBar")
-            local anchorFrame
-            local shouldShowBar = false
-            local started = false
-            bar:SetHeight(5)
-            bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-            bar:SetStatusBarColor(1.0, 1, 0.0)
-
-            --===== Spark creation =====--
-
-            local spark = bar:CreateTexture(nil, "OVERLAY")
-            spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-            spark:SetSize(18, 18)
-            spark:SetVertexColor(1, 1, 1)
-            spark:SetBlendMode("ADD")
-            spark:Hide()
-
-            --------------------------------------------------------------------------------
-            -- Function to setup status bar scripts and positions
-            --------------------------------------------------------------------------------
-
-
-            local function SetupBar()
-                LibCompat.After(0.1, function()
-                    if not StaticPopup1:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
-                        -- print("resetting")
-                        started = false
-                    end
-                end)
-                for i = 1, MAX_BATTLEFIELD_QUEUES do
-                    status = GetBattlefieldStatus(i);
-                    if (status == "confirm") then
-                        shouldShowBar = true
-                        break
-                    else
-                        shouldShowBar = false
-                    end
-                end
-                if shouldShowBar then
-                    bar:SetPoint("TOPLEFT", anchorFrame, "BOTTOMLEFT", 8, 0)
-                    bar:SetPoint("TOPRIGHT", anchorFrame, "BOTTOMRIGHT", 0, 0)
-                    bar:SetParent(anchorFrame)
-                    bar:SetScript("OnEvent", OnEvent)
-                    bar:SetScript("OnUpdate", Update)
-                    bar:SetFrameStrata("FULLSCREEN")
-                else
-                    bar:SetScript("OnEvent", nil)
-                    bar:SetScript("OnUpdate", nil)
-                    bar:Hide()
-                    spark:Hide()
-                end
-            end
-
-            --===== Hook to the blizzard frames scripts, to avoid bar creation on frames that are not BG queue pop-up =====--
-
-            StaticPopup1:HookScript("OnShow", SetupBar)
-            StaticPopup2:HookScript("OnShow", SetupBar)
-            StaticPopup3:HookScript("OnShow", SetupBar)
-            StaticPopup4:HookScript("OnShow", SetupBar)
-
-            StaticPopup1:HookScript("OnHide", SetupBar)
-            StaticPopup2:HookScript("OnHide", SetupBar)
-            StaticPopup3:HookScript("OnHide", SetupBar)
-            StaticPopup4:HookScript("OnHide", SetupBar)
-
-
-            --===== Status Bar Text Creation =====--
-
-            local text = bar:CreateFontString(nil, "ARTWORK")
-            text:SetFontObject("GameFontNormalLarge")
-            text:SetTextColor(0, 0.85, 0.0)
-            text:SetPoint("TOPLEFT", 0, -10)
-
-
-            --------------------------------------------------------------------------------
-            -- Hooks to the Blizzard functions.
-            --------------------------------------------------------------------------------
-
-            --===== OnShow =====--
-
-            local BGQueue_OnShow = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnShow
-
-            function hookConfirmBattlefieldEntry()
-                hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnShow", function(self, data)
-                    -- A new popup always represents a fresh invitation.  Do not
-                    -- reuse timing data left over from the previous match.
-                    started = false
-                    bar:Show()
-                    anchorFrame = self
-                    SetupBar()
-                    BGQueue_OnShow(self, data)
-                end)
-            end
-
-            hookConfirmBattlefieldEntry()
-
-            --===== BG Popup: Button Functions - OnAccept & OnCancel =====--
-
-            local BGQueue_OnAccept = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnAccept
-            local BGQueue_OnCancel = StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"].OnCancel
-
-            function hookConfirmBattlefieldEntry()
-                hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnAccept", function(self, data)
-                    -- print("accept")
-                    SetupBar()
-                    LibCompat.After(1, function()
-                        if not self:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
-                            -- print("resetting")
-                            started = false
-                        end
-                    end)
-                    return BGQueue_OnAccept(self, data)
-                end)
-
-                hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnCancel", function(self, data)
-                    -- print("cancel")
-                    SetupBar()
-                    LibCompat.After(1, function()
-                        if not self:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
-                            -- print("resetting")
-                            started = false
-                        end
-                    end)
-
-                    -- Call the original function
-                    return BGQueue_OnCancel(self, data)
-                end)
-            end
-
-            hookConfirmBattlefieldEntry()
-
-
-            --------------------------------------------------------------------------------
-            -- My own Functions
-            --------------------------------------------------------------------------------
-
-
-            local function OnEvent(self, event)
-                for i = 1, MAX_BATTLEFIELD_QUEUES do
-                    if not started then
-                        bar.expiration = GetBattlefieldPortExpiration(i)
-                        bar.startTime = GetTime()
-                        started = true
-                    end
-                    bar:SetMinMaxValues(0, bar.expiration)
-                end
-            end
-
-            local function Update(self, elapsed)
-                for i = 1, MAX_BATTLEFIELD_QUEUES do
-                    local progress = bar.expiration - (GetTime() - bar.startTime)
-                    bar:SetValue(progress)
-                    text:SetFormattedText(SecondsToTime(progress + 0.5))
-                end
-            end
-
-            --===== Hook to Blizz Function OnUpdate =====--
-
-            hooksecurefunc("BattlefieldTimerFrame_OnUpdate", function()
-                local confirmQueue
+            local function GetConfirmQueue()
                 for i = 1, MAX_BATTLEFIELD_QUEUES do
                     if GetBattlefieldStatus(i) == "confirm" then
-                        confirmQueue = i
-                        break
+                        return i
                     end
                 end
+            end
 
-                if not confirmQueue then
-                    started = false
-                    bar:Hide()
-                    spark:Hide()
+            local function StopPvpTimer()
+                activeQueue = nil
+                invitationEndTime = nil
+                pvpTimer:Stop()
+            end
+
+            local function ShowPvpTimer(anchorFrame, queue)
+                if not queue or GetBattlefieldStatus(queue) ~= "confirm" then
+                    StopPvpTimer()
                     return
                 end
 
-                if not started then
-                    bar.expiration = GetBattlefieldPortExpiration(confirmQueue)
-                    if not bar.expiration or bar.expiration <= 0 then
-                        bar:Hide()
-                        spark:Hide()
-                        return
-                    end
-                    bar.startTime = GetTime()
-                    started = true
-                end
-
-                local progress = bar.expiration - (GetTime() - bar.startTime)
-                if progress <= 0 then
-                    started = false
-                    bar:Hide()
-                    spark:Hide()
+                local remaining = GetBattlefieldPortExpiration(queue)
+                if not remaining or remaining <= 0 then
+                    StopPvpTimer()
                     return
                 end
 
-                bar:SetMinMaxValues(0, bar.expiration)
-                bar:SetValue(progress)
-                text:SetFormattedText(SecondsToTime(progress + 0.5))
+                local currentInvitationEndTime = GetTime() + remaining
+                local isNewInvitation = activeQueue ~= queue
+                    or not invitationEndTime
+                    or currentInvitationEndTime > invitationEndTime + 2
 
-                spark:Show()
-                spark:ClearAllPoints()
-                local pos = bar:GetWidth() / bar.expiration * progress
-                spark:SetPoint("CENTER", bar, "LEFT", pos, 0)
-                if progress <= 15 then
-                    text:SetTextColor(1, 1, 0)
-                    bar:SetStatusBarColor(1, 0, 0)
+                if isNewInvitation then
+                    activeQueue = queue
+                    invitationEndTime = currentInvitationEndTime
+                    pvpTimer:Start(remaining, anchorFrame, function()
+                        return activeQueue == queue and GetBattlefieldStatus(queue) == "confirm"
+                    end)
                 else
-                    text:SetTextColor(0, 1, 0)
-                    bar:SetStatusBarColor(1, 1, 0.0)
+                    pvpTimer:SetAnchor(anchorFrame)
+                    pvpTimer:Show()
+                end
+            end
+
+            hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnShow", function(self, data)
+                ShowPvpTimer(self, data)
+            end)
+
+            local pvpEvents = CreateFrame("Frame")
+            pvpEvents:RegisterEvent("UPDATE_BATTLEFIELD_STATUS")
+            pvpEvents:SetScript("OnEvent", function()
+                if not GetConfirmQueue() then
+                    StopPvpTimer()
                 end
             end)
 
             --------------------------------------------------------------------------------
-            -- Play Sound, code from ReadyCheckBgSound addon.
+            -- Play ready sound on the master audio channel
             --------------------------------------------------------------------------------
 
+            local lastReadySoundTime = GetTime()
 
-            local frame = CreateFrame("Frame")
-            lasttime = GetTime()
-
-            local function ReadyCheckBgSoundOnEvent(self, event, ...)
-                if (event == "LFG_PROPOSAL_SHOW" or event == "READY_CHECK") then
-                    ReadyCheckPlaySound()
-
-                elseif (event == "UPDATE_BATTLEFIELD_STATUS") then
-
-                    for i = 1, MAX_BATTLEFIELD_QUEUES do
-                        status, mapName, instanceID, lowestlevel, highestlevel, teamSize, registeredMatch = GetBattlefieldStatus(i);
-
-                        if (status == "confirm") then
-                            ReadyCheckPlaySound()
-                            break
-                        end
-                        i = i + 1
-                    end
-                end
-            end
-
-            function ReadyCheckBgSoundOnLoad()
-
-            end
-
-            function ReadyCheckPlaySound()
-                if (GetTime() >= lasttime + 10) then
-                    lasttime = GetTime()
+            local function PlayReadySound()
+                if GetTime() >= lastReadySoundTime + 10 then
+                    lastReadySoundTime = GetTime()
                     PlaySoundFile("Sound\\Interface\\ReadyCheck.wav", "Master")
                 end
             end
 
-            frame:RegisterEvent("LFG_PROPOSAL_SHOW");
-            frame:RegisterEvent("READY_CHECK");
-            frame:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
-            frame:SetScript("OnEvent", ReadyCheckBgSoundOnEvent)
+            local soundEvents = CreateFrame("Frame")
+            soundEvents:RegisterEvent("LFG_PROPOSAL_SHOW")
+            soundEvents:RegisterEvent("READY_CHECK")
+            soundEvents:RegisterEvent("UPDATE_BATTLEFIELD_STATUS")
+            soundEvents:SetScript("OnEvent", function(self, event)
+                if event == "LFG_PROPOSAL_SHOW" or event == "READY_CHECK" then
+                    PlayReadySound()
+                elseif event == "UPDATE_BATTLEFIELD_STATUS" then
+                    for i = 1, MAX_BATTLEFIELD_QUEUES do
+                        if GetBattlefieldStatus(i) == "confirm" then
+                            PlayReadySound()
+                            break
+                        end
+                    end
+                end
+            end)
 
 
             --------------------------------------------------------------------------------
@@ -7700,69 +7645,12 @@ function LeaPlusLC:Player()
             do
 
                 local proposalDuration = 40
-                local proposalEndTime = 0
-                local proposalActive = false
-
-                local lfgBar = CreateFrame("StatusBar", nil, LFDDungeonReadyPopup)
-                lfgBar:SetPoint("TOPLEFT", LFDDungeonReadyPopup, "BOTTOMLEFT", 8, 0)
-                lfgBar:SetPoint("TOPRIGHT", LFDDungeonReadyPopup, "BOTTOMRIGHT", -8, 0)
-                lfgBar:SetHeight(5)
-                lfgBar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-                lfgBar:SetStatusBarColor(1, 1, 0)
-                lfgBar:SetMinMaxValues(0, proposalDuration)
-                lfgBar:Hide()
-
-                local lfgSpark = lfgBar:CreateTexture(nil, "OVERLAY")
-                lfgSpark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-                lfgSpark:SetSize(18, 18)
-                lfgSpark:SetVertexColor(1, 1, 1)
-                lfgSpark:SetBlendMode("ADD")
-
-                local lfgText = lfgBar:CreateFontString(nil, "ARTWORK")
-                lfgText:SetFontObject("GameFontNormalLarge")
-                lfgText:SetPoint("TOP", 0, -10)
-
-                local function StopProposalTimer()
-                    proposalActive = false
-                    proposalEndTime = 0
-                    lfgBar:SetScript("OnUpdate", nil)
-                    lfgBar:Hide()
-                end
-
-                local function UpdateProposalTimer(self)
-                    local proposalExists = GetLFGProposal()
-                    local remaining = proposalEndTime - GetTime()
-
-                    if not proposalActive or not proposalExists or remaining <= 0 then
-                        StopProposalTimer()
-                        return
-                    end
-
-                    self:SetValue(remaining)
-                    lfgText:SetFormattedText(SecondsToTime(remaining + 0.5))
-
-                    if remaining <= 15 then
-                        lfgText:SetTextColor(1, 1, 0)
-                        self:SetStatusBarColor(1, 0, 0)
-                    else
-                        lfgText:SetTextColor(0, 1, 0)
-                        self:SetStatusBarColor(1, 1, 0)
-                    end
-
-                    lfgSpark:ClearAllPoints()
-                    lfgSpark:SetPoint("CENTER", self, "LEFT", self:GetWidth() / proposalDuration * remaining, 0)
-                end
+                local lfgTimer = CreateReadyTimer(LFDDungeonReadyPopup)
 
                 local function StartProposalTimer()
-                    proposalActive = true
-                    proposalEndTime = GetTime() + proposalDuration
-                    lfgBar:SetMinMaxValues(0, proposalDuration)
-                    lfgBar:SetScript("OnUpdate", UpdateProposalTimer)
-                    UpdateProposalTimer(lfgBar)
-
-                    if LFDDungeonReadyPopup:IsShown() then
-                        lfgBar:Show()
-                    end
+                    lfgTimer:Start(proposalDuration, LFDDungeonReadyPopup, function()
+                        return GetLFGProposal()
+                    end)
                 end
 
                 local lfgEvents = CreateFrame("Frame")
@@ -7774,159 +7662,24 @@ function LeaPlusLC:Player()
                     if event == "LFG_PROPOSAL_SHOW" then
                         StartProposalTimer()
                     elseif event == "LFG_PROPOSAL_UPDATE" then
-                        if proposalActive and not GetLFGProposal() then
-                            StopProposalTimer()
+                        if lfgTimer:IsRunning() and not GetLFGProposal() then
+                            lfgTimer:Stop()
                         end
                     else
-                        StopProposalTimer()
+                        lfgTimer:Stop()
                     end
                 end)
 
                 LFDDungeonReadyPopup:HookScript("OnShow", function()
-                    if proposalActive then
-                        lfgBar:Show()
-                    end
+                    lfgTimer:Show()
                 end)
 
                 LFDDungeonReadyPopup:HookScript("OnHide", function()
-                    lfgBar:Hide()
+                    lfgTimer:Hide()
                 end)
 
             end
 
-
-            --------------------------------------------------------------------------------
-            -- Test and Old codes
-            --------------------------------------------------------------------------------
-
-
-
-
-            -- local shouldShowBar1 = false
-            -- local shouldShowBar2 = false
-
-
-            -- StaticPopup1:HookScript("OnShow", function()
-            -- anchorFrame = StaticPopup1
-            -- SetupBar()
-
-            -- for i = 1, MAX_BATTLEFIELD_QUEUES do
-            --   status = GetBattlefieldStatus(i);
-            --   if ( status == "confirm" ) then
-            --     shouldShowBar1 = true
-            --     break
-            --   end
-            -- end
-
-            -- if shouldShowBar1 then
-            --   bar:Show()
-            -- else
-            --   bar:Hide()
-            -- end
-            -- end)
-
-            -- StaticPopup2:HookScript("OnShow", function()
-            -- anchorFrame = StaticPopup2
-            -- SetupBar()
-
-            -- for i = 1, MAX_BATTLEFIELD_QUEUES do
-            --   status = GetBattlefieldStatus(i);
-            --   if ( status == "confirm" ) then
-            --     shouldShowBar2 = true
-            --     break
-            --   end
-            -- end
-
-            -- if shouldShowBar2 then
-            --   bar:Show()
-            -- else
-            --   bar:Hide()
-            -- end
-            -- end)
-
-            -- StaticPopup1:HookScript("OnHide", function()
-            -- 	if shouldShowBar1 or shouldShowBar2 then return end
-            -- 	bar:Hide()
-            -- 	LibCompat.After(1, function()
-            -- 		if not StaticPopup1:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
-            -- 			print("resetting")
-            -- 			started = false
-            -- 		end
-            -- 	end)
-
-            -- end)
-
-            -- StaticPopup2:HookScript("OnHide", function()
-            -- 	if shouldShowBar1 or shouldShowBar2 then return end
-            -- 	bar:Hide()
-            -- 	LibCompat.After(1, function()
-            -- 		if not StaticPopup2:IsShown() and not MiniMapBattlefieldFrame:IsShown() then
-            -- 			print("resetting")
-            -- 			started = false
-            -- 		end
-            -- 	end)
-
-            -- end)
-
-
-
-
-
-
-
-
-
-
-
-
-
-            -- -- Declare variables
-            -- local t, barTime = -1, -1
-
-            -- -- Create status bar below dungeon ready popup
-            -- local bar = CreateFrame("StatusBar", nil, PVPReadyDialog)
-            -- bar:SetPoint("TOPLEFT", PVPReadyDialog, "BOTTOMLEFT", 0, -5)
-            -- bar:SetPoint("TOPRIGHT", PVPReadyDialog, "BOTTOMRIGHT", 0, -5)
-            -- bar:SetHeight(5)
-            -- bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
-            -- bar:SetStatusBarColor(1.0, 0.85, 0.0)
-
-            -- -- Create status bar text
-            -- local text = bar:CreateFontString(nil, "ARTWORK")
-            -- text:SetFontObject("GameFontNormalLarge")
-            -- text:SetTextColor(1.0, 0.85, 0.0)
-            -- text:SetPoint("TOP", 0, -10)
-
-            -- -- Update bar as timer counts down
-            -- bar:SetScript("OnUpdate", function(self, elapsed)
-            -- 	t = t - elapsed
-            -- 	if barTime >= 1 or barTime == -1 then
-            -- 		self:SetValue(t)
-            -- 		text:SetText(SecondsToTime(floor(t + 0.5)))
-            -- 		barTime = 0
-            -- 	end
-            -- 	barTime = barTime + elapsed
-            -- end)
-
-            -- -- Show frame when PvP ready frame shows
-            -- hooksecurefunc("PVPReadyDialog_Display", function(self, id)
-            -- 	t = GetBattlefieldPortExpiration(id) + 1
-            -- 	-- t = 89; -- debug
-            -- 	if t and t > 1 then
-            -- 		bar:SetMinMaxValues(0, t)
-            -- 		barTime = -1
-            -- 		bar:Show()
-            -- 	else
-            -- 		bar:Hide()
-            -- 	end
-            -- end)
-
-            -- PVPReadyDialog:HookScript("OnHide", function()
-            -- 	bar:Hide()
-            -- end)
-
-            -- Debug
-            -- LibCompat.After(2, function() PVPReadyDialog_Display(self, 1, "Warsong Gulch", 0, "BATTLEGROUND", "", "DAMAGER"); bar:Show() end)
 
         end
 
