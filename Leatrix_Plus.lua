@@ -20671,7 +20671,7 @@ LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowVanityControls", "Toggle helm / cloak", 340
 LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowBagSearchBox", "Show bag search box", 340, -152, true, "If checked, a bag search box will be shown in the backpack frame and the bank frame.")
 -- LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowRaidToggle"			, 	"Show raid button"				,	340, -172, 	true,	"If checked, the button to toggle the raid container frame will be shown just above the raid management frame (left side of the screen) instead of in the raid management frame itself.|n|nThis allows you to toggle the raid container frame without needing to open the raid management frame.")
 LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowPlayerChain", "Show player chain", 340, -192, true, "If checked, you will be able to show a rare, elite or rare elite chain around the player frame.")
-LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowReadyTimer", "Show ready timer", 340, -212, true, "If checked, a timer will be shown under the PvP encounter ready frame so that you know how long you have left to click the enter button.")
+LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowReadyTimer", "Show ready timer", 340, -212, true, "If checked, a timer will be shown under the Dungeon Finder, battleground and arena ready frames so that you know how long you have left to click the enter button.")
 LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowWowheadLinks", "Show Wowhead links", 340, -232, true, "If checked, Wowhead links will be shown in the world map frame and the achievements frame.")
 LeaPlusLC:MakeCB(LeaPlusLC[pg], "ShowFlightTimes", "Show flight times", 340, -252, true, "If checked, flight times will be shown in the flight map and when you take a flight.")
 
