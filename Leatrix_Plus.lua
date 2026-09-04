@@ -7524,6 +7524,9 @@ function LeaPlusLC:Player()
 
             function hookConfirmBattlefieldEntry()
                 hooksecurefunc(StaticPopupDialogs["CONFIRM_BATTLEFIELD_ENTRY"], "OnShow", function(self, data)
+                    -- A new popup always represents a fresh invitation.  Do not
+                    -- reuse timing data left over from the previous match.
+                    started = false
                     bar:Show()
                     anchorFrame = self
                     SetupBar()
@@ -7596,32 +7599,55 @@ function LeaPlusLC:Player()
             --===== Hook to Blizz Function OnUpdate =====--
 
             hooksecurefunc("BattlefieldTimerFrame_OnUpdate", function()
+                local confirmQueue
                 for i = 1, MAX_BATTLEFIELD_QUEUES do
-                    -- 		status = GetBattlefieldStatus(i);
-                    -- if status == "confirm" then
-                    if not started then
-                        bar.expiration = GetBattlefieldPortExpiration(i)
-                        bar.startTime = GetTime()
-                        started = true
-                    end
-                    bar:SetMinMaxValues(0, bar.expiration)
-                    local progress = bar.expiration - (GetTime() - bar.startTime)
-                    bar:SetValue(progress)
-                    text:SetFormattedText(SecondsToTime(progress + 0.5))
-
-                    spark:Show()
-                    local pos = bar:GetWidth() / bar.expiration * progress
-                    spark:SetPoint("CENTER", bar, "LEFT", pos, 0)
-                    if progress <= 15 then
-                        text:SetTextColor(1, 1, 0)
-                        bar:SetStatusBarColor(1, 0, 0)
-                    else
-                        text:SetTextColor(0, 1, 0)
-                        bar:SetStatusBarColor(1, 1, 0.0)
-
+                    if GetBattlefieldStatus(i) == "confirm" then
+                        confirmQueue = i
+                        break
                     end
                 end
-                -- end
+
+                if not confirmQueue then
+                    started = false
+                    bar:Hide()
+                    spark:Hide()
+                    return
+                end
+
+                if not started then
+                    bar.expiration = GetBattlefieldPortExpiration(confirmQueue)
+                    if not bar.expiration or bar.expiration <= 0 then
+                        bar:Hide()
+                        spark:Hide()
+                        return
+                    end
+                    bar.startTime = GetTime()
+                    started = true
+                end
+
+                local progress = bar.expiration - (GetTime() - bar.startTime)
+                if progress <= 0 then
+                    started = false
+                    bar:Hide()
+                    spark:Hide()
+                    return
+                end
+
+                bar:SetMinMaxValues(0, bar.expiration)
+                bar:SetValue(progress)
+                text:SetFormattedText(SecondsToTime(progress + 0.5))
+
+                spark:Show()
+                spark:ClearAllPoints()
+                local pos = bar:GetWidth() / bar.expiration * progress
+                spark:SetPoint("CENTER", bar, "LEFT", pos, 0)
+                if progress <= 15 then
+                    text:SetTextColor(1, 1, 0)
+                    bar:SetStatusBarColor(1, 0, 0)
+                else
+                    text:SetTextColor(0, 1, 0)
+                    bar:SetStatusBarColor(1, 1, 0.0)
+                end
             end)
 
             --------------------------------------------------------------------------------
