@@ -7668,6 +7668,108 @@ function LeaPlusLC:Player()
 
 
             --------------------------------------------------------------------------------
+            -- Dungeon Finder proposal timer
+            --------------------------------------------------------------------------------
+
+            do
+
+                local proposalDuration = 40
+                local proposalEndTime = 0
+                local proposalActive = false
+
+                local lfgBar = CreateFrame("StatusBar", nil, LFDDungeonReadyPopup)
+                lfgBar:SetPoint("TOPLEFT", LFDDungeonReadyPopup, "BOTTOMLEFT", 8, 0)
+                lfgBar:SetPoint("TOPRIGHT", LFDDungeonReadyPopup, "BOTTOMRIGHT", -8, 0)
+                lfgBar:SetHeight(5)
+                lfgBar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+                lfgBar:SetStatusBarColor(1, 1, 0)
+                lfgBar:SetMinMaxValues(0, proposalDuration)
+                lfgBar:Hide()
+
+                local lfgSpark = lfgBar:CreateTexture(nil, "OVERLAY")
+                lfgSpark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+                lfgSpark:SetSize(18, 18)
+                lfgSpark:SetVertexColor(1, 1, 1)
+                lfgSpark:SetBlendMode("ADD")
+
+                local lfgText = lfgBar:CreateFontString(nil, "ARTWORK")
+                lfgText:SetFontObject("GameFontNormalLarge")
+                lfgText:SetPoint("TOP", 0, -10)
+
+                local function StopProposalTimer()
+                    proposalActive = false
+                    proposalEndTime = 0
+                    lfgBar:SetScript("OnUpdate", nil)
+                    lfgBar:Hide()
+                end
+
+                local function UpdateProposalTimer(self)
+                    local proposalExists = GetLFGProposal()
+                    local remaining = proposalEndTime - GetTime()
+
+                    if not proposalActive or not proposalExists or remaining <= 0 then
+                        StopProposalTimer()
+                        return
+                    end
+
+                    self:SetValue(remaining)
+                    lfgText:SetFormattedText(SecondsToTime(remaining + 0.5))
+
+                    if remaining <= 15 then
+                        lfgText:SetTextColor(1, 1, 0)
+                        self:SetStatusBarColor(1, 0, 0)
+                    else
+                        lfgText:SetTextColor(0, 1, 0)
+                        self:SetStatusBarColor(1, 1, 0)
+                    end
+
+                    lfgSpark:ClearAllPoints()
+                    lfgSpark:SetPoint("CENTER", self, "LEFT", self:GetWidth() / proposalDuration * remaining, 0)
+                end
+
+                local function StartProposalTimer()
+                    proposalActive = true
+                    proposalEndTime = GetTime() + proposalDuration
+                    lfgBar:SetMinMaxValues(0, proposalDuration)
+                    lfgBar:SetScript("OnUpdate", UpdateProposalTimer)
+                    UpdateProposalTimer(lfgBar)
+
+                    if LFDDungeonReadyPopup:IsShown() then
+                        lfgBar:Show()
+                    end
+                end
+
+                local lfgEvents = CreateFrame("Frame")
+                lfgEvents:RegisterEvent("LFG_PROPOSAL_SHOW")
+                lfgEvents:RegisterEvent("LFG_PROPOSAL_UPDATE")
+                lfgEvents:RegisterEvent("LFG_PROPOSAL_FAILED")
+                lfgEvents:RegisterEvent("LFG_PROPOSAL_SUCCEEDED")
+                lfgEvents:SetScript("OnEvent", function(self, event)
+                    if event == "LFG_PROPOSAL_SHOW" then
+                        StartProposalTimer()
+                    elseif event == "LFG_PROPOSAL_UPDATE" then
+                        if proposalActive and not GetLFGProposal() then
+                            StopProposalTimer()
+                        end
+                    else
+                        StopProposalTimer()
+                    end
+                end)
+
+                LFDDungeonReadyPopup:HookScript("OnShow", function()
+                    if proposalActive then
+                        lfgBar:Show()
+                    end
+                end)
+
+                LFDDungeonReadyPopup:HookScript("OnHide", function()
+                    lfgBar:Hide()
+                end)
+
+            end
+
+
+            --------------------------------------------------------------------------------
             -- Test and Old codes
             --------------------------------------------------------------------------------
 
